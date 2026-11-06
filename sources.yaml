@@ -5,26 +5,35 @@
 
 podcast:
   name: "Trạm Podcast Crypto"
-  host_name: "Bé Mai"          # tên cô MC trong kịch bản
+  host_name: "Mai Hương"       # tên cô MC trong kịch bản
+  region: "Hà Nội"             # MC là người vùng nào (ảnh hưởng cách nói trong kịch bản)
+  particles: "nhé, nhỉ, đấy, ạ, ơi, ôi, hihi"   # tiểu từ hay dùng
+
+  # Dịch vụ đọc giọng: "gemini" (miễn phí) hoặc "elevenlabs" (giọng Việt thật, trả phí)
+  tts_provider: "gemini"
   author: "Trọng"
-  # Giọng đọc của Gemini. Gợi ý giọng nữ: Leda (trẻ trung), Laomedeia (tươi vui),
-  # Zephyr (trong sáng), Autonoe (sáng), Aoede (nhẹ nhàng), Achernar (mềm mại)
-  voice: "Leda"
-  # Chỉ dẫn "diễn xuất" cho giọng đọc (viết tiếng Anh cho model hiểu chuẩn nhất)
-  voice_style: >
-    A young Vietnamese woman in her early twenties hosting a fun daily crypto news podcast.
-    Super cute, bubbly, sweet and playful — like a cheerful friend sharing gossip over milk tea —
-    but still clear and easy to follow. Bright smiling tone, light energy, natural Southern
-    Vietnamese (Saigon) accent. Medium-fast pace, small natural pauses between news items.
-    English crypto terms (ETF, airdrop, staking, TVL...) are pronounced naturally in English.
+  # Giọng đọc Gemini (tên giọng xem trong AI Studio → Playground), vd Fola, Leda, Puck
+  voice: "Fola"
+  # Để trống = đọc tự nhiên y như lúc nghe thử trên AI Studio.
+  # Muốn chỉnh "diễn xuất" thì viết mô tả (tiếng Anh) vào giữa hai dấu ngoặc kép.
+  voice_style: ""
   target_minutes: 7            # độ dài mong muốn mỗi tập (phút)
   max_stories: 12              # số tin tối đa mỗi tập
   keep_episodes: 40            # giữ bao nhiêu tập gần nhất (tập cũ tự xoá)
 
+# Cấu hình ElevenLabs (chỉ dùng khi tts_provider: "elevenlabs")
+elevenlabs:
+  voice_id: "iR5k1BKfxyFKNJ628A79"     # copy Voice ID từ ElevenLabs
+  model: "eleven_multilingual_v2"      # hoặc "eleven_v3" (biểu cảm hơn)
+  stability: 0.45                      # thấp = nhiều cảm xúc hơn, cao = đều giọng hơn
+  similarity_boost: 0.8
+  style: 0.35                          # cao = "diễn" nhiều hơn
+  speed: 1.0                           # 0.7 – 1.2
+
 # Model AI (tự thử lần lượt, model đầu lỗi/không tồn tại thì dùng model sau)
 models:
   text: ["gemini-3-flash-preview", "gemini-2.5-flash", "gemini-2.5-flash-lite"]
-  tts:  ["gemini-3.1-flash-tts-preview", "gemini-2.5-flash-preview-tts"]
+  tts:  ["gemini-3.8-flash-tts", "gemini-3.1-flash-tts-preview", "gemini-2.5-flash-preview-tts"]
 
 # ---------------------------------------------------------------------
 #  Kênh Telegram — ghi username (phần sau t.me/).

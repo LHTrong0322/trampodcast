@@ -259,12 +259,16 @@ class Gemini:
         return self._try_models(models, call)
 
     def tts(self, models, voice: str, style: str, text: str) -> bytes:
-        prompt = (
-            "# AUDIO PROFILE\n" + style.strip() + "\n\n"
-            "# DIRECTOR'S NOTES\nRead ONLY the transcript below, in Vietnamese, word for word. "
-            "Do not read these notes or any headings aloud.\n\n"
-            "# TRANSCRIPT\n" + text.strip()
-        )
+        if style.strip():
+            prompt = (
+                "# AUDIO PROFILE\n" + style.strip() + "\n\n"
+                "# DIRECTOR'S NOTES\nRead ONLY the transcript below, in Vietnamese, word for word. "
+                "Do not read these notes or any headings aloud.\n\n"
+                "# TRANSCRIPT\n" + text.strip()
+            )
+        else:
+            # Giống hệt cách AI Studio gọi (Get code) → giọng ra y như lúc nghe thử
+            prompt = "## Transcript:\n" + text.strip()
 
         def call(m):
             data = self._post(m, {
@@ -274,10 +278,18 @@ class Gemini:
                     "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice}}},
                 },
             }, timeout=300)
-            pcm = b""
+            pcm, rate = b"", SAMPLE_RATE
             for p in data["candidates"][0]["content"]["parts"]:
                 if "inlineData" in p:
                     pcm += base64.b64decode(p["inlineData"]["data"])
+                    mt = re.search(r"rate=(\d+)", p["inlineData"].get("mimeType", ""))
+                    if mt:
+                        rate = int(mt.group(1))
+            if rate != SAMPLE_RATE:  # đưa về 24kHz cho đồng nhất
+                pcm = subprocess.run(["ffmpeg", "-loglevel", "error", "-f", "s16le", "-ar", str(rate),
+                                      "-ac", "1", "-i", "pipe:0", "-f", "s16le", "-ar",
+                                      str(SAMPLE_RATE), "-ac", "1", "pipe:1"],
+                                     input=pcm, capture_output=True, check=True).stdout
             # kiểm tra audio có độ dài hợp lý (≥ ~40% thời lượng ước tính)
             expected_sec = len(text) / 16
             got_sec = len(pcm) / (SAMPLE_RATE * 2)
@@ -336,7 +348,7 @@ Trả về DUY NHẤT JSON đúng cấu trúc:
 Nếu không có tin nào đáng giá, trả về "stories": []."""
 
 SCRIPT_SYSTEM = """Bạn là biên kịch cho podcast tin tức crypto tiếng Việt "{name}".
-MC là {host}: cô gái trẻ Sài Gòn, dễ thương, nhí nhảnh, hay cười, nói chuyện như kể chuyện
+MC là {host}: cô gái trẻ {region}, dễ thương, nhí nhảnh, hay cười, nói chuyện như kể chuyện
 cho bạn thân nghe — nhưng thông tin phải chính xác và rõ ràng. {host} xưng "{host_short}",
 gọi người nghe là "cả nhà".
 
@@ -350,7 +362,8 @@ YÊU CẦU KỊCH BẢN (văn NÓI, sẽ được đọc bằng máy):
   nhất → đi lần lượt từng tin, mỗi tin: chuyện gì xảy ra + vì sao nhà đầu tư cần quan tâm,
   có câu chuyển ý tự nhiên → chốt lại tâm lý thị trường → nhắc "đây không phải lời khuyên
   đầu tư, cả nhà tự nghiên cứu kỹ nha" → chào tạm biệt đáng yêu.
-- Có thể chêm cảm thán dễ thương vừa phải (ui, nha, nè, á, hihi), không lạm dụng.
+- Dùng từ ngữ, tiểu từ đúng chất người {region} ({particles}), chêm cảm thán dễ thương
+  vừa phải, không lạm dụng.
 - Độ dài khoảng {words} từ. Mỗi tin là MỘT đoạn văn, các đoạn cách nhau bằng một dòng trống."""
 
 
@@ -377,7 +390,9 @@ def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: dat
                                                ("chiều" if now_vn.hour < 18 else "tối"))
     host = pc.get("host_name", "Bé Mai")
     system = SCRIPT_SYSTEM.format(
-        name=pc["name"], host=host, host_short=host.split()[-1], session=session,
+        name=pc["name"], host=host, host_short=host, session=session,
+        region=pc.get("region", "Hà Nội"),
+        particles=pc.get("particles", "nhé, nhỉ, đấy, ạ, ơi, ôi, hihi"),
         date=f"{now_vn.day} tháng {now_vn.month}", words=int(pc.get("target_minutes", 7) * 165))
     brief = json.dumps({k: ed.get(k) for k in ("episode_title", "market_mood")} |
                        {"stories": [{k: s.get(k) for k in
@@ -418,17 +433,73 @@ def chunk_script(s: str, max_chars=1800) -> list[str]:
 # ---------------------------------------------------------------------------
 # 3. AUDIO
 # ---------------------------------------------------------------------------
+def mp3_to_pcm(mp3: bytes) -> bytes:
+    """Giải mã MP3 → PCM 16-bit mono 24kHz để ghép các đoạn."""
+    r = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", "pipe:0", "-f", "s16le",
+                        "-ac", "1", "-ar", str(SAMPLE_RATE), "pipe:1"],
+                       input=mp3, capture_output=True, check=True)
+    return r.stdout
+
+
+def elevenlabs_tts(el: dict, text: str, prev_text: str = "", next_text: str = "") -> bytes:
+    key = os.getenv("ELEVENLABS_API_KEY")
+    if not key:
+        raise RuntimeError("Thiếu ELEVENLABS_API_KEY (thêm trong GitHub Secrets)")
+    model = el.get("model", "eleven_multilingual_v2")
+    body = {
+        "text": text,
+        "model_id": model,
+        "voice_settings": {
+            "stability": float(el.get("stability", 0.45)),
+            "similarity_boost": float(el.get("similarity_boost", 0.8)),
+            "style": float(el.get("style", 0.35)),
+            "use_speaker_boost": True,
+            "speed": float(el.get("speed", 1.0)),
+        },
+    }
+    if model != "eleven_v3":  # v3 không hỗ trợ nối ngữ cảnh
+        if prev_text:
+            body["previous_text"] = prev_text[-400:]
+        if next_text:
+            body["next_text"] = next_text[:400]
+    url = (f"https://api.elevenlabs.io/v1/text-to-speech/{el['voice_id']}"
+           "?output_format=mp3_44100_128")
+    for attempt in range(3):
+        r = requests.post(url, json=body, timeout=300,
+                          headers={"xi-api-key": key, "Accept": "audio/mpeg"})
+        if r.status_code == 429 or r.status_code >= 500:
+            time.sleep(20 * (attempt + 1))
+            continue
+        if r.status_code != 200:
+            raise RuntimeError(f"ElevenLabs HTTP {r.status_code}: {r.text[:300]}")
+        return mp3_to_pcm(r.content)
+    raise RuntimeError("ElevenLabs: hết lượt thử")
+
+
+def speak_chunk(gem, cfg, chunks, n) -> bytes:
+    pc = cfg["podcast"]
+    provider = pc.get("tts_provider", "gemini")
+    ch = chunks[n]
+    if provider == "elevenlabs":
+        return elevenlabs_tts(cfg.get("elevenlabs") or {}, ch,
+                              chunks[n - 1] if n > 0 else "",
+                              chunks[n + 1] if n + 1 < len(chunks) else "")
+    return gem.tts(cfg["models"]["tts"], pc.get("voice", "Leda"), pc.get("voice_style", ""), ch)
+
+
 def synthesize(gem: Gemini, cfg: dict, script: str, mp3_path: Path) -> float:
     pc = cfg["podcast"]
     chunks = chunk_script(script)
-    log(f"   Đọc {len(chunks)} đoạn bằng giọng {pc.get('voice')}")
+    provider = pc.get("tts_provider", "gemini")
+    voice = (cfg.get("elevenlabs") or {}).get("voice_id") if provider == "elevenlabs" else pc.get("voice")
+    log(f"   Đọc {len(chunks)} đoạn bằng {provider} · giọng {voice}")
     silence = b"\x00\x00" * int(SAMPLE_RATE * 0.5)
     pcm = b""
-    for n, ch in enumerate(chunks, 1):
-        log(f"   ♪ đoạn {n}/{len(chunks)} ({len(ch)} ký tự)")
-        pcm += gem.tts(cfg["models"]["tts"], pc.get("voice", "Leda"), pc.get("voice_style", ""), ch)
+    for n in range(len(chunks)):
+        log(f"   ♪ đoạn {n + 1}/{len(chunks)} ({len(chunks[n])} ký tự)")
+        pcm += speak_chunk(gem, cfg, chunks, n)
         pcm += silence
-        if n < len(chunks):
+        if n + 1 < len(chunks) and provider == "gemini":
             time.sleep(4)  # nhẹ tay với rate limit gói free
     wav_path = mp3_path.with_suffix(".wav")
     with wave.open(str(wav_path), "wb") as w:
@@ -518,6 +589,42 @@ def publish_static(out: Path):
                 break
 
 
+SAMPLE_TEXT = ("Ơ kìa, chào cả nhà, {host} đây ạ! Tối nay có tin nóng lắm nhé: SEC vừa duyệt thêm ETF "
+               "Solana, dòng tiền vào quỹ đạt 1,2 tỷ đô chỉ trong một tuần. Trong khi đó, Hyperliquid "
+               "sắp unlock 10 triệu token HYPE, cả nhà nhớ để ý áp lực bán ngắn hạn nhé! "
+               "Đây không phải lời khuyên đầu tư đâu nha, cả nhà tự nghiên cứu kỹ nhé. Hihi, hẹn gặp lại!")
+
+
+def test_voice(cfg: dict, args):
+    pc = cfg["podcast"]
+    if args.provider:
+        pc["tts_provider"] = args.provider
+    if args.voice:
+        if pc.get("tts_provider") == "elevenlabs":
+            cfg.setdefault("elevenlabs", {})["voice_id"] = args.voice
+        else:
+            pc["voice"] = args.voice
+    if args.model:
+        cfg.setdefault("elevenlabs", {})["model"] = args.model
+    text = args.text.strip() or SAMPLE_TEXT.format(host=pc.get("host_name", "Mai Hương"))
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    gem = Gemini(os.getenv("GEMINI_API_KEY", ""))
+    mp3 = out / "thu-giong.mp3"
+    dur = synthesize(gem, cfg, text, mp3)
+    log(f"✓ Đã tạo {mp3} ({dur:.0f} giây)")
+    token, chat = os.getenv("TELEGRAM_BOT_TOKEN"), os.getenv("TELEGRAM_CHAT_ID")
+    if token and chat:
+        provider = pc.get("tts_provider", "gemini")
+        voice = (cfg.get("elevenlabs") or {}).get("voice_id") if provider == "elevenlabs" else pc.get("voice")
+        model = (cfg.get("elevenlabs") or {}).get("model", "") if provider == "elevenlabs" else ""
+        with open(mp3, "rb") as f:
+            requests.post(f"https://api.telegram.org/bot{token}/sendAudio", timeout=120, data={
+                "chat_id": chat, "caption": f"🎙️ Thử giọng: {provider} · {voice} {model}".strip(),
+                "title": f"Thử giọng {voice}"}, files={"audio": (mp3.name, f, "audio/mpeg")})
+        log("✓ Đã gửi bản thử vào Telegram")
+
+
 # ---------------------------------------------------------------------------
 # MAIN
 # ---------------------------------------------------------------------------
@@ -526,9 +633,16 @@ def main():
     ap.add_argument("--out", default="public")
     ap.add_argument("--config", default=str(ROOT / "sources.yaml"))
     ap.add_argument("--hours", type=float, default=0, help="ép lấy tin trong N giờ gần nhất")
+    ap.add_argument("--test-voice", action="store_true", help="chỉ đọc thử 1 đoạn mẫu")
+    ap.add_argument("--provider", default="", help="gemini | elevenlabs (ghi đè sources.yaml)")
+    ap.add_argument("--voice", default="", help="tên giọng Gemini hoặc Voice ID ElevenLabs")
+    ap.add_argument("--model", default="", help="model ElevenLabs, vd eleven_v3")
+    ap.add_argument("--text", default="", help="đoạn văn muốn đọc thử")
     args = ap.parse_args()
 
     cfg = yaml.safe_load(Path(args.config).read_text(encoding="utf-8"))
+    if args.test_voice:
+        return test_voice(cfg, args)
     out = Path(args.out)
     (out / "audio").mkdir(parents=True, exist_ok=True)
     publish_static(out)
