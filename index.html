@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Trạm Podcast Crypto</title>
 <meta name="theme-color" content="#FFC83D">
-<link rel="icon" href="cover.svg">
+<link rel="icon" href="logo.png">
+<link rel="apple-touch-icon" href="cover.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -20,9 +21,14 @@
   a{color:inherit}
   .wrap{max-width:760px;margin:0 auto;padding:0 18px}
   header{padding:26px 0 8px;display:flex;align-items:center;gap:14px}
-  header img{width:58px;height:58px;border-radius:16px;box-shadow:0 4px 0 var(--crust)}
+  header img{width:58px;height:58px;border-radius:50%;box-shadow:0 0 0 3px #fff,0 4px 10px rgba(58,39,22,.18)}
   header h1{font-size:22px;margin:0;font-weight:800;letter-spacing:-.3px}
   header p{margin:2px 0 0;color:var(--ink-2);font-size:13.5px}
+  .byline{margin-top:4px;font-size:12.5px;color:var(--ink-2)}
+  .byline a{color:var(--crust);font-weight:700;text-decoration:none}
+  .byline a:hover{text-decoration:underline}
+  footer{text-align:center;color:var(--ink-2);font-size:13px;padding:34px 0 10px}
+  footer a{color:var(--crust);font-weight:700;text-decoration:none}
   .feed{margin-left:auto;font-size:12.5px;font-weight:600;text-decoration:none;background:#fff;border:1.5px solid var(--line);padding:7px 11px;border-radius:999px;white-space:nowrap}
 
   .hero{margin-top:18px;background:var(--cheese);border-radius:24px;padding:22px;position:relative;overflow:hidden;box-shadow:0 6px 0 var(--crust)}
@@ -85,14 +91,16 @@
 <body>
 <div class="wrap">
   <header>
-    <img src="cover.svg" alt="">
+    <img src="logo.png" alt="Logo Trọng">
     <div>
       <h1 id="podName">Trạm Podcast Crypto</h1>
       <p id="podSub">Tin crypto chọn lọc cho nhà đầu tư · mỗi ngày 2 tập</p>
+      <div class="byline">🤖 Agent build by <a href="https://x.com/Trong0322" target="_blank" rel="noopener">@Trong0322</a></div>
     </div>
     <a class="feed" id="feedLink" href="feed.xml" hidden>📡 Feed podcast</a>
   </header>
   <main id="app"><div class="empty">Đang tải… 🎙️</div></main>
+  <footer>🤖 Agent build by <a href="https://x.com/Trong0322" target="_blank" rel="noopener">@Trong0322</a> · Nội dung do AI tổng hợp, không phải lời khuyên đầu tư</footer>
 </div>
 
 <div class="player" id="player" hidden>

@@ -209,6 +209,65 @@ def collect(cfg: dict, since: datetime, seen: set[str]) -> list[dict]:
 # ---------------------------------------------------------------------------
 # 2. GEMINI
 # ---------------------------------------------------------------------------
+def _ffmpeg_pcm(args_in: list, data: bytes, filters: str = "") -> bytes:
+    cmd = ["ffmpeg", "-loglevel", "error", *args_in, "-i", "pipe:0"]
+    if filters:
+        cmd += ["-af", filters]
+    cmd += ["-f", "s16le", "-ac", "1", "-ar", str(SAMPLE_RATE), "pipe:1"]
+    return subprocess.run(cmd, input=data, capture_output=True, check=True).stdout
+
+
+def decode_audio(raw: bytes, mime: str) -> bytes:
+    """Đưa mọi định dạng audio Gemini trả về (PCM thô, WAV có header, MP3...) về PCM 24kHz.
+    Nếu không bóc header WAV, 44 byte header bị đọc như âm thanh → tiếng rè/tách."""
+    m = (mime or "").lower()
+    is_raw_pcm = (("l16" in m or "pcm" in m) and raw[:4] != b"RIFF")
+    if is_raw_pcm:
+        mt = re.search(r"rate=(\d+)", m)
+        rate = int(mt.group(1)) if mt else SAMPLE_RATE
+        if rate == SAMPLE_RATE:
+            return raw[: len(raw) // 2 * 2]
+        return _ffmpeg_pcm(["-f", "s16le", "-ar", str(rate), "-ac", "1"], raw)
+    return _ffmpeg_pcm([], raw)  # để ffmpeg tự nhận định dạng (wav/mp3/ogg...)
+
+
+def clean_chunk(pcm: bytes) -> bytes:
+    """Cắt khoảng lặng/tạp âm nhỏ ở đầu-cuối mỗi đoạn và vuốt nhỏ dần để nối không bị 'tách'."""
+    if not pcm:
+        return pcm
+    f = ("silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.05,"
+         "areverse,"
+         "silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.08,"
+         "afade=t=in:d=0.12,"          # = vuốt nhỏ dần ở CUỐI đoạn (vì đang đảo ngược)
+         "areverse,"
+         "afade=t=in:d=0.02")
+    try:
+        out = _ffmpeg_pcm(["-f", "s16le", "-ar", str(SAMPLE_RATE), "-ac", "1"], pcm, f)
+        return out if len(out) > len(pcm) * 0.5 else pcm
+    except Exception:
+        return pcm
+
+
+_CHIME = None
+
+
+def transition_sound() -> bytes:
+    """Tiếng chuông 'ting-tinh' nhẹ, ấm (tự tổng hợp, không bản quyền) để chuyển tin."""
+    global _CHIME
+    if _CHIME is None:
+        expr = ("0.22*sin(2*PI*1046.5*t)*exp(-5*t)"
+                "+0.07*sin(2*PI*2093*t)*exp(-9*t)"
+                "+0.18*sin(2*PI*1568*(t-0.14))*exp(-4.5*(t-0.14))*gte(t,0.14)"
+                "+0.05*sin(2*PI*3136*(t-0.14))*exp(-9*(t-0.14))*gte(t,0.14)")
+        cmd = ["ffmpeg", "-loglevel", "error", "-f", "lavfi",
+               "-i", f"aevalsrc='{expr}':s={SAMPLE_RATE}:d=1.1",
+               "-af", "afade=t=in:d=0.005,afade=t=out:st=0.8:d=0.3,volume=0.55,"
+                      "aecho=0.8:0.5:60:0.25",
+               "-f", "s16le", "-ac", "1", "-ar", str(SAMPLE_RATE), "pipe:1"]
+        _CHIME = subprocess.run(cmd, capture_output=True, check=True).stdout
+    return _CHIME
+
+
 class Gemini:
     def __init__(self, key: str):
         self.key = key
@@ -278,22 +337,15 @@ class Gemini:
                     "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice}}},
                 },
             }, timeout=300)
-            pcm, rate = b"", SAMPLE_RATE
+            pcm = b""
             for p in data["candidates"][0]["content"]["parts"]:
                 if "inlineData" in p:
-                    pcm += base64.b64decode(p["inlineData"]["data"])
-                    mt = re.search(r"rate=(\d+)", p["inlineData"].get("mimeType", ""))
-                    if mt:
-                        rate = int(mt.group(1))
-            if rate != SAMPLE_RATE:  # đưa về 24kHz cho đồng nhất
-                pcm = subprocess.run(["ffmpeg", "-loglevel", "error", "-f", "s16le", "-ar", str(rate),
-                                      "-ac", "1", "-i", "pipe:0", "-f", "s16le", "-ar",
-                                      str(SAMPLE_RATE), "-ac", "1", "pipe:1"],
-                                     input=pcm, capture_output=True, check=True).stdout
+                    pcm += decode_audio(base64.b64decode(p["inlineData"]["data"]),
+                                        p["inlineData"].get("mimeType", ""))
             # kiểm tra audio có độ dài hợp lý (≥ ~40% thời lượng ước tính)
             expected_sec = len(text) / 16
             got_sec = len(pcm) / (SAMPLE_RATE * 2)
-            if got_sec < max(2, expected_sec * 0.4):
+            if got_sec < max(1.0, expected_sec * 0.4):
                 raise RuntimeError(f"audio quá ngắn ({got_sec:.0f}s / ước tính {expected_sec:.0f}s)")
             return pcm
         return self._try_models(models, call)
@@ -493,14 +545,20 @@ def synthesize(gem: Gemini, cfg: dict, script: str, mp3_path: Path) -> float:
     provider = pc.get("tts_provider", "gemini")
     voice = (cfg.get("elevenlabs") or {}).get("voice_id") if provider == "elevenlabs" else pc.get("voice")
     log(f"   Đọc {len(chunks)} đoạn bằng {provider} · giọng {voice}")
-    silence = b"\x00\x00" * int(SAMPLE_RATE * 0.5)
+    gap = lambda sec: b"\x00\x00" * int(SAMPLE_RATE * sec)
+    style = pc.get("transition", "pause")  # "pause" = ngắt nghỉ êm, "chime" = thêm tiếng chuông
     pcm = b""
     for n in range(len(chunks)):
         log(f"   ♪ đoạn {n + 1}/{len(chunks)} ({len(chunks[n])} ký tự)")
-        pcm += speak_chunk(gem, cfg, chunks, n)
-        pcm += silence
-        if n + 1 < len(chunks) and provider == "gemini":
-            time.sleep(4)  # nhẹ tay với rate limit gói free
+        pcm += clean_chunk(speak_chunk(gem, cfg, chunks, n))
+        if n + 1 < len(chunks):
+            if style == "chime":
+                pcm += gap(0.45) + transition_sound() + gap(0.25)
+            else:
+                pcm += gap(0.8)
+            if provider == "gemini":
+                time.sleep(4)  # nhẹ tay với rate limit gói free
+    pcm += gap(0.6)
     wav_path = mp3_path.with_suffix(".wav")
     with wave.open(str(wav_path), "wb") as w:
         w.setnchannels(1)
@@ -540,7 +598,7 @@ def write_feed(out: Path, cfg: dict, episodes: list[dict], site_url: str):
   <title>{esc(pc['name'])}</title>
   <link>{base}/</link>
   <language>vi</language>
-  <description>Tin crypto chọn lọc cho nhà đầu tư, đọc bởi {esc(pc.get('host_name', ''))}.</description>
+  <description>Tin crypto chọn lọc cho nhà đầu tư, đọc bởi {esc(pc.get('host_name', ''))}. Agent build by @Trong0322.</description>
   <itunes:author>{esc(pc.get('author', ''))}</itunes:author>
   <itunes:image href="{base}/cover.png"/>
   <itunes:explicit>false</itunes:explicit>
@@ -582,7 +640,7 @@ def send_telegram(mp3: Path, ep: dict, cfg: dict, site_url: str):
 
 
 def publish_static(out: Path):
-    for name in ("index.html", "cover.png", "cover.svg"):
+    for name in ("index.html", "cover.png", "logo.png"):
         for src in (ROOT / "site" / name, ROOT / name):
             if src.exists():
                 shutil.copy(src, out / name)
