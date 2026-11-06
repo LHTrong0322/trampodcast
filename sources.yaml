@@ -1,0 +1,60 @@
+# =====================================================================
+#  CẤU HÌNH PODCAST — sửa file này là đủ, không cần đụng vào code.
+#  Thêm/bớt nguồn: thêm/xoá 1 dòng. Dòng bắt đầu bằng # là ghi chú.
+# =====================================================================
+
+podcast:
+  name: "Trạm Podcast Crypto"
+  host_name: "Bé Mai"          # tên cô MC trong kịch bản
+  author: "Trọng"
+  # Giọng đọc của Gemini. Gợi ý giọng nữ: Leda (trẻ trung), Laomedeia (tươi vui),
+  # Zephyr (trong sáng), Autonoe (sáng), Aoede (nhẹ nhàng), Achernar (mềm mại)
+  voice: "Leda"
+  # Chỉ dẫn "diễn xuất" cho giọng đọc (viết tiếng Anh cho model hiểu chuẩn nhất)
+  voice_style: >
+    A young Vietnamese woman in her early twenties hosting a fun daily crypto news podcast.
+    Super cute, bubbly, sweet and playful — like a cheerful friend sharing gossip over milk tea —
+    but still clear and easy to follow. Bright smiling tone, light energy, natural Southern
+    Vietnamese (Saigon) accent. Medium-fast pace, small natural pauses between news items.
+    English crypto terms (ETF, airdrop, staking, TVL...) are pronounced naturally in English.
+  target_minutes: 7            # độ dài mong muốn mỗi tập (phút)
+  max_stories: 12              # số tin tối đa mỗi tập
+  keep_episodes: 40            # giữ bao nhiêu tập gần nhất (tập cũ tự xoá)
+
+# Model AI (tự thử lần lượt, model đầu lỗi/không tồn tại thì dùng model sau)
+models:
+  text: ["gemini-3-flash-preview", "gemini-2.5-flash", "gemini-2.5-flash-lite"]
+  tts:  ["gemini-3.1-flash-tts-preview", "gemini-2.5-flash-preview-tts"]
+
+# ---------------------------------------------------------------------
+#  Kênh Telegram — ghi username (phần sau t.me/).
+#  Nếu đã bật USERBOT (xem README): đọc được cả kênh private / tắt preview,
+#  với kênh private không có username thì ghi ID dạng -100xxxxxxxxxx
+# ---------------------------------------------------------------------
+telegram:
+  - unfolded
+  - Fivemincryptoann
+  - ThuanCapital
+  - WatcherGuru              # breaking news nhanh
+  - wublockchainenglish      # Wu Blockchain: tin Châu Á, sàn, chính sách
+
+# ---------------------------------------------------------------------
+#  Trang tin crypto uy tín (RSS)
+# ---------------------------------------------------------------------
+rss:
+  - { name: "CoinDesk",         url: "https://www.coindesk.com/arc/outboundfeeds/rss/" }
+  - { name: "The Block",        url: "https://www.theblock.co/rss.xml" }
+  - { name: "Cointelegraph",    url: "https://cointelegraph.com/rss" }
+  - { name: "Decrypt",          url: "https://decrypt.co/feed" }
+  - { name: "Blockworks",       url: "https://blockworks.co/feed" }
+  - { name: "DL News",          url: "https://www.dlnews.com/arc/outboundfeeds/rss/" }
+  - { name: "The Defiant",      url: "https://thedefiant.io/api/feed" }
+  - { name: "Bitcoin Magazine", url: "https://bitcoinmagazine.com/.rss/full/" }
+
+# ---------------------------------------------------------------------
+#  Tài khoản X (Twitter): X không cho đọc miễn phí, nên cần 1 link RSS
+#  tạo từ dịch vụ như rss.app (xem README, mục "Thêm nguồn X").
+#  Bỏ dấu # ở dòng dưới và dán link RSS của bạn vào.
+# ---------------------------------------------------------------------
+x_rss:
+  # - { name: "X @CryptoWendyO", url: "https://rss.app/feeds/XXXXXXXX.xml" }

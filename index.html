@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trạm Podcast Crypto</title>
+<meta name="theme-color" content="#FFC83D">
+<link rel="icon" href="cover.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cheese:#FFC83D; --cheese-2:#FFE08A; --crust:#E8892B; --cream:#FFF8E8;
+    --ink:#3A2716; --ink-2:#7A6450; --line:#F0DFC0; --card:#FFFFFF;
+    --c-law:#7B5CFF; --c-macro:#2F80ED; --c-flow:#12A06B; --c-proj:#E8892B; --c-sec:#E5484D; --c-mkt:#B0730E;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--cream);color:var(--ink);font-family:"Be Vietnam Pro",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  body{padding-bottom:150px}
+  a{color:inherit}
+  .wrap{max-width:760px;margin:0 auto;padding:0 18px}
+  header{padding:26px 0 8px;display:flex;align-items:center;gap:14px}
+  header img{width:58px;height:58px;border-radius:16px;box-shadow:0 4px 0 var(--crust)}
+  header h1{font-size:22px;margin:0;font-weight:800;letter-spacing:-.3px}
+  header p{margin:2px 0 0;color:var(--ink-2);font-size:13.5px}
+  .feed{margin-left:auto;font-size:12.5px;font-weight:600;text-decoration:none;background:#fff;border:1.5px solid var(--line);padding:7px 11px;border-radius:999px;white-space:nowrap}
+
+  .hero{margin-top:18px;background:var(--cheese);border-radius:24px;padding:22px;position:relative;overflow:hidden;box-shadow:0 6px 0 var(--crust)}
+  .hero:after{content:"";position:absolute;right:-30px;top:-30px;width:150px;height:150px;border-radius:50%;
+    background:radial-gradient(circle at 40% 40%,rgba(255,255,255,.55) 0 12px,transparent 13px),radial-gradient(circle at 70% 65%,rgba(255,255,255,.4) 0 18px,transparent 19px),radial-gradient(circle at 30% 80%,rgba(255,255,255,.35) 0 9px,transparent 10px)}
+  .eyebrow{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.75}
+  .hero h2{margin:6px 0 8px;font-size:23px;line-height:1.25;font-weight:800;max-width:92%}
+  .hero p{margin:0;font-size:15px;line-height:1.55}
+  .mood{margin-top:12px;background:rgba(255,255,255,.55);border-radius:14px;padding:10px 12px;font-size:14px;line-height:1.5}
+  .mood b{font-weight:700}
+  .hero .acts{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+  .btn{border:0;cursor:pointer;font:inherit;font-weight:700;border-radius:999px;padding:12px 20px;font-size:15px}
+  .btn.dark{background:var(--ink);color:var(--cheese)}
+  .btn.light{background:rgba(255,255,255,.7);color:var(--ink);text-decoration:none;display:inline-flex;align-items:center}
+
+  .tabs{display:flex;gap:6px;margin:26px 0 14px;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:5px;width:max-content}
+  .tabs button{border:0;background:none;font:inherit;font-weight:600;font-size:14px;padding:8px 16px;border-radius:999px;cursor:pointer;color:var(--ink-2)}
+  .tabs button.on{background:var(--ink);color:#fff}
+
+  .story{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:16px 16px 14px;margin-bottom:12px}
+  .story .top{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+  .chip{font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:999px;color:#fff}
+  .dots{display:flex;gap:3px}
+  .dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
+  .dots i.f{background:var(--crust)}
+  .tick{font-size:11.5px;font-weight:700;color:var(--ink-2);background:var(--cream);padding:3px 7px;border-radius:6px}
+  .story h3{margin:0 0 6px;font-size:16.5px;line-height:1.4}
+  .story p{margin:0;font-size:14.5px;line-height:1.6;color:#4d3a28}
+  .why{margin-top:10px;background:#FFF6DA;border-left:3px solid var(--cheese);padding:8px 11px;border-radius:0 10px 10px 0;font-size:14px;line-height:1.55}
+  .why b{color:var(--crust)}
+  .srcs{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+  .srcs a{font-size:12px;color:var(--ink-2);text-decoration:none;border:1px solid var(--line);padding:3px 9px;border-radius:999px}
+  .srcs a:hover{border-color:var(--crust);color:var(--crust)}
+  .script{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:18px;font-size:15px;line-height:1.75;white-space:pre-wrap}
+
+  h4.sec{margin:34px 0 12px;font-size:15px;font-weight:800}
+  .ep{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;cursor:pointer;border:1.5px solid transparent}
+  .ep:hover{background:#fff;border-color:var(--line)}
+  .ep.cur{background:#fff;border-color:var(--cheese)}
+  .ep .pl{flex:0 0 38px;height:38px;border-radius:50%;background:var(--cheese-2);display:grid;place-items:center;font-size:13px}
+  .ep .t{font-weight:600;font-size:14.5px;line-height:1.35}
+  .ep .m{font-size:12.5px;color:var(--ink-2);margin-top:2px}
+  .empty{padding:60px 20px;text-align:center;color:var(--ink-2)}
+
+  /* thanh phát cố định */
+  .player{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:12px 16px calc(12px + env(safe-area-inset-bottom));z-index:9}
+  .player .in{max-width:760px;margin:0 auto}
+  .pt{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.9}
+  .bar{height:6px;background:rgba(255,255,255,.18);border-radius:9px;margin:10px 0 6px;cursor:pointer;position:relative}
+  .bar span{position:absolute;inset:0 auto 0 0;background:var(--cheese);border-radius:9px;width:0}
+  .ctl{display:flex;align-items:center;gap:8px}
+  .ctl .time{font-size:12px;opacity:.7;font-variant-numeric:tabular-nums;min-width:92px}
+  .ctl .mid{display:flex;gap:6px;align-items:center;margin:0 auto}
+  .ic{background:rgba(255,255,255,.1);border:0;color:#fff;font:inherit;font-weight:700;font-size:12px;height:38px;min-width:38px;border-radius:999px;cursor:pointer;padding:0 10px}
+  .big{background:var(--cheese);color:var(--ink);height:46px;width:46px;font-size:17px}
+  .spd{min-width:56px}
+  @media (max-width:520px){ .hero h2{font-size:20px} .ctl .time{min-width:0;font-size:11px} .feed{display:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="cover.svg" alt="">
+    <div>
+      <h1 id="podName">Trạm Podcast Crypto</h1>
+      <p id="podSub">Tin crypto chọn lọc cho nhà đầu tư · mỗi ngày 2 tập</p>
+    </div>
+    <a class="feed" id="feedLink" href="feed.xml" hidden>📡 Feed podcast</a>
+  </header>
+  <main id="app"><div class="empty">Đang tải… 🎙️</div></main>
+</div>
+
+<div class="player" id="player" hidden>
+  <div class="in">
+    <div class="pt" id="pTitle"></div>
+    <div class="bar" id="bar"><span id="fill"></span></div>
+    <div class="ctl">
+      <div class="time" id="pTime">0:00 / 0:00</div>
+      <div class="mid">
+        <button class="ic" id="back" aria-label="Lùi 15 giây">−15</button>
+        <button class="ic big" id="play" aria-label="Phát">▶</button>
+        <button class="ic" id="fwd" aria-label="Tới 15 giây">+15</button>
+      </div>
+      <button class="ic spd" id="speed">1×</button>
+    </div>
+  </div>
+</div>
+<audio id="audio" preload="metadata"></audio>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const store = {
+  get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+};
+const CAT = {"Pháp lý":"--c-law","Vĩ mô & Chính trị":"--c-macro","Dòng tiền & ETF":"--c-flow","Dự án":"--c-proj","Bảo mật":"--c-sec","Thị trường":"--c-mkt"};
+const fmt = s => { s = Math.max(0, Math.floor(s||0)); return Math.floor(s/60) + ":" + String(s%60).padStart(2,"0"); };
+const dateLabel = iso => { const d = new Date(iso); const h = d.getHours();
+  const buoi = h < 11 ? "Sáng" : h < 14 ? "Trưa" : h < 18 ? "Chiều" : "Tối";
+  return `${buoi} ${d.toLocaleDateString("vi-VN",{weekday:"long", day:"numeric", month:"numeric"})}`; };
+
+let EPS = [], cur = null, tab = "stories";
+const audio = $("#audio");
+const SPEEDS = [1, 1.15, 1.3, 1.5, 0.9];
+
+async function init(){
+  try {
+    const meta = await fetch("meta.json", {cache:"no-store"}).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+    if (meta.name){ $("#podName").textContent = meta.name; document.title = meta.name; }
+    if (meta.host) $("#podSub").textContent = `Tin crypto chọn lọc cho nhà đầu tư · MC ${meta.host}`;
+    if (meta.feed) $("#feedLink").hidden = false;
+    EPS = await fetch("episodes.json", {cache:"no-store"}).then(r => r.json());
+  } catch(e){ EPS = []; }
+  if (!EPS.length){ $("#app").innerHTML = `<div class="empty">Chưa có tập nào. Tập đầu tiên sẽ lên sóng sau lần chạy tự động kế tiếp nha 🎙️</div>`; return; }
+  const want = location.hash.slice(1);
+  select(EPS.find(e => e.id === want) || EPS[0], false);
+}
+
+function select(ep, autoplay){
+  const sameAudio = cur && cur.id === ep.id;
+  cur = ep; history.replaceState(null, "", "#" + ep.id);
+  if (!sameAudio){
+    audio.src = ep.audio;
+    const pos = store.get("pos:" + ep.id);
+    audio.addEventListener("loadedmetadata", () => { if (pos && pos < audio.duration - 5) audio.currentTime = pos; }, {once:true});
+    audio.playbackRate = store.get("speed") || 1;
+    $("#player").hidden = false;
+    $("#pTitle").textContent = ep.title;
+    if ("mediaSession" in navigator){
+      navigator.mediaSession.metadata = new MediaMetadata({title: ep.title, artist: $("#podName").textContent,
+        artwork:[{src:"cover.png", sizes:"512x512", type:"image/png"}]});
+    }
+  }
+  render();
+  if (autoplay) audio.play();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function render(){
+  const ep = cur;
+  const stories = (ep.stories||[]).map(s => {
+    const color = `var(${CAT[s.category] || "--c-mkt"})`;
+    const imp = Math.max(1, Math.min(5, +s.importance || 3));
+    return `<article class="story">
+      <div class="top">
+        <span class="chip" style="background:${color}">${esc(s.category)}</span>
+        <span class="dots" title="Mức độ quan trọng ${imp}/5">${[1,2,3,4,5].map(i => `<i class="${i<=imp?"f":""}"></i>`).join("")}</span>
+        ${(s.tickers||[]).slice(0,4).map(t => `<span class="tick">$${esc(String(t).replace(/^\$/,""))}</span>`).join("")}
+      </div>
+      <h3>${esc(s.headline)}</h3>
+      <p>${esc(s.detail)}</p>
+      ${s.why_it_matters ? `<div class="why"><b>Investor cần biết:</b> ${esc(s.why_it_matters)}</div>` : ""}
+      ${(s.sources||[]).length ? `<div class="srcs">${s.sources.map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.name)} ↗</a>`).join("")}</div>` : ""}
+    </article>`;
+  }).join("");
+
+  $("#app").innerHTML = `
+    <section class="hero">
+      <div class="eyebrow">${esc(dateLabel(ep.date))} · ${Math.round(ep.duration/60)} phút · ${(ep.stories||[]).length} tin</div>
+      <h2>${esc(ep.title)}</h2>
+      <p>${esc(ep.summary)}</p>
+      ${ep.mood ? `<div class="mood"><b>Tâm lý thị trường:</b> ${esc(ep.mood)}</div>` : ""}
+      <div class="acts">
+        <button class="btn dark" id="heroPlay">${!audio.paused ? "❚❚ Tạm dừng" : "▶ Nghe tập này"}</button>
+        <a class="btn light" href="${esc(ep.audio)}" download>⬇ Tải MP3</a>
+      </div>
+    </section>
+    <div class="tabs">
+      <button data-t="stories" class="${tab==="stories"?"on":""}">Tin trong tập</button>
+      <button data-t="script" class="${tab==="script"?"on":""}">Lời thoại</button>
+    </div>
+    <div id="tabBody">${tab === "stories" ? stories : `<div class="script">${esc(ep.script)}</div>`}</div>
+    <h4 class="sec">Các tập trước</h4>
+    <div>${EPS.map(e => `<div class="ep ${e.id===ep.id?"cur":""}" data-id="${esc(e.id)}">
+        <div class="pl">${e.id===ep.id && !audio.paused ? "❚❚" : "▶"}</div>
+        <div><div class="t">${esc(e.title)}</div><div class="m">${esc(dateLabel(e.date))} · ${Math.round(e.duration/60)} phút</div></div>
+      </div>`).join("")}</div>`;
+
+  $("#heroPlay").onclick = toggle;
+  document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => { tab = b.dataset.t; render(); });
+  document.querySelectorAll(".ep").forEach(el => el.onclick = () => {
+    const e = EPS.find(x => x.id === el.dataset.id);
+    if (e.id === cur.id) toggle(); else select(e, true);
+  });
+}
+
+function toggle(){ audio.paused ? audio.play() : audio.pause(); }
+function syncButtons(){
+  $("#play").textContent = audio.paused ? "▶" : "❚❚";
+  const hp = $("#heroPlay"); if (hp) hp.textContent = audio.paused ? "▶ Nghe tập này" : "❚❚ Tạm dừng";
+  document.querySelectorAll(".ep").forEach(el => el.querySelector(".pl").textContent = (el.dataset.id === cur?.id && !audio.paused) ? "❚❚" : "▶");
+}
+
+$("#play").onclick = toggle;
+$("#back").onclick = () => audio.currentTime -= 15;
+$("#fwd").onclick = () => audio.currentTime += 15;
+$("#speed").onclick = () => {
+  const i = (SPEEDS.indexOf(audio.playbackRate) + 1) % SPEEDS.length;
+  audio.playbackRate = SPEEDS[i]; store.set("speed", SPEEDS[i]);
+};
+$("#bar").onclick = e => { const r = e.currentTarget.getBoundingClientRect(); if (audio.duration) audio.currentTime = (e.clientX - r.left) / r.width * audio.duration; };
+audio.addEventListener("ratechange", () => $("#speed").textContent = audio.playbackRate + "×");
+audio.addEventListener("play", syncButtons);
+audio.addEventListener("pause", syncButtons);
+audio.addEventListener("timeupdate", () => {
+  $("#fill").style.width = (audio.currentTime / (audio.duration || 1) * 100) + "%";
+  $("#pTime").textContent = `${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;
+  if (cur && Math.floor(audio.currentTime) % 5 === 0) store.set("pos:" + cur.id, audio.currentTime);
+});
+audio.addEventListener("ended", () => {
+  if (cur) store.set("pos:" + cur.id, 0);
+  const i = EPS.findIndex(e => e.id === cur.id);   // tự phát tập cũ hơn kế tiếp
+  if (i >= 0 && i < EPS.length - 1) select(EPS[i + 1], true);
+});
+if ("mediaSession" in navigator){
+  navigator.mediaSession.setActionHandler("seekbackward", () => audio.currentTime -= 15);
+  navigator.mediaSession.setActionHandler("seekforward", () => audio.currentTime += 15);
+}
+init();
+</script>
+</body>
+</html>

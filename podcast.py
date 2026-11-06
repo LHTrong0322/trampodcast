@@ -1,0 +1,610 @@
+#!/usr/bin/env python3
+"""
+Trạm Podcast Crypto — tự động gom tin crypto, lọc tin có giá trị cho investor,
+dịch sang tiếng Việt, viết kịch bản podcast và đọc thành audio (Gemini TTS).
+
+Chạy:  python scripts/podcast.py --out public
+Biến môi trường:
+  GEMINI_API_KEY        (bắt buộc)  key lấy ở aistudio.google.com
+  TELEGRAM_BOT_TOKEN    (tuỳ chọn)  gửi tập mới vào Telegram
+  TELEGRAM_CHAT_ID      (tuỳ chọn)
+  SITE_URL              (tuỳ chọn)  vd https://tram-podcast-crypto.pages.dev  (để tạo feed podcast)
+"""
+from __future__ import annotations
+
+import argparse
+import base64
+import hashlib
+import html
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+import time
+import wave
+from datetime import datetime, timedelta, timezone
+from email.utils import format_datetime
+from pathlib import Path
+
+import feedparser
+import requests
+import yaml
+from bs4 import BeautifulSoup
+
+_HERE = Path(__file__).resolve().parent
+# Hỗ trợ cả 2 kiểu: mọi file nằm chung 1 chỗ, hoặc podcast.py nằm trong thư mục scripts/
+ROOT = _HERE if (_HERE / "sources.yaml").exists() else _HERE.parent
+VN_TZ = timezone(timedelta(hours=7))
+UA = "Mozilla/5.0 (compatible; TramPodcastCrypto/1.0; +podcast-bot)"
+GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models"
+SAMPLE_RATE = 24000  # Gemini TTS trả PCM 16-bit mono 24kHz
+
+
+def log(*a):
+    print(*a, flush=True)
+
+
+# ---------------------------------------------------------------------------
+# 1. GOM TIN
+# ---------------------------------------------------------------------------
+def clean_text(s: str, limit: int = 900) -> str:
+    s = BeautifulSoup(s or "", "html.parser").get_text(" ")
+    s = re.sub(r"\s+", " ", s).strip()
+    return s[:limit]
+
+
+def item_id(*parts: str) -> str:
+    return hashlib.sha1("|".join(parts).encode()).hexdigest()[:16]
+
+
+def parse_telegram_html(channel: str, page: str) -> list[dict]:
+    soup = BeautifulSoup(page, "html.parser")
+    out = []
+    for msg in soup.select("div.tgme_widget_message[data-post]"):
+        post = msg.get("data-post", "")
+        body = msg.select_one(".tgme_widget_message_text")
+        t = msg.select_one("time[datetime]")
+        if not body or not t:
+            continue
+        # giữ xuống dòng giữa các đoạn
+        for br in body.find_all("br"):
+            br.replace_with("\n")
+        text = re.sub(r"[ \t]+", " ", body.get_text()).strip()
+        if len(text) < 25:
+            continue
+        try:
+            ts = datetime.fromisoformat(t["datetime"].replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        links = [a["href"] for a in body.select("a[href]") if a["href"].startswith("http")]
+        out.append({
+            "id": item_id("tg", post),
+            "source": f"Telegram @{channel}",
+            "title": text.split("\n")[0][:160],
+            "text": text[:1200],
+            "url": f"https://t.me/{post}",
+            "ext_links": links[:3],
+            "time": ts,
+        })
+    return out
+
+
+def fetch_telegram(channel: str) -> list[dict]:
+    r = requests.get(f"https://t.me/s/{channel}", headers={"User-Agent": UA}, timeout=25)
+    r.raise_for_status()
+    items = parse_telegram_html(channel, r.text)
+    if not items:
+        log(f"   ! @{channel}: không đọc được bài nào (kênh private hoặc tắt preview?)")
+    return items
+
+
+def parse_rss(name: str, raw: bytes) -> list[dict]:
+    feed = feedparser.parse(raw)
+    out = []
+    for e in feed.entries[:40]:
+        tm = e.get("published_parsed") or e.get("updated_parsed")
+        if not tm:
+            continue
+        ts = datetime(*tm[:6], tzinfo=timezone.utc)
+        link = e.get("link", "")
+        title = clean_text(e.get("title", ""), 200)
+        summary = clean_text(e.get("summary", "") or e.get("description", ""), 700)
+        out.append({
+            "id": item_id("rss", link or title),
+            "source": name,
+            "title": title,
+            "text": f"{title}. {summary}",
+            "url": link,
+            "ext_links": [],
+            "time": ts,
+        })
+    return out
+
+
+def fetch_rss(name: str, url: str) -> list[dict]:
+    r = requests.get(url, headers={"User-Agent": UA}, timeout=25)
+    r.raise_for_status()
+    return parse_rss(name, r.content)
+
+
+def userbot_fetch_all(channels: list, since: datetime) -> dict:
+    """Đọc kênh Telegram bằng tài khoản của bạn (Telethon). Đọc được cả kênh private
+    và kênh tắt web preview, miễn là tài khoản đã tham gia kênh.
+    Trả về {kênh: [items]} hoặc {} nếu chưa cấu hình."""
+    api_id, api_hash, sess = (os.getenv("TG_API_ID"), os.getenv("TG_API_HASH"),
+                              os.getenv("TG_SESSION"))
+    if not (api_id and api_hash and sess):
+        return {}
+    try:
+        from telethon.sync import TelegramClient
+        from telethon.sessions import StringSession
+    except ImportError:
+        log("   ! Chưa cài telethon — dùng chế độ đọc web preview")
+        return {}
+    result = {}
+    try:
+        with TelegramClient(StringSession(sess), int(api_id), api_hash) as client:
+            for ch in channels:
+                key = str(ch)
+                try:
+                    entity = client.get_entity(int(ch) if str(ch).lstrip("-").isdigit() else ch)
+                    uname = getattr(entity, "username", None)
+                    title = getattr(entity, "title", key)
+                    items = []
+                    for m in client.iter_messages(entity, limit=80):
+                        if m.date < since:
+                            break
+                        text = (m.message or "").strip()
+                        if len(text) < 25:
+                            continue
+                        post = f"{uname}/{m.id}" if uname else f"c/{entity.id}/{m.id}"
+                        items.append({
+                            "id": item_id("tg", post),
+                            "source": f"Telegram @{uname}" if uname else f"Telegram {title}",
+                            "title": text.split("\n")[0][:160],
+                            "text": text[:1200],
+                            "url": f"https://t.me/{post}",
+                            "ext_links": [],
+                            "time": m.date,
+                        })
+                    result[key] = items
+                except Exception as ex:
+                    log(f"   ! userbot không đọc được {key}: {ex}")
+    except Exception as ex:
+        log(f"   ! Đăng nhập userbot lỗi ({ex}) — dùng chế độ đọc web preview")
+    return result
+
+
+def collect(cfg: dict, since: datetime, seen: set[str]) -> list[dict]:
+    tg_channels = cfg.get("telegram") or []
+    via_userbot = userbot_fetch_all(tg_channels, since)
+    if via_userbot:
+        log(f"   (Đọc Telegram bằng tài khoản userbot: {len(via_userbot)}/{len(tg_channels)} kênh)")
+    jobs = [("tg", str(c), None) for c in tg_channels]
+    jobs += [("rss", s["name"], s["url"]) for s in (cfg.get("rss") or [])]
+    jobs += [("rss", s["name"], s["url"]) for s in (cfg.get("x_rss") or [])]
+    all_items = []
+    for kind, name, url in jobs:
+        try:
+            if kind == "tg" and name in via_userbot:
+                items = via_userbot[name]
+            elif kind == "tg":
+                items = fetch_telegram(name)  # dự phòng: đọc t.me/s/
+            else:
+                items = fetch_rss(name, url)
+        except Exception as ex:  # một nguồn lỗi không làm hỏng cả tập
+            log(f"   ✗ {name}: {ex}")
+            continue
+        fresh = [i for i in items if i["time"] >= since and i["id"] not in seen]
+        for i in fresh:
+            seen.add(i["id"])  # chống trùng giữa các nguồn trong cùng lần chạy
+        log(f"   ✓ {name}: {len(items)} bài, {len(fresh)} bài mới")
+        all_items += fresh
+    all_items.sort(key=lambda i: i["time"], reverse=True)
+    return all_items[:160]  # giới hạn để prompt không quá dài
+
+
+# ---------------------------------------------------------------------------
+# 2. GEMINI
+# ---------------------------------------------------------------------------
+class Gemini:
+    def __init__(self, key: str):
+        self.key = key
+        self.dead: set[str] = set()  # model đã lỗi trong lần chạy này → bỏ qua luôn
+
+    def _post(self, model: str, body: dict, timeout=240) -> dict:
+        url = f"{GEMINI_BASE}/{model}:generateContent"
+        for attempt in range(3):
+            r = requests.post(url, json=body, timeout=timeout,
+                              headers={"x-goog-api-key": self.key})
+            if r.status_code == 429 or r.status_code >= 500:
+                wait = 30 * (attempt + 1)
+                log(f"   … {model} bận ({r.status_code}), đợi {wait}s")
+                time.sleep(wait)
+                continue
+            if r.status_code != 200:
+                raise RuntimeError(f"{model} HTTP {r.status_code}: {r.text[:300]}")
+            return r.json()
+        raise RuntimeError(f"{model}: hết lượt thử (rate limit)")
+
+    def _try_models(self, models: list[str], fn):
+        last = None
+        for m in [m for m in models if m not in self.dead] or models:
+            try:
+                return fn(m)
+            except Exception as ex:
+                last = ex
+                if "quá ngắn" not in str(ex):
+                    self.dead.add(m)
+                log(f"   ! model {m} lỗi: {str(ex)[:200]} → thử model kế tiếp")
+        raise RuntimeError(f"Tất cả model đều lỗi. Lỗi cuối: {last}")
+
+    def text(self, models, system: str, prompt: str, json_mode=False) -> str:
+        def call(m):
+            cfg = {"temperature": 1.0}
+            if json_mode:
+                cfg["responseMimeType"] = "application/json"
+            data = self._post(m, {
+                "systemInstruction": {"parts": [{"text": system}]},
+                "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+                "generationConfig": cfg,
+            })
+            parts = data["candidates"][0]["content"]["parts"]
+            out = "".join(p.get("text", "") for p in parts if not p.get("thought"))
+            if not out.strip():
+                raise RuntimeError("model trả về rỗng")
+            return out
+        return self._try_models(models, call)
+
+    def tts(self, models, voice: str, style: str, text: str) -> bytes:
+        prompt = (
+            "# AUDIO PROFILE\n" + style.strip() + "\n\n"
+            "# DIRECTOR'S NOTES\nRead ONLY the transcript below, in Vietnamese, word for word. "
+            "Do not read these notes or any headings aloud.\n\n"
+            "# TRANSCRIPT\n" + text.strip()
+        )
+
+        def call(m):
+            data = self._post(m, {
+                "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+                "generationConfig": {
+                    "responseModalities": ["AUDIO"],
+                    "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice}}},
+                },
+            }, timeout=300)
+            pcm = b""
+            for p in data["candidates"][0]["content"]["parts"]:
+                if "inlineData" in p:
+                    pcm += base64.b64decode(p["inlineData"]["data"])
+            # kiểm tra audio có độ dài hợp lý (≥ ~40% thời lượng ước tính)
+            expected_sec = len(text) / 16
+            got_sec = len(pcm) / (SAMPLE_RATE * 2)
+            if got_sec < max(2, expected_sec * 0.4):
+                raise RuntimeError(f"audio quá ngắn ({got_sec:.0f}s / ước tính {expected_sec:.0f}s)")
+            return pcm
+        return self._try_models(models, call)
+
+
+EDITOR_SYSTEM = """Bạn là tổng biên tập một bản tin crypto tiếng Việt dành cho NHÀ ĐẦU TƯ.
+Nhiệm vụ: từ danh sách tin thô (tiếng Anh/Việt, nhiều nguồn, có trùng lặp), chọn ra những tin
+có GIÁ TRỊ THỰC cho investor, gộp các tin trùng nhau, rồi tóm tắt bằng tiếng Việt.
+
+ƯU TIÊN (giá trị cao):
+- Pháp lý & chính sách: SEC, CFTC, luật stablecoin/market structure, thuế, cấp phép sàn,
+  chính sách crypto của Việt Nam và châu Á, các vụ kiện/phán quyết.
+- Vĩ mô & chính trị có tác động thị trường: Fed/lãi suất, CPI, thuế quan, động thái chính phủ,
+  quỹ dự trữ BTC quốc gia.
+- Dòng tiền tổ chức: ETF flows, quỹ/doanh nghiệp mua bán BTC/ETH, treasury companies.
+- Dự án: mainnet/upgrade, TGE, airdrop, token unlock lớn, listing/delisting sàn lớn,
+  gọi vốn, M&A, buyback, thay đổi tokenomics, partnership THỰC CHẤT.
+- Bảo mật: hack, exploit, depeg, sự cố sàn — kèm số tiền thiệt hại.
+- On-chain/thị trường: biến động giá lớn KÈM nguyên nhân, liquidation lớn, cá voi.
+
+LOẠI BỎ: quảng cáo, giveaway, shill, kêu gọi mua bán, tin giá thuần tuý không có nguyên nhân,
+dự đoán giá vô căn cứ, tin rác, tin lặp lại, meme.
+
+QUY TẮC DỊCH:
+- Tiếng Việt tự nhiên, ngắn gọn, chính xác. GIỮ NGUYÊN thuật ngữ chuyên ngành tiếng Anh
+  (ETF, staking, airdrop, TVL, unlock, mainnet, stablecoin, liquidation, L2, restaking, DEX, perp...).
+- Giữ nguyên tên riêng, ticker ($BTC, $ETH...), con số, ngày tháng. Không bịa thêm thông tin
+  không có trong tin gốc. Nếu tin chưa xác nhận thì ghi rõ "chưa xác nhận"."""
+
+EDITOR_PROMPT = """Danh sách tin thô (mỗi tin có số [id]):
+
+{items}
+
+Hãy chọn tối đa {max_stories} tin giá trị nhất, sắp theo mức độ quan trọng giảm dần.
+Trả về DUY NHẤT JSON đúng cấu trúc:
+{{
+  "episode_title": "tiêu đề tập, ngắn, hấp dẫn, nêu 1-2 tin nóng nhất",
+  "summary": "tóm tắt cả tập trong 2 câu",
+  "market_mood": "1 câu nhận định tâm lý thị trường dựa trên các tin",
+  "stories": [
+    {{
+      "headline": "tiêu đề tiếng Việt",
+      "category": "Pháp lý | Vĩ mô & Chính trị | Dòng tiền & ETF | Dự án | Bảo mật | Thị trường",
+      "importance": 1-5,
+      "detail": "2-4 câu tóm tắt nội dung chính, có số liệu",
+      "why_it_matters": "1-2 câu: tin này ảnh hưởng gì tới nhà đầu tư",
+      "tickers": ["BTC"],
+      "source_ids": [số id của các tin gốc liên quan]
+    }}
+  ]
+}}
+Nếu không có tin nào đáng giá, trả về "stories": []."""
+
+SCRIPT_SYSTEM = """Bạn là biên kịch cho podcast tin tức crypto tiếng Việt "{name}".
+MC là {host}: cô gái trẻ Sài Gòn, dễ thương, nhí nhảnh, hay cười, nói chuyện như kể chuyện
+cho bạn thân nghe — nhưng thông tin phải chính xác và rõ ràng. {host} xưng "{host_short}",
+gọi người nghe là "cả nhà".
+
+YÊU CẦU KỊCH BẢN (văn NÓI, sẽ được đọc bằng máy):
+- Chỉ viết lời thoại thuần. KHÔNG markdown, KHÔNG emoji, KHÔNG gạch đầu dòng, KHÔNG link,
+  KHÔNG ký hiệu như *, #, (), [], /.
+- Viết số theo cách đọc tự nhiên: "1,2 tỷ đô", "giảm 8 phần trăm", "ngày 7 tháng 11".
+  Ticker đọc là tên coin: $BTC → Bitcoin, $ETH → Ethereum, $SOL → Solana.
+- Giữ thuật ngữ tiếng Anh quen thuộc (ETF, airdrop, staking, unlock, mainnet...).
+- Cấu trúc: chào mở đầu dễ thương (nhắc buổi {session} ngày {date}) → điểm nhanh 2-3 tin nóng
+  nhất → đi lần lượt từng tin, mỗi tin: chuyện gì xảy ra + vì sao nhà đầu tư cần quan tâm,
+  có câu chuyển ý tự nhiên → chốt lại tâm lý thị trường → nhắc "đây không phải lời khuyên
+  đầu tư, cả nhà tự nghiên cứu kỹ nha" → chào tạm biệt đáng yêu.
+- Có thể chêm cảm thán dễ thương vừa phải (ui, nha, nè, á, hihi), không lạm dụng.
+- Độ dài khoảng {words} từ. Mỗi tin là MỘT đoạn văn, các đoạn cách nhau bằng một dòng trống."""
+
+
+def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: datetime):
+    pc, models = cfg["podcast"], cfg["models"]
+    listing = "\n\n".join(
+        f"[{n}] ({it['source']}, {it['time'].astimezone(VN_TZ):%d/%m %H:%M}) {it['text']}"
+        for n, it in enumerate(items)
+    )
+    raw = gem.text(models["text"], EDITOR_SYSTEM,
+                   EDITOR_PROMPT.format(items=listing, max_stories=pc.get("max_stories", 12)),
+                   json_mode=True)
+    raw = re.sub(r"^```(?:json)?|```$", "", raw.strip(), flags=re.M)
+    ed = json.loads(raw)
+    stories = ed.get("stories") or []
+    for s in stories:
+        ids = [i for i in s.get("source_ids", []) if isinstance(i, int) and 0 <= i < len(items)]
+        s["sources"] = [{"name": items[i]["source"], "url": items[i]["url"]} for i in ids][:4]
+        s.pop("source_ids", None)
+    if not stories:
+        return ed, [], ""
+
+    session = "sáng" if now_vn.hour < 11 else ("trưa" if now_vn.hour < 14 else
+                                               ("chiều" if now_vn.hour < 18 else "tối"))
+    host = pc.get("host_name", "Bé Mai")
+    system = SCRIPT_SYSTEM.format(
+        name=pc["name"], host=host, host_short=host.split()[-1], session=session,
+        date=f"{now_vn.day} tháng {now_vn.month}", words=int(pc.get("target_minutes", 7) * 165))
+    brief = json.dumps({k: ed.get(k) for k in ("episode_title", "market_mood")} |
+                       {"stories": [{k: s.get(k) for k in
+                                     ("headline", "category", "detail", "why_it_matters", "tickers")}
+                                    for s in stories]}, ensure_ascii=False, indent=1)
+    script = gem.text(models["text"], system, "Viết kịch bản từ bản tin sau:\n" + brief)
+    script = sanitize_script(script)
+    return ed, stories, script
+
+
+def sanitize_script(s: str) -> str:
+    s = re.sub(r"https?://\S+", "", s)
+    s = re.sub(r"[*#_`>\[\]{}|~]", "", s)
+    s = re.sub(r"^\s*[-•]\s*", "", s, flags=re.M)
+    s = re.sub(r"\n{3,}", "\n\n", s)
+    return s.strip()
+
+
+def chunk_script(s: str, max_chars=1800) -> list[str]:
+    chunks, cur = [], ""
+    for para in [p.strip() for p in s.split("\n\n") if p.strip()]:
+        if len(para) > max_chars:  # đoạn quá dài → cắt theo câu
+            sentences = re.split(r"(?<=[.!?…])\s+", para)
+        else:
+            sentences = [para]
+        for piece in sentences:
+            sep = "\n\n" if cur and piece is para else " "
+            if cur and len(cur) + len(piece) + 2 > max_chars:
+                chunks.append(cur.strip())
+                cur = piece
+            else:
+                cur = f"{cur}{sep}{piece}" if cur else piece
+    if cur.strip():
+        chunks.append(cur.strip())
+    return chunks
+
+
+# ---------------------------------------------------------------------------
+# 3. AUDIO
+# ---------------------------------------------------------------------------
+def synthesize(gem: Gemini, cfg: dict, script: str, mp3_path: Path) -> float:
+    pc = cfg["podcast"]
+    chunks = chunk_script(script)
+    log(f"   Đọc {len(chunks)} đoạn bằng giọng {pc.get('voice')}")
+    silence = b"\x00\x00" * int(SAMPLE_RATE * 0.5)
+    pcm = b""
+    for n, ch in enumerate(chunks, 1):
+        log(f"   ♪ đoạn {n}/{len(chunks)} ({len(ch)} ký tự)")
+        pcm += gem.tts(cfg["models"]["tts"], pc.get("voice", "Leda"), pc.get("voice_style", ""), ch)
+        pcm += silence
+        if n < len(chunks):
+            time.sleep(4)  # nhẹ tay với rate limit gói free
+    wav_path = mp3_path.with_suffix(".wav")
+    with wave.open(str(wav_path), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(SAMPLE_RATE)
+        w.writeframes(pcm)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(wav_path),
+                    "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-ac", "1", "-ar", "44100",
+                    "-codec:a", "libmp3lame", "-b:a", "80k", str(mp3_path)], check=True)
+    wav_path.unlink()
+    return len(pcm) / (SAMPLE_RATE * 2)
+
+
+# ---------------------------------------------------------------------------
+# 4. XUẤT BẢN: episodes.json, feed.xml, index.html, Telegram
+# ---------------------------------------------------------------------------
+def write_feed(out: Path, cfg: dict, episodes: list[dict], site_url: str):
+    if not site_url:
+        return
+    pc = cfg["podcast"]
+    base = site_url.rstrip("/")
+    esc = html.escape
+    items_xml = []
+    for e in episodes:
+        dt = datetime.fromisoformat(e["date"])
+        items_xml.append(f"""  <item>
+    <title>{esc(e['title'])}</title>
+    <description>{esc(e['summary'])}</description>
+    <guid isPermaLink="false">{e['id']}</guid>
+    <pubDate>{format_datetime(dt)}</pubDate>
+    <enclosure url="{base}/{e['audio']}" length="{e['size']}" type="audio/mpeg"/>
+    <itunes:duration>{int(e['duration'])}</itunes:duration>
+  </item>""")
+    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+<channel>
+  <title>{esc(pc['name'])}</title>
+  <link>{base}/</link>
+  <language>vi</language>
+  <description>Tin crypto chọn lọc cho nhà đầu tư, đọc bởi {esc(pc.get('host_name', ''))}.</description>
+  <itunes:author>{esc(pc.get('author', ''))}</itunes:author>
+  <itunes:image href="{base}/cover.png"/>
+  <itunes:explicit>false</itunes:explicit>
+{chr(10).join(items_xml)}
+</channel>
+</rss>
+"""
+    (out / "feed.xml").write_text(xml, encoding="utf-8")
+
+
+def send_telegram(mp3: Path, ep: dict, cfg: dict, site_url: str):
+    token, chat = os.getenv("TELEGRAM_BOT_TOKEN"), os.getenv("TELEGRAM_CHAT_ID")
+    if not token or not chat:
+        return
+    esc = html.escape
+    api = f"https://api.telegram.org/bot{token}"
+    caption = f"🎙️ <b>{esc(ep['title'])}</b>\n{esc(ep['summary'])}"
+    try:
+        with open(mp3, "rb") as f:
+            r = requests.post(f"{api}/sendAudio", timeout=120, data={
+                "chat_id": chat, "caption": caption[:1000], "parse_mode": "HTML",
+                "title": ep["title"][:60], "performer": cfg["podcast"].get("host_name", ""),
+                "duration": int(ep["duration"]),
+            }, files={"audio": (mp3.name, f, "audio/mpeg")})
+        r.raise_for_status()
+        lines = []
+        for n, s in enumerate(ep["stories"], 1):
+            src = " · ".join(f'<a href="{esc(x["url"])}">{esc(x["name"])}</a>' for x in s["sources"][:2])
+            lines.append(f"<b>{n}. {esc(s['headline'])}</b>\n{esc(s.get('why_it_matters', ''))}\n{src}")
+        msg = "\n\n".join(lines)
+        if site_url:
+            msg += f'\n\n🎧 <a href="{esc(site_url)}">Nghe trên web</a>'
+        requests.post(f"{api}/sendMessage", timeout=60, data={
+            "chat_id": chat, "text": msg[:4000], "parse_mode": "HTML",
+            "disable_web_page_preview": "true"}).raise_for_status()
+        log("   ✓ Đã gửi Telegram")
+    except Exception as ex:
+        log(f"   ! Gửi Telegram lỗi: {ex}")
+
+
+def publish_static(out: Path):
+    for name in ("index.html", "cover.png", "cover.svg"):
+        for src in (ROOT / "site" / name, ROOT / name):
+            if src.exists():
+                shutil.copy(src, out / name)
+                break
+
+
+# ---------------------------------------------------------------------------
+# MAIN
+# ---------------------------------------------------------------------------
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", default="public")
+    ap.add_argument("--config", default=str(ROOT / "sources.yaml"))
+    ap.add_argument("--hours", type=float, default=0, help="ép lấy tin trong N giờ gần nhất")
+    args = ap.parse_args()
+
+    cfg = yaml.safe_load(Path(args.config).read_text(encoding="utf-8"))
+    out = Path(args.out)
+    (out / "audio").mkdir(parents=True, exist_ok=True)
+    publish_static(out)
+
+    key = os.getenv("GEMINI_API_KEY")
+    if not key:
+        sys.exit("Thiếu GEMINI_API_KEY (thêm trong GitHub → Settings → Secrets → Actions)")
+    site_url = os.getenv("SITE_URL", "").strip()
+
+    state_path, eps_path = out / "state.json", out / "episodes.json"
+    state = json.loads(state_path.read_text()) if state_path.exists() else {}
+    episodes = json.loads(eps_path.read_text()) if eps_path.exists() else []
+    seen_list = state.get("seen", [])
+    seen = set(seen_list)
+
+    now = datetime.now(timezone.utc)
+    if args.hours:
+        since = now - timedelta(hours=args.hours)
+    elif state.get("last_run"):
+        since = max(datetime.fromisoformat(state["last_run"]) - timedelta(hours=1),
+                    now - timedelta(hours=24))
+    else:
+        since = now - timedelta(hours=12)
+    log(f"① Gom tin từ {since.astimezone(VN_TZ):%d/%m %H:%M} (giờ VN)")
+    items = collect(cfg, since, seen)
+    log(f"   Tổng: {len(items)} tin mới")
+    if len(items) < 3:
+        log("Quá ít tin mới — bỏ qua tập này.")
+        return
+
+    gem = Gemini(key)
+    now_vn = now.astimezone(VN_TZ)
+    log("② AI lọc tin, dịch và viết kịch bản")
+    ed, stories, script = build_episode_content(gem, cfg, items, now_vn)
+    if not stories:
+        log("Không có tin đủ giá trị — bỏ qua tập này.")
+        state.update(seen=(seen_list + [i["id"] for i in items])[-4000:], last_run=now.isoformat())
+        state_path.write_text(json.dumps(state))
+        return
+    log(f"   Chọn {len(stories)} tin · kịch bản {len(script.split())} từ")
+
+    ep_id = now_vn.strftime("%Y%m%d-%H%M")
+    mp3 = out / "audio" / f"{ep_id}.mp3"
+    log("③ Đọc thành audio")
+    duration = synthesize(gem, cfg, script, mp3)
+    log(f"   ✓ {mp3.name}: {duration/60:.1f} phút, {mp3.stat().st_size/1e6:.1f} MB")
+
+    ep = {
+        "id": ep_id,
+        "date": now_vn.isoformat(),
+        "title": ed.get("episode_title") or f"Bản tin {now_vn:%d/%m}",
+        "summary": ed.get("summary", ""),
+        "mood": ed.get("market_mood", ""),
+        "audio": f"audio/{mp3.name}",
+        "duration": round(duration),
+        "size": mp3.stat().st_size,
+        "stories": stories,
+        "script": script,
+    }
+    episodes.insert(0, ep)
+    keep = int(cfg["podcast"].get("keep_episodes", 40))
+    for old in episodes[keep:]:
+        (out / old["audio"]).unlink(missing_ok=True)
+    episodes = episodes[:keep]
+
+    log("④ Xuất bản")
+    eps_path.write_text(json.dumps(episodes, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_feed(out, cfg, episodes, site_url)
+    (out / "meta.json").write_text(json.dumps({
+        "name": cfg["podcast"]["name"], "host": cfg["podcast"].get("host_name", ""),
+        "feed": bool(site_url)}, ensure_ascii=False), encoding="utf-8")
+    state.update(seen=(seen_list + [i["id"] for i in items])[-4000:], last_run=now.isoformat())
+    state_path.write_text(json.dumps(state))
+    send_telegram(mp3, ep, cfg, site_url)
+    log("✓ Xong!")
+
+
+if __name__ == "__main__":
+    main()
