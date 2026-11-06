@@ -1,0 +1,70 @@
+name: Trạm Podcast Crypto — tạo tập podcast
+
+on:
+  schedule:
+    - cron: "47 23 * * *"
+    - cron: "47 11 * * *"
+  workflow_dispatch:
+    inputs:
+      hours:
+        description: "Lấy tin trong bao nhiêu giờ gần nhất (để trống = tự động)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: podcast
+  cancel-in-progress: false
+
+jobs:
+  episode:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lấy dữ liệu các tập cũ (nhánh podcast-data)
+        run: |
+          git clone --depth 1 --branch podcast-data \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" public \
+            || mkdir -p public
+          rm -rf public/.git
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cài thư viện
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+          pip install -q requests feedparser pyyaml beautifulsoup4 telethon
+
+      - name: Gom tin → AI biên tập → đọc audio
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TG_API_ID: ${{ secrets.TG_API_ID }}
+          TG_API_HASH: ${{ secrets.TG_API_HASH }}
+          TG_SESSION: ${{ secrets.TG_SESSION }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          SCRIPT=podcast.py
+          [ -f scripts/podcast.py ] && SCRIPT=scripts/podcast.py
+          if [ -n "${{ github.event.inputs.hours }}" ]; then
+            python "$SCRIPT" --out public --hours "${{ github.event.inputs.hours }}"
+          else
+            python "$SCRIPT" --out public
+          fi
+
+      - name: Lưu & xuất bản lên nhánh podcast-data
+        run: |
+          cd public
+          git init -q -b podcast-data
+          git config user.name "tram-podcast-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Cập nhật podcast $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -f -q "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" podcast-data
