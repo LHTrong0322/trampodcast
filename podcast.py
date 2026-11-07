@@ -420,7 +420,8 @@ YÊU CẦU KỊCH BẢN (văn NÓI, sẽ được đọc bằng máy):
   đầu tư, cả nhà tự nghiên cứu kỹ nha" → chào tạm biệt đáng yêu.
 - Dùng từ ngữ, tiểu từ đúng chất người {region} ({particles}), chêm cảm thán dễ thương
   vừa phải, không lạm dụng.
-- Độ dài BẮT BUỘC khoảng {words} từ, TUYỆT ĐỐI KHÔNG vượt quá {max_words} từ. Mỗi tin là MỘT đoạn văn, các đoạn cách nhau bằng một dòng trống."""
+- Độ dài BẮT BUỘC: cả kịch bản khoảng {chars} ký tự (đọc khoảng {minutes} phút),
+  TUYỆT ĐỐI KHÔNG vượt quá {max_chars} ký tự. Mỗi tin chỉ 2-4 câu ngắn gọn, đi thẳng vào ý chính. Mỗi tin là MỘT đoạn văn, các đoạn cách nhau bằng một dòng trống."""
 
 
 def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: datetime):
@@ -449,8 +450,8 @@ def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: dat
         name=pc["name"], host=host, host_short=host, session=session,
         region=pc.get("region", "Hà Nội"),
         particles=pc.get("particles", "nhé, nhỉ, đấy, ạ, ơi, ôi, hihi"),
-        date=f"{now_vn.day} tháng {now_vn.month}", words=int(pc.get("target_minutes", 7) * 165),
-        max_words=int(pc.get("target_minutes", 7) * 185))
+        date=f"{now_vn.day} tháng {now_vn.month}", minutes=pc.get("target_minutes", 7),
+        chars=int(pc.get("target_minutes", 7) * 850), max_chars=int(pc.get("target_minutes", 7) * 1000))
     brief = json.dumps({k: ed.get(k) for k in ("episode_title", "market_mood")} |
                        {"stories": [{k: s.get(k) for k in
                                      ("headline", "category", "detail", "why_it_matters", "tickers")}
@@ -468,7 +469,7 @@ def sanitize_script(s: str) -> str:
     return s.strip()
 
 
-def chunk_script(s: str, max_chars=2400) -> list[str]:
+def chunk_script(s: str, max_chars=4200) -> list[str]:
     chunks, cur = [], ""
     for para in [p.strip() for p in s.split("\n\n") if p.strip()]:
         if len(para) > max_chars:  # đoạn quá dài → cắt theo câu
@@ -745,7 +746,7 @@ def main():
         state.update(seen=(seen_list + [i["id"] for i in items])[-4000:], last_run=now.isoformat())
         state_path.write_text(json.dumps(state))
         return
-    log(f"   Chọn {len(stories)} tin · kịch bản {len(script.split())} từ")
+    log(f"   Chọn {len(stories)} tin · kịch bản {len(script)} ký tự (~{len(script) / 900:.1f} phút)")
 
     ep_id = now_vn.strftime("%Y%m%d-%H%M")
     mp3 = out / "audio" / f"{ep_id}.mp3"

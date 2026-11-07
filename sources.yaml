@@ -18,7 +18,7 @@ podcast:
   # Muốn chỉnh "diễn xuất" thì viết mô tả (tiếng Anh) vào giữa hai dấu ngoặc kép.
   voice_style: ""
   target_minutes: 7            # độ dài mong muốn mỗi tập (phút)
-  max_stories: 12              # số tin tối đa mỗi tập
+  max_stories: 8               # số tin tối đa mỗi tập
   keep_episodes: 40            # giữ bao nhiêu tập gần nhất (tập cũ tự xoá)
 
 # Cấu hình ElevenLabs (chỉ dùng khi tts_provider: "elevenlabs")
