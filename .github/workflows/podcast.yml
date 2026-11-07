@@ -2,8 +2,8 @@ name: Trạm Podcast Crypto — tạo tập podcast
 
 on:
   schedule:
-    - cron: "47 23 * * *"
-    - cron: "47 11 * * *"
+    # 1 tập/ngày. Giờ UTC: 22:37 UTC = 5:37 sáng VN (đặt sớm vì GitHub hay chạy trễ)
+    - cron: "37 22 * * *"
   workflow_dispatch:
     inputs:
       hours:

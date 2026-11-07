@@ -17,9 +17,10 @@ podcast:
   # Để trống = đọc tự nhiên y như lúc nghe thử trên AI Studio.
   # Muốn chỉnh "diễn xuất" thì viết mô tả (tiếng Anh) vào giữa hai dấu ngoặc kép.
   voice_style: ""
-  target_minutes: 8            # độ dài mong muốn mỗi tập (phút)
-  max_stories: 15              # số tin tối đa mỗi tập (web + Telegram hiện đủ, kèm link nguồn)
-  deep_stories: 6              # số tin nóng nhất được đọc kỹ; các tin còn lại đọc nhanh 1 câu
+  target_minutes: 12           # độ dài mong muốn mỗi tập (phút)
+  max_stories: 25              # số tin tối đa mỗi tập (web + Telegram hiện đủ, kèm link nguồn)
+  deep_stories: 8              # số tin nóng nhất được đọc kỹ; các tin còn lại đọc nhanh 1 câu
+  lookback_hours: 26           # gom tin trong bao nhiêu giờ gần nhất (1 tập/ngày → 24h + dư 2h)
   keep_episodes: 40            # giữ bao nhiêu tập gần nhất (tập cũ tự xoá)
 
 # Cấu hình ElevenLabs (chỉ dùng khi tts_provider: "elevenlabs")

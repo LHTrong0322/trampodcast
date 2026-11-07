@@ -203,7 +203,7 @@ def collect(cfg: dict, since: datetime, seen: set[str]) -> list[dict]:
         log(f"   ✓ {name}: {len(items)} bài, {len(fresh)} bài mới")
         all_items += fresh
     all_items.sort(key=lambda i: i["time"], reverse=True)
-    return all_items[:160]  # giới hạn để prompt không quá dài
+    return all_items[:300]  # giới hạn để prompt không quá dài
 
 
 # ---------------------------------------------------------------------------
@@ -383,7 +383,7 @@ EDITOR_PROMPT = """Danh sách tin thô (mỗi tin có số [id]):
 
 {items}
 
-Hãy chọn tối đa {max_stories} tin giá trị nhất, sắp theo mức độ quan trọng giảm dần.
+Đây là toàn bộ tin trong khoảng 24 giờ qua. Hãy chọn tối đa {max_stories} tin giá trị nhất, sắp theo mức độ quan trọng giảm dần.
 Trả về DUY NHẤT JSON đúng cấu trúc:
 {{
   "episode_title": "tiêu đề tập, ngắn, hấp dẫn, nêu 1-2 tin nóng nhất",
@@ -639,9 +639,19 @@ def send_telegram(mp3: Path, ep: dict, cfg: dict, site_url: str):
         msg = "\n\n".join(lines)
         if site_url:
             msg += f'\n\n🎧 <a href="{esc(site_url)}">Nghe trên web</a>'
-        requests.post(f"{api}/sendMessage", timeout=60, data={
-            "chat_id": chat, "text": msg[:4000], "parse_mode": "HTML",
-            "disable_web_page_preview": "true"}).raise_for_status()
+        parts, cur = [], ""
+        for block in msg.split("\n\n"):  # Telegram giới hạn 4096 ký tự/tin → chia nhiều tin
+            if cur and len(cur) + len(block) + 2 > 3900:
+                parts.append(cur)
+                cur = block
+            else:
+                cur = f"{cur}\n\n{block}" if cur else block
+        if cur:
+            parts.append(cur)
+        for part in parts:
+            requests.post(f"{api}/sendMessage", timeout=60, data={
+                "chat_id": chat, "text": part, "parse_mode": "HTML",
+                "disable_web_page_preview": "true"}).raise_for_status()
         log("   ✓ Đã gửi Telegram")
     except Exception as ex:
         log(f"   ! Gửi Telegram lỗi: {ex}")
@@ -729,7 +739,7 @@ def main():
         since = now - timedelta(hours=args.hours)
     elif state.get("last_run"):
         since = max(datetime.fromisoformat(state["last_run"]) - timedelta(hours=1),
-                    now - timedelta(hours=24))
+                    now - timedelta(hours=float(cfg["podcast"].get("lookback_hours", 26))))
     else:
         since = now - timedelta(hours=12)
     log(f"① Gom tin từ {since.astimezone(VN_TZ):%d/%m %H:%M} (giờ VN)")
