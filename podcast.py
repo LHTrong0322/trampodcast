@@ -414,14 +414,15 @@ YÊU CẦU KỊCH BẢN (văn NÓI, sẽ được đọc bằng máy):
 - Viết số theo cách đọc tự nhiên: "1,2 tỷ đô", "giảm 8 phần trăm", "ngày 7 tháng 11".
   Ticker đọc là tên coin: $BTC → Bitcoin, $ETH → Ethereum, $SOL → Solana.
 - Giữ thuật ngữ tiếng Anh quen thuộc (ETF, airdrop, staking, unlock, mainnet...).
-- Cấu trúc: chào mở đầu dễ thương (nhắc buổi {session} ngày {date}) → điểm nhanh 2-3 tin nóng
-  nhất → đi lần lượt từng tin, mỗi tin: chuyện gì xảy ra + vì sao nhà đầu tư cần quan tâm,
-  có câu chuyển ý tự nhiên → chốt lại tâm lý thị trường → nhắc "đây không phải lời khuyên
+- Cấu trúc: chào mở đầu dễ thương (nhắc buổi {session} ngày {date}) → PHẦN 1 "tin chính":
+  {deep} tin đầu tiên trong danh sách, mỗi tin 2-4 câu: chuyện gì xảy ra + vì sao nhà đầu tư cần
+  quan tâm, có câu chuyển ý tự nhiên → PHẦN 2 "điểm nhanh": các tin còn lại, MỖI TIN ĐÚNG 1 CÂU
+  ngắn, gom chung trong 1-2 đoạn → chốt lại tâm lý thị trường → nhắc "đây không phải lời khuyên
   đầu tư, cả nhà tự nghiên cứu kỹ nha" → chào tạm biệt đáng yêu.
 - Dùng từ ngữ, tiểu từ đúng chất người {region} ({particles}), chêm cảm thán dễ thương
   vừa phải, không lạm dụng.
 - Độ dài BẮT BUỘC: cả kịch bản khoảng {chars} ký tự (đọc khoảng {minutes} phút),
-  TUYỆT ĐỐI KHÔNG vượt quá {max_chars} ký tự. Mỗi tin chỉ 2-4 câu ngắn gọn, đi thẳng vào ý chính. Mỗi tin là MỘT đoạn văn, các đoạn cách nhau bằng một dòng trống."""
+  TUYỆT ĐỐI KHÔNG vượt quá {max_chars} ký tự. Đi thẳng vào ý chính. Mỗi tin chính là MỘT đoạn văn, các đoạn cách nhau bằng một dòng trống."""
 
 
 def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: datetime):
@@ -451,7 +452,8 @@ def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: dat
         region=pc.get("region", "Hà Nội"),
         particles=pc.get("particles", "nhé, nhỉ, đấy, ạ, ơi, ôi, hihi"),
         date=f"{now_vn.day} tháng {now_vn.month}", minutes=pc.get("target_minutes", 7),
-        chars=int(pc.get("target_minutes", 7) * 850), max_chars=int(pc.get("target_minutes", 7) * 1000))
+        chars=int(pc.get("target_minutes", 7) * 850), max_chars=int(pc.get("target_minutes", 7) * 1000),
+        deep=int(pc.get("deep_stories", 6)))
     brief = json.dumps({k: ed.get(k) for k in ("episode_title", "market_mood")} |
                        {"stories": [{k: s.get(k) for k in
                                      ("headline", "category", "detail", "why_it_matters", "tickers")}
