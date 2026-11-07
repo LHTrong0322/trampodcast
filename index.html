@@ -64,6 +64,14 @@
   .srcs a:hover{border-color:var(--crust);color:var(--crust)}
   .script{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:18px;font-size:15px;line-height:1.75;white-space:pre-wrap}
 
+  .cnt{font-size:12px;font-weight:600;color:var(--ink-2);background:#fff;border:1px solid var(--line);padding:2px 8px;border-radius:999px;margin-left:6px}
+  .briefs{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:4px 16px}
+  .brief{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.55}
+  .brief:last-child{border-bottom:0}
+  .bdot{flex:0 0 8px;height:8px;border-radius:50%;margin-top:8px}
+  .bcat{font-size:11.5px;font-weight:700;color:var(--ink-2);margin-right:4px}
+  .brief a{font-size:12px;color:var(--ink-2);text-decoration:none;white-space:nowrap;margin-left:4px}
+  .brief a:hover{color:var(--crust)}
   h4.sec{margin:34px 0 12px;font-size:15px;font-weight:800}
   .ep{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;cursor:pointer;border:1.5px solid transparent}
   .ep:hover{background:#fff;border-color:var(--line)}
@@ -172,6 +180,14 @@ function select(ep, autoplay){
 
 function render(){
   const ep = cur;
+  const briefs = (ep.briefs||[]).length ? `
+    <h4 class="sec">Tin khác trong 24h <span class="cnt">${ep.briefs.length} tin</span></h4>
+    <div class="briefs">${ep.briefs.map(b => `
+      <div class="brief">
+        <span class="bdot" style="background:var(${CAT[b.category] || "--c-mkt"})" title="${esc(b.category)}"></span>
+        <div><span class="bcat">${esc(b.category)}</span> ${esc(b.summary)}
+          ${b.source && b.source.url ? `<a href="${esc(b.source.url)}" target="_blank" rel="noopener">${esc(b.source.name)} ↗</a>` : ""}</div>
+      </div>`).join("")}</div>` : "";
   const stories = (ep.stories||[]).map(s => {
     const color = `var(${CAT[s.category] || "--c-mkt"})`;
     const imp = Math.max(1, Math.min(5, +s.importance || 3));
@@ -203,7 +219,7 @@ function render(){
       <button data-t="stories" class="${tab==="stories"?"on":""}">Tin trong tập</button>
       <button data-t="script" class="${tab==="script"?"on":""}">Lời thoại</button>
     </div>
-    <div id="tabBody">${tab === "stories" ? stories : `<div class="script">${esc(ep.script)}</div>`}</div>
+    <div id="tabBody">${tab === "stories" ? stories + briefs : `<div class="script">${esc(ep.script)}</div>`}</div>
     <h4 class="sec">Các tập trước</h4>
     <div>${EPS.map(e => `<div class="ep ${e.id===ep.id?"cur":""}" data-id="${esc(e.id)}">
         <div class="pl">${e.id===ep.id && !audio.paused ? "❚❚" : "▶"}</div>

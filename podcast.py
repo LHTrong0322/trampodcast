@@ -399,8 +399,18 @@ Trả về DUY NHẤT JSON đúng cấu trúc:
       "tickers": ["BTC"],
       "source_ids": [số id của các tin gốc liên quan]
     }}
+  ],
+  "other_news": [
+    {{
+      "summary": "1 câu tiếng Việt ngắn gọn, đủ ý, có số liệu nếu có",
+      "category": "Pháp lý | Vĩ mô & Chính trị | Dòng tiền & ETF | Dự án | Bảo mật | Thị trường",
+      "source_id": số id của tin gốc
+    }}
   ]
 }}
+"other_news" = các tin CÒN LẠI không nằm trong "stories" nhưng vẫn là tin thật, có thông tin
+(tối đa {max_other} tin, ưu tiên tin quan trọng hơn). Vẫn loại bỏ quảng cáo, giveaway, shill,
+kêu gọi mua bán, meme và tin trùng lặp (tin trùng với "stories" thì không đưa vào đây).
 Nếu không có tin nào đáng giá, trả về "stories": []."""
 
 SCRIPT_SYSTEM = """Bạn là biên kịch cho podcast tin tức crypto tiếng Việt "{name}".
@@ -432,7 +442,8 @@ def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: dat
         for n, it in enumerate(items)
     )
     raw = gem.text(models["text"], EDITOR_SYSTEM,
-                   EDITOR_PROMPT.format(items=listing, max_stories=pc.get("max_stories", 12)),
+                   EDITOR_PROMPT.format(items=listing, max_stories=pc.get("max_stories", 12),
+                                       max_other=pc.get("max_other_news", 40)),
                    json_mode=True)
     raw = re.sub(r"^```(?:json)?|```$", "", raw.strip(), flags=re.M)
     ed = json.loads(raw)
@@ -441,6 +452,14 @@ def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: dat
         ids = [i for i in s.get("source_ids", []) if isinstance(i, int) and 0 <= i < len(items)]
         s["sources"] = [{"name": items[i]["source"], "url": items[i]["url"]} for i in ids][:4]
         s.pop("source_ids", None)
+    briefs = []
+    for b in ed.get("other_news") or []:
+        i = b.get("source_id")
+        if not b.get("summary") or not isinstance(i, int) or not 0 <= i < len(items):
+            continue
+        briefs.append({"summary": b["summary"], "category": b.get("category", "Thị trường"),
+                       "source": {"name": items[i]["source"], "url": items[i]["url"]}})
+    ed["briefs"] = briefs
     if not stories:
         return ed, [], ""
 
@@ -776,6 +795,7 @@ def main():
         "duration": round(duration),
         "size": mp3.stat().st_size,
         "stories": stories,
+        "briefs": ed.get("briefs", []),
         "script": script,
     }
     episodes.insert(0, ep)
