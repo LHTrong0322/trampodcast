@@ -275,12 +275,16 @@ class Gemini:
 
     def _post(self, model: str, body: dict, timeout=240) -> dict:
         url = f"{GEMINI_BASE}/{model}:generateContent"
-        for attempt in range(3):
+        for attempt in range(8):
             r = requests.post(url, json=body, timeout=timeout,
                               headers={"x-goog-api-key": self.key})
             if r.status_code == 429 or r.status_code >= 500:
-                wait = 30 * (attempt + 1)
-                log(f"   … {model} bận ({r.status_code}), đợi {wait}s")
+                txt = r.text
+                if r.status_code == 429 and "PerDay" in txt:
+                    raise RuntimeError(f"{model}: hết lượt miễn phí trong ngày. {txt[:400]}")
+                m = re.search(r'"retryDelay":\s*"(\d+)', txt)
+                wait = int(m.group(1)) + 5 if m else min(30 * (attempt + 1), 120)
+                log(f"   … {model} bận ({r.status_code}), đợi {wait}s rồi thử lại")
                 time.sleep(wait)
                 continue
             if r.status_code != 200:
@@ -416,7 +420,7 @@ YÊU CẦU KỊCH BẢN (văn NÓI, sẽ được đọc bằng máy):
   đầu tư, cả nhà tự nghiên cứu kỹ nha" → chào tạm biệt đáng yêu.
 - Dùng từ ngữ, tiểu từ đúng chất người {region} ({particles}), chêm cảm thán dễ thương
   vừa phải, không lạm dụng.
-- Độ dài khoảng {words} từ. Mỗi tin là MỘT đoạn văn, các đoạn cách nhau bằng một dòng trống."""
+- Độ dài BẮT BUỘC khoảng {words} từ, TUYỆT ĐỐI KHÔNG vượt quá {max_words} từ. Mỗi tin là MỘT đoạn văn, các đoạn cách nhau bằng một dòng trống."""
 
 
 def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: datetime):
@@ -445,7 +449,8 @@ def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: dat
         name=pc["name"], host=host, host_short=host, session=session,
         region=pc.get("region", "Hà Nội"),
         particles=pc.get("particles", "nhé, nhỉ, đấy, ạ, ơi, ôi, hihi"),
-        date=f"{now_vn.day} tháng {now_vn.month}", words=int(pc.get("target_minutes", 7) * 165))
+        date=f"{now_vn.day} tháng {now_vn.month}", words=int(pc.get("target_minutes", 7) * 165),
+        max_words=int(pc.get("target_minutes", 7) * 185))
     brief = json.dumps({k: ed.get(k) for k in ("episode_title", "market_mood")} |
                        {"stories": [{k: s.get(k) for k in
                                      ("headline", "category", "detail", "why_it_matters", "tickers")}
@@ -463,7 +468,7 @@ def sanitize_script(s: str) -> str:
     return s.strip()
 
 
-def chunk_script(s: str, max_chars=1800) -> list[str]:
+def chunk_script(s: str, max_chars=2400) -> list[str]:
     chunks, cur = [], ""
     for para in [p.strip() for p in s.split("\n\n") if p.strip()]:
         if len(para) > max_chars:  # đoạn quá dài → cắt theo câu
@@ -557,7 +562,7 @@ def synthesize(gem: Gemini, cfg: dict, script: str, mp3_path: Path) -> float:
             else:
                 pcm += gap(0.8)
             if provider == "gemini":
-                time.sleep(4)  # nhẹ tay với rate limit gói free
+                time.sleep(int(pc.get("tts_pause_seconds", 25)))  # gói free giới hạn số lần đọc mỗi phút
     pcm += gap(0.6)
     wav_path = mp3_path.with_suffix(".wav")
     with wave.open(str(wav_path), "wb") as w:
