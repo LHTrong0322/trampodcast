@@ -73,6 +73,9 @@
   .brief a{font-size:12px;color:var(--ink-2);text-decoration:none;white-space:nowrap;margin-left:4px}
   .brief a:hover{color:var(--crust)}
   .upd{display:inline-block;font-size:11.5px;font-weight:700;color:#0B6E4F;background:#DDF5EA;padding:2px 8px;border-radius:999px;vertical-align:2px}
+  .recap{margin-top:16px;background:#fff;border:1.5px dashed var(--line);border-radius:16px;padding:12px 16px;font-size:14px;line-height:1.55}
+  .recap ul{margin:6px 0 6px;padding-left:18px;color:#4d3a28}
+  .recap a{font-size:13px;font-weight:700;color:var(--crust);text-decoration:none}
   h4.sec{margin:34px 0 12px;font-size:15px;font-weight:800}
   .ep{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;cursor:pointer;border:1.5px solid transparent}
   .ep:hover{background:#fff;border-color:var(--line)}
@@ -216,6 +219,9 @@ function render(){
         <a class="btn light" href="${esc(ep.audio)}" download>⬇ Tải MP3</a>
       </div>
     </section>
+    ${ep.recap && (ep.recap.headlines||[]).length ? `<div class="recap"><b>⏪ Nhắc lại hôm qua</b>
+      <ul>${ep.recap.headlines.map(h => `<li>${esc(h)}</li>`).join("")}</ul>
+      ${EPS.some(e => e.id === ep.recap.id) ? `<a href="#${esc(ep.recap.id)}" data-goto="${esc(ep.recap.id)}">Nghe lại tập hôm qua →</a>` : ""}</div>` : ""}
     <div class="tabs">
       <button data-t="stories" class="${tab==="stories"?"on":""}">Tin trong tập</button>
       <button data-t="script" class="${tab==="script"?"on":""}">Lời thoại</button>
@@ -228,6 +234,8 @@ function render(){
       </div>`).join("")}</div>`;
 
   $("#heroPlay").onclick = toggle;
+  document.querySelectorAll("[data-goto]").forEach(a => a.onclick = ev => {
+    ev.preventDefault(); select(EPS.find(e => e.id === a.dataset.goto), false); });
   document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => { tab = b.dataset.t; render(); });
   document.querySelectorAll(".ep").forEach(el => el.onclick = () => {
     const e = EPS.find(x => x.id === el.dataset.id);
