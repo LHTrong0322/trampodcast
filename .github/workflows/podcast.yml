@@ -2,12 +2,9 @@ name: Trạm Podcast Crypto — tạo tập podcast
 
 on:
   schedule:
-    # GitHub hay chạy trễ 1-3 tiếng → hẹn 3 mốc rạng sáng (giờ UTC):
-    # 19:13 = 2:13 VN · 20:43 = 3:43 VN · 22:13 = 5:13 VN
-    # Mốc nào chạy trước thì tạo tập; các mốc sau thấy đã có tập trong ngày sẽ tự bỏ qua.
-    - cron: "13 19 * * *"
-    - cron: "43 20 * * *"
-    - cron: "13 22 * * *"
+    # 1 tập/ngày lúc 5:02 sáng VN (22:02 giờ UTC). Lệch 2 phút khỏi giờ chẵn vì
+    # GitHub hay dồn việc đúng phút :00. GitHub có thể vẫn chạy trễ vào giờ cao điểm.
+    - cron: "2 22 * * *"
   workflow_dispatch:
     inputs:
       hours:
