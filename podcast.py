@@ -437,9 +437,7 @@ YÊU CẦU KỊCH BẢN (văn NÓI, sẽ được đọc bằng máy):
 - Viết số theo cách đọc tự nhiên: "1,2 tỷ đô", "giảm 8 phần trăm", "ngày 7 tháng 11".
   Ticker đọc là tên coin: $BTC → Bitcoin, $ETH → Ethereum, $SOL → Solana.
 - Giữ thuật ngữ tiếng Anh quen thuộc (ETF, airdrop, staking, unlock, mainnet...).
-- Cấu trúc: chào mở đầu dễ thương (nhắc buổi {session} ngày {date}) → nếu có "yesterday_recap":
-  1-2 câu "nhắc lại hôm qua" điểm nhanh các tin đó cho người nghe nhớ mạch (không kể chi tiết)
-  → PHẦN 1 "tin chính":
+- Cấu trúc: chào mở đầu dễ thương (nhắc buổi {session} ngày {date}) → PHẦN 1 "tin chính":
   {deep} tin đầu tiên trong danh sách, mỗi tin 2-4 câu: chuyện gì xảy ra + vì sao nhà đầu tư cần
   quan tâm, có câu chuyển ý tự nhiên → PHẦN 2 "điểm nhanh": các tin còn lại, MỖI TIN ĐÚNG 1 CÂU
   ngắn, gom chung trong 1-2 đoạn → chốt lại tâm lý thị trường → nhắc "đây không phải lời khuyên
@@ -505,13 +503,7 @@ def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: dat
         date=f"{now_vn.day} tháng {now_vn.month}", minutes=pc.get("target_minutes", 7),
         chars=int(pc.get("target_minutes", 7) * 850), max_chars=int(pc.get("target_minutes", 7) * 1000),
         deep=int(pc.get("deep_stories", 6)))
-    recap = []
-    if episodes:
-        prev = sorted(episodes[0].get("stories", []), key=lambda x: -int(x.get("importance") or 0))
-        recap = [x.get("headline", "") for x in prev[: int(pc.get("recap_stories", 3))]]
-    ed["recap"] = {"id": episodes[0]["id"], "headlines": recap} if recap else None
     brief = json.dumps({k: ed.get(k) for k in ("episode_title", "market_mood")} |
-                       {"yesterday_recap": recap} |
                        {"stories": [{k: s.get(k) for k in
                                      ("headline", "category", "detail", "why_it_matters", "tickers", "is_update")}
                                     for s in stories]}, ensure_ascii=False, indent=1)
@@ -839,7 +831,6 @@ def main():
         "duration": round(duration),
         "size": mp3.stat().st_size,
         "stories": stories,
-        "recap": ed.get("recap"),
         "briefs": ed.get("briefs", []),
         "script": script,
     }
