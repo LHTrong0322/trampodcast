@@ -393,7 +393,8 @@ QUY TẮC CHỐNG LẶP (rất quan trọng):
   không đưa vào "stories" lẫn "other_news".
 - Chỉ đưa lại khi có DIỄN BIẾN MỚI thật sự (số liệu mới, kết quả/phán quyết, động thái mới,
   giá biến động mạnh vì nó...). Khi đó đặt "is_update": true, tiêu đề bắt đầu bằng
-  "Cập nhật:" và "detail" CHỈ nói phần mới (nhắc lại bối cảnh tối đa nửa câu).
+  "Cập nhật:" và "detail" viết theo cấu trúc: 1 câu tóm tắt lại diễn biến trước đó (dựa vào
+  danh sách tin đã đưa ở trên, để người nghe nhớ lại) + phần diễn biến mới nhất, có số liệu.
 - Tin hoàn toàn mới → "is_update": false.
 
 Danh sách tin thô hôm nay (mỗi tin có số [id]):
@@ -454,8 +455,8 @@ YÊU CẦU KỊCH BẢN (văn NÓI, sẽ được đọc bằng máy):
   quan tâm, có câu chuyển ý tự nhiên → PHẦN 2 "điểm nhanh": các tin còn lại, MỖI TIN ĐÚNG 1 CÂU
   ngắn, gom chung trong 1-2 đoạn → chốt lại tâm lý thị trường → nhắc "đây không phải lời khuyên
   đầu tư, cả nhà tự nghiên cứu kỹ nha" → chào tạm biệt đáng yêu.
-- Tin có "is_update": true là tin đã kể ở tập trước: dẫn ngắn kiểu "cập nhật thêm về..." rồi
-  CHỈ nói diễn biến mới, không kể lại từ đầu.
+- Tin có "is_update": true là tin đã kể ở tập trước: mở bằng "cập nhật tiếp về..." + 1 câu nhắc
+  lại chuyện trước đó cho người nghe nhớ, rồi tập trung kể diễn biến mới nhất.
 - Dùng từ ngữ, tiểu từ đúng chất người {region} ({particles}), chêm cảm thán dễ thương
   vừa phải, không lạm dụng.
 - Độ dài BẮT BUỘC: cả kịch bản khoảng {chars} ký tự (đọc khoảng {minutes} phút),
