@@ -2,8 +2,12 @@ name: Trạm Podcast Crypto — tạo tập podcast
 
 on:
   schedule:
-    # 1 tập/ngày. Giờ UTC: 22:37 UTC = 5:37 sáng VN (đặt sớm vì GitHub hay chạy trễ)
-    - cron: "37 22 * * *"
+    # GitHub hay chạy trễ 1-3 tiếng → hẹn 3 mốc rạng sáng (giờ UTC):
+    # 19:13 = 2:13 VN · 20:43 = 3:43 VN · 22:13 = 5:13 VN
+    # Mốc nào chạy trước thì tạo tập; các mốc sau thấy đã có tập trong ngày sẽ tự bỏ qua.
+    - cron: "13 19 * * *"
+    - cron: "43 20 * * *"
+    - cron: "13 22 * * *"
   workflow_dispatch:
     inputs:
       hours:
@@ -50,6 +54,7 @@ jobs:
           TG_API_HASH: ${{ secrets.TG_API_HASH }}
           TG_SESSION: ${{ secrets.TG_SESSION }}
           SITE_URL: ${{ vars.SITE_URL }}
+          RUN_EVENT: ${{ github.event_name }}
         run: |
           SCRIPT=podcast.py
           [ -f scripts/podcast.py ] && SCRIPT=scripts/podcast.py

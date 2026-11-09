@@ -754,6 +754,12 @@ def main():
     seen = set(seen_list)
 
     now = datetime.now(timezone.utc)
+    # Lịch tự động có nhiều mốc dự phòng: nếu đã có tập trong 16 giờ qua thì bỏ qua
+    if os.getenv("RUN_EVENT") == "schedule" and episodes:
+        last_ep = datetime.fromisoformat(episodes[0]["date"])
+        if now - last_ep < timedelta(hours=16):
+            log(f"Đã có tập lúc {last_ep:%H:%M %d/%m} — mốc dự phòng này bỏ qua.")
+            return
     if args.hours:
         since = now - timedelta(hours=args.hours)
     elif state.get("last_run"):
