@@ -72,6 +72,7 @@
   .bcat{font-size:11.5px;font-weight:700;color:var(--ink-2);margin-right:4px}
   .brief a{font-size:12px;color:var(--ink-2);text-decoration:none;white-space:nowrap;margin-left:4px}
   .brief a:hover{color:var(--crust)}
+  .upd{display:inline-block;font-size:11.5px;font-weight:700;color:#0B6E4F;background:#DDF5EA;padding:2px 8px;border-radius:999px;vertical-align:2px}
   h4.sec{margin:34px 0 12px;font-size:15px;font-weight:800}
   .ep{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;cursor:pointer;border:1.5px solid transparent}
   .ep:hover{background:#fff;border-color:var(--line)}
@@ -185,7 +186,7 @@ function render(){
     <div class="briefs">${ep.briefs.map(b => `
       <div class="brief">
         <span class="bdot" style="background:var(${CAT[b.category] || "--c-mkt"})" title="${esc(b.category)}"></span>
-        <div><span class="bcat">${esc(b.category)}</span> ${esc(b.summary)}
+        <div><span class="bcat">${esc(b.category)}</span>${b.is_update ? `<span class="upd">🔄 Cập nhật</span> ` : ""} ${esc(b.summary)}
           ${b.source && b.source.url ? `<a href="${esc(b.source.url)}" target="_blank" rel="noopener">${esc(b.source.name)} ↗</a>` : ""}</div>
       </div>`).join("")}</div>` : "";
   const stories = (ep.stories||[]).map(s => {
@@ -197,7 +198,7 @@ function render(){
         <span class="dots" title="Mức độ quan trọng ${imp}/5">${[1,2,3,4,5].map(i => `<i class="${i<=imp?"f":""}"></i>`).join("")}</span>
         ${(s.tickers||[]).slice(0,4).map(t => `<span class="tick">$${esc(String(t).replace(/^\$/,""))}</span>`).join("")}
       </div>
-      <h3>${esc(s.headline)}</h3>
+      <h3>${s.is_update ? `<span class="upd">🔄 Cập nhật</span> ` : ""}${esc(String(s.headline||"").replace(/^Cập nhật:\s*/i, ""))}</h3>
       <p>${esc(s.detail)}</p>
       ${s.why_it_matters ? `<div class="why"><b>Investor cần biết:</b> ${esc(s.why_it_matters)}</div>` : ""}
       ${(s.sources||[]).length ? `<div class="srcs">${s.sources.map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.name)} ↗</a>`).join("")}</div>` : ""}

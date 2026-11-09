@@ -379,14 +379,25 @@ QUY TẮC DỊCH:
 - Giữ nguyên tên riêng, ticker ($BTC, $ETH...), con số, ngày tháng. Không bịa thêm thông tin
   không có trong tin gốc. Nếu tin chưa xác nhận thì ghi rõ "chưa xác nhận"."""
 
-EDITOR_PROMPT = """Danh sách tin thô (mỗi tin có số [id]):
+EDITOR_PROMPT = """CÁC TIN ĐÃ ĐƯA TRONG NHỮNG TẬP TRƯỚC (người nghe đã biết):
+{history}
+
+QUY TẮC CHỐNG LẶP (rất quan trọng):
+- Tin mới nói về CÙNG sự kiện đã có ở danh sách trên mà KHÔNG có thông tin mới → BỎ HẲN,
+  không đưa vào "stories" lẫn "other_news".
+- Chỉ đưa lại khi có DIỄN BIẾN MỚI thật sự (số liệu mới, kết quả/phán quyết, động thái mới,
+  giá biến động mạnh vì nó...). Khi đó đặt "is_update": true, tiêu đề bắt đầu bằng
+  "Cập nhật:" và "detail" CHỈ nói phần mới (nhắc lại bối cảnh tối đa nửa câu).
+- Tin hoàn toàn mới → "is_update": false.
+
+Danh sách tin thô hôm nay (mỗi tin có số [id]):
 
 {items}
 
 Đây là toàn bộ tin trong khoảng 24 giờ qua. Hãy chọn tối đa {max_stories} tin giá trị nhất, sắp theo mức độ quan trọng giảm dần.
 Trả về DUY NHẤT JSON đúng cấu trúc:
 {{
-  "episode_title": "tiêu đề tập, ngắn, hấp dẫn, nêu 1-2 tin nóng nhất",
+  "episode_title": "tiêu đề tập, ngắn, hấp dẫn, nêu 1-2 tin nóng nhất, đúng chính tả tiếng Việt",
   "summary": "tóm tắt cả tập trong 2 câu",
   "market_mood": "1 câu nhận định tâm lý thị trường dựa trên các tin",
   "stories": [
@@ -397,12 +408,14 @@ Trả về DUY NHẤT JSON đúng cấu trúc:
       "detail": "2-4 câu tóm tắt nội dung chính, có số liệu",
       "why_it_matters": "1-2 câu: tin này ảnh hưởng gì tới nhà đầu tư",
       "tickers": ["BTC"],
+      "is_update": false,
       "source_ids": [số id của các tin gốc liên quan]
     }}
   ],
   "other_news": [
     {{
       "summary": "1 câu tiếng Việt ngắn gọn, đủ ý, có số liệu nếu có",
+      "is_update": false,
       "category": "Pháp lý | Vĩ mô & Chính trị | Dòng tiền & ETF | Dự án | Bảo mật | Thị trường",
       "source_id": số id của tin gốc
     }}
@@ -429,13 +442,28 @@ YÊU CẦU KỊCH BẢN (văn NÓI, sẽ được đọc bằng máy):
   quan tâm, có câu chuyển ý tự nhiên → PHẦN 2 "điểm nhanh": các tin còn lại, MỖI TIN ĐÚNG 1 CÂU
   ngắn, gom chung trong 1-2 đoạn → chốt lại tâm lý thị trường → nhắc "đây không phải lời khuyên
   đầu tư, cả nhà tự nghiên cứu kỹ nha" → chào tạm biệt đáng yêu.
+- Tin có "is_update": true là tin đã kể ở tập trước: dẫn ngắn kiểu "cập nhật thêm về..." rồi
+  CHỈ nói diễn biến mới, không kể lại từ đầu.
 - Dùng từ ngữ, tiểu từ đúng chất người {region} ({particles}), chêm cảm thán dễ thương
   vừa phải, không lạm dụng.
 - Độ dài BẮT BUỘC: cả kịch bản khoảng {chars} ký tự (đọc khoảng {minutes} phút),
   TUYỆT ĐỐI KHÔNG vượt quá {max_chars} ký tự. Đi thẳng vào ý chính. Mỗi tin chính là MỘT đoạn văn, các đoạn cách nhau bằng một dòng trống."""
 
 
-def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: datetime):
+def history_block(episodes: list[dict], n_eps: int = 3) -> str:
+    """Danh sách tin đã đưa trong các tập gần nhất, để AI không nhắc lại tin cũ."""
+    lines = []
+    for e in (episodes or [])[:n_eps]:
+        d = datetime.fromisoformat(e["date"]).strftime("%d/%m")
+        for st in e.get("stories", []):
+            lines.append(f"- [{d}] {st.get('headline', '')}: {st.get('detail', '')[:220]}")
+        for b in e.get("briefs", []):
+            lines.append(f"- [{d}] {b.get('summary', '')[:200]}")
+    return "\n".join(lines) if lines else "(chưa có tập nào trước đó)"
+
+
+def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: datetime,
+                          episodes: list[dict] | None = None):
     pc, models = cfg["podcast"], cfg["models"]
     listing = "\n\n".join(
         f"[{n}] ({it['source']}, {it['time'].astimezone(VN_TZ):%d/%m %H:%M}) {it['text']}"
@@ -443,7 +471,8 @@ def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: dat
     )
     raw = gem.text(models["text"], EDITOR_SYSTEM,
                    EDITOR_PROMPT.format(items=listing, max_stories=pc.get("max_stories", 12),
-                                       max_other=pc.get("max_other_news", 40)),
+                                       max_other=pc.get("max_other_news", 40),
+                                       history=history_block(episodes, int(pc.get("history_episodes", 3)))),
                    json_mode=True)
     raw = re.sub(r"^```(?:json)?|```$", "", raw.strip(), flags=re.M)
     ed = json.loads(raw)
@@ -458,6 +487,7 @@ def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: dat
         if not b.get("summary") or not isinstance(i, int) or not 0 <= i < len(items):
             continue
         briefs.append({"summary": b["summary"], "category": b.get("category", "Thị trường"),
+                       "is_update": bool(b.get("is_update")),
                        "source": {"name": items[i]["source"], "url": items[i]["url"]}})
     ed["briefs"] = briefs
     if not stories:
@@ -475,7 +505,7 @@ def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: dat
         deep=int(pc.get("deep_stories", 6)))
     brief = json.dumps({k: ed.get(k) for k in ("episode_title", "market_mood")} |
                        {"stories": [{k: s.get(k) for k in
-                                     ("headline", "category", "detail", "why_it_matters", "tickers")}
+                                     ("headline", "category", "detail", "why_it_matters", "tickers", "is_update")}
                                     for s in stories]}, ensure_ascii=False, indent=1)
     script = gem.text(models["text"], system, "Viết kịch bản từ bản tin sau:\n" + brief)
     script = sanitize_script(script)
@@ -777,7 +807,7 @@ def main():
     gem = Gemini(key)
     now_vn = now.astimezone(VN_TZ)
     log("② AI lọc tin, dịch và viết kịch bản")
-    ed, stories, script = build_episode_content(gem, cfg, items, now_vn)
+    ed, stories, script = build_episode_content(gem, cfg, items, now_vn, episodes)
     if not stories:
         log("Không có tin đủ giá trị — bỏ qua tập này.")
         state.update(seen=(seen_list + [i["id"] for i in items])[-4000:], last_run=now.isoformat())
