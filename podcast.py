@@ -374,8 +374,14 @@ LOẠI BỎ: quảng cáo, giveaway, shill, kêu gọi mua bán, tin giá thuầ
 dự đoán giá vô căn cứ, tin rác, tin lặp lại, meme.
 
 QUY TẮC DỊCH:
-- Tiếng Việt tự nhiên, ngắn gọn, chính xác. GIỮ NGUYÊN thuật ngữ chuyên ngành tiếng Anh
-  (ETF, staking, airdrop, TVL, unlock, mainnet, stablecoin, liquidation, L2, restaking, DEX, perp...).
+- Tiếng Việt tự nhiên, ngắn gọn, chính xác.
+- THUẬT NGỮ: ưu tiên dùng đúng thuật ngữ tiếng Anh dân crypto hay dùng, KHÔNG dịch sang tiếng Việt:
+  crypto (không viết "tiền điện tử/tiền mã hoá"), stablecoin (không "tiền ổn định"), token, coin,
+  altcoin, memecoin, blockchain, DeFi, CeFi, NFT, Web3, ETF, spot, futures, perp, long, short,
+  leverage, liquidation, funding rate, open interest, staking, restaking, airdrop, unlock, vesting,
+  TGE, listing, delisting, mainnet, testnet, L1, L2, DEX, CEX, TVL, market cap, FDV, whale,
+  on-chain, wallet, bridge, exploit, hack, rug pull, RWA, treasury, buyback, burn, fork, upgrade.
+  Tên tổ chức/luật giữ nguyên: SEC, CFTC, Fed, FOMC, CPI, GENIUS Act, CLARITY Act...
 - Giữ nguyên tên riêng, ticker ($BTC, $ETH...), con số, ngày tháng. Không bịa thêm thông tin
   không có trong tin gốc. Nếu tin chưa xác nhận thì ghi rõ "chưa xác nhận"."""
 
@@ -436,7 +442,13 @@ YÊU CẦU KỊCH BẢN (văn NÓI, sẽ được đọc bằng máy):
   KHÔNG ký hiệu như *, #, (), [], /.
 - Viết số theo cách đọc tự nhiên: "1,2 tỷ đô", "giảm 8 phần trăm", "ngày 7 tháng 11".
   Ticker đọc là tên coin: $BTC → Bitcoin, $ETH → Ethereum, $SOL → Solana.
-- Giữ thuật ngữ tiếng Anh quen thuộc (ETF, airdrop, staking, unlock, mainnet...).
+- THUẬT NGỮ: ưu tiên dùng đúng thuật ngữ tiếng Anh dân crypto hay dùng, KHÔNG dịch sang tiếng Việt:
+  crypto (không viết "tiền điện tử/tiền mã hoá"), stablecoin (không "tiền ổn định"), token, coin,
+  altcoin, memecoin, blockchain, DeFi, CeFi, NFT, Web3, ETF, spot, futures, perp, long, short,
+  leverage, liquidation, funding rate, open interest, staking, restaking, airdrop, unlock, vesting,
+  TGE, listing, delisting, mainnet, testnet, L1, L2, DEX, CEX, TVL, market cap, FDV, whale,
+  on-chain, wallet, bridge, exploit, hack, rug pull, RWA, treasury, buyback, burn, fork, upgrade.
+  Tên tổ chức/luật giữ nguyên: SEC, CFTC, Fed, FOMC, CPI, GENIUS Act, CLARITY Act...
 - Cấu trúc: chào mở đầu dễ thương (nhắc buổi {session} ngày {date}) → PHẦN 1 "tin chính":
   {deep} tin đầu tiên trong danh sách, mỗi tin 2-4 câu: chuyện gì xảy ra + vì sao nhà đầu tư cần
   quan tâm, có câu chuyển ý tự nhiên → PHẦN 2 "điểm nhanh": các tin còn lại, MỖI TIN ĐÚNG 1 CÂU
