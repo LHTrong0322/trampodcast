@@ -80,3 +80,4 @@ video:
   stories_per_day: 3          # mỗi ngày làm sẵn đoạn video cho bao nhiêu tin nóng nhất (1 lượt đọc)
   max_weekly_stories: 12      # video ngang tối đa bao nhiêu tin
   shorts: 4                   # số video dọc 9:16 (Reels/Shorts) mỗi tuần
+  image_seconds: 4            # mỗi ảnh hiện bao nhiêu giây rồi đổi ảnh mới

@@ -155,8 +155,9 @@ def eq_bars(d: ImageDraw.ImageDraw, x, y, lvl: float, t: float, color, n=5, w=10
 # ---------------------------------------------------------------------------
 # phụ đề karaoke
 # ---------------------------------------------------------------------------
-def karaoke(d: ImageDraw.ImageDraw, W, H, words: list[str], prog: float, fnt, max_w, bottom,
-            hi=(255, 200, 61), on=(255, 255, 255), off=(150, 140, 125), max_lines=2):
+def karaoke(canvas: Image.Image, d: ImageDraw.ImageDraw, W, H, words: list[str], prog: float, fnt, max_w,
+            bottom, hi=(255, 200, 61), on=(255, 255, 255), off=(214, 208, 198), max_lines=2):
+    """Phụ đề: chữ đã/đang đọc trắng, chữ đang đọc tô vàng, chữ sắp đọc trắng ngà; nền đen trong suốt."""
     if not words:
         return
     lines, cur = [], []
@@ -169,23 +170,29 @@ def karaoke(d: ImageDraw.ImageDraw, W, H, words: list[str], prog: float, fnt, ma
             cur.append(w)
     if cur:
         lines.append(cur)
+    if len(lines) == 2 and len(lines[1]) == 1 and len(lines[0]) > 2:   # tránh 1 chữ lẻ dòng dưới
+        lines[1].insert(0, lines[0].pop())
     lines = lines[:max_lines]
     lens = [len(w) + 1 for ln in lines for w in ln]
     total = sum(lens) or 1
     pos = prog * total
-    lh = int(fnt.size * 1.32)
-    box_h = lh * len(lines) + 40
-    y0 = bottom - box_h
+    lh = int(fnt.size * 1.34)
+    box_h = lh * len(lines) + 36
+    y0 = int(bottom - box_h)
     widths = [d.textlength(" ".join(ln), font=fnt) for ln in lines]
-    bw = max(widths) + 70
-    d.rounded_rectangle([(W - bw) / 2, y0, (W + bw) / 2, y0 + box_h], radius=24, fill=(0, 0, 0))
-    acc, y = 0, y0 + 18
+    bw = int(max(widths) + 72)
+    x0 = (W - bw) // 2
+    box = Image.new("RGBA", (bw, box_h), (0, 0, 0, 0))
+    ImageDraw.Draw(box).rounded_rectangle([0, 0, bw - 1, box_h - 1], radius=22, fill=(8, 6, 4, 178))
+    canvas.paste(box, (x0, y0), box)
+    acc, y = 0, y0 + 16
     sp = d.textlength(" ", font=fnt)
     for ln, lw in zip(lines, widths):
         x = (W - lw) / 2
         for w in ln:
             L = len(w) + 1
             col = on if acc + L <= pos else hi if acc <= pos else off
+            d.text((x + 2, y + 3), w, font=fnt, fill=(0, 0, 0))
             d.text((x, y), w, font=fnt, fill=col)
             x += d.textlength(w, font=fnt) + sp
             acc += L
@@ -286,7 +293,7 @@ def wipe(new: Image.Image, prev: Image.Image, p: float, color=(255, 200, 61)) ->
 
 
 def render(scenes: list[dict], W: int, H: int, out_path: Path, tmp: Path, crf: int = 22,
-           log=print) -> Path:
+           log=print, watermark: tuple | None = None) -> Path:
     """scenes: [{"dur": giây, "pcm": bytes, "draw": fn(canvas, t_local, ctx)}]."""
     pcm = b"".join(s["pcm"] for s in scenes)
     wav = tmp / (out_path.stem + ".wav")
@@ -307,6 +314,8 @@ def render(scenes: list[dict], W: int, H: int, out_path: Path, tmp: Path, crf: i
             sc["draw"](canvas, t, ctx)
             if prev is not None and t < 0.42 and sc.get("wipe", True):
                 canvas = wipe(canvas, prev, t / 0.42)
+            if watermark:
+                canvas.paste(watermark[0], watermark[1], watermark[0])
             enc.write(canvas)
             last = canvas
             fidx += 1

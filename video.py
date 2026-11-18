@@ -96,11 +96,11 @@ def file_to_pcm(path: Path) -> bytes:
     return P._ffmpeg_pcm([], path.read_bytes())
 
 
-def silences(pcm: bytes) -> list[tuple[float, float]]:
+def silences(pcm: bytes, noise="-38dB", min_d=0.25) -> list[tuple[float, float]]:
     """Tìm các khoảng lặng (để biết chỗ chuyển giữa các tin trong 1 lần đọc)."""
     with tempfile.NamedTemporaryFile(suffix=".wav") as f:
         pcm_to_wav(pcm, Path(f.name))
-        r = subprocess.run(["ffmpeg", "-i", f.name, "-af", "silencedetect=noise=-38dB:d=0.25",
+        r = subprocess.run(["ffmpeg", "-i", f.name, "-af", f"silencedetect=noise={noise}:d={min_d}",
                             "-f", "null", "-"], capture_output=True, text=True)
     starts = [float(x) for x in re.findall(r"silence_start: ([\d.]+)", r.stderr)]
     ends = [float(x) for x in re.findall(r"silence_end: ([\d.]+)", r.stderr)]
@@ -165,7 +165,8 @@ Với MỖI tin, viết lại cho video. Trả về DUY NHẤT JSON:
     "hook": "câu giật tít cho video dọc, tối đa 8 từ, gây tò mò nhưng đúng sự thật",
     "key_stat": "con số nổi bật nhất của tin, rất ngắn (vd '$1,2 tỷ', '+18%', '10 triệu HYPE'), để trống nếu không có",
     "key_label": "giải thích con số, tối đa 6 từ",
-    "visual_query": "2-4 từ TIẾNG ANH mô tả ảnh minh hoạ phù hợp để tìm ảnh stock (vd 'US Capitol building', 'stock exchange trading floor', 'hacker laptop dark', 'Federal Reserve building'); không dùng tên coin",
+    "visual_query": "2-4 từ TIẾNG ANH mô tả ảnh minh hoạ chính để tìm ảnh stock (vd 'US Capitol building', 'stock exchange trading floor', 'hacker laptop dark', 'Federal Reserve building'); không dùng tên coin",
+    "visual_queries": ["4 từ khoá TIẾNG ANH khác nhau cho 4 góc hình bám sát nội dung tin, mỗi cái 2-4 từ, đa dạng (bối cảnh, con người, đồ vật, biểu tượng), vd cho tin hack sàn: 'hacker hoodie laptop', 'server room red light', 'padlock broken', 'worried trader screen'"],
     "visual_fallback": "1 từ khoá tiếng Anh chung hơn cho ảnh (vd 'finance', 'technology', 'government')",
     "narration": "lời đọc 2-4 câu, khoảng 300-450 ký tự: chuyện gì xảy ra + vì sao investor cần quan tâm"}}
 ]}}
@@ -205,6 +206,7 @@ def make_daily(out: Path, cfg: dict, gem, ep: dict) -> bool:
             "hook": it.get("hook", ""), "key_stat": it.get("key_stat", ""),
             "key_label": it.get("key_label", ""), "narration": nar,
             "visual_query": it.get("visual_query", ""), "visual_fallback": it.get("visual_fallback", ""),
+            "visual_queries": [q for q in (it.get("visual_queries") or []) if isinstance(q, str)][:5],
             "category": st.get("category", "Thị trường"), "importance": int(st.get("importance") or 3),
             "tickers": st.get("tickers", []), "is_update": bool(st.get("is_update")),
             "sources": st.get("sources", []), "t0": round(t0, 2), "t1": round(t1, 2),
@@ -258,107 +260,119 @@ def _download(url: str) -> Image.Image | None:
         return None
 
 
-def search_pexels(query: str, orientation: str) -> tuple[Image.Image, str] | None:
+_api_cache: dict = {}
+
+
+def _cached(key, fn):
+    if key not in _api_cache:
+        try:
+            _api_cache[key] = fn()
+        except Exception as ex:
+            log(f"      ! {key[0]} lỗi: {ex}")
+            _api_cache[key] = []
+    return _api_cache[key]
+
+
+def _first_new(cands, min_side=700):
+    """cands: [(url, credit)] → ảnh đầu tiên chưa dùng trong video."""
+    for url, cred in cands:
+        if not url or url in _used:
+            continue
+        _used.add(url)
+        im = _download(url)
+        if im and min(im.size) >= min_side:
+            return im, cred
+    return None
+
+
+def search_pexels(query: str, orientation: str):
     key = os.getenv("PEXELS_API_KEY")
     if not key:
         return None
-    try:
-        r = _get("https://api.pexels.com/v1/search", headers={"Authorization": key},
-                 params={"query": query, "orientation": orientation, "per_page": 8, "size": "large"})
-        for ph in r.json().get("photos", []):
-            src = ph["src"].get("large2x") or ph["src"]["original"]
-            if src in _used:
-                continue
-            im = _download(src)
-            if im and min(im.size) >= 700:
-                _used.add(src)
-                return im, f"Ảnh: {ph.get('photographer', '')} / Pexels"
-    except Exception as ex:
-        log(f"      ! Pexels lỗi: {ex}")
-    return None
+    cands = _cached(("Pexels", query, orientation), lambda: [
+        (ph["src"].get("large2x") or ph["src"]["original"], f"{ph.get('photographer', '')} / Pexels")
+        for ph in _get("https://api.pexels.com/v1/search", headers={"Authorization": key},
+                       params={"query": query, "orientation": orientation, "per_page": 12}).json().get("photos", [])])
+    return _first_new(cands)
 
 
-def search_pixabay(query: str, orientation: str) -> tuple[Image.Image, str] | None:
+def search_pixabay(query: str, orientation: str):
     key = os.getenv("PIXABAY_API_KEY")
     if not key:
         return None
-    try:
-        r = _get("https://pixabay.com/api/", params={
-            "key": key, "q": query[:100], "image_type": "photo", "safesearch": "true", "per_page": 10,
-            "orientation": "horizontal" if orientation == "landscape" else "vertical"})
-        for h in r.json().get("hits", []):
-            url = h.get("largeImageURL") or h.get("webformatURL")
-            if url in _used:
-                continue
-            im = _download(url)
-            if im and min(im.size) >= 700:
-                _used.add(url)
-                return im, f"Ảnh: {h.get('user', '')} / Pixabay"
-    except Exception as ex:
-        log(f"      ! Pixabay lỗi: {ex}")
-    return None
+    cands = _cached(("Pixabay", query, orientation), lambda: [
+        (h.get("largeImageURL") or h.get("webformatURL"), f"{h.get('user', '')} / Pixabay")
+        for h in _get("https://pixabay.com/api/", params={
+            "key": key, "q": query[:100], "image_type": "photo", "safesearch": "true", "per_page": 15,
+            "orientation": "horizontal" if orientation == "landscape" else "vertical"}).json().get("hits", [])])
+    return _first_new(cands)
 
 
-def search_openverse(query: str, orientation: str) -> tuple[Image.Image, str] | None:
-    """Kho ảnh Creative Commons (Flickr, Wikimedia, bảo tàng...). Không cần key nhưng giới hạn lượt."""
-    try:
-        r = _get("https://api.openverse.org/v1/images/", params={
-            "q": query, "license_type": "commercial,modification", "size": "large", "page_size": 10,
-            "aspect_ratio": "wide" if orientation == "landscape" else "tall", "mature": "false"})
-        for h in r.json().get("results", []):
-            url = h.get("url")
-            if not url or url in _used:
-                continue
-            im = _download(url)
-            if im and min(im.size) >= 700:
-                _used.add(url)
-                lic = f"CC {str(h.get('license', '')).upper()} {h.get('license_version', '')}".strip()
-                return im, f"Ảnh: {(h.get('creator') or '')[:30]} / {h.get('source', 'Openverse')} ({lic})"
-    except Exception as ex:
-        log(f"      ! Openverse lỗi: {ex}")
-    return None
-
-
-def search_wikimedia(query: str) -> tuple[Image.Image, str] | None:
-    try:
+def search_wikimedia(query: str, orientation: str = "landscape"):
+    def fetch():
         r = _get("https://commons.wikimedia.org/w/api.php", params={
             "action": "query", "format": "json", "generator": "search", "gsrnamespace": 6,
-            "gsrsearch": f"filetype:bitmap {query}", "gsrlimit": 10, "prop": "imageinfo",
+            "gsrsearch": f"filetype:bitmap {query}", "gsrlimit": 12, "prop": "imageinfo",
             "iiprop": "url|size|extmetadata", "iiurlwidth": 1920})
-        pages = sorted(r.json().get("query", {}).get("pages", {}).values(), key=lambda p: p.get("index", 99))
-        for pg in pages:
+        out = []
+        for pg in sorted(r.json().get("query", {}).get("pages", {}).values(), key=lambda p: p.get("index", 99)):
             ii = (pg.get("imageinfo") or [{}])[0]
-            if ii.get("width", 0) < 1000 or ii.get("width", 0) < ii.get("height", 1) * 0.9:
+            wide = ii.get("width", 0) >= ii.get("height", 1) * 0.9
+            if ii.get("width", 0) < 1000 or (wide != (orientation == "landscape")):
                 continue
             meta = ii.get("extmetadata", {})
             lic = meta.get("LicenseShortName", {}).get("value", "")
             if not re.search(r"CC|Public domain|PD", lic, re.I):
                 continue
-            url = ii.get("thumburl") or ii["url"]
-            if url in _used:
-                continue
-            im = _download(url)
-            if im:
-                _used.add(url)
-                artist = re.sub(r"<[^>]+>", "", meta.get("Artist", {}).get("value", ""))[:40]
-                return im, f"Ảnh: {artist} / Wikimedia Commons ({lic})"
-    except Exception as ex:
-        log(f"      ! Wikimedia lỗi: {ex}")
-    return None
+            artist = re.sub(r"<[^>]+>", "", meta.get("Artist", {}).get("value", ""))[:40]
+            out.append((ii.get("thumburl") or ii.get("url"), f"{artist} / Wikimedia Commons ({lic})"))
+        return out
+    return _first_new(_cached(("Wikimedia", query, orientation), fetch))
 
 
-def find_image(item: dict, orientation: str) -> tuple[Image.Image, str] | None:
-    queries = [q for q in [item.get("visual_query"), item.get("visual_fallback")] if q]
-    queries.append({"Pháp lý": "government building law", "Vĩ mô & Chính trị": "stock market finance",
-                    "Dòng tiền & ETF": "wall street finance", "Dự án": "technology blockchain",
-                    "Bảo mật": "cyber security hacker", "Thị trường": "trading chart screen"}
-                   .get(item.get("category"), "cryptocurrency"))
-    for q in queries:
-        res = (search_pexels(q, orientation) or search_pixabay(q, orientation)
-               or search_wikimedia(q) or search_openverse(q, orientation))
-        if res:
-            return res
-    return None
+def search_openverse(query: str, orientation: str):
+    cands = _cached(("Openverse", query, orientation), lambda: [
+        (h.get("url"), f"{(h.get('creator') or '')[:30]} / {h.get('source', 'Openverse')} "
+                       f"(CC {str(h.get('license', '')).upper()} {h.get('license_version', '')})")
+        for h in _get("https://api.openverse.org/v1/images/", params={
+            "q": query, "license_type": "commercial,modification", "size": "large", "page_size": 12,
+            "aspect_ratio": "wide" if orientation == "landscape" else "tall", "mature": "false"}).json().get("results", [])])
+    return _first_new(cands)
+
+
+CATEGORY_QUERIES = {"Pháp lý": ["government building", "judge gavel court", "law books"],
+                    "Vĩ mô & Chính trị": ["stock market screen", "federal reserve", "world economy"],
+                    "Dòng tiền & ETF": ["wall street", "money finance", "investment growth"],
+                    "Dự án": ["technology network", "blockchain digital", "startup team office"],
+                    "Bảo mật": ["cyber security hacker", "padlock digital", "server room"],
+                    "Thị trường": ["trading chart screen", "stock exchange", "trader monitors"]}
+TICKER_QUERIES = {"BTC": "bitcoin coin", "ETH": "ethereum", "SOL": "solana", "XRP": "ripple xrp",
+                  "BNB": "binance", "DOGE": "dogecoin"}
+
+
+def find_images(item: dict, orientation: str, n: int) -> list:
+    """Tìm n ảnh KHÁC NHAU bám nội dung tin: lần lượt theo các từ khoá AI gợi ý, rồi từ khoá chung."""
+    queries = [q for q in (item.get("visual_queries") or []) if q]
+    queries += [q for q in [item.get("visual_query"), item.get("visual_fallback")] if q]
+    queries += [TICKER_QUERIES[str(t).lstrip("$").upper()] for t in (item.get("tickers") or [])
+                if str(t).lstrip("$").upper() in TICKER_QUERIES]
+    queries += CATEGORY_QUERIES.get(item.get("category"), ["cryptocurrency"])
+    queries = list(dict.fromkeys(queries))
+    out, rounds = [], 0
+    while len(out) < n and rounds < 3:
+        got = False
+        for q in queries:
+            if len(out) >= n:
+                break
+            res = (search_pexels(q, orientation) or search_pixabay(q, orientation)
+                   or search_wikimedia(q, orientation) or search_openverse(q, orientation))
+            if res:
+                out.append(res)
+                got = True
+        rounds += 1
+        if not got:
+            break
+    return out
 
 
 _coin_logo: dict = {}
@@ -392,31 +406,63 @@ def cover_fit(im: Image.Image, W: int, H: int) -> Image.Image:
 
 
 class KenBurns:
-    """Ảnh nền trôi chậm + phủ tối để chữ dễ đọc."""
+    """1 ảnh: phóng to/thu nhỏ chậm + trôi ngang (kiểu phim tài liệu), phủ tối để chữ dễ đọc."""
 
-    def __init__(self, im: Image.Image, W: int, H: int, region: tuple, vertical: bool, seed: int):
+    def __init__(self, im: Image.Image, region: tuple, vertical: bool, seed: int, shade: float = 1.0):
         x0, y0, x1, y1 = region
         rw, rh = x1 - x0, y1 - y0
-        big = cover_fit(im, int(rw * 1.18), int(rh * 1.18)).convert("RGB")
-        shade = Image.new("L", big.size, 0)
-        sd = ImageDraw.Draw(shade)
-        if vertical:   # mờ dần xuống dưới
+        big = cover_fit(im, int(rw * 1.2), int(rh * 1.2)).convert("RGB")
+        mask = Image.new("L", big.size, 0)
+        md = ImageDraw.Draw(mask)
+        if vertical:
             for y in range(big.height):
-                sd.line([(0, y), (big.width, y)], fill=int(70 + 185 * (y / big.height) ** 1.1))
-        else:          # tối bên trái (chỗ đặt chữ)
+                md.line([(0, y), (big.width, y)], fill=int(min(255, (70 + 185 * (y / big.height) ** 1.1) * shade)))
+        else:
             for x in range(big.width):
-                sd.line([(x, 0), (x, big.height)], fill=int(235 - 150 * (x / big.width) ** 0.9))
-        big.paste(Image.new("RGB", big.size, (14, 11, 8)), (0, 0), shade)
+                md.line([(x, 0), (x, big.height)], fill=int(min(255, (225 - 135 * (x / big.width) ** 0.9) * shade)))
+        big.paste(Image.new("RGB", big.size, (14, 11, 8)), (0, 0), mask)
         self.big, self.region, self.rw, self.rh = big, region, rw, rh
         rnd = random.Random(seed)
-        self.dir = (rnd.choice([-1, 1]), rnd.choice([-1, 1]))
+        self.zoom_in = rnd.random() < 0.5
+        self.c0 = (rnd.uniform(0.38, 0.62), rnd.uniform(0.4, 0.6))
+        self.c1 = (rnd.uniform(0.38, 0.62), rnd.uniform(0.4, 0.6))
 
-    def draw(self, canvas: Image.Image, t: float, dur: float):
-        p = M.ease_in_out(t / max(dur, 0.1))
-        mx, my = self.big.width - self.rw, self.big.height - self.rh
-        x = int(mx * (p if self.dir[0] > 0 else 1 - p))
-        y = int(my * (p if self.dir[1] > 0 else 1 - p))
-        canvas.paste(self.big.crop((x, y, x + self.rw, y + self.rh)), self.region[:2])
+    def frame(self, p: float) -> Image.Image:
+        p = M.clamp(p)
+        f = 1.0 - 0.16 * (p if self.zoom_in else 1 - p)          # tỉ lệ vùng cắt
+        bw, bh = self.big.size
+        cw, ch = bw * f, bh * f
+        cx = (self.c0[0] + (self.c1[0] - self.c0[0]) * p) * bw
+        cy = (self.c0[1] + (self.c1[1] - self.c0[1]) * p) * bh
+        x0 = min(max(0, cx - cw / 2), bw - cw)
+        y0 = min(max(0, cy - ch / 2), bh - ch)
+        return self.big.resize((self.rw, self.rh), Image.BILINEAR, box=(x0, y0, x0 + cw, y0 + ch))
+
+
+class Slideshow:
+    """Nhiều ảnh nối nhau liên tục, mỗi ảnh vài giây, chuyển bằng hoà mờ (crossfade)."""
+
+    def __init__(self, images: list, region: tuple, vertical: bool, dur: float, every: float, seed: int,
+                 shade: float = 1.0):
+        self.region, self.dur = region, dur
+        n = max(1, min(len(images), int(math.ceil(dur / every))))
+        self.kbs = [KenBurns(im, region, vertical, seed + i, shade) for i, (im, _) in enumerate(images[:n])]
+        self.slot = dur / max(1, len(self.kbs))
+        self.fade = min(0.7, self.slot * 0.25)
+
+    def draw(self, canvas: Image.Image, t: float):
+        if not self.kbs:
+            return
+        i = min(int(t / self.slot), len(self.kbs) - 1)
+        # mỗi ảnh chuyển động trong (slot + fade) giây để lúc hoà mờ vẫn đang trôi
+        span = self.slot + self.fade
+        cur = self.kbs[i].frame((t - i * self.slot) / span)
+        nxt_start = (i + 1) * self.slot - self.fade
+        if i + 1 < len(self.kbs) and t >= nxt_start:
+            a = M.ease_in_out((t - nxt_start) / self.fade)
+            nxt = self.kbs[i + 1].frame((t - nxt_start) / span)
+            cur = Image.blend(cur, nxt, a)
+        canvas.paste(cur, self.region[:2])
 
 
 # ---------------------------------------------------------------------------
@@ -509,6 +555,18 @@ def brand_layer(W, sub: str, vertical=False) -> Image.Image:
     return im
 
 
+def watermark_layer(vertical: bool) -> tuple:
+    """Watermark @Trong0322 nhỏ, mờ, cố định góc trên bên phải mọi khung hình."""
+    f = font("Bold", 26 if not vertical else 30)
+    w = int(_measure.textlength("@Trong0322", font=f)) + 12
+    im = Image.new("RGBA", (w, f.size + 14), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.text((3, 4), "@Trong0322", font=f, fill=(0, 0, 0, 120))
+    d.text((1, 2), "@Trong0322", font=f, fill=(255, 248, 232, 175))
+    W = 1080 if vertical else 1920
+    return im, (W - w - (44 if not vertical else 40), 118 if not vertical else 140)
+
+
 def draw_progress(d, W, H, frac, vertical=False):
     y = H - (10 if not vertical else 14)
     d.rectangle([0, y, W, H], fill=(48, 39, 30))
@@ -516,17 +574,43 @@ def draw_progress(d, W, H, frac, vertical=False):
 
 
 def credit(d, W, H, text, vertical=False):
+    return  # nguồn ảnh ghi trong mô tả YouTube, không hiện trên video
     if text:
         f = font("Regular", 20 if not vertical else 22)
         d.text((W - 40 - d.textlength(text[:80], font=f), H - (48 if not vertical else 70)), text[:80],
                font=f, fill=(200, 190, 175))
 
 
+def chunk_bounds(item: dict, chunks: list, speech: float) -> list:
+    """Mốc thời gian từng câu phụ đề: ước lượng theo độ dài chữ rồi 'hít' vào chỗ ngừng thật của giọng."""
+    lens = [max(1, len(" ".join(c))) for c in chunks]
+    tot = sum(lens)
+    sil = silences(item["pcm"], "-35dB", 0.12) if item.get("pcm") else []
+    mids = [(a + b) / 2 for a, b in sil if b < speech]
+    cuts, acc = [], 0
+    for L in lens[:-1]:
+        acc += L
+        guess = speech * acc / tot
+        near = [m for m in mids if abs(m - guess) < max(0.9, speech * 0.06) and (not cuts or m > cuts[-1] + 0.6)]
+        cuts.append(min(near, key=lambda m: abs(m - guess)) if near else guess)
+    edges = [0.0] + cuts + [speech]
+    return [(edges[i], edges[i + 1]) for i in range(len(chunks))]
+
+
+def balance_lines(lines: list[str]) -> list[str]:
+    if len(lines) >= 2 and len(lines[-1].split()) == 1 and len(lines[-2].split()) > 2:
+        a = lines[-2].split()
+        lines[-1] = a.pop() + " " + lines[-1]
+        lines[-2] = " ".join(a)
+    return lines
+
+
 # ---------------------------------------------------------------------------
 # 4. CẢNH (scene) — mỗi cảnh trả về hàm vẽ theo thời gian
 # ---------------------------------------------------------------------------
-def scene_title(title, week, host, dur):
+def scene_title(title, week, host, dur, images=None):
     W, H = 1920, 1080
+    show = Slideshow(images or [], (0, 0, W, H), False, dur, 2.6, 99, shade=1.15) if images else None
     L = [Layer(logo(240), 120, 170, "pop", 0.1, 0.7),
          Layer(text_img("TỔNG HỢP TUẦN", font("ExtraBold", 46), CHEESE), 120, 470, "fade_up", 0.35),
          Layer(text_img(week, font("SemiBold", 40), MUTED), 120, 530, "fade_up", 0.45)]
@@ -536,10 +620,12 @@ def scene_title(title, week, host, dur):
     L.append(Layer(text_img(f"MC {host}", font("SemiBold", 32), MUTED), 1560, 990, "fade_up", 1.1))
 
     def draw(c, t, ctx):
+        if show:
+            show.draw(c, t)
         for ly in L:
             ly.draw(c, t)
         d = ImageDraw.Draw(c)
-        M.eq_bars(d, 1760, 120, ctx["lvl"], ctx["t_glob"], CHEESE, h=60, w=14, gapx=9)
+        M.eq_bars(d, 1740, 40, ctx["lvl"], ctx["t_glob"], CHEESE, h=60, w=14, gapx=9)
         draw_progress(d, W, H, ctx["t_glob"] / ctx["total"])
     return draw
 
@@ -589,7 +675,7 @@ def scene_chart(prices, week_label, dur):
     return draw
 
 
-def story_layers_h(item, idx, total, week_label, image):
+def story_layers_h(item, idx, total, week_label):
     W, H = 1920, 1080
     L = [Layer(brand_layer(W, week_label), 0, 40, "fade_up", 0, 0.4, 20),
          Layer(text_img(f"{idx:02d}/{total:02d}", font("ExtraBold", 40), CHEESE), 1760, 60, "fade_up", 0.1)]
@@ -619,29 +705,24 @@ def story_layers_h(item, idx, total, week_label, image):
     if stat:
         stat_box = (1270, 300, 540, 340)
         L.append(Layer(panel_img(540, 340), 1270, 300, "slide_left", 0.45, 0.7))
-        lf = font("SemiBold", 32)
-        for i, ln in enumerate(wrap(_measure, item.get("key_label", ""), lf, 460, 2)):
+        lf = font("SemiBold", 30)
+        for i, ln in enumerate(balance_lines(wrap(_measure, item.get("key_label", ""), lf, 470, 2))):
             ti = text_img(ln, lf, MUTED, shadow=False)
             L.append(Layer(ti, 1270 + (540 - ti.size[0]) // 2, 520 + i * 42, "fade_up", 1.1))
-    kb = KenBurns(image[0], W, H, (0, 0, W, H), False, hash(item["headline"]) & 0xffff) if image else None
-    return L, stat, stat_box, kb, (image[1] if image else "")
+    return L, stat, stat_box
 
 
-def scene_story_h(item, idx, total, week_label, dur, image):
+def scene_story_h(item, idx, total, week_label, dur, images, every):
     W, H = 1920, 1080
-    L, stat, stat_box, kb, cred = story_layers_h(item, idx, total, week_label, image)
+    L, stat, stat_box = story_layers_h(item, idx, total, week_label)
+    show = Slideshow(images, (0, 0, W, H), False, dur, every, hash(item["headline"]) & 0xffff)
     chunks = M.split_words_chunks(item["narration"], 78) or [[]]
-    lens = [max(1, len(" ".join(c))) for c in chunks]
     speech = max(0.5, item["speech_dur"])
-    bounds, acc = [], 0
-    for Lc in lens:
-        bounds.append((acc / sum(lens) * speech, (acc + Lc) / sum(lens) * speech))
-        acc += Lc
+    bounds = chunk_bounds(item, chunks, speech)
     sf_big = fit_font(stat, "ExtraBold", 140, 64, 480, 1) if stat else None
 
     def draw(c, t, ctx):
-        if kb:
-            kb.draw(c, t, dur)
+        show.draw(c, t)
         for ly in L:
             ly.draw(c, t)
         d = ImageDraw.Draw(c)
@@ -654,18 +735,17 @@ def scene_story_h(item, idx, total, week_label, dur, image):
                 d.text((x0 + (w - sw) / 2, y0 + 50 + (140 - sf_big.size) / 2), s, font=sf_big, fill=CHEESE)
         for (a, b), ch in zip(bounds, chunks):
             if a <= t < b + (dur - speech if (a, b) == bounds[-1] else 0):
-                M.karaoke(d, W, H, ch, (t - a) / max(0.1, b - a), font("SemiBold", 44), 1500, H - 70)
+                M.karaoke(c, d, W, H, ch, (t - a) / max(0.1, b - a), font("SemiBold", 46), 1400, H - 64)
                 break
         M.eq_bars(d, 1610, 62, ctx["lvl"], ctx["t_glob"], CHEESE, h=40, w=9, gapx=6)
-        credit(d, W, H, cred)
         draw_progress(d, W, H, ctx["t_glob"] / ctx["total"])
     return draw
 
 
-def scene_story_v(item, dur, week_label, image):
+def scene_story_v(item, dur, week_label, images, every):
     W, H = 1080, 1920
     L = [Layer(brand_layer(W, week_label, True), 0, 40, "fade_up", 0, 0.4, 20)]
-    kb = KenBurns(image[0], W, H, (0, 230, W, 1050), True, hash(item["headline"]) & 0xffff) if image else None
+    show = Slideshow(images, (0, 230, W, 1050), True, dur, every, hash(item["headline"]) & 0xffff)
     fc = font("Bold", 32)
     x = 70
     for k, ci in enumerate([chip_img(item["category"], CAT_COLORS.get(item["category"], (176, 115, 14)), fc)] +
@@ -694,17 +774,11 @@ def scene_story_v(item, dur, week_label, image):
     cta = text_img("Xem full tổng hợp tuần · @Trong0322", font("Bold", 32), MUTED, shadow=False)
     L.append(Layer(cta, (W - cta.size[0]) // 2, H - 110, "fade_up", 1.0))
     chunks = M.split_words_chunks(item["narration"], 54) or [[]]
-    lens = [max(1, len(" ".join(c))) for c in chunks]
     speech = max(0.5, item["speech_dur"])
-    bounds, acc = [], 0
-    for Lc in lens:
-        bounds.append((acc / sum(lens) * speech, (acc + Lc) / sum(lens) * speech))
-        acc += Lc
-    cred = image[1] if image else ""
+    bounds = chunk_bounds(item, chunks, speech)
 
     def draw(c, t, ctx):
-        if kb:
-            kb.draw(c, t, dur)
+        show.draw(c, t)
         for ly in L:
             ly.draw(c, t)
         d = ImageDraw.Draw(c)
@@ -714,11 +788,10 @@ def scene_story_v(item, dur, week_label, image):
             d.text(((W - sw) / 2, sy + 30 + (150 - sf.size) / 2), s, font=sf, fill=CHEESE)
         for (a, b), ch in zip(bounds, chunks):
             if a <= t < b + (dur - speech if (a, b) == bounds[-1] else 0):
-                M.karaoke(d, W, H, ch, (t - a) / max(0.1, b - a), font("ExtraBold", 54), W - 150, H - 170,
+                M.karaoke(c, d, W, H, ch, (t - a) / max(0.1, b - a), font("ExtraBold", 54), W - 150, H - 170,
                           max_lines=3)
                 break
         M.eq_bars(d, W - 150, 70, ctx["lvl"], ctx["t_glob"], CHEESE, h=56, w=12, gapx=8)
-        credit(d, W, H, cred, vertical=True)
         draw_progress(d, W, H, ctx["t_glob"] / ctx["total"], vertical=True)
     return draw
 
@@ -844,13 +917,21 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
     wl = f"Tổng hợp tuần {week}"
     T = 0.6  # nghỉ giữa các tin
 
+    every = float(vcfg.get("image_seconds", 4.0))  # đổi ảnh mỗi ~4 giây
     log("   🖼  Tìm ảnh minh hoạ cho từng tin")
+    credits = []
     for i in set(order) | set(shorts):
         it = pool[i]
         it["speech_dur"] = len(it["pcm"]) / SR / 2
-        it["img_h"] = find_image(it, "landscape") if i in order else None
-        it["img_v"] = find_image(it, "portrait") if i in shorts else None
-        log(f"      [{i}] {it.get('visual_query', '')!r} → {'có ảnh' if (it['img_h'] or it['img_v']) else 'không có'}")
+        n = max(2, min(9, int(math.ceil((it["speech_dur"] + 0.6) / every))))
+        it["imgs_h"] = find_images(it, "landscape", n) if i in order else []
+        it["imgs_v"] = find_images(it, "portrait", n) if i in shorts else []
+        credits += [c for _, c in it["imgs_h"] + it["imgs_v"]]
+        log(f"      [{i}] {len(it['imgs_h'])} ảnh ngang · {len(it['imgs_v'])} ảnh dọc · {it.get('visual_query', '')!r}")
+    intro_imgs = find_images({"visual_queries": ["cryptocurrency bitcoin", "stock market trading screen",
+                                                 "city skyline night finance"], "category": "Thị trường"},
+                             "landscape", 4)
+    credits += [c for _, c in intro_imgs]
 
     # ---- video ngang 16:9 ----
     scenes = []
@@ -858,12 +939,12 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
     idur = len(intro_pcm) / SR / 2 + T
     if prices:
         scenes.append({"dur": idur * 0.5, "pcm": intro_pcm[: int(len(intro_pcm) * 0.5) // 2 * 2],
-                       "draw": scene_title(title, week, pc.get("host_name", ""), idur * 0.5), "wipe": False})
+                       "draw": scene_title(title, week, pc.get("host_name", ""), idur * 0.5, intro_imgs), "wipe": False})
         rest = intro_pcm[int(len(intro_pcm) * 0.5) // 2 * 2:] + gap(T)
         scenes.append({"dur": len(rest) / SR / 2, "pcm": rest, "draw": scene_chart(prices, wl, len(rest) / SR / 2)})
     else:
         scenes.append({"dur": idur, "pcm": intro_pcm + gap(T),
-                       "draw": scene_title(title, week, pc.get("host_name", ""), idur), "wipe": False})
+                       "draw": scene_title(title, week, pc.get("host_name", ""), idur, intro_imgs), "wipe": False})
     marks = [(0, "Mở đầu")]
     tcur = sum(s_["dur"] for s_ in scenes)
     for k, i in enumerate(order, 1):
@@ -871,7 +952,7 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
         a_ = it["pcm"] + gap(T)
         dur = len(a_) / SR / 2
         marks.append((tcur, it["headline"][:70]))
-        scenes.append({"dur": dur, "pcm": a_, "draw": scene_story_h(it, k, len(order), wl, dur, it["img_h"])})
+        scenes.append({"dur": dur, "pcm": a_, "draw": scene_story_h(it, k, len(order), wl, dur, it["imgs_h"], every)})
         tcur += dur
     marks.append((tcur, "Tổng kết"))
     o_ = outro_pcm + gap(2.5)
@@ -884,7 +965,8 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
         sc["dur"] = n / M.FPS
     log(f"   🎬 Dựng video ngang ({sum(s_['dur'] for s_ in scenes) / 60:.1f} phút)…")
     t0 = time.time()
-    h_mp4 = M.render(scenes, 1920, 1080, result_dir / f"tong-hop-tuan-{tag}-16x9.mp4", tmp, log=log)
+    h_mp4 = M.render(scenes, 1920, 1080, result_dir / f"tong-hop-tuan-{tag}-16x9.mp4", tmp, log=log,
+                     watermark=watermark_layer(False))
     log(f"   ✓ Video ngang: {h_mp4.stat().st_size / 1e6:.1f} MB (dựng mất {time.time() - t0:.0f}s)")
 
     # ---- video dọc 9:16 ----
@@ -893,18 +975,20 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
         it = pool[i]
         a_ = it["pcm"] + gap(0.6)
         dur = len(a_) / SR / 2
-        vs = [{"dur": dur, "pcm": a_, "draw": scene_story_v(it, dur, wl, it["img_v"]), "wipe": False},
+        vs = [{"dur": dur, "pcm": a_, "draw": scene_story_v(it, dur, wl, it["imgs_v"], every), "wipe": False},
               {"dur": 2.4, "pcm": gap(2.4), "draw": scene_outro(vertical=True)}]
         for sc in vs:
             k = int(round(sc["dur"] * M.FPS))
             sc["pcm"] = (sc["pcm"] + gap(1))[: int(k / M.FPS * SR) * 2]
             sc["dur"] = k / M.FPS
-        v = M.render(vs, 1080, 1920, result_dir / f"short-{tag}-{n}.mp4", tmp, log=lambda *a: None)
+        v = M.render(vs, 1080, 1920, result_dir / f"short-{tag}-{n}.mp4", tmp, log=lambda *a: None,
+                     watermark=watermark_layer(True))
         v_files.append((v, it))
         log(f"   ✓ Short {n}: {sum(s_['dur'] for s_ in vs):.0f}s, {v.stat().st_size / 1e6:.1f} MB")
 
     desc = (plan.get("description", "") + "\n\n" + youtube_chapters(marks) +
-            "\n\nAgent build by @Trong0322 · Nội dung do AI tổng hợp, không phải lời khuyên đầu tư.")
+            "\n\nAgent build by @Trong0322 · Nội dung do AI tổng hợp, không phải lời khuyên đầu tư."
+            + ("\n\nNguồn ảnh (giấy phép miễn phí): " + "; ".join(dict.fromkeys(credits)) if credits else ""))
     return {"tag": tag, "title": title, "description": desc, "week": week,
             "h": h_mp4, "shorts": v_files}
 
