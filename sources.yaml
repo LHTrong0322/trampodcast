@@ -85,3 +85,27 @@ video:
   music_volume: 0.22          # âm lượng nhạc nền (0.1 = rất nhỏ, 0.35 = rõ)
   shorts_speed: 1.08          # video dọc đọc nhanh hơn 8%
   shorts_max_seconds: 30      # video dọc tối đa bao nhiêu giây
+
+# ---------------------------------------------------------------------
+#  TRẠM INSIGHT — gửi link bài X chất lượng vào bot Telegram → video chia sẻ insight
+#  Lệnh trong Telegram: gửi link (nhiều link 1 lúc cũng được) · /list xem link đang chờ · /cook làm ngay
+# ---------------------------------------------------------------------
+insight:
+  enabled: true
+  brand: "Trạm Insight"
+  title_tag: "INSIGHT CRYPTO"
+  outro_line: "Đăng ký kênh để nhận insight crypto mỗi tuần"
+  cta_v: "Xem full trên YouTube · @Trong0322"
+  voice: "Charon"             # giọng tạm (nam, kiểu giảng giải) — đổi tên giọng Gemini tại đây
+  voice_style: ""             # để trống = đọc tự nhiên
+  host_name: ""               # tên người dẫn (để trống = không xưng tên)
+  host_desc: "điềm đạm, sâu sắc, gần gũi như một người anh đi trước chia sẻ kinh nghiệm"
+  self_word: "mình"
+  audience: "mọi người"
+  min_posts: 3                # đủ bao nhiêu link thì tối đó tự cook video
+  max_posts: 8                # mỗi video dùng tối đa bao nhiêu bài
+  max_sections: 6             # số insight tối đa trong 1 video
+  target_minutes: 7
+  shorts: 3                   # số video ngắn highlight
+  shorts_max_seconds: 45
+  cook_hours: [19, 23]        # khung giờ (VN) được phép cook tự động

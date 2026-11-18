@@ -51,6 +51,12 @@ CAT_COLORS = {
     "Dự án": (232, 137, 43), "Bảo mật": (229, 72, 77), "Thị trường": (176, 115, 14),
 }
 
+# chữ thương hiệu (insight.py ghi đè cho chuỗi Trạm Insight)
+BRAND = {"name": "TRẠM PODCAST CRYPTO", "title_tag": "TỔNG HỢP TUẦN",
+         "outro_line": "Đăng ký kênh để nhận tổng hợp crypto mỗi tuần",
+         "cta_v": "Xem full tổng hợp tuần · @Trong0322", "thumb_tag": "TỔNG HỢP TUẦN {week}",
+         "tg_header": "Video tổng hợp tuần {week}", "tag_prefix": "weekly"}
+
 TERMS = """THUẬT NGỮ: giữ nguyên thuật ngữ tiếng Anh dân crypto hay dùng (crypto, stablecoin, token,
 altcoin, DeFi, ETF, spot, futures, long, short, leverage, liquidation, staking, airdrop, unlock,
 TGE, listing, mainnet, L1, L2, DEX, CEX, TVL, market cap, whale, on-chain, RWA, buyback...);
@@ -259,7 +265,7 @@ def en_money(text: str) -> str:
         return f"{'$' if dollar else ''}{_num(m.group(2))}{u}"
     text = _UNIT_RE.sub(unit, text)
     text = _DOLLAR_RE.sub(lambda m: f"${_num(m.group(1))}", text)
-    text = re.sub(r"\s*phần trăm", "%", text)
+    text = re.sub(r"(\d)\s*phần trăm", r"\1%", text)
     return re.sub(r"\$\$", "$", text)
 
 
@@ -606,7 +612,7 @@ def brand_layer(W, sub: str, vertical=False) -> Image.Image:
     im.paste(logo(s), (60, 10), logo(s))
     d = ImageDraw.Draw(im)
     f1, f2 = font("ExtraBold", 40 if vertical else 34), font("Regular", 28 if vertical else 24)
-    d.text((60 + s + 22, 14 + (8 if vertical else 2)), "TRẠM PODCAST CRYPTO", font=f1, fill=CREAM)
+    d.text((60 + s + 22, 14 + (8 if vertical else 2)), BRAND["name"], font=f1, fill=CREAM)
     d.text((60 + s + 22, 14 + (60 if vertical else 46)), sub, font=f2, fill=MUTED)
     return im
 
@@ -668,12 +674,13 @@ def scene_title(title, week, host, dur, images=None):
     W, H = 1920, 1080
     show = Slideshow(images or [], (0, 0, W, H), False, dur, 2.6, 99, shade=1.15) if images else None
     L = [Layer(logo(240), 120, 170, "pop", 0.1, 0.7),
-         Layer(text_img("TỔNG HỢP TUẦN", font("ExtraBold", 46), CHEESE), 120, 470, "fade_up", 0.35),
+         Layer(text_img(BRAND["title_tag"], font("ExtraBold", 46), CHEESE), 120, 470, "fade_up", 0.35),
          Layer(text_img(week, font("SemiBold", 40), MUTED), 120, 530, "fade_up", 0.45)]
     tf = fit_font(title, "ExtraBold", 92, 60, 1680, 3)
     for i, ln in enumerate(wrap(_measure, title, tf, 1680, 3)):
         L.append(Layer(text_img(ln, tf, CREAM), 116, 620 + i * int(tf.size * 1.15), "fade_up", 0.6 + 0.12 * i))
-    L.append(Layer(text_img(f"MC {host}", font("SemiBold", 32), MUTED), 1560, 990, "fade_up", 1.1))
+    if host:
+        L.append(Layer(text_img(f"MC {host}", font("SemiBold", 32), MUTED), 1560, 990, "fade_up", 1.1))
 
     def draw(c, t, ctx):
         if show:
@@ -743,7 +750,7 @@ def make_thumbnail(text: str, stat: str, week: str, bg) -> Image.Image:
         d.rounded_rectangle([bx0, by0, bx0 + sw + 60, by0 + sf.size + 40], radius=26, fill=CHEESE)
         d.text((bx0 + 30, by0 + 12), stat, font=sf, fill=(20, 16, 12))
     img.paste(logo(110), (W - 150, 36), logo(110))
-    tag = f"TỔNG HỢP TUẦN {week}"
+    tag = BRAND["thumb_tag"].format(week=week)
     tf2 = font("ExtraBold", 30)
     tw = d.textlength(tag, font=tf2)
     d.rounded_rectangle([60, 40, 60 + tw + 40, 92], radius=26, fill=(20, 16, 12))
@@ -807,7 +814,8 @@ def story_layers_h(item, idx, total, week_label):
     chips = [chip_img(item["category"], CAT_COLORS.get(item["category"], (176, 115, 14)), fc)]
     if item.get("is_update"):
         chips.append(chip_img("CẬP NHẬT", (11, 110, 79), fc))
-    chips.append(text_img(date_label(datetime.fromisoformat(item["date"])), font("SemiBold", 30), MUTED))
+    chips.append(text_img(item.get("date_text") or date_label(datetime.fromisoformat(item["date"])),
+                          font("SemiBold", 30), MUTED))
     for k, ci in enumerate(chips):
         L.append(Layer(ci, x, 236 if k < len(chips) - 1 else 240, "pop", 0.2 + 0.08 * k, 0.5))
         x += ci.size[0] + 14
@@ -917,7 +925,7 @@ def scene_story_v(item, dur, week_label, images, every):
         ti = text_img(wrap(_measure, item.get("key_label", ""), lf, W - 260, 1)[0] if item.get("key_label") else "",
                       lf, MUTED, shadow=False)
         L.append(Layer(ti, (W - ti.size[0]) // 2, sy + 200, "fade_up", 1.2))
-    cta = text_img("Xem full tổng hợp tuần · @Trong0322", font("Bold", 32), MUTED, shadow=False)
+    cta = text_img(BRAND["cta_v"], font("Bold", 32), MUTED, shadow=False)
     L.append(Layer(cta, (W - cta.size[0]) // 2, H - 110, "fade_up", 1.0))
     chunks = M.split_words_chunks(item.get("sub_text") or item["narration"], 54) or [[]]
     speech = max(0.5, item["speech_dur"])
@@ -948,8 +956,8 @@ def scene_outro(vertical=False):
     L = [Layer(logo(s), (W - s) // 2, int(H * 0.2), "pop", 0.05, 0.7)]
     y = int(H * 0.2) + s + 50
     for k, (text, f, c) in enumerate([
-            ("TRẠM PODCAST CRYPTO", font("ExtraBold", 64 if vertical else 58), CHEESE),
-            ("Đăng ký kênh để nhận tổng hợp crypto mỗi tuần", font("SemiBold", 40 if vertical else 36), CREAM),
+            (BRAND["name"], font("ExtraBold", 64 if vertical else 58), CHEESE),
+            (BRAND["outro_line"], font("SemiBold", 40 if vertical else 36), CREAM),
             ("Agent build by @Trong0322", font("Bold", 36 if vertical else 32), MUTED),
             ("Nội dung do AI tổng hợp · không phải lời khuyên đầu tư", font("Regular", 30 if vertical else 26), MUTED)]):
         for ln in wrap(_measure, text, f, W - 160):
@@ -1217,7 +1225,7 @@ def publish_release(res: dict) -> str:
     repo = os.getenv("GITHUB_REPOSITORY")
     if not repo or not os.getenv("GH_TOKEN"):
         return ""
-    tag = f"weekly-{res['tag']}"
+    tag = f"{BRAND['tag_prefix']}-{res['tag']}"
     notes = f"# {res['title']}\n\n{res['description']}"
     files = [str(res["h"])] + [str(v) for v, _ in res["shorts"]] + ([str(res["thumb"])] if res.get("thumb") else [])
     subprocess.run(["gh", "release", "delete", tag, "-y", "--cleanup-tag", "-R", repo], capture_output=True)
@@ -1260,7 +1268,7 @@ def send_telegram_videos(res: dict, release_url: str):
 
     requests.post(f"{api}/sendMessage", timeout=60, data={
         "chat_id": chat, "parse_mode": "HTML", "disable_web_page_preview": "true",
-        "text": (f"🎬 <b>Video tổng hợp tuần {esc(res['week'])}</b> — bản xem trước\n"
+        "text": (f"🎬 <b>{esc(BRAND['tg_header'].format(week=res['week']))}</b> — bản xem trước\n"
                  f"1 video ngang 16:9 (YouTube) + {len(res['shorts'])} video dọc 9:16 (Reels/Shorts)\n"
                  + (f"📦 Tải file gốc: {esc(release_url)}" if release_url else ""))})
     if res.get("thumb"):
