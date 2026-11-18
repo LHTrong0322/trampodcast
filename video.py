@@ -779,7 +779,7 @@ def scene_chart(prices, week_label, dur):
             cur_price = first + (last - first) * e
             price = f"${cur_price:,.0f}" if last > 100 else f"${cur_price:,.2f}"
             d.text((x0 + 40, y0 + 104), price, font=font("Bold", 44), fill=CREAM)
-            pct = f"{'+' if ch >= 0 else ''}{ch * e:.1f}%".replace(".", ",")
+            pct = f"{'+' if ch >= 0 else ''}{ch * e:.1f}%"
             pf = font("ExtraBold", 54)
             d.text((x1 - 40 - d.textlength(pct, font=pf), y0 + 34), pct, font=pf, fill=col)
             cx0, cy0, cx1, cy1 = x0 + 40, y0 + 200, x1 - 40, y1 - 50
@@ -867,7 +867,7 @@ def scene_story_h(item, idx, total, week_label, dur, images, every):
             ch_pct = (ser[-1] / ser[0] - 1) * 100
             col = (34, 197, 94) if ch_pct >= 0 else (239, 68, 68)
             d.text((x0 + 26, y0 + 18), f"{sym} · 7 ngày", font=font("Bold", 28), fill=CREAM)
-            pct = f"{'+' if ch_pct >= 0 else ''}{ch_pct * e:.1f}%".replace(".", ",")
+            pct = f"{'+' if ch_pct >= 0 else ''}{ch_pct * e:.1f}%"
             pf = font("ExtraBold", 32)
             d.text((x0 + w - 26 - d.textlength(pct, font=pf), y0 + 16), pct, font=pf, fill=col)
             gx0, gy0, gx1, gy1 = x0 + 26, y0 + 66, x0 + w - 26, y0 + h - 22
