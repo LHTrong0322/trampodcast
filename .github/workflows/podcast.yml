@@ -40,7 +40,7 @@ jobs:
       - name: Cài thư viện
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
-          pip install -q requests feedparser pyyaml beautifulsoup4 telethon
+          pip install -q requests feedparser pyyaml beautifulsoup4 telethon pillow
 
       - name: Gom tin → AI biên tập → đọc audio
         env:
@@ -60,6 +60,12 @@ jobs:
           else
             python "$SCRIPT" --out public
           fi
+
+      - name: Làm sẵn đoạn video của ngày (dùng lượt dư cho video tuần)
+        continue-on-error: true
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python video.py daily --out public
 
       - name: Lưu & xuất bản lên nhánh podcast-data
         run: |

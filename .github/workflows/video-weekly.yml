@@ -1,0 +1,68 @@
+name: Video tổng hợp tuần (16:9 + Shorts 9:16)
+
+on:
+  schedule:
+    # Chủ nhật 08:23 UTC = 15:23 giờ VN (dư thời gian cho GitHub chạy trễ, kịp xem trước 19:00)
+    - cron: "23 8 * * 0"
+  workflow_dispatch:
+    inputs:
+      backfill:
+        description: "Làm bù đoạn video cho bao nhiêu tập gần nhất còn thiếu (mỗi tập tốn 1 lượt đọc)"
+        required: false
+        default: "0"
+      days:
+        description: "Gom tin trong bao nhiêu ngày gần nhất"
+        required: false
+        default: "7"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: podcast
+  cancel-in-progress: false
+
+jobs:
+  weekly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lấy dữ liệu (nhánh podcast-data)
+        run: |
+          git clone --depth 1 --branch podcast-data \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" public
+          rm -rf public/.git
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cài thư viện
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+          pip install -q requests feedparser pyyaml beautifulsoup4 pillow
+
+      - name: Dựng video tuần + gửi Telegram
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python video.py weekly --out public \
+            --backfill "${{ github.event.inputs.backfill || '0' }}" \
+            --days "${{ github.event.inputs.days || '7' }}"
+
+      - name: Lưu đoạn video làm bù (nhánh podcast-data)
+        if: always()
+        run: |
+          rm -rf public/video/weekly
+          cd public
+          git init -q -b podcast-data
+          git config user.name "tram-podcast-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Cập nhật dữ liệu video $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -f -q "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" podcast-data
