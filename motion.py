@@ -250,13 +250,24 @@ def countup_text(stat: str, p: float) -> str:
 # bộ mã hoá
 # ---------------------------------------------------------------------------
 class Encoder:
-    def __init__(self, path: Path, W: int, H: int, audio_wav: Path, crf: int = 22):
-        self.p = subprocess.Popen([
-            "ffmpeg", "-loglevel", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24",
-            "-s", f"{W}x{H}", "-r", str(FPS), "-i", "pipe:0", "-i", str(audio_wav),
-            "-c:v", "libx264", "-preset", "veryfast", "-crf", str(crf), "-pix_fmt", "yuv420p",
-            "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "128k", "-ar", "44100",
-            "-shortest", "-movflags", "+faststart", str(path)], stdin=subprocess.PIPE)
+    def __init__(self, path: Path, W: int, H: int, audio_wav: Path, crf: int = 22,
+                 music_wav: Path | None = None, music_vol: float = 0.22):
+        cmd = ["ffmpeg", "-loglevel", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24",
+               "-s", f"{W}x{H}", "-r", str(FPS), "-i", "pipe:0", "-i", str(audio_wav)]
+        if music_wav:
+            # nhạc nền tự nhỏ đi khi có giọng đọc (sidechain), rồi trộn và chuẩn hoá âm lượng
+            cmd += ["-i", str(music_wav), "-filter_complex",
+                    f"[1:a]asplit=2[v1][v2];[2:a]lowpass=f=3200,volume={music_vol}[m];"
+                    "[m][v1]sidechaincompress=threshold=0.015:ratio=6:attack=20:release=450[md];"
+                    "[v2][md]amix=inputs=2:duration=first:normalize=0,"
+                    "loudnorm=I=-14:TP=-1.5:LRA=11[a]",
+                    "-map", "0:v", "-map", "[a]"]
+        else:
+            cmd += ["-af", "loudnorm=I=-14:TP=-1.5:LRA=11"]
+        cmd += ["-c:v", "libx264", "-preset", "veryfast", "-crf", str(crf), "-pix_fmt", "yuv420p",
+                "-c:a", "aac", "-b:a", "128k", "-ar", "44100", "-shortest", "-movflags", "+faststart",
+                str(path)]
+        self.p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
         self.path = path
 
     def write(self, img: Image.Image):
@@ -293,7 +304,8 @@ def wipe(new: Image.Image, prev: Image.Image, p: float, color=(255, 200, 61)) ->
 
 
 def render(scenes: list[dict], W: int, H: int, out_path: Path, tmp: Path, crf: int = 22,
-           log=print, watermark: tuple | None = None) -> Path:
+           log=print, watermark: tuple | None = None, music_pcm: bytes | None = None,
+           music_vol: float = 0.22) -> Path:
     """scenes: [{"dur": giây, "pcm": bytes, "draw": fn(canvas, t_local, ctx)}]."""
     pcm = b"".join(s["pcm"] for s in scenes)
     wav = tmp / (out_path.stem + ".wav")
@@ -301,7 +313,11 @@ def render(scenes: list[dict], W: int, H: int, out_path: Path, tmp: Path, crf: i
     lv = levels(pcm)
     total = sum(s["dur"] for s in scenes)
     bg = Backdrop(W, H)
-    enc = Encoder(out_path, W, H, wav, crf)
+    mwav = None
+    if music_pcm:
+        mwav = tmp / (out_path.stem + "-music.wav")
+        write_wav(music_pcm, mwav)
+    enc = Encoder(out_path, W, H, wav, crf, mwav, music_vol)
     t_glob, fidx, prev = 0.0, 0, None
     for si, sc in enumerate(scenes):
         n = int(round(sc["dur"] * FPS))

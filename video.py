@@ -31,6 +31,7 @@ from PIL import Image, ImageDraw, ImageFont
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import podcast as P  # noqa: E402
 import motion as M  # noqa: E402
+import music as MU  # noqa: E402
 from motion import Layer  # noqa: E402
 
 log = P.log
@@ -376,20 +377,44 @@ def find_images(item: dict, orientation: str, n: int) -> list:
 
 
 _coin_logo: dict = {}
+_coin_info: dict = {}
+
+
+def coin_info(ticker: str) -> dict | None:
+    t = str(ticker).lstrip("$").upper()
+    if t not in _coin_info:
+        _coin_info[t] = None
+        try:
+            r = _get("https://api.coingecko.com/api/v3/search", params={"query": t})
+            for c in r.json().get("coins", [])[:8]:
+                if c.get("symbol", "").upper() == t and c.get("market_cap_rank"):
+                    _coin_info[t] = c
+                    break
+        except Exception:
+            pass
+    return _coin_info[t]
+
+
+def coin_series(ticker: str) -> list | None:
+    """Giá 7 ngày của coin (để vẽ biểu đồ nhỏ trong cảnh tin)."""
+    info = coin_info(ticker)
+    if not info:
+        return None
+    try:
+        time.sleep(1.2)  # nhẹ tay với giới hạn của CoinGecko
+        r = _get(f"https://api.coingecko.com/api/v3/coins/{info['id']}/market_chart",
+                 params={"vs_currency": "usd", "days": 7})
+        pts = [p[1] for p in r.json().get("prices", [])]
+        return pts[::3] if len(pts) > 10 else None
+    except Exception:
+        return None
 
 
 def coin_logo(ticker: str, size: int) -> Image.Image | None:
     t = str(ticker).lstrip("$").upper()
     if t not in _coin_logo:
-        _coin_logo[t] = None
-        try:
-            r = _get("https://api.coingecko.com/api/v3/search", params={"query": t})
-            for c in r.json().get("coins", [])[:8]:
-                if c.get("symbol", "").upper() == t and c.get("large"):
-                    _coin_logo[t] = _download(c["large"].replace("/large/", "/large/"))
-                    break
-        except Exception:
-            pass
+        info = coin_info(t)
+        _coin_logo[t] = _download(info["large"]) if info and info.get("large") else None
     im = _coin_logo[t]
     if im is None:
         return None
@@ -630,6 +655,73 @@ def scene_title(title, week, host, dur, images=None):
     return draw
 
 
+def scene_hook(hook, stat, label, dur, images):
+    """3 giây mở màn: con số sốc nhất tuần chạy số + câu hook, ảnh nền đổi nhanh."""
+    W, H = 1920, 1080
+    show = Slideshow(images or [], (0, 0, W, H), False, dur, 1.4, 7, shade=1.25) if images else None
+    stat = (stat or "").strip()
+    sf = fit_font(stat, "ExtraBold", 230, 100, 1600, 1) if stat else None
+    L = []
+    if label:
+        ti = text_img(label.upper(), font("Bold", 40), CREAM)
+        L.append(Layer(ti, (W - ti.size[0]) // 2, 585, "fade_up", 0.35))
+    hf = fit_font(hook, "ExtraBold", 64, 44, 1600, 2)
+    y = 680 if stat else 420
+    for i, ln in enumerate(wrap(_measure, hook, hf, 1600, 2)):
+        ti = text_img(ln, hf, CHEESE if not stat else (255, 255, 255))
+        L.append(Layer(ti, (W - ti.size[0]) // 2, y, "pop", 0.15 + 0.12 * i, 0.5))
+        y += int(hf.size * 1.2)
+
+    def draw(c, t, ctx):
+        if show:
+            show.draw(c, t)
+        d = ImageDraw.Draw(c)
+        if stat:
+            s_ = M.countup_text(stat, t / 0.9)
+            sw = d.textlength(s_, font=sf)
+            sc = 1 + 0.04 * math.sin(min(1, t / 0.9) * math.pi)
+            d.text(((W - sw * sc) / 2 + 4, 270 + 6), s_, font=sf, fill=(0, 0, 0))
+            d.text(((W - sw) / 2, 270), s_, font=sf, fill=CHEESE)
+        for ly in L:
+            ly.draw(c, t)
+        M.eq_bars(d, (W - 100) // 2, 210, ctx["lvl"], ctx["t_glob"], CHEESE, h=60, w=14, gapx=9)
+    return draw
+
+
+def make_thumbnail(text: str, stat: str, week: str, bg) -> Image.Image:
+    """Ảnh bìa YouTube 1280×720: chữ to 3-5 từ + con số + logo + @Trong0322."""
+    W, H = 1280, 720
+    img = Image.new("RGB", (W, H), BG)
+    if bg is not None:
+        img.paste(KenBurns(bg, (0, 0, W, H), False, 1, shade=1.05).frame(0.5), (0, 0))
+    d = ImageDraw.Draw(img)
+    text = (text or "").upper().strip()
+    tf = fit_font(text, "ExtraBold", 118, 64, 820, 3)
+    lines = wrap(_measure, text, tf, 820, 3)
+    y = 150 if not stat else 110
+    for k, ln in enumerate(lines):
+        col = CHEESE if k % 2 == 0 else (255, 255, 255)
+        for dx, dy in ((6, 7), (4, 4)):
+            d.text((60 + dx, y + dy), ln, font=tf, fill=(0, 0, 0))
+        d.text((60, y), ln, font=tf, fill=col)
+        y += int(tf.size * 1.05)
+    if stat:
+        sf = fit_font(stat, "ExtraBold", 120, 70, 520, 1)
+        sw = int(d.textlength(stat, font=sf))
+        bx0, by0 = 60, min(y + 24, H - sf.size - 90)
+        d.rounded_rectangle([bx0, by0, bx0 + sw + 60, by0 + sf.size + 40], radius=26, fill=CHEESE)
+        d.text((bx0 + 30, by0 + 12), stat, font=sf, fill=(20, 16, 12))
+    img.paste(logo(110), (W - 150, 36), logo(110))
+    tag = f"TỔNG HỢP TUẦN {week}"
+    tf2 = font("ExtraBold", 30)
+    tw = d.textlength(tag, font=tf2)
+    d.rounded_rectangle([60, 40, 60 + tw + 40, 92], radius=26, fill=(20, 16, 12))
+    d.text((80, 46), tag, font=tf2, fill=CHEESE)
+    wf = font("Bold", 30)
+    d.text((W - 40 - d.textlength("@Trong0322", font=wf), H - 60), "@Trong0322", font=wf, fill=CREAM)
+    return img
+
+
 def scene_chart(prices, week_label, dur):
     W, H = 1920, 1080
     brand = Layer(brand_layer(W, week_label), 0, 40, "fade_up", 0, 0.4, 20)
@@ -720,6 +812,10 @@ def scene_story_h(item, idx, total, week_label, dur, images, every):
     speech = max(0.5, item["speech_dur"])
     bounds = chunk_bounds(item, chunks, speech)
     sf_big = fit_font(stat, "ExtraBold", 140, 64, 480, 1) if stat else None
+    cc = item.get("coin_chart")
+    cbox = (1270, 662, 540, 176) if stat else (1270, 300, 540, 300)
+    if cc:
+        L.append(Layer(panel_img(cbox[2], cbox[3], outline=(80, 64, 40, 255)), cbox[0], cbox[1], "slide_left", 0.9, 0.6))
 
     def draw(c, t, ctx):
         show.draw(c, t)
@@ -733,6 +829,25 @@ def scene_story_h(item, idx, total, week_label, dur, images, every):
                 x0, y0, w, h = stat_box
                 sw = d.textlength(s, font=sf_big)
                 d.text((x0 + (w - sw) / 2, y0 + 50 + (140 - sf_big.size) / 2), s, font=sf_big, fill=CHEESE)
+        if cc and t > 1.2:
+            sym, ser = cc
+            e = M.ease_out_cubic((t - 1.2) / 1.6)
+            x0, y0, w, h = cbox
+            ch_pct = (ser[-1] / ser[0] - 1) * 100
+            col = (34, 197, 94) if ch_pct >= 0 else (239, 68, 68)
+            d.text((x0 + 26, y0 + 18), f"{sym} · 7 ngày", font=font("Bold", 28), fill=CREAM)
+            pct = f"{'+' if ch_pct >= 0 else ''}{ch_pct * e:.1f}%".replace(".", ",")
+            pf = font("ExtraBold", 32)
+            d.text((x0 + w - 26 - d.textlength(pct, font=pf), y0 + 16), pct, font=pf, fill=col)
+            gx0, gy0, gx1, gy1 = x0 + 26, y0 + 66, x0 + w - 26, y0 + h - 22
+            lo, hi = min(ser), max(ser)
+            rng = (hi - lo) or 1
+            k = max(2, int(len(ser) * e))
+            pts = [(gx0 + (gx1 - gx0) * j / (len(ser) - 1), gy1 - (gy1 - gy0) * (v - lo) / rng)
+                   for j, v in enumerate(ser[:k])]
+            d.line(pts, fill=col, width=4, joint="curve")
+            px, py = pts[-1]
+            d.ellipse([px - 7, py - 7, px + 7, py + 7], fill=col)
         for (a, b), ch in zip(bounds, chunks):
             if a <= t < b + (dur - speech if (a, b) == bounds[-1] else 0):
                 M.karaoke(c, d, W, H, ch, (t - a) / max(0.1, b - a), font("SemiBold", 46), 1400, H - 64)
@@ -858,10 +973,18 @@ Nhiệm vụ:
 4. Viết lời kết (~260 ký tự): chốt tâm lý thị trường tuần, nhắc "không phải lời khuyên đầu tư",
    mời đăng ký kênh.
 5. Tiêu đề video YouTube hấp dẫn (≤ 90 ký tự, đúng chính tả) và mô tả ngắn (2-3 câu).
+6. "hook": 1 câu MỞ MÀN cực sốc, đọc trong ~3 giây (≤ 16 từ), nêu con số/sự kiện gây chú ý nhất
+   tuần, KHÔNG chào hỏi (vd "Sáu tỷ đô bị thanh lý chỉ trong bảy ngày, chuyện gì đang xảy ra?").
+   "hook_stat": con số đó dạng ngắn để hiện chữ to (vd "$6 tỷ"); "hook_label": giải thích ≤ 6 từ.
+7. Ảnh bìa YouTube: "thumb_text" 3-5 từ IN HOA gây tò mò; "thumb_stat" con số ngắn (có thể trống).
+8. Với MỖI tin trong "shorts": "short_hooks" là 1 câu mở đầu giật tít đọc trong ~2-3 giây
+   (≤ 12 từ), khiến người lướt phải dừng lại xem.
+Lời "intro" bắt đầu ngay bằng lời chào (vì đã có hook phía trước).
 
 Trả về DUY NHẤT JSON:
-{{"title": "...", "description": "...", "intro": "...", "outro": "...",
-  "order": [id, ...], "shorts": [id, ...]}}"""
+{{"title": "...", "description": "...", "hook": "...", "hook_stat": "...", "hook_label": "...",
+  "thumb_text": "...", "thumb_stat": "...", "intro": "...", "outro": "...",
+  "order": [id, ...], "shorts": [id, ...], "short_hooks": {{"id": "câu hook", ...}}}}"""
 
 
 def youtube_chapters(marks: list[tuple[float, str]]) -> str:
@@ -904,10 +1027,20 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
     order = list(dict.fromkeys(order)) or list(range(len(pool)))
     shorts = [i for i in plan.get("shorts", []) if isinstance(i, int) and 0 <= i < len(pool)][:n_shorts]
     intro, outro = P.sanitize_script(plan.get("intro", "")), P.sanitize_script(plan.get("outro", ""))
-    log(f"   ♪ Đọc lời mở + kết ({len(intro) + len(outro)} ký tự, 1 lượt)")
-    io_pcm = tts_once(gem, cfg, intro + "\n\n" + outro)
-    (a0, a1), (b0, b1) = split_points(io_pcm, [intro, outro])
-    intro_pcm, outro_pcm = slice_pcm(io_pcm, a0, a1), slice_pcm(io_pcm, b0, b1)
+    hook = P.sanitize_script(plan.get("hook", ""))
+    sh_raw = plan.get("short_hooks") or {}
+    sh_lines = {i: P.sanitize_script(str(sh_raw.get(str(i)) or sh_raw.get(i) or "")) for i in shorts}
+    parts = ([hook] if hook else []) + [intro, outro] + [sh_lines[i] for i in shorts if sh_lines[i]]
+    log(f"   ♪ Đọc hook + lời mở + kết + hook video dọc ({sum(map(len, parts))} ký tự, 1 lượt)")
+    io_pcm = tts_once(gem, cfg, "\n\n".join(parts))
+    spans = split_points(io_pcm, parts)
+    pcs = [slice_pcm(io_pcm, a, b) for a, b in spans]
+    hook_pcm = pcs.pop(0) if hook else b""
+    intro_pcm, outro_pcm = pcs.pop(0), pcs.pop(0)
+    sh_pcm = {}
+    for i in shorts:
+        if sh_lines[i] and pcs:
+            sh_pcm[i] = pcs.pop(0)
 
     tmp = Path(tempfile.mkdtemp())
     result_dir = out / "video" / "weekly"
@@ -928,6 +1061,13 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
         it["imgs_v"] = find_images(it, "portrait", n) if i in shorts else []
         credits += [c for _, c in it["imgs_h"] + it["imgs_v"]]
         log(f"      [{i}] {len(it['imgs_h'])} ảnh ngang · {len(it['imgs_v'])} ảnh dọc · {it.get('visual_query', '')!r}")
+    for i in order:
+        pool[i]["coin_chart"] = None
+        for tk in (pool[i].get("tickers") or [])[:3]:
+            series = coin_series(tk)
+            if series:
+                pool[i]["coin_chart"] = (str(tk).lstrip("$").upper(), series)
+                break
     intro_imgs = find_images({"visual_queries": ["cryptocurrency bitcoin", "stock market trading screen",
                                                  "city skyline night finance"], "category": "Thị trường"},
                              "landscape", 4)
@@ -935,16 +1075,23 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
 
     # ---- video ngang 16:9 ----
     scenes = []
+    if hook_pcm:
+        hd = len(hook_pcm) / SR / 2 + 0.35
+        scenes.append({"dur": hd, "pcm": hook_pcm + gap(0.35), "wipe": False,
+                       "draw": scene_hook(hook, plan.get("hook_stat", ""), plan.get("hook_label", ""), hd,
+                                          intro_imgs)})
     prices = fetch_prices()
     idur = len(intro_pcm) / SR / 2 + T
     if prices:
         scenes.append({"dur": idur * 0.5, "pcm": intro_pcm[: int(len(intro_pcm) * 0.5) // 2 * 2],
-                       "draw": scene_title(title, week, pc.get("host_name", ""), idur * 0.5, intro_imgs), "wipe": False})
+                       "draw": scene_title(title, week, pc.get("host_name", ""), idur * 0.5, intro_imgs),
+                       "wipe": bool(hook_pcm)})
         rest = intro_pcm[int(len(intro_pcm) * 0.5) // 2 * 2:] + gap(T)
         scenes.append({"dur": len(rest) / SR / 2, "pcm": rest, "draw": scene_chart(prices, wl, len(rest) / SR / 2)})
     else:
         scenes.append({"dur": idur, "pcm": intro_pcm + gap(T),
-                       "draw": scene_title(title, week, pc.get("host_name", ""), idur, intro_imgs), "wipe": False})
+                       "draw": scene_title(title, week, pc.get("host_name", ""), idur, intro_imgs),
+                       "wipe": bool(hook_pcm)})
     marks = [(0, "Mở đầu")]
     tcur = sum(s_["dur"] for s_ in scenes)
     for k, i in enumerate(order, 1):
@@ -965,32 +1112,64 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
         sc["dur"] = n / M.FPS
     log(f"   🎬 Dựng video ngang ({sum(s_['dur'] for s_ in scenes) / 60:.1f} phút)…")
     t0 = time.time()
+    seed = int(now.strftime("%G%V"))
+    total_s = sum(s_["dur"] for s_ in scenes)
+    music = MU.make_music(total_s + 1, seed) if vcfg.get("music", True) else None
     h_mp4 = M.render(scenes, 1920, 1080, result_dir / f"tong-hop-tuan-{tag}-16x9.mp4", tmp, log=log,
-                     watermark=watermark_layer(False))
+                     watermark=watermark_layer(False), music_pcm=music,
+                     music_vol=float(vcfg.get("music_volume", 0.22)))
     log(f"   ✓ Video ngang: {h_mp4.stat().st_size / 1e6:.1f} MB (dựng mất {time.time() - t0:.0f}s)")
 
-    # ---- video dọc 9:16 ----
+    # ---- video dọc 9:16: câu hook + lời tin đọc nhanh hơn ~8%, tối đa ~30 giây ----
     v_files = []
+    speed = float(vcfg.get("shorts_speed", 1.08))
+    max_s = float(vcfg.get("shorts_max_seconds", 30))
     for n, i in enumerate(shorts, 1):
-        it = pool[i]
-        a_ = it["pcm"] + gap(0.6)
+        it = dict(pool[i])
+        hk = sh_pcm.get(i, b"")
+        body = P._ffmpeg_pcm(["-f", "s16le", "-ar", str(SR), "-ac", "1"], it["pcm"], f"atempo={speed}")
+        sents = [x for x in re.split(r"(?<=[.!?…])\s+", it["narration"]) if x.strip()]
+        budget = max_s - 2.6 - len(hk) / SR / 2 - 0.2
+        if len(body) / SR / 2 > budget and len(sents) > 1:
+            b_ = chunk_bounds({"pcm": body}, [s_.split() for s_ in sents], len(body) / SR / 2)
+            keep = max(1, len([1 for a, b in b_ if b <= budget]))
+            body = body[: int(b_[keep - 1][1] * SR) * 2]
+            sents = sents[:keep]
+        text = " ".join(sents)
+        if hk:
+            it["narration"] = sh_lines[i] + " " + text
+            it["pcm"] = hk + gap(0.15) + body
+        else:
+            it["narration"], it["pcm"] = text, body
+        it["speech_dur"] = len(it["pcm"]) / SR / 2
+        a_ = it["pcm"] + gap(0.4)
         dur = len(a_) / SR / 2
-        vs = [{"dur": dur, "pcm": a_, "draw": scene_story_v(it, dur, wl, it["imgs_v"], every), "wipe": False},
-              {"dur": 2.4, "pcm": gap(2.4), "draw": scene_outro(vertical=True)}]
+        vs = [{"dur": dur, "pcm": a_, "draw": scene_story_v(it, dur, wl, it["imgs_v"], every * 0.8), "wipe": False},
+              {"dur": 2.2, "pcm": gap(2.2), "draw": scene_outro(vertical=True)}]
         for sc in vs:
             k = int(round(sc["dur"] * M.FPS))
             sc["pcm"] = (sc["pcm"] + gap(1))[: int(k / M.FPS * SR) * 2]
             sc["dur"] = k / M.FPS
+        tot = sum(s_["dur"] for s_ in vs)
         v = M.render(vs, 1080, 1920, result_dir / f"short-{tag}-{n}.mp4", tmp, log=lambda *a: None,
-                     watermark=watermark_layer(True))
+                     watermark=watermark_layer(True),
+                     music_pcm=MU.make_music(tot + 1, seed + n) if vcfg.get("music", True) else None,
+                     music_vol=float(vcfg.get("music_volume", 0.22)) * 1.15)
         v_files.append((v, it))
-        log(f"   ✓ Short {n}: {sum(s_['dur'] for s_ in vs):.0f}s, {v.stat().st_size / 1e6:.1f} MB")
+        log(f"   ✓ Short {n}: {tot:.0f}s, {v.stat().st_size / 1e6:.1f} MB")
+
+    # ---- ảnh bìa YouTube ----
+    thumb = result_dir / f"thumbnail-{tag}.png"
+    bg = (pool[order[0]]["imgs_h"][0][0] if order and pool[order[0]].get("imgs_h") else
+          (intro_imgs[0][0] if intro_imgs else None))
+    make_thumbnail(plan.get("thumb_text") or title, plan.get("thumb_stat", ""), week, bg).save(thumb)
+    log(f"   ✓ Ảnh bìa YouTube: {thumb.name}")
 
     desc = (plan.get("description", "") + "\n\n" + youtube_chapters(marks) +
             "\n\nAgent build by @Trong0322 · Nội dung do AI tổng hợp, không phải lời khuyên đầu tư."
             + ("\n\nNguồn ảnh (giấy phép miễn phí): " + "; ".join(dict.fromkeys(credits)) if credits else ""))
     return {"tag": tag, "title": title, "description": desc, "week": week,
-            "h": h_mp4, "shorts": v_files}
+            "h": h_mp4, "shorts": v_files, "thumb": thumb}
 
 
 # ---------------------------------------------------------------------------
@@ -1002,7 +1181,7 @@ def publish_release(res: dict) -> str:
         return ""
     tag = f"weekly-{res['tag']}"
     notes = f"# {res['title']}\n\n{res['description']}"
-    files = [str(res["h"])] + [str(v) for v, _ in res["shorts"]]
+    files = [str(res["h"])] + [str(v) for v, _ in res["shorts"]] + ([str(res["thumb"])] if res.get("thumb") else [])
     subprocess.run(["gh", "release", "delete", tag, "-y", "--cleanup-tag", "-R", repo], capture_output=True)
     subprocess.run(["gh", "release", "create", tag, *files, "-R", repo, "--title", res["title"][:120],
                     "--notes", notes], check=True)
@@ -1046,6 +1225,11 @@ def send_telegram_videos(res: dict, release_url: str):
         "text": (f"🎬 <b>Video tổng hợp tuần {esc(res['week'])}</b> — bản xem trước\n"
                  f"1 video ngang 16:9 (YouTube) + {len(res['shorts'])} video dọc 9:16 (Reels/Shorts)\n"
                  + (f"📦 Tải file gốc: {esc(release_url)}" if release_url else ""))})
+    if res.get("thumb"):
+        with open(res["thumb"], "rb") as f:
+            requests.post(f"{api}/sendPhoto", timeout=120, data={
+                "chat_id": chat, "caption": "🖼 Ảnh bìa (thumbnail) YouTube"},
+                files={"photo": (res["thumb"].name, f, "image/png")})
     send_video(res["h"], f"<b>{esc(res['title'])}</b>\n16:9 · YouTube", 1920, 1080)
     for n, (v, it) in enumerate(res["shorts"], 1):
         send_video(v, f"Short {n}: <b>{esc(it.get('hook') or it['headline'])}</b>\n9:16 · Reels/Shorts/TikTok",

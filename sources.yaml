@@ -81,3 +81,7 @@ video:
   max_weekly_stories: 12      # video ngang tối đa bao nhiêu tin
   shorts: 4                   # số video dọc 9:16 (Reels/Shorts) mỗi tuần
   image_seconds: 4            # mỗi ảnh hiện bao nhiêu giây rồi đổi ảnh mới
+  music: true                 # nhạc nền lo-fi tự sáng tác (không bản quyền)
+  music_volume: 0.22          # âm lượng nhạc nền (0.1 = rất nhỏ, 0.35 = rõ)
+  shorts_speed: 1.08          # video dọc đọc nhanh hơn 8%
+  shorts_max_seconds: 30      # video dọc tối đa bao nhiêu giây
