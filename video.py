@@ -402,7 +402,7 @@ class KenBurns:
         sd = ImageDraw.Draw(shade)
         if vertical:   # mờ dần xuống dưới
             for y in range(big.height):
-                sd.line([(0, y), (big.width, y)], fill=int(40 + 200 * (y / big.height) ** 1.6))
+                sd.line([(0, y), (big.width, y)], fill=int(70 + 185 * (y / big.height) ** 1.1))
         else:          # tối bên trái (chỗ đặt chữ)
             for x in range(big.width):
                 sd.line([(x, 0), (x, big.height)], fill=int(235 - 150 * (x / big.width) ** 0.9))
@@ -460,7 +460,8 @@ def text_img(text: str, fnt, fill, shadow=True) -> Image.Image:
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
     if shadow:
-        d.text((4, 5), text, font=fnt, fill=(0, 0, 0, 150))
+        for dx, dy in ((4, 5), (3, 3), (5, 6)):
+            d.text((dx, dy), text, font=fnt, fill=(0, 0, 0, 170))
     d.text((2, 2), text, font=fnt, fill=fill)
     return im
 
