@@ -51,6 +51,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           GH_TOKEN: ${{ github.token }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
         run: |
           python video.py weekly --out public \
             --backfill "${{ github.event.inputs.backfill || '0' }}" \

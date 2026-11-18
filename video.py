@@ -233,6 +233,7 @@ def prune_segments(out: Path, keep_days: int = 16):
 # 2. HÌNH ẢNH: tự tìm ảnh hợp từng tin (ảnh được phép dùng) + logo coin
 # ---------------------------------------------------------------------------
 IMG_CACHE = Path(tempfile.gettempdir()) / "tpc_img"
+_used: set = set()  # không dùng lại 1 ảnh 2 lần trong cùng video
 
 
 def _get(url, **kw):
@@ -266,11 +267,55 @@ def search_pexels(query: str, orientation: str) -> tuple[Image.Image, str] | Non
                  params={"query": query, "orientation": orientation, "per_page": 8, "size": "large"})
         for ph in r.json().get("photos", []):
             src = ph["src"].get("large2x") or ph["src"]["original"]
+            if src in _used:
+                continue
             im = _download(src)
             if im and min(im.size) >= 700:
+                _used.add(src)
                 return im, f"Ảnh: {ph.get('photographer', '')} / Pexels"
     except Exception as ex:
         log(f"      ! Pexels lỗi: {ex}")
+    return None
+
+
+def search_pixabay(query: str, orientation: str) -> tuple[Image.Image, str] | None:
+    key = os.getenv("PIXABAY_API_KEY")
+    if not key:
+        return None
+    try:
+        r = _get("https://pixabay.com/api/", params={
+            "key": key, "q": query[:100], "image_type": "photo", "safesearch": "true", "per_page": 10,
+            "orientation": "horizontal" if orientation == "landscape" else "vertical"})
+        for h in r.json().get("hits", []):
+            url = h.get("largeImageURL") or h.get("webformatURL")
+            if url in _used:
+                continue
+            im = _download(url)
+            if im and min(im.size) >= 700:
+                _used.add(url)
+                return im, f"Ảnh: {h.get('user', '')} / Pixabay"
+    except Exception as ex:
+        log(f"      ! Pixabay lỗi: {ex}")
+    return None
+
+
+def search_openverse(query: str, orientation: str) -> tuple[Image.Image, str] | None:
+    """Kho ảnh Creative Commons (Flickr, Wikimedia, bảo tàng...). Không cần key nhưng giới hạn lượt."""
+    try:
+        r = _get("https://api.openverse.org/v1/images/", params={
+            "q": query, "license_type": "commercial,modification", "size": "large", "page_size": 10,
+            "aspect_ratio": "wide" if orientation == "landscape" else "tall", "mature": "false"})
+        for h in r.json().get("results", []):
+            url = h.get("url")
+            if not url or url in _used:
+                continue
+            im = _download(url)
+            if im and min(im.size) >= 700:
+                _used.add(url)
+                lic = f"CC {str(h.get('license', '')).upper()} {h.get('license_version', '')}".strip()
+                return im, f"Ảnh: {(h.get('creator') or '')[:30]} / {h.get('source', 'Openverse')} ({lic})"
+    except Exception as ex:
+        log(f"      ! Openverse lỗi: {ex}")
     return None
 
 
@@ -289,8 +334,12 @@ def search_wikimedia(query: str) -> tuple[Image.Image, str] | None:
             lic = meta.get("LicenseShortName", {}).get("value", "")
             if not re.search(r"CC|Public domain|PD", lic, re.I):
                 continue
-            im = _download(ii.get("thumburl") or ii["url"])
+            url = ii.get("thumburl") or ii["url"]
+            if url in _used:
+                continue
+            im = _download(url)
             if im:
+                _used.add(url)
                 artist = re.sub(r"<[^>]+>", "", meta.get("Artist", {}).get("value", ""))[:40]
                 return im, f"Ảnh: {artist} / Wikimedia Commons ({lic})"
     except Exception as ex:
@@ -305,7 +354,8 @@ def find_image(item: dict, orientation: str) -> tuple[Image.Image, str] | None:
                     "Bảo mật": "cyber security hacker", "Thị trường": "trading chart screen"}
                    .get(item.get("category"), "cryptocurrency"))
     for q in queries:
-        res = search_pexels(q, orientation) or search_wikimedia(q)
+        res = (search_pexels(q, orientation) or search_pixabay(q, orientation)
+               or search_wikimedia(q) or search_openverse(q, orientation))
         if res:
             return res
     return None
