@@ -164,7 +164,7 @@ Với MỖI tin, viết lại cho video. Trả về DUY NHẤT JSON:
 {{"items": [
   {{"headline": "tiêu đề ngắn, tối đa 70 ký tự",
     "hook": "câu giật tít cho video dọc, tối đa 8 từ, gây tò mò nhưng đúng sự thật",
-    "key_stat": "con số nổi bật nhất của tin, rất ngắn (vd '$1,2 tỷ', '+18%', '10 triệu HYPE'), để trống nếu không có",
+    "key_stat": "con số nổi bật nhất, viết KIỂU TIẾNG ANH rất ngắn (vd '$1.2B', '$400M', '+18%', '10M HYPE'), để trống nếu không có",
     "key_label": "giải thích con số, tối đa 6 từ",
     "visual_query": "2-4 từ TIẾNG ANH mô tả ảnh minh hoạ chính để tìm ảnh stock (vd 'US Capitol building', 'stock exchange trading floor', 'hacker laptop dark', 'Federal Reserve building'); không dùng tên coin",
     "visual_queries": ["4 từ khoá TIẾNG ANH khác nhau cho 4 góc hình bám sát nội dung tin, mỗi cái 2-4 từ, đa dạng (bối cảnh, con người, đồ vật, biểu tượng), vd cho tin hack sàn: 'hacker hoodie laptop', 'server room red light', 'padlock broken', 'worried trader screen'"],
@@ -230,6 +230,37 @@ def prune_segments(out: Path, keep_days: int = 16):
                 d.rmdir()
         except Exception:
             pass
+
+
+# ---------------------------------------------------------------------------
+# định dạng tiền/số kiểu tiếng Anh cho CHỮ HIỆN TRÊN VIDEO ($6B, $1.2B, $400M, $63,000)
+# ---------------------------------------------------------------------------
+_UNITS = [("nghìn tỷ", "T"), ("ngàn tỷ", "T"), ("tỷ", "B"), ("triệu", "M"), ("nghìn", "K"), ("ngàn", "K")]
+_UNIT_RE = re.compile(r"(?:(\$)\s?)?(\d+(?:[.,]\d+)*)\s*(nghìn tỷ|ngàn tỷ|tỷ|triệu|nghìn|ngàn)"
+                      r"(\s*(?:đô la Mỹ|đô la|đô|USD|usd|USDT|\$))?", re.I)
+_DOLLAR_RE = re.compile(r"(\d{1,3}(?:[.,]\d{3})+|\d+(?:[.,]\d+)?)\s*(?:đô la Mỹ|đô la|đô|USD)\b", re.I)
+
+
+def _num(raw: str) -> str:
+    if re.fullmatch(r"\d{1,3}(\.\d{3})+", raw):          # 63.000 (kiểu VN) → 63,000
+        return f"{int(raw.replace('.', '')):,}"
+    if re.fullmatch(r"\d{1,3}(,\d{3})+", raw):           # 63,000 giữ nguyên
+        return raw
+    return raw.replace(",", ".")                          # 1,2 → 1.2
+
+
+def en_money(text: str) -> str:
+    if not text:
+        return text
+
+    def unit(m):
+        dollar = bool(m.group(1)) or bool(m.group(4))
+        u = dict(_UNITS)[m.group(3).lower()]
+        return f"{'$' if dollar else ''}{_num(m.group(2))}{u}"
+    text = _UNIT_RE.sub(unit, text)
+    text = _DOLLAR_RE.sub(lambda m: f"${_num(m.group(1))}", text)
+    text = re.sub(r"\s*phần trăm", "%", text)
+    return re.sub(r"\$\$", "$", text)
 
 
 # ---------------------------------------------------------------------------
@@ -808,7 +839,7 @@ def scene_story_h(item, idx, total, week_label, dur, images, every):
     W, H = 1920, 1080
     L, stat, stat_box = story_layers_h(item, idx, total, week_label)
     show = Slideshow(images, (0, 0, W, H), False, dur, every, hash(item["headline"]) & 0xffff)
-    chunks = M.split_words_chunks(item["narration"], 78) or [[]]
+    chunks = M.split_words_chunks(item.get("sub_text") or item["narration"], 78) or [[]]
     speech = max(0.5, item["speech_dur"])
     bounds = chunk_bounds(item, chunks, speech)
     sf_big = fit_font(stat, "ExtraBold", 140, 64, 480, 1) if stat else None
@@ -888,7 +919,7 @@ def scene_story_v(item, dur, week_label, images, every):
         L.append(Layer(ti, (W - ti.size[0]) // 2, sy + 200, "fade_up", 1.2))
     cta = text_img("Xem full tổng hợp tuần · @Trong0322", font("Bold", 32), MUTED, shadow=False)
     L.append(Layer(cta, (W - cta.size[0]) // 2, H - 110, "fade_up", 1.0))
-    chunks = M.split_words_chunks(item["narration"], 54) or [[]]
+    chunks = M.split_words_chunks(item.get("sub_text") or item["narration"], 54) or [[]]
     speech = max(0.5, item["speech_dur"])
     bounds = chunk_bounds(item, chunks, speech)
 
@@ -975,7 +1006,7 @@ Nhiệm vụ:
 5. Tiêu đề video YouTube hấp dẫn (≤ 90 ký tự, đúng chính tả) và mô tả ngắn (2-3 câu).
 6. "hook": 1 câu MỞ MÀN cực sốc, đọc trong ~3 giây (≤ 16 từ), nêu con số/sự kiện gây chú ý nhất
    tuần, KHÔNG chào hỏi (vd "Sáu tỷ đô bị thanh lý chỉ trong bảy ngày, chuyện gì đang xảy ra?").
-   "hook_stat": con số đó dạng ngắn để hiện chữ to (vd "$6 tỷ"); "hook_label": giải thích ≤ 6 từ.
+   "hook_stat": con số đó viết kiểu tiếng Anh để hiện chữ to (vd "$6B", "$400M", "-15%"); "hook_label": giải thích ≤ 6 từ.
 7. Ảnh bìa YouTube: "thumb_text" 3-5 từ IN HOA gây tò mò; "thumb_stat" con số ngắn (có thể trống).
 8. Với MỖI tin trong "shorts": "short_hooks" là 1 câu mở đầu giật tít đọc trong ~2-3 giây
    (≤ 12 từ), khiến người lướt phải dừng lại xem.
@@ -1046,10 +1077,15 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
     result_dir = out / "video" / "weekly"
     result_dir.mkdir(parents=True, exist_ok=True)
     tag = now.strftime("%Y%m%d")
-    title = plan.get("title") or f"Tổng hợp crypto tuần {week}"
+    title = en_money(plan.get("title") or f"Tổng hợp crypto tuần {week}")
     wl = f"Tổng hợp tuần {week}"
     T = 0.6  # nghỉ giữa các tin
 
+    # chữ hiện trên video: tiền/số kiểu tiếng Anh ($6B, $1.2B...). Giọng đọc giữ tiếng Việt.
+    for it in pool:
+        for k in ("headline", "key_stat", "key_label", "hook"):
+            it[k] = en_money(it.get(k, ""))
+        it["sub_text"] = en_money(it["narration"])
     every = float(vcfg.get("image_seconds", 4.0))  # đổi ảnh mỗi ~4 giây
     log("   🖼  Tìm ảnh minh hoạ cho từng tin")
     credits = []
@@ -1078,7 +1114,8 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
     if hook_pcm:
         hd = len(hook_pcm) / SR / 2 + 0.35
         scenes.append({"dur": hd, "pcm": hook_pcm + gap(0.35), "wipe": False,
-                       "draw": scene_hook(hook, plan.get("hook_stat", ""), plan.get("hook_label", ""), hd,
+                       "draw": scene_hook(en_money(hook), en_money(plan.get("hook_stat", "")),
+                                          en_money(plan.get("hook_label", "")), hd,
                                           intro_imgs)})
     prices = fetch_prices()
     idur = len(intro_pcm) / SR / 2 + T
@@ -1136,6 +1173,7 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
             body = body[: int(b_[keep - 1][1] * SR) * 2]
             sents = sents[:keep]
         text = " ".join(sents)
+        it["sub_text"] = en_money((sh_lines[i] + " " + text) if hk else text)
         if hk:
             it["narration"] = sh_lines[i] + " " + text
             it["pcm"] = hk + gap(0.15) + body
@@ -1162,7 +1200,7 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
     thumb = result_dir / f"thumbnail-{tag}.png"
     bg = (pool[order[0]]["imgs_h"][0][0] if order and pool[order[0]].get("imgs_h") else
           (intro_imgs[0][0] if intro_imgs else None))
-    make_thumbnail(plan.get("thumb_text") or title, plan.get("thumb_stat", ""), week, bg).save(thumb)
+    make_thumbnail(en_money(plan.get("thumb_text") or title), en_money(plan.get("thumb_stat", "")), week, bg).save(thumb)
     log(f"   ✓ Ảnh bìa YouTube: {thumb.name}")
 
     desc = (plan.get("description", "") + "\n\n" + youtube_chapters(marks) +
