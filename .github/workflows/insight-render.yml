@@ -1,0 +1,98 @@
+name: Trạm Insight LAB — dựng 3 kiểu video song song
+
+on:
+  workflow_dispatch:
+    inputs:
+      lab:
+        description: "Thư mục lab trong nhánh lab-renders (vd 20261119-1655)"
+        required: true
+      variants:
+        description: "Các bản dựng: engine|voice|mode|tên file, cách nhau bởi ;"
+        required: false
+        default: "remotion|vieneu:Hải Đăng|motion|1-remotion-haidang;remotion|vieneu:Hải Đăng|data|2-dulieu-haidang;classic|gemini:Ludo|-|3-claude-ludo"
+
+permissions:
+  contents: write
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - id: m
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          v = [x.split("|") for x in os.environ["V"].split(";") if x.strip()]
+          print("matrix=" + json.dumps({"include": [{"engine": a, "voice": b, "mode": c, "name": d} for a, b, c, d in v]}, ensure_ascii=False))
+          PY
+        env:
+          V: ${{ github.event.inputs.variants }}
+
+  render:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lấy nguyên liệu lab
+        run: |
+          git fetch -q --depth 1 origin lab-renders
+          git checkout -q FETCH_HEAD -- "labs/${{ github.event.inputs.lab }}"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        if: matrix.engine == 'remotion'
+        with:
+          node-version: "22"
+      - name: Cài thư viện
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+          pip install -q requests feedparser pyyaml beautifulsoup4 pillow numpy
+      - name: Cài Remotion
+        if: matrix.engine == 'remotion'
+        working-directory: remotion
+        run: |
+          npm ci --silent
+          npx remotion browser ensure
+      - name: Dựng
+        env:
+          CHROME_PATH: ""
+        run: |
+          mkdir -p out
+          python insight_render.py ${{ matrix.engine }} --lab "labs/${{ github.event.inputs.lab }}" --voice "${{ matrix.voice }}" --mode "${{ matrix.mode }}" --out "out/${{ matrix.name }}.mp4"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: out/${{ matrix.name }}.mp4
+
+  publish:
+    needs: render
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: art
+      - name: Gom file + chú thích
+        run: |
+          mkdir -p send
+          find art -name "*.mp4" -exec cp {} send/ \;
+          git fetch -q --depth 1 origin lab-renders
+          git show FETCH_HEAD:"labs/${{ github.event.inputs.lab }}/captions.json" > send/captions.json 2>/dev/null || true
+          ls -la send
+      - name: Release + Telegram
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+          pip install -q requests
+          python tg_send_release.py "insight-lab-${{ github.event.inputs.lab }}" send

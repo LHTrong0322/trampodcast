@@ -9,9 +9,9 @@ const Frame: React.FC<{w: number; h: number; title: string; sub?: string; childr
     boxShadow: `0 40px 120px rgba(0,0,0,0.6), 0 0 60px ${C.cyan}33`, padding: 36, boxSizing: 'border-box', fontFamily: FONT,
     display: 'flex', flexDirection: 'column', gap: 18, overflow: 'hidden'}}>
     <div style={{display: 'flex', alignItems: 'baseline', gap: 14}}>
-      <div style={{color: C.ink, fontWeight: 800, fontSize: 32, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: w - 330}}>{title}</div>
+      <div style={{color: C.ink, fontWeight: 800, fontSize: 32, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: sub === '' ? w - 80 : w - 300}}>{title}</div>
       <div style={{flex: 1}} />
-      <div style={{color: C.muted, fontWeight: 600, fontSize: 18, whiteSpace: 'nowrap'}}>{sub || 'Dữ liệu thật · CoinGecko'}</div>
+      {sub === '' ? null : <div style={{color: C.muted, fontWeight: 600, fontSize: 18, whiteSpace: 'nowrap'}}>{sub || 'Dữ liệu thật · CoinGecko'}</div>}
     </div>
     <div style={{flex: 1, position: 'relative'}}>{children}</div>
   </div>
@@ -196,7 +196,7 @@ const Checklist: React.FC<{spec: DataSpec; w: number; h: number}> = ({spec, w, h
   const {fps} = useVideoConfig();
   const items = (spec.items || []).slice(0, 5);
   return (
-    <Frame w={w} h={h} title={spec.title || 'Checklist'} sub="Tự kiểm tra trước khi xuống tiền">
+    <Frame w={w} h={h} title={spec.title || 'Checklist'} sub="">
       <div style={{display: 'flex', flexDirection: 'column', gap: 22, justifyContent: 'center', height: '100%'}}>
         {items.map((it, i) => {
           const s = spring({frame: f - 6 - i * 14, fps, config: {damping: 12}});

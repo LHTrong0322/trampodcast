@@ -222,7 +222,7 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; mode?: st
         {sc.keyStat ? (
           <div style={{position: 'absolute', right: 0, top: 570, padding: '14px 30px', display: 'flex', alignItems: 'center', gap: 22, borderRadius: 24, background: 'rgba(12,10,24,0.92)',
             border: `2px solid ${C.gold}99`, boxShadow: `0 0 40px ${C.gold}44`, minWidth: 260}}>
-            <CountUp value={sc.keyStat} size={64} delay={20} />
+            <div style={{whiteSpace: 'nowrap'}}><CountUp value={sc.keyStat} size={sc.keyStat.length > 6 ? 48 : 64} delay={20} /></div>
             <div style={{fontFamily: FONT, color: C.muted, fontWeight: 600, fontSize: 24, width: 330, lineHeight: 1.25}}>{sc.keyLabel}</div>
           </div>
         ) : null}
@@ -241,7 +241,7 @@ const OutroScene: React.FC<{sc: Scene; brandName: string}> = ({sc, brandName}) =
     <AbsoluteFill>
       <Backdrop accent={C.cyan} />
       <AbsoluteFill style={{padding: '150px 140px', flexDirection: 'column', gap: 34}}>
-        <Chip text="TÓM LẠI" color={C.gold} />
+        <div><Chip text="TÓM LẠI" color={C.gold} /></div>
         {(sc.points || []).map((p, i) => {
           const s = interpolate(f - 10 - i * 12, [0, 14], [0, 1], clamp);
           return <div key={i} style={{display: 'flex', gap: 24, alignItems: 'center', opacity: s, transform: `translateX(${(1 - s) * -50}px)`,

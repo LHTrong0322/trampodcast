@@ -28,7 +28,7 @@ def _imgs(lab: Path, names: list[str], credits: dict) -> list:
 
 
 def post_card(lab: Path, post: dict) -> Image.Image:
-    W, H = 720, 470 if post.get("cover") else 230
+    W, H = 720, 410 if post.get("cover") else 230
     card = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     m = Image.new("L", (W, H), 0)
     ImageDraw.Draw(m).rounded_rectangle([0, 0, W - 1, H - 1], 30, fill=255)
@@ -36,9 +36,9 @@ def post_card(lab: Path, post: dict) -> Image.Image:
     y = 0
     if post.get("cover"):
         from PIL import ImageOps
-        cv = ImageOps.fit(Image.open(lab / post["cover"]).convert("RGB"), (W, 240))
+        cv = ImageOps.fit(Image.open(lab / post["cover"]).convert("RGB"), (W, 180))
         base.paste(cv, (0, 0))
-        y = 240
+        y = 180
     d = ImageDraw.Draw(base)
     if post.get("avatar"):
         av = Image.open(lab / post["avatar"]).convert("RGB").resize((70, 70))
@@ -78,7 +78,7 @@ def render(lab: Path, voice: str, out: Path) -> Path:
     idur = len(pcm["intro"]) / SR / 2 + T
     base_intro = V.scene_title(V.en_money(plan.get("title", theme)), theme, "", idur, intro_imgs)
     card = post_card(lab, post) if post else None
-    card_ly = M.Layer(card, 1120, 150, "slide_left", 0.8, 0.8) if card else None
+    card_ly = M.Layer(card, 1120, 190, "slide_left", 0.8, 0.8) if card else None
 
     def intro_draw(c, t, ctx, _b=base_intro, _ly=card_ly):
         _b(c, t, ctx)
@@ -94,7 +94,7 @@ def render(lab: Path, voice: str, out: Path) -> Path:
         if d_.get("type") == "coin_chart":
             t_ = str((d_.get("tickers") or [""])[0]).lstrip("$").upper()
             if t_ in coins:
-                cc = (t_, coins[t_]["series"][-60:])
+                cc = (t_, coins[t_]["series"][-28:])  # ≈ 7 ngày gần nhất (khớp nhãn "7 ngày")
         item = {"headline": V.en_money(s["heading"]), "key_stat": V.en_money(s.get("key_stat", "")),
                 "key_label": V.en_money(s.get("key_label", "")), "narration": text[f"s{k}"],
                 "sub_text": V.en_money(text[f"s{k}"]), "category": "Insight", "tickers": [], "is_update": False,

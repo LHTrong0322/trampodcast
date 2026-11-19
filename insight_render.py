@@ -122,12 +122,18 @@ def remotion(lab: Path, voice: str, mode: str, out: Path) -> Path:
                            "quote": V.en_money(s.get("quote", "")), "source": ("@" + src[0]) if src else "",
                            "data": s.get("data"), "images": [f"img/{x}" for x in imgs.get(f"s{i}", [])]})
     music = None
-    try:
+    try:  # trộn sẵn nhạc nền (tự nhỏ đi khi có giọng) vào 1 file âm thanh
         music_track(total, rd / "music.wav", 7)
-        music = "music.wav"
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(rd / "voice.wav"), "-i", str(rd / "music.wav"),
+                        "-filter_complex",
+                        "[0:a]asplit=2[v1][v2];[1:a]volume=0.22[m];"
+                        "[m][v1]sidechaincompress=threshold=0.015:ratio=6:attack=20:release=450[md];"
+                        "[v2][md]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11[a]",
+                        "-map", "[a]", "-ar", "48000", str(rd / "mix.wav")], check=True)
+        (rd / "music.wav").unlink()
     except Exception as ex:
         log(f"   ! nhạc lỗi: {ex}")
-    props = {"fps": 30, "width": 1920, "height": 1080, "audio": "voice.wav", "music": music, "duration": round(total, 3),
+    props = {"fps": 30, "width": 1920, "height": 1080, "audio": "mix.wav" if (rd / "mix.wav").exists() else "voice.wav", "music": music, "duration": round(total, 3),
              "scenes": scenes, "data": data, "mode": mode,
              "brand": {"name": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")},
              "post": {"author": post.get("author", ""), "handle": post.get("handle", ""), "avatar": post.get("avatar"),
