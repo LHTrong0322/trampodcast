@@ -130,7 +130,8 @@ def verified_quotes(s: dict, posts: list) -> list:
     for q in s.get("x_quotes") or []:
         t = (q or {}).get("text", "").strip().strip('"“”')
         if 6 <= len(t.split()) <= 40 and norm(t) and norm(t) in src:
-            out.append({"text": t, "vi": V.en_money((q or {}).get("vi", ""))})
+            vi = V.en_money((q or {}).get("vi", "")).strip().strip('"“”')
+            out.append({"text": t, "vi": vi[:1].upper() + vi[1:]})
     return out[:2]
 
 
