@@ -107,7 +107,7 @@ insight:
   voice_primary: "gemini:Riko"       # giọng chính (Storyteller, dùng key INSIGHT_GEMINI_API_KEY)
   voice_fallback: "vieneu:Hải Đăng"  # chỉ dùng khi Gemini hết lượt — cả video đổi sang giọng này
   voice_speed: {gemini: auto, vieneu: auto}   # auto = tự chỉnh về ~target_wpm từ/phút; hoặc số, vd 1.05
-  target_wpm: 215
+  target_wpm: 228            # nhịp nhanh vừa, giữ chân người xem
   tts_provider: "gemini"      # (bộ dựng cũ) "gemini" hoặc "vieneu"
   vieneu_voice: "Hải Đăng"
   voice: "Riko"

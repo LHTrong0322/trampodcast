@@ -6,7 +6,7 @@ on:
       vieneu:
         description: "Các giọng VieNeu (cách nhau bởi dấu phẩy)"
         required: false
-        default: "Hải Đăng,Minh Đức,Phạm Tuyên,Quốc Tuấn,Xuân Vĩnh,Thanh Bình"
+        default: ""
       gemini:
         description: "Các giọng Gemini (tốn lượt Gemini, mỗi giọng 1 lượt) — để trống = không thử"
         required: false
