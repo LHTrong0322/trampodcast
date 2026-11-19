@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Img, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {AccentCtx, Backdrop, BRAND, glass, Handle, C, Captions, Chip, clamp, CountUp, DISPLAY, FONT, Glitch, HEAD, RevealWords, useAccent, useFonts, useSpring, Word} from './ui';
+import {AccentCtx, applyTheme, tone, Backdrop, BRAND, glass, Handle, T, C, Captions, Chip, clamp, CountUp, DISPLAY, FONT, Glitch, HEAD, RevealWords, useAccent, useFonts, useSpring, Word} from './ui';
 import {DataPanel, DataSpec} from './data';
 
 export type Post = {author: string; handle: string; avatar?: string; cover?: string; title?: string; text?: string;
@@ -16,9 +16,10 @@ export type Scene = {
   endAt?: number; xquotes?: {text: string; vi?: string}[]; terms?: {term: string; explain: string; at: number}[];
 };
 export type InsightProps = {fps: number; width: number; height: number; audio: string; music?: string; duration: number;
-  scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string; mode?: string; shortTitle?: string};
+  scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string; mode?: string; shortTitle?: string;
+  theme?: string};
 
-export const DEFAULT_ACCENT = BRAND.blue;
+export const accentDefault = () => BRAND.blue;
 const fmt = (n?: number) => (n == null ? '' : n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'K' : String(n));
 
 // ---------- thanh trên: logo kênh + nguồn ----------
@@ -44,7 +45,7 @@ const TopBar: React.FC<{source?: string; idx?: number; total?: number; brand: st
       {total ? (
         <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
           {Array.from({length: total}, (_, i) => <div key={i} style={{width: i + 1 === idx ? 40 : 12, height: 6, borderRadius: 9,
-            background: i + 1 <= (idx || 0) ? ac : 'rgba(255,255,255,0.15)'}} />)}
+            background: i + 1 <= (idx || 0) ? ac : T.dim}} />)}
           <div style={{color: C.ink, fontFamily: DISPLAY, fontWeight: 800, fontSize: 22, marginLeft: 10}}>{String(idx).padStart(2, '0')}<span style={{color: C.muted}}>/{String(total).padStart(2, '0')}</span></div>
         </div>
       ) : null}
@@ -64,7 +65,7 @@ const HookScene: React.FC<{sc: Scene; brand: string; source?: string}> = ({sc, b
     <Backdrop img={sc.images?.[0]} dim={0.75} />
     <TopBar brand={brand} source={source} />
     {sc.stat ? [0, 1, 2].map((k) => <div key={k} style={{position: 'absolute', left: '50%', top: '34%', width: 900, height: 900,
-      marginLeft: -450, marginTop: -450, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.5)',
+      marginLeft: -450, marginTop: -450, borderRadius: '50%', border: `2px solid ${C.line}`,
       transform: `scale(${0.3 + ring(k) * 1.2})`, opacity: (1 - ring(k)) * 0.18}} />) : null}
     <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 26}}>
       {sc.stat ? <CountUp value={sc.stat} size={240} delay={3} color={BRAND.orange} frames={40} /> : null}
@@ -225,7 +226,7 @@ const TermCallout: React.FC<{terms: {term: string; explain: string; at: number}[
   const o = interpolate(lt, [0, 0.25, 5.1, 5.5], [0, 1, 1, 0], clamp);
   return (
     <div style={{position: 'absolute', left: 110, top: 770, display: 'flex', alignItems: 'center', gap: 16, opacity: o,
-      transform: `translateY(${(1 - o) * 16}px)`, padding: '14px 22px', borderRadius: 16, background: 'rgba(255,255,255,0.05)',
+      transform: `translateY(${(1 - o) * 16}px)`, padding: '14px 22px', borderRadius: 16, background: C.panel,
       border: `1px solid ${C.line}`, maxWidth: 820, fontFamily: FONT}}>
       <div style={{fontSize: 30}}>💡</div>
       <div style={{color: C.ink, fontSize: 25, lineHeight: 1.3}}><b style={{fontFamily: HEAD, color: ac}}>{cur.term}</b>: {cur.explain}</div>
@@ -350,6 +351,7 @@ const Chrome: React.FC = () => {
 };
 
 export const Insight: React.FC<InsightProps> = (props) => {
+  applyTheme(props.theme);
   useFonts();
   const {fps} = useVideoConfig();
   const f = useCurrentFrame();
@@ -360,7 +362,7 @@ export const Insight: React.FC<InsightProps> = (props) => {
       {props.audio ? <Audio src={staticFile(props.audio)} /> : null}
       {props.scenes.map((sc, i) => (
         <Sequence key={i} from={Math.round(sc.from * fps)} durationInFrames={Math.max(1, Math.round(sc.dur * fps))}>
-          <AccentCtx.Provider value={sc.project?.color || DEFAULT_ACCENT}>
+          <AccentCtx.Provider value={tone(sc.project?.color) || accentDefault()}>
             {sc.type === 'hook' ? <HookScene sc={sc} brand={brandName} source={props.post ? '@' + props.post.handle : undefined} /> : null}
             {sc.type === 'intro' ? <IntroScene sc={sc} post={props.post} brand={brandName} /> : null}
             {sc.type === 'section' ? <SectionScene sc={sc} data={props.data} brandName={brandName} post={props.post} /> : null}
@@ -370,7 +372,7 @@ export const Insight: React.FC<InsightProps> = (props) => {
           </AccentCtx.Provider>
         </Sequence>
       ))}
-      <AccentCtx.Provider value={cur?.project?.color || DEFAULT_ACCENT}><Chrome /></AccentCtx.Provider>
+      <AccentCtx.Provider value={tone(cur?.project?.color) || accentDefault()}><Chrome /></AccentCtx.Provider>
     </AbsoluteFill>
   );
 };

@@ -1,17 +1,18 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {AccentCtx, Backdrop, BRAND, Handle, C, Captions, Chip, CountUp, FONT, HEAD, RevealWords, useFonts} from './ui';
+import {AccentCtx, applyTheme, tone, Backdrop, BRAND, Handle, C, Captions, Chip, CountUp, FONT, HEAD, RevealWords, useFonts} from './ui';
 import {DataPanel} from './data';
-import {DEFAULT_ACCENT, InsightProps, QuoteCard} from './Insight';
+import {accentDefault, InsightProps, QuoteCard} from './Insight';
 
 // Video dọc 9:16 (TikTok / Shorts / Reels): 1 insight, kiểu "dữ liệu thật"
 export const InsightShort: React.FC<InsightProps> = (props) => {
+  applyTheme(props.theme);
   useFonts();
   const {durationInFrames, width} = useVideoConfig();
   const f = useCurrentFrame();
   const sc = props.scenes[0];
   if (!sc) return null;
-  const ac = sc.project?.color || DEFAULT_ACCENT;
+  const ac = tone(sc.project?.color) || accentDefault();
   const hasData = !!(sc.data && sc.data.type && sc.data.type !== 'none');
   return (
     <AccentCtx.Provider value={ac}>

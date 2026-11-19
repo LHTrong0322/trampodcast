@@ -1,6 +1,6 @@
 import React from 'react';
 import {Img, interpolate, staticFile, useCurrentFrame, useVideoConfig, spring} from 'remotion';
-import {BRAND, C, clamp, DISPLAY, ease, FONT, glass, HEAD, useAccent} from './ui';
+import {BRAND, T, C, clamp, DISPLAY, ease, FONT, glass, HEAD, useAccent} from './ui';
 
 export type DataSpec = {type: string; tickers?: string[]; items?: {label: string; value?: string}[]; title?: string};
 
@@ -8,7 +8,7 @@ const Frame: React.FC<{w: number; h: number; title: string; sub?: string; childr
   const ac = useAccent();
   return (
   <div style={{width: w, height: h, borderRadius: 26, ...glass, borderTop: `4px solid ${ac}`,
-    boxShadow: '0 30px 80px rgba(0,0,0,0.45)', padding: 36, boxSizing: 'border-box', fontFamily: FONT,
+    boxShadow: T.shadow, padding: 36, boxSizing: 'border-box', fontFamily: FONT,
     display: 'flex', flexDirection: 'column', gap: 18, overflow: 'hidden'}}>
     <div style={{display: 'flex', alignItems: 'baseline', gap: 14}}>
       <div style={{color: C.ink, fontFamily: HEAD, fontWeight: 700, fontSize: 32, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: sub === '' ? w - 80 : w - 300}}>{title}</div>
@@ -121,9 +121,9 @@ const Heatmap: React.FC<{data: any; w: number; h: number}> = ({data, w, h}) => {
               alignItems: 'center', justifyContent: 'center', gap: 4, opacity: s, transform: `scale(${0.8 + 0.2 * s})`}}>
               <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
                 <Img src={staticFile(`logos/${m.sym}.png`)} style={{width: 30, height: 30, borderRadius: 99}} />
-                <span style={{color: '#fff', fontWeight: 800, fontSize: 26}}>{m.sym}</span>
+                <span style={{color: T.tileInk, fontWeight: 800, fontSize: 26}}>{m.sym}</span>
               </div>
-              <div style={{color: '#fff', fontWeight: 800, fontSize: 28}}>{c >= 0 ? '+' : ''}{c.toFixed(1)}%</div>
+              <div style={{color: T.tileInk, fontWeight: 800, fontSize: 28}}>{c >= 0 ? '+' : ''}{c.toFixed(1)}%</div>
             </div>
           );
         })}
@@ -161,8 +161,8 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
     const o = interpolate(f, [Math.round((i / pts.length) * 50) + 6, Math.round((i / pts.length) * 50) + 16], [0, 1], clamp);
     const lx = Math.min(W - 150, Math.max(0, x - 70));
     return <g key={txt} opacity={o}>
-      <circle cx={x} cy={y} r={8} fill={c} stroke="#0C0E24" strokeWidth={3} />
-      <rect x={lx} y={above ? y - 52 : y + 16} width={150} height={36} rx={10} fill="#12142E" stroke={c} strokeWidth={1.5} />
+      <circle cx={x} cy={y} r={8} fill={c} stroke={T.solid} strokeWidth={3} />
+      <rect x={lx} y={above ? y - 52 : y + 16} width={150} height={36} rx={10} fill={T.solid} stroke={c} strokeWidth={1.5} />
       <text x={lx + 75} y={above ? y - 27 : y + 41} fill={C.ink} fontSize={20} fontFamily="HEAD" fontWeight={700} textAnchor="middle">{txt}</text>
     </g>;
   };
@@ -183,7 +183,7 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
         {lab(iHi, `Đỉnh ${money(hi)}`, BRAND.orange, true)}
         {lab(iLo, `Đáy ${money(lo)}`, BRAND.sky, false)}
         <circle cx={last[0]} cy={last[1]} r={pulse} fill={col} opacity={0.25} />
-        <circle cx={last[0]} cy={last[1]} r={8} fill="#fff" />
+        <circle cx={last[0]} cy={last[1]} r={8} fill={C.ink} />
       </svg>
     </Frame>
   );
@@ -205,7 +205,7 @@ const StatCompare: React.FC<{spec: DataSpec; w: number; h: number}> = ({spec, w,
             <div style={{display: 'flex', justifyContent: 'space-between', color: C.ink, fontSize: 28, fontWeight: 700, marginBottom: 8}}>
               <span>{it.label}</span><span style={{color: cols[i], fontWeight: 800}}>{it.value}</span>
             </div>
-            <div style={{height: 26, borderRadius: 13, background: 'rgba(255,255,255,0.08)'}}>
+            <div style={{height: 26, borderRadius: 13, background: T.track}}>
               <div style={{height: 26, borderRadius: 13, width: `${(nums[i] / mx) * 100 * p}%`, background: cols[i]}} />
             </div>
           </div>

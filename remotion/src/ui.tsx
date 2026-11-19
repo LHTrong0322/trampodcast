@@ -6,7 +6,7 @@ import {
 
 // Bảng màu "crypto cao cấp & sạch": nền tối xanh-tím sâu (không đen trơn), 1 quầng màu nhấn tím→xanh rất nhẹ,
 // thẻ kính mờ tinh tế, chữ trắng; màu nổi chỉ dùng cho số liệu. (blue = màu nhấn chính, sky = cyan, orange = màu số)
-export const BRAND = {blue: '#8E9BFF', sky: '#A9B8FF', orange: '#FFFFFF', navy: '#0C0E24', pink: '#B9A8FF'};
+export const BRAND: Record<string, string> = {blue: '#8E9BFF', sky: '#A9B8FF', orange: '#FFFFFF', navy: '#0C0E24', pink: '#B9A8FF'};
 export const C = {
   bg: '#0C0E24',
   panel: 'rgba(255,255,255,0.05)',
@@ -22,6 +22,62 @@ export const C = {
 };
 export const glass: React.CSSProperties = {background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.10)',
   backdropFilter: 'blur(14px)', boxShadow: '0 20px 60px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)'};
+// các thông số phụ theo chủ đề nền
+export const T = {
+  grad: 'linear-gradient(150deg, #141436 0%, #0C0E24 50%, #0A1530 100%)', blobA: 1, dots: 'rgba(255,255,255,0.07)',
+  fade: 'rgba(8,6,40,0.7)', capBg: 'rgba(10,12,30,0.7)', capShadow: '0 2px 8px rgba(0,0,0,0.6)', solid: '#12142E',
+  track: 'rgba(255,255,255,0.08)', tileInk: '#FFFFFF', handle: 'rgba(255,255,255,0.55)', dim: 'rgba(255,255,255,0.15)',
+  textShadow: '0 2px 12px rgba(0,0,0,0.3)', shadow: '0 30px 80px rgba(0,0,0,0.45)',
+};
+type Theme = {C: Partial<typeof C>; T: Partial<typeof T>; glass: React.CSSProperties; accent: string; sky: string};
+const DARK: Theme = {C: {...C}, T: {...T}, glass: {...glass}, accent: '#8E9BFF', sky: '#A9B8FF'};
+export const THEMES: Record<string, Theme> = {
+  dark: DARK,
+  // Sáng sạch: trắng ngà + xanh lavender nhạt, chữ xanh than (kiểu Stripe/Notion)
+  light: {accent: '#4F5BD5', sky: '#6C8CF5',
+    C: {bg: '#F3F5FB', panel: 'rgba(255,255,255,0.8)', line: 'rgba(25,35,80,0.10)', ink: '#131836', muted: '#5D6688',
+      green: '#16A673', red: '#D9465F', gold: '#131836'},
+    T: {grad: 'linear-gradient(150deg, #FFFFFF 0%, #F1F4FC 50%, #E7EDFB 100%)', blobA: 0.55, dots: 'rgba(25,35,80,0.07)',
+      fade: 'rgba(240,243,251,0)', capBg: 'rgba(255,255,255,0.88)', capShadow: 'none', solid: '#FFFFFF', track: 'rgba(25,35,80,0.08)',
+      tileInk: '#131836', handle: 'rgba(19,24,54,0.5)', dim: 'rgba(25,35,80,0.15)', textShadow: 'none', shadow: '0 18px 50px rgba(40,50,110,0.12)'},
+    glass: {background: 'rgba(255,255,255,0.82)', border: '1px solid rgba(25,35,80,0.08)', backdropFilter: 'blur(14px)',
+      boxShadow: '0 18px 50px rgba(40,50,110,0.12)'}},
+  // Xanh đại dương: xanh dương trầm, sáng hơn nền đen, chữ trắng (kiểu Coinbase/Base)
+  blue: {accent: '#8DBBFF', sky: '#B5D2FF',
+    C: {bg: '#16295A', panel: 'rgba(255,255,255,0.08)', line: 'rgba(255,255,255,0.14)', ink: '#FFFFFF', muted: '#BCC9E8', gold: '#FFFFFF'},
+    T: {grad: 'linear-gradient(150deg, #1A3266 0%, #16295A 50%, #1C3A78 100%)', blobA: 0.8, dots: 'rgba(255,255,255,0.07)',
+      fade: 'rgba(16,30,70,0.5)', capBg: 'rgba(12,24,58,0.72)', solid: '#1A3266', handle: 'rgba(255,255,255,0.6)'},
+    glass: {background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)', backdropFilter: 'blur(14px)',
+      boxShadow: '0 20px 60px rgba(5,15,45,0.35)'}},
+  // Xám xanh: trung tính, dịu mắt, chữ trắng
+  slate: {accent: '#A3B1FF', sky: '#C3CCFF',
+    C: {bg: '#2B3147', panel: 'rgba(255,255,255,0.07)', line: 'rgba(255,255,255,0.13)', ink: '#FFFFFF', muted: '#C3C8DA', gold: '#FFFFFF'},
+    T: {grad: 'linear-gradient(150deg, #323954 0%, #2B3147 50%, #2E3858 100%)', blobA: 0.6, dots: 'rgba(255,255,255,0.06)',
+      fade: 'rgba(30,34,52,0.5)', capBg: 'rgba(28,32,50,0.75)', solid: '#323954', handle: 'rgba(255,255,255,0.6)'},
+    glass: {background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.13)', backdropFilter: 'blur(14px)',
+      boxShadow: '0 20px 60px rgba(10,12,25,0.35)'}},
+};
+let CUR = 'dark';
+// màu dự án quá sáng trên nền sáng → tự làm đậm để đọc được
+export const tone = (hex?: string | null) => {
+  if (!hex || CUR !== 'light' || !/^#[0-9a-f]{6}$/i.test(hex)) return hex || undefined;
+  const n = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  const lum = (0.299 * n[0] + 0.587 * n[1] + 0.114 * n[2]) / 255;
+  if (lum < 0.55) return hex;
+  const k = 0.55 / lum;
+  return '#' + n.map((v) => Math.round(v * k * 0.8).toString(16).padStart(2, '0')).join('');
+};
+export const applyTheme = (name?: string) => {
+  CUR = THEMES[name || 'dark'] ? name || 'dark' : 'dark';
+  const th = THEMES[name || 'dark'] || DARK;
+  Object.assign(C, DARK.C, th.C);
+  Object.assign(T, DARK.T, th.T);
+  for (const k of Object.keys(glass)) delete (glass as any)[k];
+  Object.assign(glass, th.glass);
+  BRAND.blue = th.accent;
+  BRAND.sky = th.sky;
+  BRAND.orange = C.ink;
+};
 export const AccentCtx = React.createContext<string>(BRAND.blue);
 export const useAccent = () => React.useContext(AccentCtx);
 export const FONT = "'BODY', system-ui, sans-serif";      // chữ thường, phụ đề: Lexend (dễ đọc)
@@ -67,18 +123,18 @@ export const Backdrop: React.FC<{accent?: string; img?: string; dim?: number}> =
       width: r, height: r, marginLeft: -r / 2, marginTop: -r / 2, borderRadius: '50%', background: col, opacity: a, filter: 'blur(120px)'}} />
   );
   return (
-    <AbsoluteFill style={{background: 'linear-gradient(150deg, #141436 0%, #0C0E24 50%, #0A1530 100%)', overflow: 'hidden'}}>
+    <AbsoluteFill style={{background: T.grad, overflow: 'hidden'}}>
       {img ? (
         <Img src={staticFile(img)} style={{position: 'absolute', inset: -40, width: width + 80, height: height + 80,
           objectFit: 'cover', filter: 'blur(26px) saturate(1.2)', opacity: 1 - dim, mixBlendMode: 'screen',
           transform: `scale(${1.05 + 0.02 * Math.sin(t * 0.15)})`}} />
       ) : null}
-      {blob(15, 18, 900, ac, 0.18, 0.1, 0)}
-      {blob(88, 85, 800, BRAND.sky, 0.08, 0.08, 2)}
-      <AbsoluteFill style={{backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1.4px, transparent 1.4px)', backgroundSize: '36px 36px',
+      {blob(15, 18, 900, ac, 0.18 * T.blobA, 0.1, 0)}
+      {blob(88, 85, 800, BRAND.sky, 0.08 * T.blobA, 0.08, 2)}
+      <AbsoluteFill style={{backgroundImage: `radial-gradient(${T.dots} 1.4px, transparent 1.4px)`, backgroundSize: '36px 36px',
         backgroundPosition: `${(f * 0.25) % 36}px 0px`,
         maskImage: 'radial-gradient(ellipse 85% 75% at 65% 40%, black 15%, transparent 80%)'}} />
-      <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(8,6,40,0) 65%, rgba(8,6,40,0.7) 100%)'}} />
+      <AbsoluteFill style={{background: `linear-gradient(180deg, transparent 65%, ${T.fade} 100%)`}} />
     </AbsoluteFill>
   );
 };
@@ -139,7 +195,7 @@ export const RevealWords: React.FC<{text: string; size: number; weight?: number;
         return (
           <span key={i} style={{display: 'inline-block', overflow: 'hidden', paddingBottom: size * 0.08}}>
             <span style={{display: 'inline-block', transform: `translateY(${(1 - s) * 110}%) rotate(${(1 - s) * 6}deg)`,
-              opacity: s, color: color, textShadow: hl ? 'none' : '0 2px 12px rgba(0,0,0,0.3)',
+              opacity: s, color: color, textShadow: T.textShadow,
               ...(hl ? {color: accentColor} : {})}}>{w}</span>
           </span>
         );
@@ -168,7 +224,7 @@ export const CountUp: React.FC<{value: string; delay?: number; size: number; col
   const bump = spring({frame: f - delay - frames, fps, config: {damping: 8, mass: 0.4}});
   const sc = interpolate(s, [0, 1], [0.6, 1]) * (1 + 0.08 * Math.sin(Math.min(1, bump) * Math.PI));
   return <div style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: size, color, lineHeight: 1, transform: `scale(${sc})`, opacity: s,
-    textShadow: '0 6px 24px rgba(0,0,0,0.35)', letterSpacing: -2, fontVariantNumeric: 'tabular-nums'}}>{shown}</div>;
+    textShadow: T.textShadow, letterSpacing: -2, fontVariantNumeric: 'tabular-nums'}}>{shown}</div>;
 };
 
 // ---------- phụ đề: hiện cả cụm câu (không chạy từng chữ), gọn & dễ đọc ----------
@@ -199,8 +255,8 @@ export const Captions: React.FC<{words: Word[]; bottom: number; size: number; ma
   return (
     <div style={{position: 'absolute', left: 0, right: 0, bottom, display: 'flex', justifyContent: 'center'}}>
       <div style={{maxWidth, textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: size, lineHeight: 1.35,
-        color: C.ink, opacity: op, padding: '10px 26px', borderRadius: 14, background: 'rgba(10,12,30,0.7)', backdropFilter: 'blur(8px)',
-        textShadow: '0 2px 8px rgba(0,0,0,0.6)'}}>
+        color: C.ink, opacity: op, padding: '10px 26px', borderRadius: 14, background: T.capBg, backdropFilter: 'blur(8px)',
+        textShadow: T.capShadow}}>
         {c.map((w) => w.t).join(' ')}
       </div>
     </div>
@@ -211,7 +267,7 @@ export const Captions: React.FC<{words: Word[]; bottom: number; size: number; ma
 export const Glitch: React.FC<{frames?: number}> = ({frames = 9}) => {
   const f = useCurrentFrame();
   if (f > frames) return null;
-  return <AbsoluteFill style={{background: '#0C0E24', opacity: interpolate(f, [0, frames], [1, 0], clamp), pointerEvents: 'none'}} />;
+  return <AbsoluteFill style={{background: C.bg, opacity: interpolate(f, [0, frames], [1, 0], clamp), pointerEvents: 'none'}} />;
 };
 
 export const Chip: React.FC<{text: string; color?: string; size?: number}> = ({text, color: col, size = 26}) => {
@@ -223,12 +279,12 @@ export const Chip: React.FC<{text: string; color?: string; size?: number}> = ({t
 };
 
 // logo X + @Trong0322 (watermark kênh)
-export const XMark: React.FC<{size: number; color?: string}> = ({size, color = '#fff'}) => (
+export const XMark: React.FC<{size: number; color?: string}> = ({size, color = C.ink}) => (
   <svg width={size} height={size} viewBox="0 0 24 24" style={{display: 'inline-block', flexShrink: 0}}>
     <path fill={color} d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
   </svg>
 );
-export const Handle: React.FC<{size: number; color?: string; style?: React.CSSProperties}> = ({size, color = 'rgba(255,255,255,0.55)', style}) => (
+export const Handle: React.FC<{size: number; color?: string; style?: React.CSSProperties}> = ({size, color = T.handle, style}) => (
   <div style={{display: 'flex', alignItems: 'center', gap: size * 0.35, fontFamily: HEAD, fontWeight: 700, fontSize: size, color, ...style}}>
     <XMark size={size * 0.9} color={color} />@Trong0322
   </div>
