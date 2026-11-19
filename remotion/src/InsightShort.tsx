@@ -44,7 +44,7 @@ export const InsightShort: React.FC<InsightProps> = (raw) => {
           <Chip text="Xem full trên YouTube · Smart Penguin Insights" color={C.red} size={26} />
         </div>
         <div style={{position: 'absolute', left: 0, bottom: 0, height: 8, width: (f / durationInFrames) * width, background: ac}} />
-        <Handle size={24} style={{position: 'absolute', right: 40, top: 40}} />
+        <Handle size={30} style={{position: 'absolute', right: 40, top: 36}} />
       </AbsoluteFill>
     </AccentCtx.Provider>
   );

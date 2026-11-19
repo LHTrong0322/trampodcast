@@ -349,8 +349,10 @@ export const XMark: React.FC<{size: number; color?: string}> = ({size, color = C
     <path fill={color} d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
   </svg>
 );
-export const Handle: React.FC<{size: number; color?: string; style?: React.CSSProperties}> = ({size, color = T.handle, style}) => (
-  <div style={{display: 'flex', alignItems: 'center', gap: size * 0.35, fontFamily: HEAD, fontWeight: 700, fontSize: size, color, ...style}}>
-    <XMark size={size * 0.9} color={color} />@Trong0322
+export const Handle: React.FC<{size: number; color?: string; style?: React.CSSProperties}> = ({size, color, style}) => (
+  <div style={{display: 'flex', alignItems: 'center', gap: size * 0.4, fontFamily: HEAD, fontWeight: 700, fontSize: size,
+    color: color || C.ink, padding: `${size * 0.3}px ${size * 0.6}px`, borderRadius: 99, background: C.panel,
+    border: `1px solid ${C.line}`, backdropFilter: 'blur(8px)', letterSpacing: 0.3, ...style}}>
+    <XMark size={size * 0.85} color={color || C.ink} />@Trong0322
   </div>
 );

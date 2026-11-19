@@ -345,7 +345,7 @@ const Chrome: React.FC = () => {
   return (
     <>
       <div style={{position: 'absolute', left: 0, bottom: 0, height: 5, width: (f / durationInFrames) * width, background: ac}} />
-      <Handle size={22} style={{position: 'absolute', right: 40, bottom: 24}} />
+      <Handle size={26} style={{position: 'absolute', right: 36, bottom: 18}} />
     </>
   );
 };

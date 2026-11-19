@@ -29,7 +29,7 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acc, projectLog
           boxShadow: '0 20px 60px rgba(200,255,61,0.35)'}}>{stat}</div> : null}
         {projectLogo ? <Img src={staticFile(projectLogo)} style={{position: 'absolute', right: 110, top: 200, width: 300, height: 300, borderRadius: '50%',
           boxShadow: `0 0 0 10px ${accent}55, 0 30px 80px rgba(0,0,0,0.6)`}} /> : null}
-        <Handle size={28} style={{position: 'absolute', right: 40, bottom: 30}} />
+        <Handle size={30} style={{position: 'absolute', right: 40, bottom: 30}} />
       </AbsoluteFill>
     </AccentCtx.Provider>
   );
