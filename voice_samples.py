@@ -70,6 +70,7 @@ def main():
     ap.add_argument("--vieneu", default="")
     ap.add_argument("--gemini", default="")
     ap.add_argument("--text", default="")
+    ap.add_argument("--no-send", default="", help="giọng chỉ đo, không gửi Telegram")
     a = ap.parse_args()
     text = a.text.strip() or TEXT
     out = Path("samples"); out.mkdir(exist_ok=True)
@@ -82,7 +83,8 @@ def main():
         try:
             p = out / f"{n:02d}-vieneu.mp3"
             to_mp3(P.vieneu_tts(text, v), p)
-            send(p, f"{n}. VieNeu · {v} (miễn phí)")
+            if v not in a.no_send.split(","):
+                send(p, f"VieNeu · {v} (miễn phí)")
         except Exception as ex:
             print("  lỗi:", ex)
     gvoices = [x.strip() for x in a.gemini.split(",") if x.strip()]
@@ -95,7 +97,7 @@ def main():
             try:
                 p = out / f"{n:02d}-gemini.mp3"
                 to_mp3(gem.tts(models, v, GEMINI_STYLE, text), p)
-                send(p, f"{n}. Gemini · {v} (giọng Hà Nội)")
+                send(p, f"Gemini · {v} (giọng Hà Nội)")
             except Exception as ex:
                 print("  lỗi:", ex)
             if i + 1 < len(gvoices):

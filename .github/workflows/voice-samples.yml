@@ -11,6 +11,10 @@ on:
         description: "Các giọng Gemini nam (tốn lượt Gemini, mỗi giọng 1 lượt)"
         required: false
         default: "Charon,Orus"
+      no_send:
+        description: "Giọng chỉ đo thông số, không gửi lại Telegram"
+        required: false
+        default: ""
       text:
         description: "Đoạn đọc thử (để trống = đoạn tin mẫu)"
         required: false
@@ -39,4 +43,4 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          python voice_samples.py --vieneu "${{ github.event.inputs.vieneu }}" --gemini "${{ github.event.inputs.gemini }}" --text "${{ github.event.inputs.text }}"
+          python voice_samples.py --vieneu "${{ github.event.inputs.vieneu }}" --gemini "${{ github.event.inputs.gemini }}" --text "${{ github.event.inputs.text }}" --no-send "${{ github.event.inputs.no_send }}"
