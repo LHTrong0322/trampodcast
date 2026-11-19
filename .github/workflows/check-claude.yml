@@ -1,0 +1,31 @@
+name: Kiểm tra key Claude
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Kiểm tra
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          echo "== ANTHROPIC_API_KEY: $([ -n "$ANTHROPIC_API_KEY" ] && echo "CÓ (bắt đầu bằng ${ANTHROPIC_API_KEY:0:10}…)" || echo 'CHƯA CÓ')"
+          echo "== CLAUDE_CODE_OAUTH_TOKEN: $([ -n "$CLAUDE_CODE_OAUTH_TOKEN" ] && echo "CÓ (bắt đầu bằng ${CLAUDE_CODE_OAUTH_TOKEN:0:14}…)" || echo 'CHƯA CÓ')"
+          if [ -n "$ANTHROPIC_API_KEY" ]; then
+            code=$(curl -s -o /tmp/r.json -w "%{http_code}" https://api.anthropic.com/v1/messages \
+              -H "x-api-key: $ANTHROPIC_API_KEY" -H "anthropic-version: 2023-06-01" -H "content-type: application/json" \
+              -d '{"model":"claude-haiku-5-5","max_tokens":10,"messages":[{"role":"user","content":"Reply with exactly: OK"}]}')
+            echo "== Gọi API bằng ANTHROPIC_API_KEY: HTTP $code"; head -c 300 /tmp/r.json; echo
+          fi
+          if [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            npm i -g --silent @anthropic-ai/claude-code >/dev/null 2>&1
+            out=$(ANTHROPIC_API_KEY= claude -p "Reply with exactly: OK" --max-turns 1 2>&1 | head -c 300)
+            echo "== Gọi Claude bằng CLAUDE_CODE_OAUTH_TOKEN: $out"
+          fi
