@@ -204,9 +204,9 @@ const XQuoteCard: React.FC<{post: Post | null; text: string; vi?: string; w: num
         <div style={{flex: 1}} />
         <div style={{color: C.ink, fontSize: 38, fontWeight: 800}}>𝕏</div>
       </div>
-      <div style={{fontFamily: HEAD, color: C.ink, fontSize: text.length > 120 ? 34 : 40, fontWeight: 500, lineHeight: 1.3}}>{text}</div>
-      {vi ? <div style={{marginTop: 'auto', padding: '14px 18px', borderRadius: 14, background: `${ac}1F`, color: C.ink, fontSize: 26,
-        lineHeight: 1.35, borderLeft: `4px solid ${ac}`}}>🇻🇳 {vi}</div> : null}
+      {/* hiện bản dịch tiếng Việt (giống video trước); câu gốc đã được kiểm tra có thật trong bài */}
+      <div style={{fontFamily: HEAD, color: C.ink, fontSize: (vi || text).length > 130 ? 36 : 42, fontWeight: 600, lineHeight: 1.3}}>“{vi || text}”</div>
+      <div style={{marginTop: 'auto', color: C.muted, fontSize: 22}}>Dịch từ bài viết của <b style={{color: C.ink}}>@{post?.handle}</b> trên X</div>
     </div>
   );
 };

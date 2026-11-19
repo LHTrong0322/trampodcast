@@ -37,7 +37,7 @@ PROMPT = I.PROMPT.replace(
                 "items": [{{"label": "≤ 5 từ", "value": "con số/kiểu tiếng Anh ngắn hoặc trống"}}],
                 "title": "tiêu đề ngắn cho hình, ≤ 6 từ"}},
       "project": {{"name": "tên dự án/coin CHÍNH được bàn trong phần này (vd Hyperliquid), trống nếu không có", "ticker": "vd HYPE"}},
-      "x_quotes": [{{"text": "1-2 câu highlight NGUYÊN VĂN của tác giả, COPY CHÍNH XÁC từng chữ từ bài nguồn (giữ tiếng Anh), mỗi câu ≤ 30 từ", "vi": "dịch nghĩa tiếng Việt ngắn gọn"}}],
+      "x_quotes": [{{"text": "1-2 câu highlight NGUYÊN VĂN của tác giả, COPY CHÍNH XÁC từng chữ từ bài nguồn (giữ tiếng Anh), mỗi câu ≤ 30 từ", "vi": "bản dịch tiếng Việt tự nhiên, sát nghĩa, đọc mượt (đây là chữ hiện trên video)"}}],
       "terms": [{{"term": "thuật ngữ khó xuất hiện trong lời đọc phần này (vd FDV, Low Float), tối đa 2", "explain": "giải thích ≤ 12 từ, dễ hiểu"}}]}}''')
 PROMPT += """
 Độ dài: nếu bài nguồn đủ ý, viết đủ {max_sections} phần, mỗi phần 130-180 từ; hook ≤ 2 câu thật cuốn.
