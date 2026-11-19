@@ -26,6 +26,7 @@ jobs:
           fi
           if [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
             npm i -g --silent @anthropic-ai/claude-code >/dev/null 2>&1
+            export CLAUDE_CODE_OAUTH_TOKEN=$(printf '%s' "$CLAUDE_CODE_OAUTH_TOKEN" | tr -d '\r\n\t ')
             out=$(ANTHROPIC_API_KEY= claude -p "Reply with exactly: OK" --max-turns 1 2>&1 | head -c 300)
             echo "== Gọi Claude bằng CLAUDE_CODE_OAUTH_TOKEN: $out"
           fi
