@@ -4,26 +4,24 @@ import {
   continueRender, delayRender, Easing,
 } from 'remotion';
 
-// Bảng màu kiểu crypto đang thịnh (tech, trẻ, dễ viral): nền gradient tím điện → xanh dương đậm có các mảng màu
-// trôi chậm, thẻ kính mờ (glassmorphism), chữ trắng, chữ nhấn chuyển sắc cyan → xanh chanh neon.
-// (tên biến giữ nguyên: blue = màu nhấn chính, sky = cyan, orange = màu số nổi bật)
-export const BRAND = {blue: '#7B61FF', sky: '#00E0FF', orange: '#B6FF3B', navy: '#140B4A', pink: '#FF3DCB'};
-export const GRAD = `linear-gradient(90deg, ${'#00E0FF'}, ${'#B6FF3B'})`;
+// Bảng màu "crypto cao cấp & sạch": nền tối xanh-tím sâu (không đen trơn), 1 quầng màu nhấn tím→xanh rất nhẹ,
+// thẻ kính mờ tinh tế, chữ trắng; màu nổi chỉ dùng cho số liệu. (blue = màu nhấn chính, sky = cyan, orange = màu số)
+export const BRAND = {blue: '#7C6CFF', sky: '#4FD1FF', orange: '#C6F432', navy: '#0C0E24', pink: '#B07CFF'};
 export const C = {
-  bg: '#140B4A',
-  panel: 'rgba(255,255,255,0.07)',
-  line: 'rgba(255,255,255,0.16)',
-  ink: '#FFFFFF',
-  muted: '#C9C2FF',
-  violet: '#7B61FF',
-  cyan: '#00E0FF',
-  pink: '#FF3DCB',
-  gold: '#B6FF3B',
-  green: '#2BF5A0',
-  red: '#FF4D6D',
+  bg: '#0C0E24',
+  panel: 'rgba(255,255,255,0.05)',
+  line: 'rgba(255,255,255,0.10)',
+  ink: '#F7F8FC',
+  muted: '#A9AECB',
+  violet: '#7C6CFF',
+  cyan: '#4FD1FF',
+  pink: '#B07CFF',
+  gold: '#C6F432',
+  green: '#34D399',
+  red: '#F25F78',
 };
-export const glass: React.CSSProperties = {background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.16)',
-  backdropFilter: 'blur(16px)', boxShadow: '0 24px 70px rgba(10,4,40,0.45), inset 0 1px 0 rgba(255,255,255,0.12)'};
+export const glass: React.CSSProperties = {background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.10)',
+  backdropFilter: 'blur(14px)', boxShadow: '0 20px 60px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)'};
 export const AccentCtx = React.createContext<string>(BRAND.blue);
 export const useAccent = () => React.useContext(AccentCtx);
 export const FONT = "'BODY', system-ui, sans-serif";      // chữ thường, phụ đề: Lexend (dễ đọc)
@@ -69,16 +67,15 @@ export const Backdrop: React.FC<{accent?: string; img?: string; dim?: number}> =
       width: r, height: r, marginLeft: -r / 2, marginTop: -r / 2, borderRadius: '50%', background: col, opacity: a, filter: 'blur(120px)'}} />
   );
   return (
-    <AbsoluteFill style={{background: 'linear-gradient(135deg, #24107A 0%, #140B4A 40%, #0B1F7A 75%, #081443 100%)', overflow: 'hidden'}}>
+    <AbsoluteFill style={{background: 'linear-gradient(150deg, #141436 0%, #0C0E24 50%, #0A1530 100%)', overflow: 'hidden'}}>
       {img ? (
         <Img src={staticFile(img)} style={{position: 'absolute', inset: -40, width: width + 80, height: height + 80,
           objectFit: 'cover', filter: 'blur(26px) saturate(1.2)', opacity: 1 - dim, mixBlendMode: 'screen',
           transform: `scale(${1.05 + 0.02 * Math.sin(t * 0.15)})`}} />
       ) : null}
-      {blob(18, 22, 900, ac, 0.55, 0.12, 0)}
-      {blob(85, 80, 800, BRAND.sky, 0.32, 0.1, 2)}
-      {blob(75, 10, 600, BRAND.pink, 0.22, 0.14, 4)}
-      <AbsoluteFill style={{backgroundImage: 'radial-gradient(rgba(255,255,255,0.13) 1.5px, transparent 1.5px)', backgroundSize: '36px 36px',
+      {blob(15, 18, 900, ac, 0.28, 0.1, 0)}
+      {blob(88, 85, 800, BRAND.sky, 0.14, 0.08, 2)}
+      <AbsoluteFill style={{backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1.4px, transparent 1.4px)', backgroundSize: '36px 36px',
         backgroundPosition: `${(f * 0.25) % 36}px 0px`,
         maskImage: 'radial-gradient(ellipse 85% 75% at 65% 40%, black 15%, transparent 80%)'}} />
       <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(8,6,40,0) 65%, rgba(8,6,40,0.7) 100%)'}} />
@@ -143,7 +140,7 @@ export const RevealWords: React.FC<{text: string; size: number; weight?: number;
           <span key={i} style={{display: 'inline-block', overflow: 'hidden', paddingBottom: size * 0.08}}>
             <span style={{display: 'inline-block', transform: `translateY(${(1 - s) * 110}%) rotate(${(1 - s) * 6}deg)`,
               opacity: s, color: hl ? 'transparent' : color, textShadow: hl ? 'none' : '0 2px 12px rgba(0,0,0,0.3)',
-              ...(hl ? {backgroundImage: `linear-gradient(90deg, ${accentColor}, ${BRAND.orange})`, WebkitBackgroundClip: 'text', backgroundClip: 'text'} : {})}}>{w}</span>
+              ...(hl ? {backgroundImage: `linear-gradient(90deg, ${accentColor}, ${BRAND.sky})`, WebkitBackgroundClip: 'text', backgroundClip: 'text'} : {})}}>{w}</span>
           </span>
         );
       })}
@@ -171,7 +168,7 @@ export const CountUp: React.FC<{value: string; delay?: number; size: number; col
   const bump = spring({frame: f - delay - frames, fps, config: {damping: 8, mass: 0.4}});
   const sc = interpolate(s, [0, 1], [0.6, 1]) * (1 + 0.08 * Math.sin(Math.min(1, bump) * Math.PI));
   return <div style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: size, color, lineHeight: 1, transform: `scale(${sc})`, opacity: s,
-    textShadow: `0 0 ${40 * bump}px ${color}88, 0 6px 24px rgba(0,0,0,0.35)`, letterSpacing: -2, fontVariantNumeric: 'tabular-nums'}}>{shown}</div>;
+    textShadow: `0 0 ${24 * bump}px ${color}55, 0 6px 24px rgba(0,0,0,0.35)`, letterSpacing: -2, fontVariantNumeric: 'tabular-nums'}}>{shown}</div>;
 };
 
 // ---------- phụ đề: hiện cả cụm câu (không chạy từng chữ), gọn & dễ đọc ----------
@@ -202,7 +199,7 @@ export const Captions: React.FC<{words: Word[]; bottom: number; size: number; ma
   return (
     <div style={{position: 'absolute', left: 0, right: 0, bottom, display: 'flex', justifyContent: 'center'}}>
       <div style={{maxWidth, textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: size, lineHeight: 1.35,
-        color: C.ink, opacity: op, padding: '10px 26px', borderRadius: 14, background: 'rgba(12,6,48,0.62)', backdropFilter: 'blur(10px)',
+        color: C.ink, opacity: op, padding: '10px 26px', borderRadius: 14, background: 'rgba(10,12,30,0.7)', backdropFilter: 'blur(8px)',
         textShadow: '0 2px 8px rgba(0,0,0,0.6)'}}>
         {c.map((w) => w.t).join(' ')}
       </div>
@@ -214,7 +211,7 @@ export const Captions: React.FC<{words: Word[]; bottom: number; size: number; ma
 export const Glitch: React.FC<{frames?: number}> = ({frames = 9}) => {
   const f = useCurrentFrame();
   if (f > frames) return null;
-  return <AbsoluteFill style={{background: '#1A0D5C', opacity: interpolate(f, [0, frames], [1, 0], clamp), pointerEvents: 'none'}} />;
+  return <AbsoluteFill style={{background: '#0C0E24', opacity: interpolate(f, [0, frames], [1, 0], clamp), pointerEvents: 'none'}} />;
 };
 
 export const Chip: React.FC<{text: string; color?: string; size?: number}> = ({text, color: col, size = 26}) => {

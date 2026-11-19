@@ -145,6 +145,28 @@ def frames_of(video: Path, n: int, w: int = 640) -> list[bytes]:
     return out
 
 
+def claude_review(prompt: str, imgs: list[tuple[str, bytes]]) -> dict:
+    """Bot review bằng Claude (cần secret ANTHROPIC_API_KEY)."""
+    key = os.getenv("ANTHROPIC_API_KEY", "")
+    if not key:
+        raise RuntimeError("chưa có ANTHROPIC_API_KEY")
+    content = []
+    for label, b in imgs:
+        content += [{"type": "text", "text": f"[{label}]"},
+                    {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg",
+                                                 "data": base64.b64encode(b).decode()}}]
+    content.append({"type": "text", "text": prompt + "\nChỉ trả về JSON hợp lệ, không thêm chữ nào khác."})
+    model = (V.load_cfg().get("insight") or {}).get("review_model", "claude-sonnet-5-5")
+    r = requests.post("https://api.anthropic.com/v1/messages", timeout=300, headers={
+        "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json"},
+        json={"model": model, "max_tokens": 2500, "messages": [{"role": "user", "content": content}]})
+    if r.status_code != 200:
+        raise RuntimeError(f"Claude HTTP {r.status_code}: {r.text[:300]}")
+    txt = "".join(c.get("text", "") for c in r.json().get("content", []) if c.get("type") == "text")
+    m = re.search(r"\{.*\}", txt, re.S)
+    return json.loads(m.group(0) if m else txt)
+
+
 def review(gem, cfg, res: dict, thumb: Path | None) -> dict:
     import insight_lab as L
     plan = res["plan"]
@@ -164,8 +186,13 @@ def review(gem, cfg, res: dict, thumb: Path | None) -> dict:
     prompt = REVIEW_PROMPT.format(n=10, ns=len(imgs) - 10, title=plan.get("title", ""), minutes=res["duration"] / 60,
                                   voice=res["voice"], wpm=wpm, hook=plan.get("hook", ""))
     try:
-        c2 = {**cfg, "models": {**cfg["models"], "text": ["gemini-2.5-flash", "gemini-3-flash-preview", "gemini-2.5-flash-lite"]}}
-        return L.gem_vision(gem, c2, prompt, imgs)
+        rv = claude_review(prompt, imgs)
+        rv["by"] = "Claude"
+        return rv
+    except Exception as ex:
+        log(f"   ! review bằng Claude chưa chạy được ({ex}) → dùng Gemini")
+    try:
+        return {**L.gem_vision(gem, cfg, prompt, imgs), "by": "Gemini"}
     except Exception as ex:
         log(f"   ! review lỗi: {ex}")
         return {}
@@ -178,7 +205,7 @@ def review_text(rv: dict) -> str:
     names = {"hook_3s": "Hook 3 giây đầu", "hinh_anh_ro_rang": "Hình rõ ràng", "mau_sac_brand": "Màu & brand",
              "nhip_do": "Nhịp độ", "phu_de": "Phụ đề", "du_lieu_lien_quan": "Dữ liệu đúng ý", "thumbnail": "Ảnh bìa",
              "short_9x16": "Video ngắn"}
-    lines = [f"🧐 BOT REVIEW · điểm tổng {rv.get('score', '?')}/10", ""]
+    lines = [f"🧐 BOT REVIEW ({rv.get('by', 'AI')}) · điểm tổng {rv.get('score', '?')}/10", ""]
     lines += [f"• {names.get(k, k)}: {v}/10" for k, v in sc.items()]
     if rv.get("tot"):
         lines += ["", "👍 Đang tốt:"] + [f"– {x}" for x in rv["tot"]]

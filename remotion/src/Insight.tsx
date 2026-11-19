@@ -13,7 +13,7 @@ export type Scene = {
   title?: string; theme?: string;
   idx?: number; total?: number; heading?: string; keyStat?: string; keyLabel?: string; bullets?: string[];
   quote?: string; source?: string; data?: DataSpec | null; points?: string[]; project?: Project | null;
-  xquotes?: {text: string; vi?: string}[]; terms?: {term: string; explain: string; at: number}[];
+  endAt?: number; xquotes?: {text: string; vi?: string}[]; terms?: {term: string; explain: string; at: number}[];
 };
 export type InsightProps = {fps: number; width: number; height: number; audio: string; music?: string; duration: number;
   scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string; mode?: string; shortTitle?: string};
@@ -294,17 +294,20 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Po
   );
 };
 
-// ---------- OUTRO (giữ như bản 1+2) ----------
+// ---------- OUTRO: tóm lại → màn hình kết thúc (chừa chỗ gắn 2 video + nút đăng ký của YouTube) ----------
 const OutroScene: React.FC<{sc: Scene; brandName: string}> = ({sc, brandName}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const ac = useAccent();
+  const t = f / fps;
+  const endAt = sc.endAt || sc.dur;
+  const recap = interpolate(t - endAt, [0, 0.6], [1, 0], clamp);
+  const es = interpolate(t - endAt, [0.2, 1], [0, 1], clamp);
   const pulse = 1 + 0.03 * Math.sin(f / 6);
-  const btn = useSpring(Math.round(fps * Math.max(1, sc.dur - 4)), 12);
   return (
     <AbsoluteFill>
       <Backdrop />
-      <AbsoluteFill style={{padding: '150px 140px', flexDirection: 'column', gap: 32}}>
+      <AbsoluteFill style={{padding: '150px 140px', flexDirection: 'column', gap: 32, opacity: recap}}>
         <div><Chip text="TÓM LẠI" /></div>
         {(sc.points || []).map((p, i) => {
           const s = interpolate(f - 10 - i * 12, [0, 14], [0, 1], clamp);
@@ -313,8 +316,22 @@ const OutroScene: React.FC<{sc: Scene; brandName: string}> = ({sc, brandName}) =
             <span style={{fontFamily: DISPLAY, color: ac}}>{String(i + 1).padStart(2, '0')}</span>{p}</div>;
         })}
       </AbsoluteFill>
-      <div style={{position: 'absolute', right: 140, bottom: 300, opacity: btn, transform: `scale(${btn * pulse})`,
-        padding: '24px 50px', borderRadius: 99, background: C.red, color: '#fff', fontFamily: HEAD, fontWeight: 700, fontSize: 40}}>ĐĂNG KÝ · {brandName}</div>
+      {t >= endAt ? (
+        <AbsoluteFill style={{opacity: es}}>
+          <div style={{position: 'absolute', left: 120, top: 120, display: 'flex', alignItems: 'center', gap: 22}}>
+            <Img src={staticFile('logo.png')} style={{width: 110, height: 110, borderRadius: '50%'}} />
+            <div>
+              <div style={{fontFamily: HEAD, fontWeight: 700, fontSize: 52, color: C.ink}}>{brandName}</div>
+              <div style={{fontFamily: FONT, fontSize: 28, color: C.muted}}>Insight crypto dễ hiểu, mỗi tuần</div>
+            </div>
+          </div>
+          {[0, 1].map((k) => <div key={k} style={{position: 'absolute', top: 360, left: 120 + k * 860, width: 800, height: 450, borderRadius: 24,
+            border: `2px dashed ${C.line}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: HEAD,
+            color: C.muted, fontSize: 30}}>{k ? 'Video đề xuất' : 'Xem tiếp video này'}</div>)}
+          <div style={{position: 'absolute', left: 120, bottom: 140, transform: `scale(${pulse})`, transformOrigin: 'left center',
+            padding: '20px 44px', borderRadius: 99, background: C.red, color: '#fff', fontFamily: HEAD, fontWeight: 700, fontSize: 36}}>ĐĂNG KÝ KÊNH</div>
+        </AbsoluteFill>
+      ) : null}
     </AbsoluteFill>
   );
 };

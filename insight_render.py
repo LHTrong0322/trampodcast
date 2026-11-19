@@ -69,13 +69,13 @@ def word_times(text: str, pcm: bytes) -> list[dict]:
     return out
 
 
-def build_timeline(plan, pcm, text, gap=0.35):
+def build_timeline(plan, pcm, text, gap=0.35, tail=2.6):
     """Ghép audio các đoạn (nghỉ ngắn giữa đoạn để giữ nhịp) + lập danh sách cảnh (giây)."""
     secs = plan["sections"]
     order = (["hook"] if "hook" in pcm else []) + ["intro"] + [f"s{k}" for k in range(len(secs))] + ["outro"]
     audio, scenes, t = b"", [], 0.0
     for key in order:
-        a = pcm[key] + V.gap(gap if key != "outro" else 2.6)
+        a = pcm[key] + V.gap(gap if key != "outro" else tail)
         dur = len(a) / SR / 2
         scenes.append({"key": key, "from": round(t, 3), "dur": round(dur, 3), "words": word_times(text[key], pcm[key])})
         audio += a
@@ -194,7 +194,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     f = auto_speed(plan, pcm, float(ic.get("target_wpm", 215))) if f == "auto" else float(f)
     log(f"   Tốc độ giọng ×{f:.2f}")
     pcm = {k: speed(v, f) for k, v in pcm.items()}
-    audio, tl, total = build_timeline(plan, pcm, text)
+    audio, tl, total = build_timeline(plan, pcm, text, tail=float(ic.get("end_screen_seconds", 12)))
     prep_public(lab)
     V.pcm_to_wav(audio, RD / "voice.wav")
     try:
@@ -223,7 +223,8 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                            "images": [f"img/{x}" for x in imgs.get("intro", [])][:1]})
         elif k == "outro":
             chapters.append((sc["from"], "Tóm lại"))
-            scenes.append({**base, "type": "outro", "points": [V.en_money(s["heading"]) for s in secs][:5]})
+            scenes.append({**base, "type": "outro", "points": [V.en_money(s["heading"]) for s in secs][:5],
+                           "endAt": round(len(pcm["outro"]) / SR / 2 + 0.6, 2)})
         else:
             i = int(k[1:])
             s = secs[i]

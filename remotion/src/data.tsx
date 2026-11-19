@@ -161,8 +161,8 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
     const o = interpolate(f, [Math.round((i / pts.length) * 50) + 6, Math.round((i / pts.length) * 50) + 16], [0, 1], clamp);
     const lx = Math.min(W - 150, Math.max(0, x - 70));
     return <g key={txt} opacity={o}>
-      <circle cx={x} cy={y} r={8} fill={c} stroke="#1A0D5C" strokeWidth={3} />
-      <rect x={lx} y={above ? y - 52 : y + 16} width={150} height={36} rx={10} fill="#1A0D5C" stroke={c} strokeWidth={1.5} />
+      <circle cx={x} cy={y} r={8} fill={c} stroke="#0C0E24" strokeWidth={3} />
+      <rect x={lx} y={above ? y - 52 : y + 16} width={150} height={36} rx={10} fill="#12142E" stroke={c} strokeWidth={1.5} />
       <text x={lx + 75} y={above ? y - 27 : y + 41} fill={C.ink} fontSize={20} fontFamily="HEAD" fontWeight={700} textAnchor="middle">{txt}</text>
     </g>;
   };

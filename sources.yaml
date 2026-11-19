@@ -43,7 +43,7 @@ elevenlabs:
 
 # Model AI (tự thử lần lượt, model đầu lỗi/không tồn tại thì dùng model sau)
 models:
-  text: ["gemini-3-flash-preview", "gemini-2.5-flash", "gemini-2.5-flash-lite"]
+  text: ["gemini-3-flash-preview", "gemini-3.8-flash", "gemini-3.5-flash-lite", "gemini-2.5-flash", "gemini-2.5-flash-lite"]
   tts:  ["gemini-3.8-flash-tts"]   # giọng Fola chỉ có trên model này
 
 # ---------------------------------------------------------------------
@@ -121,5 +121,7 @@ insight:
   max_sections: 6             # số insight tối đa trong 1 video
   target_minutes: 7
   shorts: 3                   # số video ngắn highlight
-  shorts_max_seconds: 55
+  shorts_max_seconds: 45
+  review_model: "claude-sonnet-5-5"   # bot review dùng Claude (secret ANTHROPIC_API_KEY); chưa có key thì tạm dùng Gemini
+  end_screen_seconds: 12              # khoảng cuối video để gắn màn hình kết thúc YouTube
   cook_hours: [19, 23]        # khung giờ (VN) được phép cook tự động
