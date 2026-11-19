@@ -9,7 +9,7 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent = BRAND.blue, pr
   const words = (text || '').toUpperCase().split(/\s+/);
   return (
     <AccentCtx.Provider value={accent}>
-      <AbsoluteFill style={{background: `linear-gradient(150deg, #1A0F45, ${BRAND.navy} 60%)`, fontFamily: FONT}}>
+      <AbsoluteFill style={{background: 'linear-gradient(135deg, #2A128F 0%, #140B4A 45%, #0B2290 100%)', fontFamily: FONT}}>
         {bg ? <Img src={staticFile(bg)} style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.35, filter: 'saturate(0.8)'}} /> : null}
         <AbsoluteFill style={{background: `radial-gradient(900px 600px at 15% 20%, ${accent}40, transparent 70%), linear-gradient(90deg, ${C.bg} 35%, rgba(10,12,18,0.4))`}} />
         <div style={{position: 'absolute', left: 64, top: 48, display: 'flex', alignItems: 'center', gap: 14}}>

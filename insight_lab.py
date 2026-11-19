@@ -47,6 +47,9 @@ về coin cụ thể → coin_chart; so sánh 2-4 thứ có số → stat_compar
 tiêu chí đánh giá → checklist (điền items, value để trống); bức tranh toàn thị trường → market_heatmap.
 stat_compare CHỈ dùng khi các items cùng đơn vị và so sánh được với nhau (vd doanh thu dự án A vs B); không trộn % với ngày.
 "thumb_text": 2-4 từ cực ngắn cho ảnh bìa (vd "ALTCOIN RÁC SẮP CHẾT"), khác tiêu đề; "thumb_stat" là 1 con số gây sốc có thật.
+hook_stat / thumb_stat: con số THẬT trong bài, nói về THỊ TRƯỜNG hoặc DỰ ÁN và gắn trực tiếp với luận điểm chính của video
+(vd % altcoin sụt giảm, doanh thu dự án, % tăng sau khi đổi tokenomics). TUYỆT ĐỐI không lấy số về thu nhập/lợi nhuận cá nhân,
+số người đăng ký, quảng cáo của tác giả, hay điểm số kiểu "10/10". Không chắc thì để trống.
 Hook: mở bằng 1 câu hỏi hoặc con số gây sốc chạm vào nỗi đau/lợi ích của người xem, ≤ 2 câu, đọc ≤ 6 giây.
 Không dùng dấu gạch ngang dài (— hoặc –) ở bất kỳ trường nào; dùng dấu phẩy hoặc hai chấm.
 Lời đọc: câu ngắn, nhiều từ nối kiểu "Nhưng…", "Tại sao?", "Kết quả là…" để giữ nhịp; không lan man."""

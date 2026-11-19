@@ -30,7 +30,7 @@ def ts(sec: float) -> str:
 SEO_SYSTEM = """Bạn là chuyên gia SEO YouTube & TikTok mảng crypto/đầu tư tại Việt Nam (khán giả Việt, tìm kiếm bằng
 tiếng Việt lẫn từ khoá tiếng Anh như crypto, altcoin, DCA, tokenomics...). Viết chuẩn thuật toán: từ khoá chính nằm
 đầu tiêu đề và 2 câu đầu mô tả; tiêu đề gây tò mò nhưng KHÔNG câu view sai sự thật; không hứa lợi nhuận;
-không nhắc AI/bot. Tên kênh: {brand}."""
+không nhắc AI/bot; không dùng dấu gạch ngang dài (— –). Tên kênh: {brand}."""
 
 SEO_PROMPT = """Video dài ({minutes:.1f} phút): "{title}"
 Chủ đề: {theme}
@@ -78,6 +78,7 @@ def seo_pack(gem, cfg, res: dict) -> dict:
             + "\n⚠️ Không phải lời khuyên đầu tư. Hãy tự nghiên cứu (DYOR) trước khi xuống tiền.\n"
             + "🐧 Smart Penguin Insights · @Trong0322\n\n" + " ".join(seo.get("hashtags", [])))
     seo["yt_description"] = desc[:4900]
+    seo = R.nodash(seo)  # không bao giờ dùng dấu gạch ngang dài
     tags, n = [], 0
     for t in seo.get("yt_tags", []):
         if n + len(t) + 1 > 480:
@@ -163,7 +164,8 @@ def review(gem, cfg, res: dict, thumb: Path | None) -> dict:
     prompt = REVIEW_PROMPT.format(n=10, ns=len(imgs) - 10, title=plan.get("title", ""), minutes=res["duration"] / 60,
                                   voice=res["voice"], wpm=wpm, hook=plan.get("hook", ""))
     try:
-        return L.gem_vision(gem, cfg, prompt, imgs)
+        c2 = {**cfg, "models": {**cfg["models"], "text": ["gemini-2.5-flash", "gemini-3-flash-preview", "gemini-2.5-flash-lite"]}}
+        return L.gem_vision(gem, c2, prompt, imgs)
     except Exception as ex:
         log(f"   ! review lỗi: {ex}")
         return {}
@@ -198,6 +200,7 @@ def _tg():
 
 
 def tg_text(text: str):
+    text = R.nodash(text)
     api, chat = _tg()
     if not api:
         return
@@ -207,6 +210,7 @@ def tg_text(text: str):
 
 
 def tg_video(path: Path, caption: str):
+    caption = R.nodash(caption)
     api, chat = _tg()
     if not api:
         return

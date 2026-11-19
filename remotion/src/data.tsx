@@ -1,13 +1,13 @@
 import React from 'react';
 import {Img, interpolate, staticFile, useCurrentFrame, useVideoConfig, spring} from 'remotion';
-import {BRAND, C, clamp, DISPLAY, ease, FONT, HEAD, useAccent} from './ui';
+import {BRAND, C, clamp, DISPLAY, ease, FONT, glass, HEAD, useAccent} from './ui';
 
 export type DataSpec = {type: string; tickers?: string[]; items?: {label: string; value?: string}[]; title?: string};
 
 const Frame: React.FC<{w: number; h: number; title: string; sub?: string; children: React.ReactNode}> = ({w, h, title, sub, children}) => {
   const ac = useAccent();
   return (
-  <div style={{width: w, height: h, borderRadius: 26, background: C.panel, border: `1px solid ${C.line}`, borderTop: `4px solid ${ac}`,
+  <div style={{width: w, height: h, borderRadius: 26, ...glass, borderTop: `4px solid ${ac}`,
     boxShadow: '0 30px 80px rgba(0,0,0,0.45)', padding: 36, boxSizing: 'border-box', fontFamily: FONT,
     display: 'flex', flexDirection: 'column', gap: 18, overflow: 'hidden'}}>
     <div style={{display: 'flex', alignItems: 'baseline', gap: 14}}>
@@ -161,8 +161,8 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
     const o = interpolate(f, [Math.round((i / pts.length) * 50) + 6, Math.round((i / pts.length) * 50) + 16], [0, 1], clamp);
     const lx = Math.min(W - 150, Math.max(0, x - 70));
     return <g key={txt} opacity={o}>
-      <circle cx={x} cy={y} r={8} fill={c} stroke="#120E2E" strokeWidth={3} />
-      <rect x={lx} y={above ? y - 52 : y + 16} width={150} height={36} rx={10} fill="#120E2E" stroke={c} strokeWidth={1.5} />
+      <circle cx={x} cy={y} r={8} fill={c} stroke="#1A0D5C" strokeWidth={3} />
+      <rect x={lx} y={above ? y - 52 : y + 16} width={150} height={36} rx={10} fill="#1A0D5C" stroke={c} strokeWidth={1.5} />
       <text x={lx + 75} y={above ? y - 27 : y + 41} fill={C.ink} fontSize={20} fontFamily="HEAD" fontWeight={700} textAnchor="middle">{txt}</text>
     </g>;
   };

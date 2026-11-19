@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Img, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {AccentCtx, Backdrop, BRAND, Handle, C, Captions, Chip, clamp, CountUp, DISPLAY, FONT, Glitch, HEAD, RevealWords, useAccent, useFonts, useSpring, Word} from './ui';
+import {AccentCtx, Backdrop, BRAND, glass, Handle, C, Captions, Chip, clamp, CountUp, DISPLAY, FONT, Glitch, HEAD, RevealWords, useAccent, useFonts, useSpring, Word} from './ui';
 import {DataPanel, DataSpec} from './data';
 
 export type Post = {author: string; handle: string; avatar?: string; cover?: string; title?: string; text?: string;
@@ -53,7 +53,7 @@ const TopBar: React.FC<{source?: string; idx?: number; total?: number; brand: st
 };
 
 // ---------- HOOK ----------
-const HookScene: React.FC<{sc: Scene}> = ({sc}) => {
+const HookScene: React.FC<{sc: Scene; brand: string; source?: string}> = ({sc, brand, source}) => {
   const f = useCurrentFrame();
   const ring = (k: number) => {
     const t = ((f - 10 - k * 18) % 54) / 54;
@@ -61,7 +61,8 @@ const HookScene: React.FC<{sc: Scene}> = ({sc}) => {
   };
   return (
   <AbsoluteFill>
-    <Backdrop img={sc.images?.[0]} dim={0.75} accent={BRAND.orange} />
+    <Backdrop img={sc.images?.[0]} dim={0.75} />
+    <TopBar brand={brand} source={source} />
     {sc.stat ? [0, 1, 2].map((k) => <div key={k} style={{position: 'absolute', left: '50%', top: '34%', width: 900, height: 900,
       marginLeft: -450, marginTop: -450, borderRadius: '50%', border: `3px solid ${BRAND.orange}`,
       transform: `scale(${0.3 + ring(k) * 1.2})`, opacity: (1 - ring(k)) * 0.35}} />) : null}
@@ -82,7 +83,7 @@ const PostCard: React.FC<{post: Post; delay: number}> = ({post, delay}) => {
   const s = useSpring(delay, 18);
   return (
     <div style={{perspective: 1800}}>
-      <div style={{width: 740, borderRadius: 26, background: C.panel, border: `1px solid ${C.line}`,
+      <div style={{width: 740, borderRadius: 26, ...glass,
         boxShadow: '0 40px 100px rgba(0,0,0,0.55)', overflow: 'hidden', fontFamily: FONT,
         transform: `rotateY(${interpolate(s, [0, 1], [-25, -6]) + Math.sin(f / 50)}deg) translateX(${(1 - s) * 200}px)`, opacity: s}}>
         {post.cover ? <Img src={staticFile(post.cover)} style={{width: '100%', height: 280, objectFit: 'cover'}} /> : null}
@@ -109,7 +110,7 @@ const PostCard: React.FC<{post: Post; delay: number}> = ({post, delay}) => {
 };
 
 // ---------- INTRO: tiêu đề → danh sách insight ----------
-const IntroScene: React.FC<{sc: Scene; post: Post | null}> = ({sc, post}) => {
+const IntroScene: React.FC<{sc: Scene; post: Post | null; brand: string}> = ({sc, post, brand}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const ac = useAccent();
@@ -119,7 +120,8 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null}> = ({sc, post}) => {
   return (
     <AbsoluteFill>
       <Backdrop img={sc.images?.[0]} dim={0.88} />
-      <AbsoluteFill style={{flexDirection: 'row', alignItems: 'center', padding: '0 110px', gap: 70}}>
+      <TopBar brand={brand} source={post ? '@' + post.handle : undefined} />
+      <AbsoluteFill style={{flexDirection: 'row', alignItems: 'center', padding: '60px 110px 0', gap: 70}}>
         <div style={{flex: 1, position: 'relative', height: 700}}>
           <div style={{position: 'absolute', top: 60, display: 'flex', flexDirection: 'column', gap: 28, opacity: out}}>
             <div><Chip text={(sc.theme || 'INSIGHT').toUpperCase()} /></div>
@@ -175,7 +177,7 @@ export const QuoteCard: React.FC<{post: Post | null; quote: string; w: number; h
   const s = useSpring(2, 18);
   const ac = useAccent();
   return (
-    <div style={{width: w, height: h, borderRadius: 26, background: C.panel, border: `1px solid ${C.line}`, boxSizing: 'border-box',
+    <div style={{width: w, height: h, borderRadius: 26, ...glass, boxSizing: 'border-box',
       padding: 50, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 26, fontFamily: FONT, opacity: s,
       transform: `scale(${0.96 + 0.04 * s})`, boxShadow: '0 30px 80px rgba(0,0,0,0.4)', borderLeft: `6px solid ${ac}`}}>
       <div style={{fontFamily: HEAD, fontSize: 44, lineHeight: 1.28, color: C.ink, fontWeight: 700}}>“{quote}”</div>
@@ -192,7 +194,7 @@ const XQuoteCard: React.FC<{post: Post | null; text: string; vi?: string; w: num
   const s = useSpring(2, 16);
   const ac = useAccent();
   return (
-    <div style={{width: w, height: h, borderRadius: 26, background: '#120E2E', border: `1px solid ${C.line}`, boxSizing: 'border-box',
+    <div style={{width: w, height: h, borderRadius: 26, ...glass, boxSizing: 'border-box',
       padding: '40px 46px', display: 'flex', flexDirection: 'column', gap: 22, fontFamily: FONT, opacity: s,
       transform: `translateY(${(1 - s) * 30}px)`, boxShadow: `0 30px 80px rgba(0,0,0,0.45), 0 0 0 1px ${ac}22`}}>
       <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
@@ -282,7 +284,7 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Po
         })}
         {sc.keyStat ? (
           <div style={{position: 'absolute', right: 0, top: 590, padding: '14px 28px', display: 'flex', alignItems: 'center', gap: 20,
-            borderRadius: 18, background: C.panel, border: `1px solid ${C.line}`}}>
+            borderRadius: 18, ...glass}}>
             <div style={{whiteSpace: 'nowrap'}}><CountUp value={sc.keyStat} size={sc.keyStat.length > 6 ? 40 : 54} delay={20} color={BRAND.orange} /></div>
             <div style={{fontFamily: FONT, color: C.muted, fontWeight: 500, fontSize: 22, width: 320, lineHeight: 1.25}}>{sc.keyLabel}</div>
           </div>
@@ -341,8 +343,8 @@ export const Insight: React.FC<InsightProps> = (props) => {
       {props.scenes.map((sc, i) => (
         <Sequence key={i} from={Math.round(sc.from * fps)} durationInFrames={Math.max(1, Math.round(sc.dur * fps))}>
           <AccentCtx.Provider value={sc.project?.color || DEFAULT_ACCENT}>
-            {sc.type === 'hook' ? <HookScene sc={sc} /> : null}
-            {sc.type === 'intro' ? <IntroScene sc={sc} post={props.post} /> : null}
+            {sc.type === 'hook' ? <HookScene sc={sc} brand={brandName} source={props.post ? '@' + props.post.handle : undefined} /> : null}
+            {sc.type === 'intro' ? <IntroScene sc={sc} post={props.post} brand={brandName} /> : null}
             {sc.type === 'section' ? <SectionScene sc={sc} data={props.data} brandName={brandName} post={props.post} /> : null}
             {sc.type === 'outro' ? <OutroScene sc={sc} brandName={brandName} /> : null}
             {sc.type !== 'hook' ? <Captions words={sc.words} bottom={64} size={40} maxWidth={1500} /> : null}
