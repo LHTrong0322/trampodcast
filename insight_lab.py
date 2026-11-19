@@ -38,6 +38,7 @@ PROMPT = I.PROMPT.replace(
                 "title": "tiêu đề ngắn cho hình, ≤ 6 từ"}},
       "project": {{"name": "tên dự án/coin CHÍNH được bàn trong phần này (vd Hyperliquid), trống nếu không có", "ticker": "vd HYPE"}},
       "x_quotes": [{{"text": "1-2 câu highlight NGUYÊN VĂN của tác giả, COPY CHÍNH XÁC từng chữ từ bài nguồn (giữ tiếng Anh), mỗi câu ≤ 30 từ", "vi": "bản dịch tiếng Việt tự nhiên, sát nghĩa, đọc mượt (đây là chữ hiện trên video)"}}],
+      "emphasis": ["3-5 cụm từ QUAN TRỌNG NHẤT trong lời đọc phần này (2-4 từ mỗi cụm, chép ĐÚNG từng chữ trong narration) để in đậm trên phụ đề"],
       "terms": [{{"term": "thuật ngữ khó xuất hiện trong lời đọc phần này (vd FDV, Low Float), tối đa 2", "explain": "giải thích ≤ 12 từ, dễ hiểu"}}]}}''')
 PROMPT += """
 Độ dài: nếu bài nguồn đủ ý, viết đủ {max_sections} phần, mỗi phần 130-180 từ; hook ≤ 2 câu thật cuốn.
@@ -352,6 +353,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     if notes:
         prompt += "\nRút kinh nghiệm từ review các video trước (áp dụng):\n" + "\n".join(f"- {n}" for n in notes)
     plan = V.llm_json(gem, cfg, system, prompt)
+    plan = P.nodash(plan)  # triệt gạch ngang dài ngay từ kịch bản
     plan["sections"] = [s for s in plan.get("sections", []) if s.get("narration")][: int(ic.get("max_sections", 6))]
     plan["posts"] = posts
     log("③ Dữ liệu thị trường + ảnh (AI lọc ảnh lạc đề)")

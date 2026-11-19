@@ -97,16 +97,7 @@ def mix_music(voice_wav: Path, out_wav: Path, seconds: float, seed: int):
     tmp.unlink()
 
 
-def nodash(x):
-    """Không dùng dấu gạch ngang dài (— –) trên video: thay bằng dấu phẩy/hai chấm."""
-    if isinstance(x, str):
-        x = re.sub(r"\s*[—–]\s*(?=\S)", ", ", x)
-        return re.sub(r"\s*[—–]\s*", "", x).replace(" , ", ", ")
-    if isinstance(x, list):
-        return [nodash(i) for i in x]
-    if isinstance(x, dict):
-        return {k: nodash(v) for k, v in x.items()}
-    return x
+nodash = P.nodash
 
 
 def vivid(hexc: str | None) -> str | None:
@@ -251,6 +242,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                            "bullets": [V.en_money(b) for b in (s.get("bullets") or [])][:3],
                            "quote": V.en_money(s.get("quote", "")), "source": ("@" + src[0]) if src[0] else "",
                            "data": dspec or None, "project": proj, "xquotes": verified_quotes(s, posts),
+                           "emph": [V.en_money(e) for e in (s.get("emphasis") or [])][:6],
                            "terms": term_times(s, sc["words"])})
     chapters[0] = (0.0, chapters[0][1])
     post = nodash(post)
@@ -259,7 +251,8 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
              "views": post.get("views"), "retweets": post.get("retweets")} if post else None
     scenes = nodash(scenes)
     props = {"fps": 30, "width": 1920, "height": 1080, "audio": audio_file, "duration": round(total, 3),
-             "scenes": scenes, "data": data, "brand": brand, "post": pinfo, "theme": os.getenv("INSIGHT_THEME") or ic.get("theme", "dark")}
+             "scenes": scenes, "data": data, "brand": brand, "post": pinfo,
+             "emph": [V.en_money(e) for s in secs for e in (s.get("emphasis") or [])][:30], "theme": os.getenv("INSIGHT_THEME") or ic.get("theme", "dark")}
     out_dir.mkdir(parents=True, exist_ok=True)
     tag = lab.name + (f"-{os.getenv('INSIGHT_THEME')}" if os.getenv("INSIGHT_THEME") else "")
     long_path = out_dir / f"smart-penguin-{tag}-16x9.mp4"

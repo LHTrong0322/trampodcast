@@ -160,10 +160,11 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
     const [x, y] = pts[i];
     const o = interpolate(f, [Math.round((i / pts.length) * 50) + 6, Math.round((i / pts.length) * 50) + 16], [0, 1], clamp);
     const lx = Math.min(W - 150, Math.max(0, x - 70));
+    const ly = above ? Math.max(4, y - 52) : Math.min(H - 40, y + 16);   // không tràn lên dòng giá phía trên
     return <g key={txt} opacity={o}>
       <circle cx={x} cy={y} r={8} fill={c} stroke={T.solid} strokeWidth={3} />
-      <rect x={lx} y={above ? y - 52 : y + 16} width={150} height={36} rx={10} fill={T.solid} stroke={c} strokeWidth={1.5} />
-      <text x={lx + 75} y={above ? y - 27 : y + 41} fill={C.ink} fontSize={20} fontFamily="HEAD" fontWeight={700} textAnchor="middle">{txt}</text>
+      <rect x={lx} y={ly} width={150} height={36} rx={10} fill={T.solid} stroke={c} strokeWidth={1.5} />
+      <text x={lx + 75} y={ly + 25} fill={C.ink} fontSize={20} fontFamily="HEAD" fontWeight={700} textAnchor="middle">{txt}</text>
     </g>;
   };
   const pulse = 10 + 6 * Math.abs(Math.sin(f / 8));
@@ -174,7 +175,7 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
         <div style={{color: C.ink, fontFamily: DISPLAY, fontSize: 44, fontWeight: 800}}>{m ? money(m.price) : ''}</div>
         <div style={{color: col, fontFamily: DISPLAY, fontSize: 32, fontWeight: 800}}>{chg >= 0 ? '+' : ''}{chg.toFixed(1)}%</div>
       </div>
-      <svg width={W} height={H} style={{overflow: 'visible'}}>
+      <svg width={W} height={H} style={{overflow: 'hidden'}}>
         <defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor={col} stopOpacity={0.4} /><stop offset="1" stopColor={col} stopOpacity={0} /></linearGradient></defs>
         <line x1={0} x2={W} y1={y0} y2={y0} stroke={C.muted} strokeDasharray="6 8" strokeWidth={1.5} opacity={0.6} />
         <text x={W} y={y0 - 8} fill={C.muted} fontSize={18} textAnchor="end" fontFamily="BODY">đầu kỳ {money(series[0])}</text>

@@ -525,7 +525,29 @@ def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: dat
     return ed, stories, script
 
 
+DASHES = "\u2014\u2013\u2015\u2012\u2E3A\u2E3B\uFE58\uFE63\uFF0D"  # — – ― ‒ ⸺ ⸻ ﹘ ﹣ －
+
+
+def nodash(x):
+    """KHÔNG BAO GIỜ dùng gạch ngang dài (— – ― …) hay gạch nối đứng giữa câu ( - ): thay bằng dấu phẩy.
+    Dùng cho mọi chữ: kịch bản, chữ trên video, phụ đề, SEO, tin Telegram. Áp dụng đệ quy cho list/dict."""
+    if isinstance(x, str):
+        x = re.sub(rf"\s*[{DASHES}]+\s*(?=\S)", ", ", x)
+        x = re.sub(rf"\s*[{DASHES}]+\s*", "", x)
+        x = re.sub(r"(?<=\S)\s+-{1,3}\s+(?=\S)", ", ", x)   # "a - b", "a -- b" → "a, b"
+        x = re.sub(r",\s*,", ",", x).replace(" ,", ",")
+        return re.sub(r"([.!?:;]),", r"\1", x)
+    if isinstance(x, list):
+        return [nodash(i) for i in x]
+    if isinstance(x, tuple):
+        return tuple(nodash(i) for i in x)
+    if isinstance(x, dict):
+        return {k: nodash(v) for k, v in x.items()}
+    return x
+
+
 def sanitize_script(s: str) -> str:
+    s = nodash(s)
     s = re.sub(r"https?://\S+", "", s)
     s = re.sub(r"[*#_`>\[\]{}|~]", "", s)
     s = re.sub(r"^\s*[-•]\s*", "", s, flags=re.M)

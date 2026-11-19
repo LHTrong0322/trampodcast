@@ -150,9 +150,9 @@ def tts_once(gem, cfg, text: str) -> bytes:
 
 
 def llm_json(gem, cfg, system: str, prompt: str) -> dict:
-    raw = gem.text(cfg["models"]["text"], system, prompt, json_mode=True)
+    raw = gem.text(cfg["models"]["text"], system, prompt + "\nKhông dùng dấu gạch ngang dài (— –) ở bất kỳ đâu.", json_mode=True)
     raw = re.sub(r"^```(?:json)?|```$", "", raw.strip(), flags=re.M)
-    return json.loads(raw)
+    return P.nodash(json.loads(raw))
 
 
 # ---------------------------------------------------------------------------
@@ -258,6 +258,7 @@ def _num(raw: str) -> str:
 def en_money(text: str) -> str:
     if not text:
         return text
+    text = P.nodash(text)
 
     def unit(m):
         dollar = bool(m.group(1)) or bool(m.group(4))

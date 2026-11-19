@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Img, staticFile} from 'remotion';
-import {AccentCtx, applyTheme, BRAND, Handle, T, C, DISPLAY, FONT, HEAD, useFonts} from './ui';
+import {AccentCtx, applyTheme, clean, BRAND, Handle, T, C, DISPLAY, FONT, HEAD, useFonts} from './ui';
 
 // Ảnh bìa YouTube 1280×720: chữ to, 1 con số, logo dự án + logo kênh
 export type ThumbProps = {text: string; stat?: string; accent?: string; projectLogo?: string | null; bg?: string | null; brand: string; theme?: string};
@@ -8,7 +8,7 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acc, projectLog
   applyTheme(theme);
   const accent = acc || BRAND.blue;
   useFonts();
-  const words = (text || '').toUpperCase().split(/\s+/);
+  const words = clean(text || '').toUpperCase().split(/\s+/);
   return (
     <AccentCtx.Provider value={accent}>
       <AbsoluteFill style={{background: T.grad, fontFamily: FONT}}>

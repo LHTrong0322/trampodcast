@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Img, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {AccentCtx, applyTheme, tone, Backdrop, BRAND, glass, Handle, T, C, Captions, Chip, clamp, CountUp, DISPLAY, FONT, Glitch, HEAD, RevealWords, useAccent, useFonts, useSpring, Word} from './ui';
+import {AccentCtx, applyTheme, deepClean, EmphText, tone, Backdrop, BRAND, glass, Handle, T, C, Captions, Chip, clamp, CountUp, DISPLAY, FONT, Glitch, HEAD, RevealWords, useAccent, useFonts, useSpring, Word} from './ui';
 import {DataPanel, DataSpec} from './data';
 
 export type Post = {author: string; handle: string; avatar?: string; cover?: string; title?: string; text?: string;
@@ -13,11 +13,11 @@ export type Scene = {
   title?: string; theme?: string;
   idx?: number; total?: number; heading?: string; keyStat?: string; keyLabel?: string; bullets?: string[];
   quote?: string; source?: string; data?: DataSpec | null; points?: string[]; project?: Project | null;
-  endAt?: number; xquotes?: {text: string; vi?: string}[]; terms?: {term: string; explain: string; at: number}[];
+  endAt?: number; emph?: string[]; xquotes?: {text: string; vi?: string}[]; terms?: {term: string; explain: string; at: number}[];
 };
 export type InsightProps = {fps: number; width: number; height: number; audio: string; music?: string; duration: number;
   scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string; mode?: string; shortTitle?: string;
-  theme?: string};
+  theme?: string; emph?: string[]};
 
 export const accentDefault = () => BRAND.blue;
 const fmt = (n?: number) => (n == null ? '' : n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'K' : String(n));
@@ -154,7 +154,7 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null; brand: string}> = ({sc
 };
 
 // ---------- SECTION (kiểu "dữ liệu thật") ----------
-const Bullets: React.FC<{items: string[]; dur: number; fps: number}> = ({items, dur, fps}) => {
+const Bullets: React.FC<{items: string[]; dur: number; fps: number; emph?: string[]}> = ({items, dur, fps, emph}) => {
   const f = useCurrentFrame();
   const ac = useAccent();
   return (
@@ -166,7 +166,7 @@ const Bullets: React.FC<{items: string[]; dur: number; fps: number}> = ({items, 
           <div key={i} style={{display: 'flex', alignItems: 'center', gap: 16, opacity: s, transform: `translateX(${(1 - s) * -40}px)`,
             fontFamily: FONT, fontSize: 32, fontWeight: 500, color: C.ink}}>
             <div style={{width: 10, height: 10, borderRadius: 3, background: ac, flexShrink: 0, transform: 'rotate(45deg)'}} />
-            <span>{b}</span>
+            <span><EmphText text={b} emph={emph} weight={700} /></span>
           </div>
         );
       })}
@@ -174,14 +174,14 @@ const Bullets: React.FC<{items: string[]; dur: number; fps: number}> = ({items, 
   );
 };
 
-export const QuoteCard: React.FC<{post: Post | null; quote: string; w: number; h: number}> = ({post, quote, w, h}) => {
+export const QuoteCard: React.FC<{post: Post | null; quote: string; w: number; h: number; emph?: string[]}> = ({post, quote, w, h, emph}) => {
   const s = useSpring(2, 18);
   const ac = useAccent();
   return (
     <div style={{width: w, height: h, borderRadius: 26, ...glass, boxSizing: 'border-box',
       padding: 50, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 26, fontFamily: FONT, opacity: s,
       transform: `scale(${0.96 + 0.04 * s})`, boxShadow: '0 30px 80px rgba(0,0,0,0.4)', borderLeft: `6px solid ${ac}`}}>
-      <div style={{fontFamily: HEAD, fontSize: 44, lineHeight: 1.28, color: C.ink, fontWeight: 700}}>“{quote}”</div>
+      <div style={{fontFamily: HEAD, fontSize: 44, lineHeight: 1.28, color: C.ink, fontWeight: 500}}>“<EmphText text={quote} emph={emph} color={ac} weight={700} />”</div>
       {post ? <div style={{display: 'flex', alignItems: 'center', gap: 14}}>
         {post.avatar ? <Img src={staticFile(post.avatar)} style={{width: 52, height: 52, borderRadius: '50%'}} /> : null}
         <div style={{color: C.muted, fontSize: 24, fontWeight: 500}}>Source: <b style={{color: C.ink}}>@{post.handle}</b></div>
@@ -191,7 +191,7 @@ export const QuoteCard: React.FC<{post: Post | null; quote: string; w: number; h
 };
 
 // thẻ trích nguyên văn câu highlight của tác giả trên X (kèm dịch)
-const XQuoteCard: React.FC<{post: Post | null; text: string; vi?: string; w: number; h: number}> = ({post, text, vi, w, h}) => {
+const XQuoteCard: React.FC<{post: Post | null; text: string; vi?: string; w: number; h: number; emph?: string[]}> = ({post, text, vi, w, h, emph}) => {
   const s = useSpring(2, 16);
   const ac = useAccent();
   return (
@@ -208,7 +208,7 @@ const XQuoteCard: React.FC<{post: Post | null; text: string; vi?: string; w: num
         <div style={{color: C.ink, fontSize: 38, fontWeight: 800}}>𝕏</div>
       </div>
       {/* hiện bản dịch tiếng Việt (giống video trước); câu gốc đã được kiểm tra có thật trong bài */}
-      <div style={{fontFamily: HEAD, color: C.ink, fontSize: (vi || text).length > 130 ? 36 : 42, fontWeight: 600, lineHeight: 1.3}}>“{vi || text}”</div>
+      <div style={{fontFamily: HEAD, color: C.ink, fontSize: (vi || text).length > 130 ? 36 : 42, fontWeight: 500, lineHeight: 1.3}}>“<EmphText text={vi || text} emph={emph} color={ac} weight={700} />”</div>
       <div style={{marginTop: 'auto', color: C.muted, fontSize: 22}}>Dịch từ bài viết của <b style={{color: C.ink}}>@{post?.handle}</b> trên X</div>
     </div>
   );
@@ -265,7 +265,7 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Po
       <div style={{position: 'absolute', left: 110, top: 230, width: 800, display: 'flex', flexDirection: 'column', gap: 36}}>
         <RevealWords text={sc.heading || ''} size={58} delay={6} stagger={3} maxWidth={800}
           highlight={[sc.project?.name || '', sc.keyStat || ''].filter(Boolean)} />
-        {sc.bullets?.length ? <Bullets items={sc.bullets} dur={sc.dur} fps={fps} /> : null}
+        {sc.bullets?.length ? <Bullets items={sc.bullets} dur={sc.dur} fps={fps} emph={sc.emph} /> : null}
       </div>
       {sc.terms?.length ? <TermCallout terms={sc.terms} /> : null}
       <div style={{position: 'absolute', right: 100, top: 190, width: W, height: H}}>
@@ -278,8 +278,8 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Po
             <div key={i} style={{position: 'absolute', inset: 0, opacity: o, transform: `scale(${i === bi ? zoom : 1}) translateX(${(1 - o) * (i === bi ? 40 : -40)}px)`}}>
               <Sequence from={Math.round(st * fps)} layout="none">
                 {b.kind === 'data' ? <DataPanel spec={sc.data!} data={data} w={W} h={H} />
-                  : b.kind === 'x' ? <XQuoteCard post={post || null} text={b.text!} vi={b.vi} w={W} h={H} />
-                    : <QuoteCard post={post || null} quote={b.text || ''} w={W} h={H} />}
+                  : b.kind === 'x' ? <XQuoteCard post={post || null} text={b.text!} vi={b.vi} w={W} h={H} emph={sc.emph} />
+                    : <QuoteCard post={post || null} quote={b.text || ''} w={W} h={H} emph={sc.emph} />}
               </Sequence>
             </div>
           );
@@ -350,7 +350,8 @@ const Chrome: React.FC = () => {
   );
 };
 
-export const Insight: React.FC<InsightProps> = (props) => {
+export const Insight: React.FC<InsightProps> = (raw) => {
+  const props = React.useMemo(() => deepClean(raw), [raw]);
   applyTheme(props.theme);
   useFonts();
   const {fps} = useVideoConfig();
@@ -367,7 +368,7 @@ export const Insight: React.FC<InsightProps> = (props) => {
             {sc.type === 'intro' ? <IntroScene sc={sc} post={props.post} brand={brandName} /> : null}
             {sc.type === 'section' ? <SectionScene sc={sc} data={props.data} brandName={brandName} post={props.post} /> : null}
             {sc.type === 'outro' ? <OutroScene sc={sc} brandName={brandName} /> : null}
-            {sc.type !== 'hook' ? <Captions words={sc.words} bottom={64} size={40} maxWidth={1500} /> : null}
+            {sc.type !== 'hook' ? <Captions words={sc.words} bottom={64} size={40} maxWidth={1500} emph={sc.emph || props.emph} /> : null}
             {i > 0 ? <Glitch /> : null}
           </AccentCtx.Provider>
         </Sequence>

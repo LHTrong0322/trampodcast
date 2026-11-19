@@ -86,6 +86,48 @@ export const DISPLAY = "'DISPLAY', 'HEAD', sans-serif";   // số lớn, ảnh b
 
 export type Word = {t: string; s: number; e: number};
 
+// ---------- lớp chặn cuối: KHÔNG BAO GIỜ hiện gạch ngang dài trên video ----------
+const DASH_RE = /\s*[\u2014\u2013\u2015\u2012\u2E3A\u2E3B\uFE58\uFE63\uFF0D]+\s*/g;
+export const clean = (t: string) => t.replace(DASH_RE, ', ').replace(/(\S)\s+-{1,3}\s+(?=\S)/g, '$1, ').replace(/,\s*,/g, ',')
+  .replace(/,\s*$/, '').replace(/([.!?:;]),/g, '$1');
+export const deepClean = <X,>(x: X): X => {
+  if (typeof x === 'string') return clean(x) as any;
+  if (Array.isArray(x)) return x.map((i) => deepClean(i)) as any;
+  if (x && typeof x === 'object') {
+    const o: any = {};
+    for (const [k, v] of Object.entries(x as any)) o[k] = k === 'audio' || k === 'avatar' || k === 'cover' || k === 'logo' || k === 'images' ? v : deepClean(v);
+    return o;
+  }
+  return x;
+};
+
+// ---------- in đậm cụm từ quan trọng ----------
+const norm = (w: string) => w.toLowerCase().replace(/[^\p{L}\p{N}$%.]+/gu, '').replace(/\.$/, '');
+/** trả về mảng true/false: từ nào thuộc cụm quan trọng */
+export const emphMask = (words: string[], emph: string[] = []) => {
+  const nw = words.map(norm);
+  const mask = nw.map(() => false);
+  for (const ph of emph) {
+    const p = ph.split(/\s+/).map(norm).filter(Boolean);
+    if (!p.length) continue;
+    for (let i = 0; i + p.length <= nw.length; i++) {
+      if (p.every((x, j) => nw[i + j] === x)) for (let j = 0; j < p.length; j++) mask[i + j] = true;
+    }
+  }
+  return mask;
+};
+export const EmphText: React.FC<{text: string; emph?: string[]; color?: string; weight?: number}> = ({text, emph = [], color, weight = 800}) => {
+  const ws = text.split(/(\s+)/);
+  const words = ws.filter((x) => !/^\s+$/.test(x));
+  const m = emphMask(words, emph);
+  let k = -1;
+  return <>{ws.map((w, i) => {
+    if (/^\s+$/.test(w)) return w;
+    k++;
+    return m[k] ? <b key={i} style={{fontWeight: weight, color}}>{w}</b> : <React.Fragment key={i}>{w}</React.Fragment>;
+  })}</>;
+};
+
 // ---------- fonts (Lexend + Space Grotesk + Unbounded, có tiếng Việt) ----------
 import FONT_LIST from './fonts.json';
 let fontsLoaded: Promise<unknown> | null = null;
@@ -228,9 +270,10 @@ export const CountUp: React.FC<{value: string; delay?: number; size: number; col
 };
 
 // ---------- phụ đề: hiện cả cụm câu (không chạy từng chữ), gọn & dễ đọc ----------
-export const Captions: React.FC<{words: Word[]; bottom: number; size: number; maxWidth: number; perChunk?: number}> = ({
-  words, bottom, size, maxWidth, perChunk = 12,
+export const Captions: React.FC<{words: Word[]; bottom: number; size: number; maxWidth: number; perChunk?: number; emph?: string[]}> = ({
+  words, bottom, size, maxWidth, perChunk = 12, emph = [],
 }) => {
+  const ac = useAccent();
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const t = f / fps;
@@ -257,7 +300,7 @@ export const Captions: React.FC<{words: Word[]; bottom: number; size: number; ma
       <div style={{maxWidth, textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: size, lineHeight: 1.35,
         color: C.ink, opacity: op, padding: '10px 26px', borderRadius: 14, background: T.capBg, backdropFilter: 'blur(8px)',
         textShadow: T.capShadow}}>
-        {c.map((w) => w.t).join(' ')}
+        <EmphText text={c.map((w) => w.t).join(' ')} emph={emph} color={ac} />
       </div>
     </div>
   );
