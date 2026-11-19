@@ -50,6 +50,8 @@ stat_compare CHỈ dùng khi các items cùng đơn vị và so sánh được v
 hook_stat / thumb_stat: con số THẬT trong bài, nói về THỊ TRƯỜNG hoặc DỰ ÁN và gắn trực tiếp với luận điểm chính của video
 (vd % altcoin sụt giảm, doanh thu dự án, % tăng sau khi đổi tokenomics). TUYỆT ĐỐI không lấy số về thu nhập/lợi nhuận cá nhân,
 số người đăng ký, quảng cáo của tác giả, hay điểm số kiểu "10/10". Không chắc thì để trống.
+Intro ≤ 45 từ (đọc dưới 15 giây): giới thiệu nhanh rồi vào thẳng insight 1. Giữa video (cuối phần 2) chèn 1 câu ngắn
+mời người xem bình luận ý kiến của họ.
 Hook: mở bằng 1 câu hỏi hoặc con số gây sốc chạm vào nỗi đau/lợi ích của người xem, ≤ 2 câu, đọc ≤ 6 giây.
 Không dùng dấu gạch ngang dài (— hoặc –) ở bất kỳ trường nào; dùng dấu phẩy hoặc hai chấm.
 Lời đọc: câu ngắn, nhiều từ nối kiểu "Nhưng…", "Tại sao?", "Kết quả là…" để giữ nhịp; không lan man."""
