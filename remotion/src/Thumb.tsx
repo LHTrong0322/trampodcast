@@ -16,8 +16,10 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent = '#7C6CFF', pro
           <Img src={staticFile('logo.png')} style={{width: 64, height: 64, borderRadius: 99}} />
           <div style={{color: C.ink, fontWeight: 800, fontSize: 26, letterSpacing: 2}}>{brand.toUpperCase()}</div>
         </div>
-        <div style={{position: 'absolute', left: 64, top: 150, width: 820, display: 'flex', flexWrap: 'wrap', columnGap: 22,
-          fontWeight: 800, fontSize: words.join(' ').length > 28 ? 92 : 112, lineHeight: 1.02, color: C.ink, letterSpacing: -1}}>
+        <div style={{position: 'absolute', left: 64, top: 150, width: projectLogo ? 760 : 1100, height: stat ? 330 : 480, display: 'flex',
+          flexWrap: 'wrap', alignContent: 'flex-start', columnGap: 22, overflow: 'hidden',
+          fontWeight: 800, fontSize: Math.max(72, Math.min(124, Math.round(2600 / Math.max(12, words.join(' ').length)))), lineHeight: 1.18,
+          color: C.ink, letterSpacing: -1}}>
           {words.map((w, i) => <span key={i} style={{color: i % 3 === 1 ? accent : C.ink}}>{w}</span>)}
         </div>
         {stat ? <div style={{position: 'absolute', left: 64, bottom: 60, padding: '10px 30px', borderRadius: 20, background: accent,

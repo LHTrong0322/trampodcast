@@ -42,7 +42,9 @@ PROMPT += """
 Không nhắc đến AI, máy, bot hay "nội dung tổng hợp" ở bất kỳ đâu trong lời đọc.
 Gợi ý chọn data.type: nói về tâm lý thị trường → fear_greed; về altcoin vs bitcoin, dòng tiền → dominance;
 về coin cụ thể → coin_chart; so sánh 2-4 thứ có số → stat_compare (điền items); danh sách việc cần làm /
-tiêu chí đánh giá → checklist (điền items, value để trống); bức tranh toàn thị trường → market_heatmap."""
+tiêu chí đánh giá → checklist (điền items, value để trống); bức tranh toàn thị trường → market_heatmap.
+stat_compare CHỈ dùng khi các items cùng đơn vị và so sánh được với nhau (vd doanh thu dự án A vs B); không trộn % với ngày.
+"thumb_text": 3-5 từ cực ngắn cho ảnh bìa (vd "ALTCOIN RÁC SẮP CHẾT"), khác tiêu đề."""
 
 
 def fx_raw(url: str) -> dict:

@@ -66,7 +66,7 @@ def seo_pack(gem, cfg, res: dict) -> dict:
         log(f"   ! SEO lỗi: {ex}")
         seo = {"yt_titles": [plan.get("title", "")], "yt_intro": plan.get("description", ""), "yt_tags": [], "hashtags": ["#crypto"]}
     chapters = "\n".join(f"{ts(t)} {name}" for t, name in res["chapters"])
-    used = {x for k, v in (plan.get("images") or {}).items() for x in v}
+    used = {i.split("/")[-1] for sc in res.get("scenes", []) for i in (sc.get("images") or [])}  # chỉ ảnh thật sự xuất hiện
     credits = "; ".join(dict.fromkeys(v for k, v in (plan.get("image_credits") or {}).items() if k in used and v))
     src = "\n".join(f"• @{p.get('handle', '')}: {p.get('url', '')}" for p in plan.get("posts") or [])
     desc = (seo.get("yt_intro", "") + "\n\n"
@@ -93,9 +93,15 @@ def seo_pack(gem, cfg, res: dict) -> dict:
 # ---------------------------------------------------------------------------
 def thumbnail(res: dict, out: Path) -> Path | None:
     plan = res["plan"]
-    proj = next((s.get("project") for s in res["scenes"] if s.get("project") and s["project"].get("logo")), None)
-    props = {"comp": "Thumb", "width": 1280, "height": 720, "text": V.en_money(plan.get("thumb") or plan.get("title", ""))[:48],
-             "stat": V.en_money(plan.get("hook_stat", ""))[:8], "accent": (proj or {}).get("color") or "#7C6CFF",
+    hook = " ".join([plan.get("hook", ""), plan.get("hook_label", ""), plan.get("thumb_text", "")]).lower()
+    projs = [s["project"] for s in res["scenes"] if s.get("project") and s["project"].get("logo")]
+    # logo trên ảnh bìa phải khớp con số/hook (vd 95% của ENA → logo Ethena)
+    proj = next((p for p in projs if (p.get("ticker") or "#").lower() in hook or (p.get("name") or "#").lower() in hook), None)
+    text = (plan.get("thumb_text") or plan.get("thumb") or "").strip()
+    if not text or len(text.split()) > 6:
+        text = " ".join((text or plan.get("title", "")).replace(":", "").split()[:5])
+    props = {"comp": "Thumb", "width": 1280, "height": 720, "text": V.en_money(text),
+             "stat": V.en_money(plan.get("thumb_stat") or plan.get("hook_stat", ""))[:8], "accent": (proj or {}).get("color") or "#7C6CFF",
              "projectLogo": (proj or {}).get("logo"), "bg": None,
              "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")}
     try:
