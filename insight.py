@@ -434,8 +434,19 @@ def produce(out: Path, cfg: dict, st: dict, links: str = ""):
             tips += r.get("script_tips") or []
     forced = [v.strip() for v in os.getenv("INSIGHT_VOICE", "").split(",") if v.strip()]
     lab = L.prepare(src, Path("lab"), voices=forced or None, notes=tips[-6:])
-    res = R.render(lab, Path("render_out"))
-    PB.publish(lab, res, Path("render_out"), data_dir=out)
+    themes = [t.strip() for t in os.getenv("INSIGHT_THEMES", "").split(",") if t.strip()]
+    if not themes:
+        res = R.render(lab, Path("render_out"))
+        PB.publish(lab, res, Path("render_out"), data_dir=out)
+    else:  # dựng nhiều kiểu nền từ CÙNG 1 kịch bản + giọng để so sánh; video ngắn chỉ làm cho kiểu đầu
+        seo = None
+        for i, th in enumerate(themes):
+            os.environ["INSIGHT_THEME"] = th
+            log(f"🎨 Kiểu nền: {th}")
+            res = R.render(lab, Path("render_out") / th, shorts=(i == 0))
+            pub = PB.publish(lab, res, Path("render_out") / th, data_dir=out, do_review=(i == 0), seo=seo)
+            seo = pub["seo"]
+        os.environ.pop("INSIGHT_THEME", None)
     for p in st["posts"]:
         if (links.strip() and p.get("url") and p["url"].split("?")[0] in links) or (not links.strip() and p in posts):
             p["used"] = True

@@ -103,7 +103,7 @@ def thumbnail(res: dict, out: Path) -> Path | None:
         text = " ".join((text or plan.get("title", "")).replace(":", "").split()[:5])
     props = {"comp": "Thumb", "width": 1280, "height": 720, "text": R.nodash(V.en_money(text)),
              "stat": V.en_money(plan.get("thumb_stat") or plan.get("hook_stat", ""))[:8], "accent": (proj or {}).get("color"),
-             "projectLogo": (proj or {}).get("logo"), "bg": None, "theme": (V.load_cfg().get("insight") or {}).get("theme", "dark"),
+             "projectLogo": (proj or {}).get("logo"), "bg": None, "theme": os.getenv("INSIGHT_THEME") or (V.load_cfg().get("insight") or {}).get("theme", "dark"),
              "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")}
     try:
         R.run_remotion(props, out, frames="0")
@@ -262,13 +262,18 @@ def tg_photo(path: Path, caption: str):
 
 
 # ---------------------------------------------------------------------------
-def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None) -> dict:
+THEME_NAMES = {"light": "Nền sáng", "blue": "Nền xanh đại dương", "slate": "Nền xám xanh", "dark": "Nền tối"}
+
+
+def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, do_review: bool = True,
+            seo: dict | None = None) -> dict:
     cfg = V.load_cfg()
     gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))
-    tag = lab.name
+    th = os.getenv("INSIGHT_THEME", "")
+    tag = lab.name + (f"-{th}" if th else "")
     thumb = thumbnail(res, out / f"thumbnail-{tag}.png")
     log("⑥ Gói SEO")
-    seo = seo_pack(gem, cfg, res)
+    seo = seo or seo_pack(gem, cfg, res)
     (out / f"seo-{tag}.json").write_text(json.dumps(seo, ensure_ascii=False, indent=1), encoding="utf-8")
     files = [res["long"]] + [s["path"] for s in res["shorts"]] + ([thumb] if thumb else []) + [out / f"seo-{tag}.json"]
     url = ""
@@ -281,7 +286,7 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None) -> di
         url = f"https://github.com/{repo}/releases/tag/{rt}"
     log("⑦ Gửi Telegram")
     plan = res["plan"]
-    tg_text(f"🐧 SMART PENGUIN INSIGHTS · video mới ({res['duration'] / 60:.1f} phút · giọng {res['voice'].split(':')[1]})\n"
+    tg_text((f"🎨 BẢN {THEME_NAMES.get(th, th).upper()}\n" if th else "") + f"🐧 SMART PENGUIN INSIGHTS · video mới ({res['duration'] / 60:.1f} phút · giọng {res['voice'].split(':')[1]})\n"
             f"1 video YouTube 16:9 + {len(res['shorts'])} video ngắn 9:16 (TikTok/Shorts/Reels)\n" + (f"📦 File gốc: {url}" if url else ""))
     tg_photo(thumb, "🖼 Ảnh bìa YouTube")
     tg_video(res["long"], "🎬 " + (seo.get("yt_titles") or [plan.get("title", "")])[0])
@@ -291,13 +296,16 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None) -> di
     yt = ("📺 YOUTUBE — copy dán khi đăng\n\nTIÊU ĐỀ (chọn 1):\n" + "\n".join(f"{i + 1}. {t}" for i, t in enumerate(seo.get("yt_titles", [])))
           + "\n\nMÔ TẢ:\n" + seo["yt_description"] + "\n\nTAGS:\n" + ", ".join(seo.get("yt_tags", []))
           + ("\n\nBÌNH LUẬN GHIM:\n" + seo["pinned_comment"] if seo.get("pinned_comment") else ""))
-    tg_text(yt)
-    if seo.get("shorts"):
+    if do_review:
+        tg_text(yt)
+    if seo.get("shorts") and res["shorts"]:
         tk = ["🎵 TIKTOK / SHORTS — caption từng video ngắn"]
         for i, sh in enumerate(seo["shorts"][: len(res["shorts"])]):
             tk += ["", f"Short {i + 1}", f"Shorts title: {sh.get('yt_title', '')}",
                    f"TikTok: {sh.get('tiktok_caption', '')} {' '.join(sh.get('tiktok_hashtags', []))}"]
         tg_text("\n".join(tk))
+    if not do_review:
+        return {"release": url, "seo": seo, "review": None, "thumb": str(thumb) if thumb else None}
     log("⑧ Bot review")
     rv = review(gem, cfg, res, thumb)
     if rv:

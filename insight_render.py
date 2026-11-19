@@ -248,9 +248,9 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
              "views": post.get("views"), "retweets": post.get("retweets")} if post else None
     scenes = nodash(scenes)
     props = {"fps": 30, "width": 1920, "height": 1080, "audio": audio_file, "duration": round(total, 3),
-             "scenes": scenes, "data": data, "brand": brand, "post": pinfo, "theme": ic.get("theme", "dark")}
+             "scenes": scenes, "data": data, "brand": brand, "post": pinfo, "theme": os.getenv("INSIGHT_THEME") or ic.get("theme", "dark")}
     out_dir.mkdir(parents=True, exist_ok=True)
-    tag = lab.name
+    tag = lab.name + (f"-{os.getenv('INSIGHT_THEME')}" if os.getenv("INSIGHT_THEME") else "")
     long_path = out_dir / f"smart-penguin-{tag}-16x9.mp4"
     log(f"Dựng video dài · {total / 60:.1f} phút · giọng {voice}")
     run_remotion(props, long_path, frames)
@@ -273,7 +273,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
         sc = next(x for x in scenes if x.get("idx") == i + 1)
         sprops = {"fps": 30, "width": 1080, "height": 1920, "audio": f"short{n}.wav", "duration": round(len(a) / SR / 2, 3),
                   "scenes": [{**sc, "from": 0, "dur": round(len(a) / SR / 2, 3), "words": [x for x in w if x["s"] < end]}],
-                  "data": data, "brand": brand, "post": pinfo, "theme": ic.get("theme", "dark"),
+                  "data": data, "brand": brand, "post": pinfo, "theme": os.getenv("INSIGHT_THEME") or ic.get("theme", "dark"),
                   "shortTitle": nodash(V.en_money(str(shr.get(str(i)) or shr.get(i) or sc["heading"])))}
         sp = out_dir / f"smart-penguin-{tag}-short{n + 1}-9x16.mp4"
         log(f"Dựng video ngắn {n + 1} · {len(a) / SR / 2:.0f}s")
