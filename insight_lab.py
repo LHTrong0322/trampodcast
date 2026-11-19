@@ -35,8 +35,11 @@ PROMPT = I.PROMPT.replace(
       "data": {{"type": "chọn 1 hình dữ liệu THẬT hợp nhất cho phần này: coin_chart | fear_greed | dominance | market_heatmap | stat_compare | checklist | none",
                 "tickers": ["ticker coin nếu type=coin_chart, vd 'BTC'"],
                 "items": [{{"label": "≤ 5 từ", "value": "con số/kiểu tiếng Anh ngắn hoặc trống"}}],
-                "title": "tiêu đề ngắn cho hình, ≤ 6 từ"}}}}''')
+                "title": "tiêu đề ngắn cho hình, ≤ 6 từ"}},
+      "project": {{"name": "tên dự án/coin CHÍNH được bàn trong phần này (vd Hyperliquid), trống nếu không có", "ticker": "vd HYPE"}}}}''')
 PROMPT += """
+Độ dài: nếu bài nguồn đủ ý, viết đủ {max_sections} phần, mỗi phần 130-180 từ; hook ≤ 2 câu thật cuốn.
+Không nhắc đến AI, máy, bot hay "nội dung tổng hợp" ở bất kỳ đâu trong lời đọc.
 Gợi ý chọn data.type: nói về tâm lý thị trường → fear_greed; về altcoin vs bitcoin, dòng tiền → dominance;
 về coin cụ thể → coin_chart; so sánh 2-4 thứ có số → stat_compare (điền items); danh sách việc cần làm /
 tiêu chí đánh giá → checklist (điền items, value để trống); bức tranh toàn thị trường → market_heatmap."""
@@ -49,6 +52,53 @@ def fx_raw(url: str) -> dict:
     r = requests.get(f"https://api.fxtwitter.com/{m.group(1)}/status/{m.group(2)}", timeout=30,
                      headers={"User-Agent": P.UA})
     return r.json() if r.ok else {}
+
+
+BRAND_OVERRIDE = {  # màu nhận diện chuẩn của vài dự án lớn (logo đơn sắc khó tự lấy màu)
+    "BTC": "#F7931A", "ETH": "#8C9EFF", "SOL": "#14F195", "BNB": "#F3BA2F", "HYPE": "#97FCE4", "ENA": "#F2F2F2",
+    "XRP": "#5DB2FF", "DOGE": "#E0C068", "TON": "#3AA6F5", "SUI": "#6FBCF0", "ARB": "#28A0F0", "OP": "#FF0420",
+    "AAVE": "#B6509E", "UNI": "#FF007A", "LINK": "#5B8DEF", "PENDLE": "#5BC0DE", "TRX": "#FF3B4B", "AVAX": "#E84142",
+}
+
+
+def brand_color(png: Path) -> str | None:
+    """Lấy màu nhận diện từ logo: màu đậm, tươi xuất hiện nhiều nhất (bỏ trắng/đen/xám)."""
+    try:
+        import colorsys
+        from PIL import Image
+        im = Image.open(png).convert("RGBA").resize((64, 64))
+        cnt = {}
+        for r, g, b, a in im.getdata():
+            if a < 200:
+                continue
+            h, l, sat = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+            if sat < 0.35 or l < 0.18 or l > 0.88:
+                continue
+            k = (r // 24, g // 24, b // 24)
+            cnt[k] = cnt.get(k, 0) + 1
+        if not cnt or max(cnt.values()) < 40:
+            return None
+        r, g, b = [x * 24 + 12 for x in max(cnt, key=cnt.get)]
+        h, l, sat = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+        r, g, b = colorsys.hls_to_rgb(h, max(l, 0.55), min(1, sat * 1.05))  # đủ sáng trên nền tối
+        return "#%02X%02X%02X" % (int(r * 255), int(g * 255), int(b * 255))
+    except Exception:
+        return None
+
+
+def gem_vision(gem, cfg, prompt: str, images: list[tuple[str, bytes]]) -> dict:
+    """Gửi nhiều ảnh nhỏ + câu hỏi cho Gemini (model chữ), nhận JSON."""
+    import base64
+    parts = [{"text": prompt}]
+    for label, b in images:
+        parts += [{"text": f"[{label}]"}, {"inline_data": {"mime_type": "image/jpeg", "data": base64.b64encode(b).decode()}}]
+
+    def call(m):
+        data = gem._post(m, {"contents": [{"role": "user", "parts": parts}],
+                             "generationConfig": {"temperature": 0.3, "responseMimeType": "application/json"}})
+        txt = "".join(p.get("text", "") for p in data["candidates"][0]["content"]["parts"] if not p.get("thought"))
+        return json.loads(re.sub(r"^```(?:json)?|```$", "", txt.strip(), flags=re.M))
+    return gem._try_models(cfg["models"]["text"], call)
 
 
 def _texts(node, out: list):
@@ -158,8 +208,11 @@ def coin_data(lab: Path, plan: dict, data: dict):
         d = s.get("data") or {}
         if d.get("type") == "coin_chart":
             tick += [str(t).lstrip("$").upper() for t in d.get("tickers") or []]
+        pj = (s.get("project") or {}).get("ticker")
+        if pj:
+            tick.append(str(pj).lstrip("$").upper())
     data.setdefault("coins", {})
-    for t in dict.fromkeys(tick):
+    for t in dict.fromkeys(x for x in tick if re.fullmatch(r"[A-Z0-9]{2,10}", x)):
         info = V.coin_info(t)
         if not info:
             log(f"   ! không tìm thấy coin {t}")
@@ -175,22 +228,28 @@ def coin_data(lab: Path, plan: dict, data: dict):
             if info.get("large"):
                 (lab / "logos" / f"{t}.png").write_bytes(requests.get(info["large"], timeout=20).content)
             data["coins"][t] = {"name": info.get("name", t), "price": pts[-1], "series": pts[::max(1, len(pts) // 120)],
-                                "days": 30}
+                                "days": 30, "logo": f"logos/{t}.png" if (lab / "logos" / f"{t}.png").exists() else None,
+                                "color": BRAND_OVERRIDE.get(t) or brand_color(lab / "logos" / f"{t}.png")}
             log(f"   Coin {t}: {len(pts)} điểm giá")
         except Exception as ex:
             log(f"   ! giá {t} lỗi: {ex}")
 
 
-def save_images(lab: Path, plan: dict):
+def save_images(lab: Path, plan: dict, gem=None, cfg=None):
+    """Tìm ảnh cho từng phần rồi nhờ AI xem từng ảnh: chỉ giữ ảnh ĐÚNG nội dung (loại ảnh đời sống/truyền thống lạc đề)."""
+    import io
     img = lab / "img"
     credits = {}
     secs = plan["sections"]
-    jobs = [("intro", {"visual_queries": [plan.get("theme", ""), "trader desk night screens", "city skyline night"],
-                       "category": "Dự án"}, "landscape", 5)]
+    jobs = [("intro", {"visual_queries": (plan.get("visual_queries") or []) + [plan.get("theme", ""), "cryptocurrency trading chart screen"],
+                       "category": "Dự án"}, "landscape", 6)]
     for k, s in enumerate(secs):
         jobs.append((f"s{k}", {"visual_queries": s.get("visual_queries") or [], "category": "Dự án",
                                "visual_query": s.get("heading", "")}, "landscape", 6))
-        jobs.append((f"s{k}v", {"visual_queries": s.get("visual_queries") or [], "category": "Dự án"}, "portrait", 4))
+    topics = {"intro": plan.get("title", "")}
+    for k, s in enumerate(secs):
+        topics[f"s{k}"] = s.get("heading", "")
+    thumbs = []
     for name, item, ori, n in jobs:
         files = []
         for i, (im, cr) in enumerate(V.find_images(item, ori, n)):
@@ -198,8 +257,32 @@ def save_images(lab: Path, plan: dict):
             im.save(img / fn, quality=90)
             files.append(fn)
             credits[fn] = cr
+            t = im.copy()
+            t.thumbnail((384, 384))
+            b = io.BytesIO()
+            t.convert("RGB").save(b, "JPEG", quality=70)
+            thumbs.append((fn, b.getvalue()))
         plan.setdefault("images", {})[name] = files
     plan["image_credits"] = credits
+    if gem and thumbs:
+        try:
+            ask = ("Bạn là biên tập viên hình ảnh cho video YouTube về crypto/đầu tư. Chủ đề từng nhóm ảnh:\n"
+                   + "\n".join(f"- {k}: {v}" for k, v in topics.items())
+                   + "\nVới MỖI ảnh (nhãn dạng <nhóm>_<số>.jpg), chấm 0-10 mức LIÊN QUAN trực tiếp tới chủ đề nhóm đó và tới "
+                     "crypto/tài chính/công nghệ. Chấm thấp (≤4) ảnh đời sống, truyền thống, phong cảnh, động vật, đồ ăn, "
+                     "trẻ em, ảnh văn phòng chung chung không ăn nhập, ảnh có chữ/logo thương hiệu khác. "
+                     'Trả JSON: {"scores": {"<nhãn>": số}}')
+            sc = gem_vision(gem, cfg, ask, thumbs).get("scores", {})
+            for name in list(plan["images"]):
+                keep = [f for f in plan["images"][name] if float(sc.get(f, 0)) >= 7]
+                drop = [f for f in plan["images"][name] if f not in keep]
+                plan["images"][name] = keep
+                for f in drop:
+                    (img / f).unlink(missing_ok=True)
+            log(f"   Lọc ảnh bằng AI: giữ {sum(len(v) for v in plan['images'].values())}/{len(thumbs)} ảnh")
+        except Exception as ex:
+            log(f"   ! lọc ảnh lỗi ({ex}) → không dùng ảnh kho")
+            plan["images"] = {k: [] for k in plan["images"]}
 
 
 def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
@@ -216,71 +299,93 @@ def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
         log(f"   ⚠️ Chưa có INSIGHT_GEMINI_API_KEY → bỏ qua giọng Gemini {name} để giữ lượt cho podcast")
         return False
     cfg["podcast"]["voice"] = name
+    cfg["podcast"]["voice_style"] = ""
     gem = P.Gemini(key or os.getenv("GEMINI_API_KEY", ""))
-    pcs = I.tts_parts(gem, cfg, parts)
-    for i, pcm in enumerate(pcs):
-        V.pcm_to_wav(pcm, outdir / f"{i:02d}.wav")
-    return len(pcs) == len(parts)
+    import time
+    # mỗi đoạn đọc riêng 1 lượt → không bao giờ bị cắt giữa câu khi chia lại audio
+    for i, t in enumerate(parts):
+        if i:
+            time.sleep(int(cfg["podcast"].get("tts_pause_seconds", 25)))
+        V.pcm_to_wav(V.tts_once(gem, cfg, t), outdir / f"{i:02d}.wav")
+    return True
 
 
-def prepare(links: str, voices: str, out: Path):
+def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release: bool = False,
+            notes: list[str] | None = None) -> Path:
+    """Viết kịch bản + lấy dữ liệu/ảnh + đọc giọng. Giọng: thử lần lượt theo danh sách (Gemini Ludo trước,
+    hết lượt thì VieNeu Hải Đăng) — cả video luôn dùng MỘT giọng."""
     cfg = V.load_cfg()
     ic = cfg.get("insight") or {}
+    voices = voices or [ic.get("voice_primary", "gemini:Ludo"), ic.get("voice_fallback", "vieneu:Hải Đăng")]
     tag = datetime.now(P.VN_TZ).strftime("%Y%m%d-%H%M")
     lab = out / tag
     lab.mkdir(parents=True, exist_ok=True)
-    posts = [read_post(u, lab) for u in links.split() if u.strip()]
+    (lab / "img").mkdir(exist_ok=True)
+    if isinstance(posts_or_links, str):
+        posts = [read_post(u, lab) for u in posts_or_links.split() if u.strip()]
+    else:
+        posts = []
+        for p in posts_or_links:  # bài từ hộp thư Telegram: đọc lại bản đầy đủ nếu là link X
+            full = read_post(p["url"], lab) if I.X_RE.search(p.get("url", "")) else None
+            posts.append(full if full and len(full["text"]) >= len(p.get("text", "")) else
+                         {"author": p.get("author", ""), "handle": p.get("handle", ""), "url": p.get("url", ""),
+                          "text": p.get("text", ""), "title": p.get("title", "")})
     gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))
     listing = "\n\n".join(f"[{i}] @{p['handle']} ({p['author']}) — {p.get('title', '')}:\n{p['text'][:9000]}"
                           for i, p in enumerate(posts))
     system = I.SYSTEM.format(name=ic.get("name", "Smart Penguin Insights"), host_desc=ic.get("host_desc", "điềm đạm, sâu sắc"),
                              self_word=ic.get("self_word", "mình"), audience=ic.get("audience", "mọi người"))
     log("② Viết kịch bản")
-    plan = V.llm_json(gem, cfg, system, PROMPT.format(posts=listing, minutes=ic.get("target_minutes", 7),
-                                                      max_sections=ic.get("max_sections", 6)))
-    plan["sections"] = [s for s in plan.get("sections", []) if s.get("narration")]
+    prompt = PROMPT.format(posts=listing, minutes=ic.get("target_minutes", 7), max_sections=ic.get("max_sections", 6))
+    if notes:
+        prompt += "\nRút kinh nghiệm từ review các video trước (áp dụng):\n" + "\n".join(f"- {n}" for n in notes)
+    plan = V.llm_json(gem, cfg, system, prompt)
+    plan["sections"] = [s for s in plan.get("sections", []) if s.get("narration")][: int(ic.get("max_sections", 6))]
     plan["posts"] = posts
-    log("③ Dữ liệu thị trường + ảnh")
+    log("③ Dữ liệu thị trường + ảnh (AI lọc ảnh lạc đề)")
     md = market_data(lab)
     coin_data(lab, plan, md)
     (lab / "data.json").write_text(json.dumps(md, ensure_ascii=False), encoding="utf-8")
-    save_images(lab, plan)
-    # các đoạn đọc: hook, intro, từng section, outro, hook của shorts
-    sh = [i for i in plan.get("shorts", []) if isinstance(i, int) and 0 <= i < len(plan["sections"])][:3]
-    shr = plan.get("short_hooks") or {}
+    save_images(lab, plan, gem, cfg)
     parts = [("hook", plan.get("hook", "")), ("intro", plan.get("intro", ""))]
     parts += [(f"s{k}", s["narration"]) for k, s in enumerate(plan["sections"])]
     parts += [("outro", plan.get("outro", ""))]
-    parts += [(f"sh{i}", str(shr.get(str(i)) or shr.get(i) or "")) for i in sh]
     parts = [(k, P.sanitize_script(t)) for k, t in parts if t and t.strip()]
     plan["parts"] = [{"key": k, "text": t} for k, t in parts]
-    plan["shorts"] = sh
+    plan["shorts"] = [i for i in plan.get("shorts", []) if isinstance(i, int) and 0 <= i < len(plan["sections"])][
+                     : int(ic.get("shorts", 3))]
     plan["voices"] = {}
-    for v in [x.strip() for x in voices.split(",") if x.strip()]:
+    for v in voices:
         log(f"④ Đọc giọng {v}")
+        vd = re.sub(r"\W+", "_", v)
         try:
-            ok = speak(cfg, v, [t for _, t in parts], lab / "audio" / re.sub(r"\W+", "_", v))
+            ok = speak(cfg, v, [t for _, t in parts], lab / "audio" / vd)
         except Exception as ex:
-            log(f"   ! lỗi: {ex}")
+            log(f"   ! giọng {v} lỗi: {str(ex)[:300]} → chuyển giọng dự phòng")
             ok = False
-        plan["voices"][v] = re.sub(r"\W+", "_", v) if ok else None
+        if ok:
+            plan["voices"][v] = vd
+            plan["voice"] = v
+            break
+    if not plan.get("voice"):
+        raise RuntimeError("Không đọc được giọng nào")
     (lab / "plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=1), encoding="utf-8")
-    zp = shutil.make_archive(str(out / f"lab-{tag}"), "zip", lab)
-    repo = os.getenv("GITHUB_REPOSITORY")
-    if repo and os.getenv("GH_TOKEN"):
-        subprocess.run(["gh", "release", "create", f"lab-{tag}", zp, "-R", repo, "--prerelease",
+    if release and os.getenv("GITHUB_REPOSITORY") and os.getenv("GH_TOKEN"):
+        zp = shutil.make_archive(str(out / f"lab-{tag}"), "zip", lab)
+        subprocess.run(["gh", "release", "create", f"lab-{tag}", zp, "-R", os.environ["GITHUB_REPOSITORY"], "--prerelease",
                         "--title", f"Lab nguyên liệu {tag}", "--notes", plan.get("title", "")], check=True)
-    log(f"✓ Xong: lab-{tag} · giọng: {plan['voices']}")
+    log(f"✓ Nguyên liệu xong: {lab} · giọng {plan['voice']}")
+    return lab
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", choices=["prepare"])
     ap.add_argument("--links", default="")
-    ap.add_argument("--voices", default="vieneu:Hải Đăng,gemini:Ludo")
+    ap.add_argument("--voices", default="")
     ap.add_argument("--out", default="lab")
     a = ap.parse_args()
-    prepare(a.links, a.voices, Path(a.out))
+    prepare(a.links, Path(a.out), [v.strip() for v in a.voices.split(",") if v.strip()] or None, release=True)
 
 
 if __name__ == "__main__":

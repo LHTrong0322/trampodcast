@@ -2,6 +2,7 @@ import React from 'react';
 import {Composition} from 'remotion';
 import {Insight, InsightProps} from './Insight';
 import {InsightShort} from './InsightShort';
+import {Thumb} from './Thumb';
 
 const empty: InsightProps = {fps: 30, width: 1920, height: 1080, audio: '', duration: 10, scenes: [], post: null, brand: {}};
 
@@ -37,5 +38,7 @@ export const Root: React.FC = () => (
         height: props.height,
       })}
     />
+    <Composition id="Thumb" component={Thumb} width={1280} height={720} fps={30} durationInFrames={1}
+      defaultProps={{text: '', stat: '', brand: 'Smart Penguin Insights'}} />
   </>
 );

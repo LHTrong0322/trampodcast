@@ -412,6 +412,38 @@ def cook(out: Path, cfg: dict, gem, st: dict) -> dict:
             "shorts": v_files, "thumb": thumb}
 
 
+def produce(out: Path, cfg: dict, st: dict, links: str = ""):
+    """Quy trình chính thức (kiểu video 2): nguyên liệu → dựng Remotion → SEO + Release + Telegram → bot review."""
+    import insight_lab as L
+    import insight_render as R
+    import insight_publish as PB
+    ic = cfg.get("insight") or {}
+    posts = [p for p in st["posts"] if not p.get("used")][: int(ic.get("max_posts", 8))]
+    if links.strip():
+        src = links
+    elif posts:
+        src = posts
+    else:
+        log("Không có link nào đang chờ.")
+        return
+    # rút kinh nghiệm từ 3 lần review gần nhất
+    rp = out / "insight" / "reviews.json"
+    tips = []
+    if rp.exists():
+        for r in json.loads(rp.read_text(encoding="utf-8"))[-3:]:
+            tips += r.get("script_tips") or []
+    lab = L.prepare(src, Path("lab"), notes=tips[-6:])
+    res = R.render(lab, Path("render_out"))
+    PB.publish(lab, res, Path("render_out"), data_dir=out)
+    for p in st["posts"]:
+        if (links.strip() and p.get("url") and p["url"].split("?")[0] in links) or (not links.strip() and p in posts):
+            p["used"] = True
+    st["force"] = False
+    st["videos"].append({"date": datetime.now(P.VN_TZ).isoformat(), "title": res["plan"].get("title", ""),
+                         "posts": [p.get("url") for p in res["plan"].get("posts", [])]})
+    save_store(out, st)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("mode", choices=["inbox", "cook"])
@@ -439,24 +471,7 @@ def main():
         if not [p for p in st["posts"] if not p.get("used")]:
             log("Không có link nào đang chờ.")
             return
-    ic = cfg.get("insight") or {}
-    # giọng riêng cho Trạm Insight
-    cfg["podcast"]["voice"] = ic.get("voice", "Charon")
-    cfg["podcast"]["tts_provider"] = args.voice_provider or ic.get("tts_provider", "gemini")
-    if cfg["podcast"]["tts_provider"] == "vieneu":
-        cfg.setdefault("vieneu", {})["voice"] = args.voice_name or ic.get("vieneu_voice", "Mai Anh")
-    cfg["podcast"]["voice_style"] = ic.get("voice_style", "")
-    cfg["podcast"]["host_name"] = ic.get("host_name", "")
-    key = os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", "")
-    gem = P.Gemini(key)
-    res = cook(out, cfg, gem, st)
-    save_store(out, st)
-    url = ""
-    try:
-        url = V.publish_release(res)
-    except Exception as ex:
-        log(f"   ! Release lỗi: {ex}")
-    V.send_telegram_videos(res, url)
+    produce(out, cfg, st, args.links)
     log("✓ Xong video Insight!")
 
 

@@ -4,17 +4,22 @@ import {
   continueRender, delayRender, Easing,
 } from 'remotion';
 
+// Bảng màu "sạch": nền xanh đen trung tính, 1 màu nhấn (đổi theo màu brand dự án), ít phát sáng
 export const C = {
-  bg: '#07060f',
-  ink: '#F6F3FF',
-  muted: '#A9A3C7',
-  violet: '#7B5CFF',
-  cyan: '#22D3EE',
-  pink: '#FF4FD8',
-  gold: '#FFC83D',
-  green: '#2EE59D',
-  red: '#FF5470',
+  bg: '#0A0C12',
+  panel: '#121621',
+  line: 'rgba(255,255,255,0.08)',
+  ink: '#F4F6FA',
+  muted: '#8B94A7',
+  violet: '#7C6CFF',
+  cyan: '#4CC9F0',
+  pink: '#F472B6',
+  gold: '#FFC94D',
+  green: '#22C55E',
+  red: '#F43F5E',
 };
+export const AccentCtx = React.createContext<string>('#7C6CFF');
+export const useAccent = () => React.useContext(AccentCtx);
 export const FONT = "'BVP', system-ui, sans-serif";
 
 export type Word = {t: string; s: number; e: number};
@@ -50,62 +55,25 @@ export const useSpring = (delay = 0, damping = 14, mass = 0.8) => {
   return spring({frame: f - delay, fps, config: {damping, mass}});
 };
 
-// ---------- animated background ----------
-export const Backdrop: React.FC<{accent?: string; img?: string; dim?: number}> = ({accent = C.violet, img, dim = 0.78}) => {
+// ---------- nền: gradient nhẹ chuyển động chậm + ảnh mờ (nếu có), không lưới/hạt ----------
+export const Backdrop: React.FC<{accent?: string; img?: string; dim?: number}> = ({accent, img, dim = 0.8}) => {
   const f = useCurrentFrame();
   const {width, height} = useVideoConfig();
+  const ctx = useAccent();
+  const ac = accent || ctx;
   const t = f / 30;
-  const g1x = 30 + 12 * Math.sin(t * 0.21);
-  const g1y = 25 + 10 * Math.cos(t * 0.17);
-  const g2x = 75 + 10 * Math.cos(t * 0.13);
-  const g2y = 80 + 8 * Math.sin(t * 0.19);
+  const x = 22 + 6 * Math.sin(t * 0.12);
+  const y = 18 + 5 * Math.cos(t * 0.1);
   return (
     <AbsoluteFill style={{background: C.bg, overflow: 'hidden'}}>
       {img ? (
         <Img src={staticFile(img)} style={{position: 'absolute', inset: -40, width: width + 80, height: height + 80,
-          objectFit: 'cover', filter: 'blur(26px) saturate(1.2)', opacity: 1 - dim,
-          transform: `scale(${1.05 + 0.03 * Math.sin(t * 0.2)})`}} />
+          objectFit: 'cover', filter: 'blur(30px) saturate(0.9)', opacity: 1 - dim,
+          transform: `scale(${1.05 + 0.02 * Math.sin(t * 0.15)})`}} />
       ) : null}
-      <AbsoluteFill style={{
-        background: `radial-gradient(circle at ${g1x}% ${g1y}%, ${accent}55 0%, transparent 42%),
-                     radial-gradient(circle at ${g2x}% ${g2y}%, ${C.cyan}33 0%, transparent 40%),
-                     radial-gradient(circle at 50% 120%, ${C.pink}22 0%, transparent 50%)`,
-      }} />
-      {/* perspective grid floor */}
-      <AbsoluteFill style={{perspective: 900, overflow: 'hidden'}}>
-        <div style={{
-          position: 'absolute', left: '-50%', width: '200%', height: '70%', bottom: '-28%',
-          transform: 'rotateX(72deg)', transformOrigin: 'center top',
-          backgroundImage: `linear-gradient(${accent}40 2px, transparent 2px), linear-gradient(90deg, ${accent}40 2px, transparent 2px)`,
-          backgroundSize: '90px 90px', backgroundPosition: `0 ${(f * 1.6) % 90}px`,
-          maskImage: 'linear-gradient(to bottom, transparent, black 30%, black 60%, transparent)',
-          opacity: 0.55,
-        }} />
-      </AbsoluteFill>
-      <Particles />
-      <AbsoluteFill style={{background: 'radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.65) 100%)'}} />
-    </AbsoluteFill>
-  );
-};
-
-const P_SEEDS = Array.from({length: 38}, (_, i) => {
-  const r = (n: number) => {
-    const x = Math.sin(i * 999 + n * 77) * 10000;
-    return x - Math.floor(x);
-  };
-  return {x: r(1), y: r(2), s: 2 + r(3) * 4, v: 0.15 + r(4) * 0.5, o: 0.2 + r(5) * 0.5};
-});
-const Particles: React.FC = () => {
-  const f = useCurrentFrame();
-  const {width, height} = useVideoConfig();
-  return (
-    <AbsoluteFill>
-      {P_SEEDS.map((p, i) => {
-        const y = ((p.y * height - f * p.v * 2) % height + height) % height;
-        return <div key={i} style={{position: 'absolute', left: p.x * width, top: y, width: p.s, height: p.s,
-          borderRadius: 99, background: i % 3 ? C.cyan : C.violet, opacity: p.o * (0.6 + 0.4 * Math.sin(f / 20 + i)),
-          boxShadow: `0 0 ${p.s * 4}px ${i % 3 ? C.cyan : C.violet}`}} />;
-      })}
+      <AbsoluteFill style={{background: `radial-gradient(1100px 700px at ${x}% ${y}%, ${ac}26, transparent 70%),
+        radial-gradient(900px 600px at 88% 92%, ${ac}14, transparent 70%)`}} />
+      <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(10,12,18,0) 60%, rgba(10,12,18,0.85) 100%)'}} />
     </AbsoluteFill>
   );
 };
@@ -127,7 +95,7 @@ export const ImageDeck: React.FC<{images: string[]; dur: number; w: number; h: n
     <div style={{width: w, height: h, perspective: 1600}}>
       <div style={{width: w, height: h, borderRadius: radius, overflow: 'hidden', position: 'relative',
         transform: `rotateY(${ry}deg) rotateX(${3 * Math.sin(t * 0.4)}deg) scale(${interpolate(enter, [0, 1], [0.85, 1])})`,
-        opacity: enter, boxShadow: `0 40px 120px rgba(0,0,0,0.6), 0 0 0 2px ${C.violet}99, 0 0 60px ${C.violet}55`}}>
+        opacity: enter, boxShadow: `0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px ${C.line}`}}>
         {images.length === 0 ? <div style={{width: '100%', height: '100%', background: '#15122a'}} /> : null}
         {images.map((src, i) => {
           if (Math.abs(i - idx) > 1) return null;
@@ -156,16 +124,17 @@ export const RevealWords: React.FC<{text: string; size: number; weight?: number;
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const words = text.split(/\s+/).filter(Boolean);
+  const accentColor = useAccent();
   return (
     <div style={{display: 'flex', flexWrap: 'wrap', columnGap: size * 0.26, rowGap: size * (lineHeight - 1),
       maxWidth, fontFamily: FONT, fontWeight: weight, fontSize: size, lineHeight, color}}>
       {words.map((w, i) => {
         const s = spring({frame: f - delay - i * stagger, fps, config: {damping: 15, mass: 0.7}});
-        const hl = highlight.some((h) => w.toLowerCase().includes(h.toLowerCase()));
+        const hl = highlight.some((h) => h && w.toLowerCase().includes(h.toLowerCase()));
         return (
           <span key={i} style={{display: 'inline-block', overflow: 'hidden', paddingBottom: size * 0.08}}>
             <span style={{display: 'inline-block', transform: `translateY(${(1 - s) * 110}%) rotate(${(1 - s) * 6}deg)`,
-              opacity: s, color: hl ? C.gold : color, textShadow: hl ? `0 0 30px ${C.gold}88` : '0 4px 24px rgba(0,0,0,0.5)'}}>{w}</span>
+              opacity: s, color: hl ? accentColor : color, textShadow: '0 2px 12px rgba(0,0,0,0.35)'}}>{w}</span>
           </span>
         );
       })}
@@ -174,7 +143,9 @@ export const RevealWords: React.FC<{text: string; size: number; weight?: number;
 };
 
 // ---------- count-up stat ----------
-export const CountUp: React.FC<{value: string; delay?: number; size: number; color?: string}> = ({value, delay = 0, size, color = C.gold}) => {
+export const CountUp: React.FC<{value: string; delay?: number; size: number; color?: string}> = ({value, delay = 0, size, color: col}) => {
+  const ac = useAccent();
+  const color = col || ac;
   const f = useCurrentFrame();
   const m = value.match(/^([^\d]*)(\d+(?:[.,]\d+)?)(.*)$/);
   let shown = value;
@@ -189,73 +160,56 @@ export const CountUp: React.FC<{value: string; delay?: number; size: number; col
   const s = useSpring(delay, 10, 0.6);
   return <div style={{fontFamily: FONT, fontWeight: 800, fontSize: size, color, lineHeight: 1,
     transform: `scale(${interpolate(s, [0, 1], [0.6, 1])})`, opacity: s,
-    textShadow: `0 0 40px ${color}99, 0 6px 30px rgba(0,0,0,0.6)`, letterSpacing: -2}}>{shown}</div>;
+    textShadow: '0 4px 20px rgba(0,0,0,0.4)', letterSpacing: -1}}>{shown}</div>;
 };
 
-// ---------- TikTok-style captions ----------
+// ---------- phụ đề: hiện cả cụm câu (không chạy từng chữ), gọn & dễ đọc ----------
 export const Captions: React.FC<{words: Word[]; bottom: number; size: number; maxWidth: number; perChunk?: number}> = ({
-  words, bottom, size, maxWidth, perChunk = 7,
+  words, bottom, size, maxWidth, perChunk = 12,
 }) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const t = f / fps;
   if (!words.length) return null;
-  // chunk by count + punctuation
   const chunks: Word[][] = [];
   let cur: Word[] = [];
   words.forEach((w, i) => {
     cur.push(w);
-    const end = /[.!?…,:;]$/.test(w.t);
-    const gap = i + 1 < words.length && words[i + 1].s - w.e > 0.25;
-    if (cur.length >= perChunk || (end && cur.length >= 3) || gap) {
+    const stop = /[.!?…]$/.test(w.t);
+    const comma = /[,;:]$/.test(w.t);
+    const gap = i + 1 < words.length && words[i + 1].s - w.e > 0.3;
+    if (cur.length >= perChunk || stop || (comma && cur.length >= 5) || gap) {
       chunks.push(cur);
       cur = [];
     }
   });
   if (cur.length) chunks.push(cur);
-  const ci = chunks.findIndex((c, i) => t < (chunks[i + 1]?.[0].s ?? Infinity));
-  const chunk = chunks[Math.max(0, ci)];
-  if (!chunk || t < chunk[0].s - 0.1 || t > chunk[chunk.length - 1].e + 0.6) return null;
-  const pop = spring({frame: f - Math.round(chunk[0].s * fps), fps, config: {damping: 13, mass: 0.5}});
+  const idx = chunks.findIndex((c, i) => t >= c[0].s - 0.05 && t < (chunks[i + 1]?.[0].s ?? c[c.length - 1].e + 0.4) - 0.05);
+  if (idx < 0) return null;
+  const c = chunks[idx];
+  const op = interpolate(t - c[0].s, [-0.05, 0.12], [0, 1], clamp);
   return (
     <div style={{position: 'absolute', left: 0, right: 0, bottom, display: 'flex', justifyContent: 'center'}}>
-      <div style={{maxWidth, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: `${size * 0.12}px ${size * 0.24}px`,
-        fontFamily: FONT, fontWeight: 800, fontSize: size, lineHeight: 1.15, transform: `scale(${interpolate(pop, [0, 1], [0.9, 1])})`,
-        opacity: pop, padding: '14px 28px', borderRadius: 22, background: 'rgba(7,6,15,0.55)', backdropFilter: 'blur(8px)'}}>
-        {chunk.map((w, i) => {
-          const active = t >= w.s && t < w.e + 0.05;
-          const done = t >= w.e;
-          return <span key={i} style={{color: active ? '#0b0a14' : done ? C.ink : 'rgba(246,243,255,0.55)',
-            background: active ? C.gold : 'transparent', borderRadius: 10, padding: '0 8px',
-            transform: `scale(${active ? 1.08 : 1})`, display: 'inline-block',
-            textShadow: active ? 'none' : '0 3px 12px rgba(0,0,0,0.8)'}}>{w.t}</span>;
-        })}
+      <div style={{maxWidth, textAlign: 'center', fontFamily: FONT, fontWeight: 600, fontSize: size, lineHeight: 1.3,
+        color: C.ink, opacity: op, padding: '10px 26px', borderRadius: 14, background: 'rgba(10,12,18,0.72)',
+        textShadow: '0 2px 8px rgba(0,0,0,0.6)'}}>
+        {c.map((w) => w.t).join(' ')}
       </div>
     </div>
   );
 };
 
-// ---------- glitch flash at scene start ----------
-export const Glitch: React.FC<{frames?: number}> = ({frames = 10}) => {
+// ---------- chuyển cảnh: mờ dần nhẹ (sạch hơn glitch) ----------
+export const Glitch: React.FC<{frames?: number}> = ({frames = 9}) => {
   const f = useCurrentFrame();
   if (f > frames) return null;
-  const k = 1 - f / frames;
-  const bars = Array.from({length: 7}, (_, i) => {
-    const x = Math.sin((f + 1) * (i + 3) * 12.9898) * 43758.5453;
-    return x - Math.floor(x);
-  });
-  return (
-    <AbsoluteFill style={{pointerEvents: 'none', mixBlendMode: 'screen'}}>
-      <AbsoluteFill style={{background: `linear-gradient(90deg, ${C.cyan}${Math.round(k * 80).toString(16).padStart(2, '0')}, transparent, ${C.pink}${Math.round(k * 80).toString(16).padStart(2, '0')})`}} />
-      {bars.map((b, i) => <div key={i} style={{position: 'absolute', left: 0, right: 0, top: `${b * 100}%`, height: 6 + b * 40,
-        background: i % 2 ? C.cyan : C.pink, opacity: k * 0.6, transform: `translateX(${(b - 0.5) * 200 * k}px)`}} />)}
-      <AbsoluteFill style={{background: '#fff', opacity: f < 2 ? 0.35 : 0}} />
-    </AbsoluteFill>
-  );
+  return <AbsoluteFill style={{background: C.bg, opacity: interpolate(f, [0, frames], [1, 0], clamp), pointerEvents: 'none'}} />;
 };
 
-export const Chip: React.FC<{text: string; color?: string; size?: number}> = ({text, color = C.violet, size = 26}) => (
-  <div style={{display: 'inline-flex', alignItems: 'center', gap: 10, padding: `${size * 0.35}px ${size * 0.8}px`, borderRadius: 99,
-    background: `${color}26`, border: `2px solid ${color}AA`, color: C.ink, fontFamily: FONT, fontWeight: 700, fontSize: size,
-    boxShadow: `0 0 24px ${color}44`}}>{text}</div>
-);
+export const Chip: React.FC<{text: string; color?: string; size?: number}> = ({text, color: col, size = 26}) => {
+  const ac = useAccent();
+  const color = col || ac;
+  return <div style={{display: 'inline-flex', alignItems: 'center', gap: 10, padding: `${size * 0.32}px ${size * 0.75}px`, borderRadius: 99,
+    background: `${color}1F`, border: `1.5px solid ${color}88`, color: C.ink, fontFamily: FONT, fontWeight: 700, fontSize: size,
+    letterSpacing: 1}}>{text}</div>;
+};

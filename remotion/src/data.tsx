@@ -1,12 +1,14 @@
 import React from 'react';
 import {Img, interpolate, staticFile, useCurrentFrame, useVideoConfig, spring} from 'remotion';
-import {C, clamp, ease, FONT} from './ui';
+import {C, clamp, ease, FONT, useAccent} from './ui';
 
 export type DataSpec = {type: string; tickers?: string[]; items?: {label: string; value?: string}[]; title?: string};
 
-const Frame: React.FC<{w: number; h: number; title: string; sub?: string; children: React.ReactNode}> = ({w, h, title, sub, children}) => (
-  <div style={{width: w, height: h, borderRadius: 34, background: 'rgba(14,12,28,0.94)', border: `2px solid ${C.cyan}77`,
-    boxShadow: `0 40px 120px rgba(0,0,0,0.6), 0 0 60px ${C.cyan}33`, padding: 36, boxSizing: 'border-box', fontFamily: FONT,
+const Frame: React.FC<{w: number; h: number; title: string; sub?: string; children: React.ReactNode}> = ({w, h, title, sub, children}) => {
+  const ac = useAccent();
+  return (
+  <div style={{width: w, height: h, borderRadius: 26, background: C.panel, border: `1px solid ${C.line}`, borderTop: `4px solid ${ac}`,
+    boxShadow: '0 30px 80px rgba(0,0,0,0.45)', padding: 36, boxSizing: 'border-box', fontFamily: FONT,
     display: 'flex', flexDirection: 'column', gap: 18, overflow: 'hidden'}}>
     <div style={{display: 'flex', alignItems: 'baseline', gap: 14}}>
       <div style={{color: C.ink, fontWeight: 800, fontSize: 32, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: sub === '' ? w - 80 : w - 300}}>{title}</div>
@@ -15,7 +17,8 @@ const Frame: React.FC<{w: number; h: number; title: string; sub?: string; childr
     </div>
     <div style={{flex: 1, position: 'relative'}}>{children}</div>
   </div>
-);
+  );
+};
 
 const useP = (delay = 0, len = 36) => {
   const f = useCurrentFrame();
@@ -51,7 +54,7 @@ const FearGreed: React.FC<{data: any; w: number; h: number}> = ({data, w, h}) =>
         <circle cx={cx} cy={280} r={18} fill="#fff" />
       </svg>
       <div style={{position: 'absolute', left: 0, right: 0, top: 285, display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 22}}>
-        <div style={{fontSize: 84, fontWeight: 800, color, textShadow: `0 0 30px ${color}`, lineHeight: 1}}>{Math.round(v)}</div>
+        <div style={{fontSize: 84, fontWeight: 800, color, lineHeight: 1}}>{Math.round(v)}</div>
         <div style={{fontSize: 34, fontWeight: 800, color: C.ink}}>{fg[0]?.label || ''}</div>
       </div>
       <div style={{position: 'absolute', bottom: 0, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 50, color: C.muted, fontSize: 24, fontWeight: 600}}>
@@ -151,14 +154,14 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
   return (
     <Frame w={w} h={h} title={`${m?.name || sym} · ${days} ngày`}>
       <div style={{display: 'flex', alignItems: 'center', gap: 18, marginBottom: 10}}>
-        <Img src={staticFile(`logos/${m?.sym || sym}.png`)} style={{width: 56, height: 56, borderRadius: 99}} />
+        <Img src={staticFile(`logos/${m?.sym || sym}.png`)} style={{width: 52, height: 52, borderRadius: 99}} />
         <div style={{color: C.ink, fontSize: 52, fontWeight: 800}}>{m ? money(m.price) : ''}</div>
         <div style={{color: col, fontSize: 40, fontWeight: 800}}>{chg >= 0 ? '+' : ''}{chg.toFixed(1)}%</div>
       </div>
       <svg width={W} height={H}>
         <defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor={col} stopOpacity={0.45} /><stop offset="1" stopColor={col} stopOpacity={0} /></linearGradient></defs>
         <path d={`${path} L${last[0]},${H} L0,${H} Z`} fill="url(#g)" />
-        <path d={path} stroke={col} strokeWidth={5} fill="none" style={{filter: `drop-shadow(0 0 10px ${col})`}} />
+        <path d={path} stroke={col} strokeWidth={4} fill="none" />
         <circle cx={last[0]} cy={last[1]} r={10} fill="#fff" />
       </svg>
     </Frame>
@@ -171,7 +174,8 @@ const StatCompare: React.FC<{spec: DataSpec; w: number; h: number}> = ({spec, w,
   const nums = items.map((it) => parseFloat(String(it.value || '').replace(/[^\d.]/g, '')) || 0);
   const mx = Math.max(1, ...nums);
   const p = useP(4, 40);
-  const cols = [C.violet, C.cyan, C.pink, C.gold];
+  const ac = useAccent();
+  const cols = [ac, `${ac}CC`, `${ac}99`, `${ac}77`];
   return (
     <Frame w={w} h={h} title={spec.title || 'So sánh'} sub="Số liệu từ bài gốc">
       <div style={{display: 'flex', flexDirection: 'column', gap: 26, justifyContent: 'center', height: '100%'}}>
@@ -181,7 +185,7 @@ const StatCompare: React.FC<{spec: DataSpec; w: number; h: number}> = ({spec, w,
               <span>{it.label}</span><span style={{color: cols[i], fontWeight: 800}}>{it.value}</span>
             </div>
             <div style={{height: 26, borderRadius: 13, background: 'rgba(255,255,255,0.08)'}}>
-              <div style={{height: 26, borderRadius: 13, width: `${(nums[i] / mx) * 100 * p}%`, background: cols[i], boxShadow: `0 0 20px ${cols[i]}`}} />
+              <div style={{height: 26, borderRadius: 13, width: `${(nums[i] / mx) * 100 * p}%`, background: cols[i]}} />
             </div>
           </div>
         ))}
@@ -195,13 +199,14 @@ const Checklist: React.FC<{spec: DataSpec; w: number; h: number}> = ({spec, w, h
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const items = (spec.items || []).slice(0, 5);
+  const ac = useAccent();
   return (
     <Frame w={w} h={h} title={spec.title || 'Checklist'} sub="">
       <div style={{display: 'flex', flexDirection: 'column', gap: 22, justifyContent: 'center', height: '100%'}}>
         {items.map((it, i) => {
           const s = spring({frame: f - 6 - i * 14, fps, config: {damping: 12}});
           return <div key={i} style={{display: 'flex', gap: 20, alignItems: 'center', opacity: s, transform: `translateX(${(1 - s) * 40}px)`}}>
-            <div style={{width: 48, height: 48, borderRadius: 12, background: C.green, color: '#062', fontSize: 34, fontWeight: 800,
+            <div style={{width: 48, height: 48, borderRadius: 12, background: ac, color: '#0A0C12', fontSize: 30, fontWeight: 800,
               display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${s})`}}>✓</div>
             <div style={{color: C.ink, fontSize: 34, fontWeight: 700}}>{it.label}</div>
           </div>;

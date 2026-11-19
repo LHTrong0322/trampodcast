@@ -1,4 +1,4 @@
-name: Trạm Insight (link X → video chia sẻ insight)
+name: Smart Penguin Insights (link X → video insight + shorts)
 
 on:
   schedule:
@@ -15,14 +15,6 @@ on:
         description: "Thêm link bài X trực tiếp (cách nhau bởi dấu cách) — không bắt buộc"
         required: false
         default: ""
-      voice_provider:
-        description: "Giọng đọc: để trống = theo sources.yaml · vieneu = giọng VieNeu-TTS miễn phí"
-        required: false
-        default: ""
-      voice_name:
-        description: "Tên giọng VieNeu (vd Mai Anh, Ngọc Huyền, Phạm Tuyên)"
-        required: false
-        default: ""
 
 permissions:
   contents: write
@@ -34,7 +26,7 @@ concurrency:
 jobs:
   insight:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
 
@@ -61,11 +53,21 @@ jobs:
           [ "${{ github.event.inputs.force }}" = "true" ] && ARGS="--force"
           python insight.py inbox --out public $ARGS --links "${{ github.event.inputs.links }}"
 
-      - name: Cài ffmpeg
+      - name: Cài ffmpeg + giọng dự phòng
         if: steps.inbox.outputs.cook == 'true'
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
-          if [ "${{ github.event.inputs.voice_provider }}" = "vieneu" ]; then pip install -q vieneu; fi
+          pip install -q vieneu
+
+      - uses: actions/setup-node@v4
+        if: steps.inbox.outputs.cook == 'true'
+        with:
+          node-version: "22"
+
+      - name: Cài Remotion (bộ dựng video)
+        if: steps.inbox.outputs.cook == 'true'
+        working-directory: remotion
+        run: npm ci --silent
 
       - name: Cook video Insight + gửi Telegram
         if: steps.inbox.outputs.cook == 'true'
@@ -78,9 +80,7 @@ jobs:
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          python insight.py cook --out public --force \
-            --voice-provider "${{ github.event.inputs.voice_provider }}" \
-            --voice-name "${{ github.event.inputs.voice_name }}"
+          python insight.py cook --out public --force --links "${{ github.event.inputs.links }}"
 
       - name: Lưu dữ liệu (nhánh podcast-data)
         if: always()

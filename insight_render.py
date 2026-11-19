@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 """
-Dựng video Insight từ "nguyên liệu" LAB (insight_lab.py) theo nhiều kiểu:
+Dựng video Smart Penguin Insights từ "nguyên liệu" (insight_lab.py) bằng Remotion — kiểu "dữ liệu thật":
 
-  python insight_render.py remotion --lab lab/<tag> --voice "vieneu:Hải Đăng" --mode motion
-  python insight_render.py remotion --lab lab/<tag> --voice "vieneu:Hải Đăng" --mode data
-  python insight_render.py classic  --lab lab/<tag> --voice "gemini:Ludo"
+  python insight_render.py --lab lab/<tag> --out out/            → video dài 16:9 + các video ngắn 9:16
 
-remotion: dựng bằng Remotion (React) — motion graphics; mode=data: ưu tiên hình dữ liệu thật thay ảnh.
-classic : bộ dựng Python (motion.py) đã nâng cấp.
+Mỗi phần dùng màu nhận diện của dự án được nhắc; phụ đề hiện theo cụm câu; nguồn ghi "Source: @...".
 """
 from __future__ import annotations
 
@@ -26,17 +23,30 @@ import music as MU
 log = P.log
 SR = V.SR
 ROOT = Path(__file__).resolve().parent
+RD = ROOT / "remotion" / "public"
+OVERRIDE = {}
+try:
+    from insight_lab import BRAND_OVERRIDE as OVERRIDE  # noqa
+except Exception:
+    pass
 
 
-def load_lab(lab: Path, voice: str):
+def load_lab(lab: Path, voice: str | None = None):
     plan = json.loads((lab / "plan.json").read_text(encoding="utf-8"))
+    voice = voice or plan.get("voice") or next(k for k, v in plan["voices"].items() if v)
     vdir = plan["voices"].get(voice)
     if not vdir:
         raise SystemExit(f"Không có audio cho giọng {voice}")
     pcm = {p["key"]: V.file_to_pcm(lab / "audio" / vdir / f"{i:02d}.wav") for i, p in enumerate(plan["parts"])}
     text = {p["key"]: p["text"] for p in plan["parts"]}
     data = json.loads((lab / "data.json").read_text(encoding="utf-8")) if (lab / "data.json").exists() else {}
-    return plan, pcm, text, data
+    return plan, pcm, text, data, voice
+
+
+def speed(pcm: bytes, factor: float) -> bytes:
+    if abs(factor - 1) < 0.01:
+        return pcm
+    return P._ffmpeg_pcm(["-f", "s16le", "-ar", str(SR), "-ac", "1"], pcm, f"atempo={factor:.3f}")
 
 
 def word_times(text: str, pcm: bytes) -> list[dict]:
@@ -59,13 +69,13 @@ def word_times(text: str, pcm: bytes) -> list[dict]:
     return out
 
 
-def build_timeline(plan, pcm, text, gap=0.55):
-    """Ghép audio các đoạn + lập danh sách cảnh (giây)."""
+def build_timeline(plan, pcm, text, gap=0.35):
+    """Ghép audio các đoạn (nghỉ ngắn giữa đoạn để giữ nhịp) + lập danh sách cảnh (giây)."""
     secs = plan["sections"]
     order = (["hook"] if "hook" in pcm else []) + ["intro"] + [f"s{k}" for k in range(len(secs))] + ["outro"]
     audio, scenes, t = b"", [], 0.0
     for key in order:
-        a = pcm[key] + V.gap(gap if key != "outro" else 2.8)
+        a = pcm[key] + V.gap(gap if key != "outro" else 2.6)
         dur = len(a) / SR / 2
         scenes.append({"key": key, "from": round(t, 3), "dur": round(dur, 3), "words": word_times(text[key], pcm[key])})
         audio += a
@@ -73,96 +83,153 @@ def build_timeline(plan, pcm, text, gap=0.55):
     return audio, scenes, t
 
 
-def music_track(seconds: float, path: Path, seed: int):
+def mix_music(voice_wav: Path, out_wav: Path, seconds: float, seed: int):
+    """Nhạc nền tự nhỏ đi khi có giọng, chuẩn âm lượng YouTube."""
     raw = MU.make_music(seconds + 1, seed)
-    tmp = path.with_suffix(".pcm")
+    tmp = out_wav.with_suffix(".pcm")
     tmp.write_bytes(raw.tobytes() if hasattr(raw, "tobytes") else raw)
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "s16le", "-ar", str(SR), "-ac", "1", "-i", str(tmp),
-                    "-af", "lowpass=f=3200", str(path)], check=True)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(voice_wav), "-f", "s16le", "-ar", str(SR), "-ac", "1",
+                    "-i", str(tmp), "-filter_complex",
+                    "[1:a]lowpass=f=3200,volume=0.2[m];[0:a]asplit=2[v1][v2];"
+                    "[m][v1]sidechaincompress=threshold=0.015:ratio=6:attack=20:release=450[md];"
+                    "[v2][md]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11[a]",
+                    "-map", "[a]", "-ar", "48000", str(out_wav)], check=True)
     tmp.unlink()
 
 
-def remotion(lab: Path, voice: str, mode: str, out: Path) -> Path:
-    plan, pcm, text, data = load_lab(lab, voice)
-    audio, tl, total = build_timeline(plan, pcm, text)
-    rd = ROOT / "remotion" / "public"
-    if rd.exists():
-        shutil.rmtree(rd)
-    rd.mkdir(parents=True)
-    V.pcm_to_wav(audio, rd / "voice.wav")
+def project_of(s: dict, data: dict) -> dict | None:
+    pj = s.get("project") or {}
+    t = str(pj.get("ticker") or "").lstrip("$").upper()
+    name = pj.get("name") or ""
+    if not (t or name):
+        return None
+    c = (data.get("coins") or {}).get(t) or {}
+    return {"name": name or c.get("name") or t, "ticker": t, "logo": c.get("logo"),
+            "color": c.get("color") or OVERRIDE.get(t)}
+
+
+def prep_public(lab: Path):
+    if RD.exists():
+        shutil.rmtree(RD)
+    RD.mkdir(parents=True)
     for d in ["img", "logos"]:
         if (lab / d).exists():
-            shutil.copytree(lab / d, rd / d)
-    shutil.copytree(ROOT / "fonts", rd / "fonts")
-    shutil.copy(ROOT / "logo.png", rd / "logo.png")
+            shutil.copytree(lab / d, RD / d)
+    shutil.copytree(ROOT / "fonts", RD / "fonts")
+    shutil.copy(ROOT / "logo.png", RD / "logo.png")
+
+
+def run_remotion(props: dict, out: Path, frames: str = ""):
+    pj = ROOT / "remotion" / "props.json"
+    pj.write_text(json.dumps(props, ensure_ascii=False), encoding="utf-8")
+    env = dict(os.environ)
+    if frames:
+        env["ONLY_FRAMES"] = frames
+    out.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["node", "render.mjs", str(pj), str(out.resolve())], cwd=ROOT / "remotion", check=True, env=env)
+
+
+def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "", shorts: bool = True) -> dict:
+    cfg = V.load_cfg()
+    ic = cfg.get("insight") or {}
+    plan, pcm, text, data, voice = load_lab(lab, voice)
+    sp_cfg = ic.get("voice_speed") or {}
+    f = float(sp_cfg.get(voice.split(":")[0], 1.0)) if isinstance(sp_cfg, dict) else 1.0
+    pcm = {k: speed(v, f) for k, v in pcm.items()}
+    audio, tl, total = build_timeline(plan, pcm, text)
+    prep_public(lab)
+    V.pcm_to_wav(audio, RD / "voice.wav")
+    try:
+        mix_music(RD / "voice.wav", RD / "mix.wav", total, 7)
+        audio_file = "mix.wav"
+    except Exception as ex:
+        log(f"   ! nhạc lỗi: {ex}")
+        audio_file = "voice.wav"
     imgs = plan.get("images", {})
     secs = plan["sections"]
-    post = (plan.get("posts") or [{}])[0]
-    scenes = []
+    posts = plan.get("posts") or [{}]
+    post = posts[0]
+    brand = {"name": ic.get("brand", "Smart Penguin Insights")}
+    scenes, chapters = [], []
     for sc in tl:
         k = sc["key"]
         base = {"from": sc["from"], "dur": sc["dur"], "words": sc["words"]}
         if k == "hook":
             scenes.append({**base, "type": "hook", "hook": V.en_money(plan.get("hook", "")),
                            "stat": V.en_money(plan.get("hook_stat", "")), "label": V.en_money(plan.get("hook_label", "")),
-                           "images": [f"img/{x}" for x in imgs.get("intro", [])]})
+                           "images": [f"img/{x}" for x in imgs.get("intro", [])][:1]})
         elif k == "intro":
+            chapters.append((sc["from"], "Mở đầu"))
             scenes.append({**base, "type": "intro", "title": V.en_money(plan.get("title", "")), "theme": plan.get("theme", ""),
                            "points": [V.en_money(s["heading"]) for s in secs][:6],
-                           "images": [f"img/{x}" for x in imgs.get("intro", [])[1:]]})
+                           "images": [f"img/{x}" for x in imgs.get("intro", [])][:1]})
         elif k == "outro":
-            scenes.append({**base, "type": "outro", "points": [s["heading"] for s in secs][:4]})
+            chapters.append((sc["from"], "Tóm lại"))
+            scenes.append({**base, "type": "outro", "points": [V.en_money(s["heading"]) for s in secs][:5]})
         else:
             i = int(k[1:])
             s = secs[i]
-            src = [plan["posts"][j]["handle"] for j in s.get("source_ids", []) if isinstance(j, int) and j < len(plan["posts"])]
+            src = [posts[j]["handle"] for j in s.get("source_ids", []) if isinstance(j, int) and j < len(posts)] or [post.get("handle", "")]
+            chapters.append((sc["from"], V.en_money(s["heading"])))
+            proj = project_of(s, data)
+            dspec = dict(s.get("data") or {})
+            if proj and dspec.get("type") in ("coin_chart", "market_heatmap", "none", None) and \
+                    ((data.get("coins") or {}).get(proj["ticker"]) or {}).get("series"):
+                dspec = {**dspec, "type": "coin_chart", "tickers": [proj["ticker"]]}  # có dự án → biểu đồ giá của chính dự án
             scenes.append({**base, "type": "section", "idx": i + 1, "total": len(secs), "heading": V.en_money(s["heading"]),
                            "keyStat": V.en_money(s.get("key_stat", "")), "keyLabel": V.en_money(s.get("key_label", "")),
                            "bullets": [V.en_money(b) for b in (s.get("bullets") or [])][:3],
-                           "quote": V.en_money(s.get("quote", "")), "source": ("@" + src[0]) if src else "",
-                           "data": s.get("data"), "images": [f"img/{x}" for x in imgs.get(f"s{i}", [])]})
-    music = None
-    try:  # trộn sẵn nhạc nền (tự nhỏ đi khi có giọng) vào 1 file âm thanh
-        music_track(total, rd / "music.wav", 7)
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(rd / "voice.wav"), "-i", str(rd / "music.wav"),
-                        "-filter_complex",
-                        "[0:a]asplit=2[v1][v2];[1:a]volume=0.22[m];"
-                        "[m][v1]sidechaincompress=threshold=0.015:ratio=6:attack=20:release=450[md];"
-                        "[v2][md]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11[a]",
-                        "-map", "[a]", "-ar", "48000", str(rd / "mix.wav")], check=True)
-        (rd / "music.wav").unlink()
-    except Exception as ex:
-        log(f"   ! nhạc lỗi: {ex}")
-    props = {"fps": 30, "width": 1920, "height": 1080, "audio": "mix.wav" if (rd / "mix.wav").exists() else "voice.wav", "music": music, "duration": round(total, 3),
-             "scenes": scenes, "data": data, "mode": mode,
-             "brand": {"name": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")},
-             "post": {"author": post.get("author", ""), "handle": post.get("handle", ""), "avatar": post.get("avatar"),
-                      "cover": post.get("cover"), "title": post.get("title", ""), "likes": post.get("likes"),
-                      "views": post.get("views"), "retweets": post.get("retweets")} if post else None}
-    pj = ROOT / "remotion" / "props.json"
-    pj.write_text(json.dumps(props, ensure_ascii=False), encoding="utf-8")
-    out.parent.mkdir(parents=True, exist_ok=True)
-    log(f"Remotion · {mode} · {total / 60:.1f} phút → {out}")
-    subprocess.run(["node", "render.mjs", str(pj), str(out.resolve())], cwd=ROOT / "remotion", check=True)
-    return out
+                           "quote": V.en_money(s.get("quote", "")), "source": ("@" + src[0]) if src[0] else "",
+                           "data": dspec or None, "project": proj})
+    chapters[0] = (0.0, chapters[0][1])
+    pinfo = {"author": post.get("author", ""), "handle": post.get("handle", ""), "avatar": post.get("avatar"),
+             "cover": post.get("cover"), "title": post.get("title", ""), "likes": post.get("likes"),
+             "views": post.get("views"), "retweets": post.get("retweets")} if post else None
+    props = {"fps": 30, "width": 1920, "height": 1080, "audio": audio_file, "duration": round(total, 3),
+             "scenes": scenes, "data": data, "brand": brand, "post": pinfo}
+    out_dir.mkdir(parents=True, exist_ok=True)
+    tag = lab.name
+    long_path = out_dir / f"smart-penguin-{tag}-16x9.mp4"
+    log(f"Dựng video dài · {total / 60:.1f} phút · giọng {voice}")
+    run_remotion(props, long_path, frames)
+    res = {"long": long_path, "shorts": [], "chapters": chapters, "duration": total, "voice": voice, "plan": plan,
+           "scenes": scenes}
+    if not shorts or frames:
+        return res
+    # ---- video ngắn 9:16: mỗi insight hay nhất 1 video, cắt ở cuối câu, ≤ shorts_max_seconds ----
+    mx = float(ic.get("shorts_max_seconds", 55))
+    shr = plan.get("short_hooks") or {}
+    for n, i in enumerate(plan.get("shorts", [])):
+        k = f"s{i}"
+        w = word_times(text[k], pcm[k])
+        end = len(pcm[k]) / SR / 2
+        if end > mx:
+            ends = [x["e"] for x in w if re.search(r"[.!?…]$", x["t"]) and x["e"] <= mx]
+            end = (ends[-1] + 0.25) if ends else mx
+        a = pcm[k][: int(end * SR) * 2] + V.gap(1.2)
+        V.pcm_to_wav(a, RD / f"short{n}.wav")
+        sc = next(x for x in scenes if x.get("idx") == i + 1)
+        sprops = {"fps": 30, "width": 1080, "height": 1920, "audio": f"short{n}.wav", "duration": round(len(a) / SR / 2, 3),
+                  "scenes": [{**sc, "from": 0, "dur": round(len(a) / SR / 2, 3), "words": [x for x in w if x["s"] < end]}],
+                  "data": data, "brand": brand, "post": pinfo,
+                  "shortTitle": V.en_money(str(shr.get(str(i)) or shr.get(i) or sc["heading"]))}
+        sp = out_dir / f"smart-penguin-{tag}-short{n + 1}-9x16.mp4"
+        log(f"Dựng video ngắn {n + 1} · {len(a) / SR / 2:.0f}s")
+        run_remotion(sprops, sp)
+        res["shorts"].append({"path": sp, "section": i, "title": sprops["shortTitle"]})
+    return res
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("engine", choices=["remotion", "classic"])
     ap.add_argument("--lab", required=True)
-    ap.add_argument("--voice", required=True)
-    ap.add_argument("--mode", default="motion")
-    ap.add_argument("--out", required=True)
+    ap.add_argument("--out", default="out")
+    ap.add_argument("--voice", default="")
     ap.add_argument("--frames", default="", help="chỉ xuất ảnh khung hình ở các giây này (kiểm tra nhanh)")
+    ap.add_argument("--no-shorts", action="store_true")
     a = ap.parse_args()
-    if a.frames:
-        os.environ["ONLY_FRAMES"] = a.frames
-    if a.engine == "remotion":
-        remotion(Path(a.lab), a.voice, a.mode, Path(a.out))
-    else:
-        import insight_classic
-        insight_classic.render(Path(a.lab), a.voice, Path(a.out))
+    r = render(Path(a.lab), Path(a.out), a.voice or None, a.frames, not a.no_shorts)
+    print(json.dumps({"long": str(r["long"]), "shorts": [str(s["path"]) for s in r["shorts"]]}, ensure_ascii=False))
 
 
 if __name__ == "__main__":

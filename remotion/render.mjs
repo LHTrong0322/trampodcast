@@ -6,7 +6,7 @@ import path from 'node:path';
 
 const [, , propsPath, outPath] = process.argv;
 const inputProps = JSON.parse(fs.readFileSync(propsPath, 'utf8'));
-const id = inputProps.height > inputProps.width ? 'InsightShort' : 'Insight';
+const id = inputProps.comp || (inputProps.height > inputProps.width ? 'InsightShort' : 'Insight');
 const browserExecutable = process.env.CHROME_PATH || (fs.existsSync('/usr/bin/google-chrome') ? '/usr/bin/google-chrome' : null);
 const chromiumOptions = {gl: 'angle', enableMultiProcessOnLinux: true};
 
@@ -16,7 +16,7 @@ const only = process.env.ONLY_FRAMES;
 if (only) {
   for (const s of only.split(',').map(Number)) {
     const frame = Math.min(composition.durationInFrames - 1, Math.round(s * composition.fps));
-    const out = outPath.replace(/\.mp4$/, '') + `-f${s}.png`;
+    const out = outPath.endsWith('.png') ? outPath : outPath.replace(/\.mp4$/, '') + `-f${s}.png`;
     await renderStill({composition, serveUrl, output: out, frame, inputProps, browserExecutable, chromiumOptions});
     console.log('still', out);
   }
