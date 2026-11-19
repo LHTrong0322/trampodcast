@@ -150,6 +150,37 @@ def market_data(lab: Path) -> dict:
     return d
 
 
+def coin_data(lab: Path, plan: dict, data: dict):
+    """Giá 30 ngày + logo cho các coin AI nhắc trong phần biểu đồ (vd ENA)."""
+    import time
+    tick = []
+    for s in plan.get("sections", []):
+        d = s.get("data") or {}
+        if d.get("type") == "coin_chart":
+            tick += [str(t).lstrip("$").upper() for t in d.get("tickers") or []]
+    data.setdefault("coins", {})
+    for t in dict.fromkeys(tick):
+        info = V.coin_info(t)
+        if not info:
+            log(f"   ! không tìm thấy coin {t}")
+            continue
+        try:
+            time.sleep(1.5)
+            ch = requests.get(f"https://api.coingecko.com/api/v3/coins/{info['id']}/market_chart",
+                              params={"vs_currency": "usd", "days": 30}, timeout=30).json()
+            pts = [p[1] for p in ch.get("prices", [])]
+            if len(pts) < 10:
+                continue
+            (lab / "logos").mkdir(exist_ok=True)
+            if info.get("large"):
+                (lab / "logos" / f"{t}.png").write_bytes(requests.get(info["large"], timeout=20).content)
+            data["coins"][t] = {"name": info.get("name", t), "price": pts[-1], "series": pts[::max(1, len(pts) // 120)],
+                                "days": 30}
+            log(f"   Coin {t}: {len(pts)} điểm giá")
+        except Exception as ex:
+            log(f"   ! giá {t} lỗi: {ex}")
+
+
 def save_images(lab: Path, plan: dict):
     img = lab / "img"
     credits = {}
@@ -210,7 +241,9 @@ def prepare(links: str, voices: str, out: Path):
     plan["sections"] = [s for s in plan.get("sections", []) if s.get("narration")]
     plan["posts"] = posts
     log("③ Dữ liệu thị trường + ảnh")
-    (lab / "data.json").write_text(json.dumps(market_data(lab), ensure_ascii=False), encoding="utf-8")
+    md = market_data(lab)
+    coin_data(lab, plan, md)
+    (lab / "data.json").write_text(json.dumps(md, ensure_ascii=False), encoding="utf-8")
     save_images(lab, plan)
     # các đoạn đọc: hook, intro, từng section, outro, hook của shorts
     sh = [i for i in plan.get("shorts", []) if isinstance(i, int) and 0 <= i < len(plan["sections"])][:3]

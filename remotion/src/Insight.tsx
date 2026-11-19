@@ -14,7 +14,7 @@ export type Scene = {
   quote?: string; source?: string; data?: DataSpec | null; points?: string[];
 };
 export type InsightProps = {fps: number; width: number; height: number; audio: string; music?: string; duration: number;
-  scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string};
+  scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string; mode?: string};
 
 const fmt = (n?: number) => (n == null ? '' : n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'K' : String(n));
 
@@ -129,19 +129,37 @@ const Bullets: React.FC<{items: string[]; dur: number; fps: number}> = ({items, 
   );
 };
 
-const SectionScene: React.FC<{sc: Scene; data: any; brandName: string}> = ({sc, data, brandName}) => {
+const QuoteCard: React.FC<{post: Post | null; quote: string; w: number; h: number}> = ({post, quote, w, h}) => {
+  const s = useSpring(4, 15);
+  return (
+    <div style={{width: w, height: h, borderRadius: 34, background: 'rgba(14,12,28,0.94)', border: `2px solid ${C.violet}88`, boxSizing: 'border-box',
+      padding: 50, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 30, fontFamily: FONT, opacity: s,
+      transform: `scale(${0.92 + 0.08 * s})`, boxShadow: `0 40px 120px rgba(0,0,0,0.6), 0 0 60px ${C.violet}44`}}>
+      <div style={{fontSize: 140, lineHeight: 0.5, color: C.violet, fontWeight: 800}}>“</div>
+      <div style={{fontSize: 46, lineHeight: 1.25, color: C.ink, fontWeight: 700}}>{quote}</div>
+      {post ? <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
+        {post.avatar ? <Img src={staticFile(post.avatar)} style={{width: 60, height: 60, borderRadius: 99}} /> : null}
+        <div style={{color: C.muted, fontSize: 26, fontWeight: 600}}>ý tưởng từ <b style={{color: C.ink}}>@{post.handle}</b> · diễn giải lại</div>
+      </div> : null}
+    </div>
+  );
+};
+
+const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; mode?: string; post?: Post | null}> = ({sc, data, brandName, mode, post}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const numS = useSpring(0, 20);
   const hasData = !!(sc.data && sc.data.type && sc.data.type !== 'none');
-  // nửa đầu: ảnh; nửa sau: hình dữ liệu (nếu có)
-  const swapAt = sc.dur * 0.5;
+  const dataMode = mode === 'data';
+  // motion: nửa đầu ảnh, nửa sau hình dữ liệu · data: hình dữ liệu ngay, nửa sau trích ý tác giả
+  const swapAt = dataMode ? 0 : sc.dur * 0.5;
+  const quoteAt = sc.dur * 0.55;
   const t = f / fps;
   const showData = hasData && t >= swapAt;
   const dataIn = interpolate(t - swapAt, [0, 0.7], [0, 1], clamp);
   return (
     <AbsoluteFill>
-      <Backdrop img={sc.images?.[0]} dim={0.86} />
+      <Backdrop img={dataMode ? undefined : sc.images?.[0]} dim={0.86} accent={dataMode ? C.cyan : C.violet} />
       <TopBar label={sc.source ? `Insight · theo ${sc.source}` : 'Insight'} idx={sc.idx} total={sc.total} brand={brandName} logo="logo.png" />
       {/* big outlined chapter number */}
       <div style={{position: 'absolute', left: 60, top: 120, fontFamily: FONT, fontWeight: 800, fontSize: 300, lineHeight: 1,
@@ -153,14 +171,29 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string}> = ({sc, 
         {sc.bullets?.length ? <Bullets items={sc.bullets} dur={sc.dur} fps={fps} /> : null}
       </div>
       <div style={{position: 'absolute', right: 100, top: 190}}>
-        <div style={{opacity: showData ? 1 - dataIn : 1, position: 'absolute', right: 0, top: 0}}>
-          <ImageDeck images={sc.images || []} dur={hasData ? swapAt : sc.dur} w={820} h={540} every={4} />
-        </div>
-        {hasData ? (
-          <div style={{opacity: dataIn, transform: `translateY(${(1 - dataIn) * 40}px) scale(${0.95 + 0.05 * dataIn})`, position: 'absolute', right: 0, top: 0}}>
-            {showData ? <Sequence from={Math.round(swapAt * fps)} layout="none"><DataPanel spec={sc.data!} data={data} w={820} h={540} /></Sequence> : null}
-          </div>
-        ) : null}
+        {dataMode ? (
+          <>
+            <div style={{position: 'absolute', right: 0, top: 0, opacity: hasData && sc.quote ? interpolate(t - quoteAt, [0, 0.6], [1, 0], clamp) : 1}}>
+              {hasData ? <DataPanel spec={sc.data!} data={data} w={820} h={540} /> : <QuoteCard post={post || null} quote={sc.quote || sc.heading || ''} w={820} h={540} />}
+            </div>
+            {hasData && sc.quote && t >= quoteAt ? (
+              <div style={{position: 'absolute', right: 0, top: 0}}>
+                <Sequence from={Math.round(quoteAt * fps)} layout="none"><QuoteCard post={post || null} quote={sc.quote} w={820} h={540} /></Sequence>
+              </div>
+            ) : null}
+          </>
+        ) : (
+          <>
+            <div style={{opacity: showData ? 1 - dataIn : 1, position: 'absolute', right: 0, top: 0}}>
+              <ImageDeck images={sc.images || []} dur={hasData ? swapAt : sc.dur} w={820} h={540} every={4} />
+            </div>
+            {hasData ? (
+              <div style={{opacity: dataIn, transform: `translateY(${(1 - dataIn) * 40}px) scale(${0.95 + 0.05 * dataIn})`, position: 'absolute', right: 0, top: 0}}>
+                {showData ? <Sequence from={Math.round(swapAt * fps)} layout="none"><DataPanel spec={sc.data!} data={data} w={820} h={540} /></Sequence> : null}
+              </div>
+            ) : null}
+          </>
+        )}
         {sc.keyStat ? (
           <div style={{position: 'absolute', right: -20, top: 440, padding: '18px 30px', borderRadius: 24, background: 'rgba(12,10,24,0.92)',
             border: `2px solid ${C.gold}99`, boxShadow: `0 0 40px ${C.gold}44`, minWidth: 260}}>
@@ -223,7 +256,7 @@ export const Insight: React.FC<InsightProps> = (props) => {
         <Sequence key={i} from={Math.round(sc.from * fps)} durationInFrames={Math.max(1, Math.round(sc.dur * fps))}>
           {sc.type === 'hook' ? <HookScene sc={sc} /> : null}
           {sc.type === 'intro' ? <IntroScene sc={sc} post={props.post} /> : null}
-          {sc.type === 'section' ? <SectionScene sc={sc} data={props.data} brandName={(props.brand.name || 'SMART PENGUIN INSIGHTS').toUpperCase()} /> : null}
+          {sc.type === 'section' ? <SectionScene sc={sc} data={props.data} brandName={(props.brand.name || 'SMART PENGUIN INSIGHTS').toUpperCase()} mode={props.mode} post={props.post} /> : null}
           {sc.type === 'outro' ? <OutroScene sc={sc} brandName={(props.brand.name || 'SMART PENGUIN INSIGHTS').toUpperCase()} /> : null}
           {sc.type !== 'hook' ? <Captions words={sc.words} bottom={70} size={44} maxWidth={1500} /> : null}
           {i > 0 ? <Glitch /> : null}
