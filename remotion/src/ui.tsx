@@ -4,19 +4,20 @@ import {
   continueRender, delayRender, Easing,
 } from 'remotion';
 
-// Bảng màu brand Smart Penguin: xanh cobalt + xanh trời + cam (mỏ chim cánh cụt), nền xanh navy (không đen trơn)
-export const BRAND = {blue: '#2F7BFF', sky: '#8EC5FF', orange: '#FFAA2B', navy: '#071233'};
+// Bảng màu kiểu ngành crypto hiện đại: nền tím than sâu, chuyển sắc tím điện → cyan (Solana/Phantom vibe),
+// số nổi bật xanh chanh neon. (tên biến giữ nguyên: blue = màu nhấn chính, sky = cyan, orange = màu số nổi bật)
+export const BRAND = {blue: '#8B5CFF', sky: '#2DE2FF', orange: '#C8FF3D', navy: '#0A0A1F'};
 export const C = {
-  bg: '#071233',
-  panel: 'rgba(14,28,68,0.82)',
-  line: 'rgba(142,197,255,0.16)',
-  ink: '#F3F7FF',
-  muted: '#93A6CC',
-  violet: '#2F7BFF',
-  cyan: '#8EC5FF',
-  pink: '#F472B6',
-  gold: '#FFAA2B',
-  green: '#22D39B',
+  bg: '#0A0A1F',
+  panel: 'rgba(22,17,52,0.82)',
+  line: 'rgba(170,150,255,0.18)',
+  ink: '#F5F3FF',
+  muted: '#A39DC8',
+  violet: '#8B5CFF',
+  cyan: '#2DE2FF',
+  pink: '#FF4FD8',
+  gold: '#C8FF3D',
+  green: '#22E39B',
   red: '#FF4D6D',
 };
 export const AccentCtx = React.createContext<string>(BRAND.blue);
@@ -62,18 +63,18 @@ export const Backdrop: React.FC<{accent?: string; img?: string; dim?: number}> =
   const x = 18 + 8 * Math.sin(t * 0.11);
   const y = 16 + 6 * Math.cos(t * 0.09);
   return (
-    <AbsoluteFill style={{background: `linear-gradient(160deg, #0A1A4A 0%, ${BRAND.navy} 55%, #050C24 100%)`, overflow: 'hidden'}}>
+    <AbsoluteFill style={{background: `linear-gradient(160deg, #1A0F45 0%, ${BRAND.navy} 55%, #06061A 100%)`, overflow: 'hidden'}}>
       {img ? (
         <Img src={staticFile(img)} style={{position: 'absolute', inset: -40, width: width + 80, height: height + 80,
           objectFit: 'cover', filter: 'blur(28px) saturate(1.1)', opacity: 1 - dim, mixBlendMode: 'screen',
           transform: `scale(${1.05 + 0.02 * Math.sin(t * 0.15)})`}} />
       ) : null}
       <AbsoluteFill style={{background: `radial-gradient(1000px 700px at ${x}% ${y}%, ${ac}40, transparent 70%),
-        radial-gradient(900px 650px at ${92 - x / 4}% ${88 - y / 4}%, ${BRAND.blue}33, transparent 70%)`}} />
+        radial-gradient(900px 650px at ${92 - x / 4}% ${88 - y / 4}%, ${BRAND.sky}26, transparent 70%)`}} />
       <AbsoluteFill style={{backgroundImage: `radial-gradient(${BRAND.sky}2E 1.6px, transparent 1.6px)`, backgroundSize: '34px 34px',
         backgroundPosition: `${(f * 0.25) % 34}px 0px`,
         maskImage: 'radial-gradient(ellipse 80% 70% at 70% 40%, black 10%, transparent 75%)'}} />
-      <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(5,12,36,0) 62%, rgba(5,12,36,0.85) 100%)'}} />
+      <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(10,10,31,0) 62%, rgba(10,10,31,0.85) 100%)'}} />
     </AbsoluteFill>
   );
 };
@@ -193,7 +194,7 @@ export const Captions: React.FC<{words: Word[]; bottom: number; size: number; ma
   return (
     <div style={{position: 'absolute', left: 0, right: 0, bottom, display: 'flex', justifyContent: 'center'}}>
       <div style={{maxWidth, textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: size, lineHeight: 1.35,
-        color: C.ink, opacity: op, padding: '10px 26px', borderRadius: 14, background: 'rgba(5,12,36,0.72)',
+        color: C.ink, opacity: op, padding: '10px 26px', borderRadius: 14, background: 'rgba(10,10,31,0.72)',
         textShadow: '0 2px 8px rgba(0,0,0,0.6)'}}>
         {c.map((w) => w.t).join(' ')}
       </div>

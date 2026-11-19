@@ -192,7 +192,7 @@ const XQuoteCard: React.FC<{post: Post | null; text: string; vi?: string; w: num
   const s = useSpring(2, 16);
   const ac = useAccent();
   return (
-    <div style={{width: w, height: h, borderRadius: 26, background: '#0B1530', border: `1px solid ${C.line}`, boxSizing: 'border-box',
+    <div style={{width: w, height: h, borderRadius: 26, background: '#120E2E', border: `1px solid ${C.line}`, boxSizing: 'border-box',
       padding: '40px 46px', display: 'flex', flexDirection: 'column', gap: 22, fontFamily: FONT, opacity: s,
       transform: `translateY(${(1 - s) * 30}px)`, boxShadow: `0 30px 80px rgba(0,0,0,0.45), 0 0 0 1px ${ac}22`}}>
       <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
@@ -222,7 +222,7 @@ const TermCallout: React.FC<{terms: {term: string; explain: string; at: number}[
   const o = interpolate(lt, [0, 0.25, 5.1, 5.5], [0, 1, 1, 0], clamp);
   return (
     <div style={{position: 'absolute', left: 110, top: 770, display: 'flex', alignItems: 'center', gap: 16, opacity: o,
-      transform: `translateY(${(1 - o) * 16}px)`, padding: '14px 22px', borderRadius: 16, background: 'rgba(255,170,43,0.12)',
+      transform: `translateY(${(1 - o) * 16}px)`, padding: '14px 22px', borderRadius: 16, background: 'rgba(200,255,61,0.10)',
       border: `1.5px solid ${BRAND.orange}88`, maxWidth: 820, fontFamily: FONT}}>
       <div style={{fontSize: 30}}>💡</div>
       <div style={{color: C.ink, fontSize: 25, lineHeight: 1.3}}><b style={{fontFamily: HEAD, color: BRAND.orange}}>{cur.term}</b> — {cur.explain}</div>
