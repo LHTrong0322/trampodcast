@@ -36,7 +36,9 @@ PROMPT = I.PROMPT.replace(
                 "tickers": ["ticker coin nếu type=coin_chart, vd 'BTC'"],
                 "items": [{{"label": "≤ 5 từ", "value": "con số/kiểu tiếng Anh ngắn hoặc trống"}}],
                 "title": "tiêu đề ngắn cho hình, ≤ 6 từ"}},
-      "project": {{"name": "tên dự án/coin CHÍNH được bàn trong phần này (vd Hyperliquid), trống nếu không có", "ticker": "vd HYPE"}}}}''')
+      "project": {{"name": "tên dự án/coin CHÍNH được bàn trong phần này (vd Hyperliquid), trống nếu không có", "ticker": "vd HYPE"}},
+      "x_quotes": [{{"text": "1-2 câu highlight NGUYÊN VĂN của tác giả, COPY CHÍNH XÁC từng chữ từ bài nguồn (giữ tiếng Anh), mỗi câu ≤ 30 từ", "vi": "dịch nghĩa tiếng Việt ngắn gọn"}}],
+      "terms": [{{"term": "thuật ngữ khó xuất hiện trong lời đọc phần này (vd FDV, Low Float), tối đa 2", "explain": "giải thích ≤ 12 từ, dễ hiểu"}}]}}''')
 PROMPT += """
 Độ dài: nếu bài nguồn đủ ý, viết đủ {max_sections} phần, mỗi phần 130-180 từ; hook ≤ 2 câu thật cuốn.
 Không nhắc đến AI, máy, bot hay "nội dung tổng hợp" ở bất kỳ đâu trong lời đọc.
@@ -44,7 +46,9 @@ Gợi ý chọn data.type: nói về tâm lý thị trường → fear_greed; v�
 về coin cụ thể → coin_chart; so sánh 2-4 thứ có số → stat_compare (điền items); danh sách việc cần làm /
 tiêu chí đánh giá → checklist (điền items, value để trống); bức tranh toàn thị trường → market_heatmap.
 stat_compare CHỈ dùng khi các items cùng đơn vị và so sánh được với nhau (vd doanh thu dự án A vs B); không trộn % với ngày.
-"thumb_text": 3-5 từ cực ngắn cho ảnh bìa (vd "ALTCOIN RÁC SẮP CHẾT"), khác tiêu đề."""
+"thumb_text": 2-4 từ cực ngắn cho ảnh bìa (vd "ALTCOIN RÁC SẮP CHẾT"), khác tiêu đề; "thumb_stat" là 1 con số gây sốc có thật.
+Hook: mở bằng 1 câu hỏi hoặc con số gây sốc chạm vào nỗi đau/lợi ích của người xem, ≤ 2 câu, đọc ≤ 6 giây.
+Lời đọc: câu ngắn, nhiều từ nối kiểu "Nhưng…", "Tại sao?", "Kết quả là…" để giữ nhịp; không lan man."""
 
 
 def fx_raw(url: str) -> dict:
@@ -57,7 +61,7 @@ def fx_raw(url: str) -> dict:
 
 
 BRAND_OVERRIDE = {  # màu nhận diện chuẩn của vài dự án lớn (logo đơn sắc khó tự lấy màu)
-    "BTC": "#F7931A", "ETH": "#8C9EFF", "SOL": "#14F195", "BNB": "#F3BA2F", "HYPE": "#97FCE4", "ENA": "#F2F2F2",
+    "BTC": "#F7931A", "ETH": "#8C9EFF", "SOL": "#14F195", "BNB": "#F3BA2F", "HYPE": "#97FCE4", 
     "XRP": "#5DB2FF", "DOGE": "#E0C068", "TON": "#3AA6F5", "SUI": "#6FBCF0", "ARB": "#28A0F0", "OP": "#FF0420",
     "AAVE": "#B6509E", "UNI": "#FF007A", "LINK": "#5B8DEF", "PENDLE": "#5BC0DE", "TRX": "#FF3B4B", "AVAX": "#E84142",
 }

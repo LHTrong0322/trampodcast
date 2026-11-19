@@ -97,6 +97,50 @@ def mix_music(voice_wav: Path, out_wav: Path, seconds: float, seed: int):
     tmp.unlink()
 
 
+def vivid(hexc: str | None) -> str | None:
+    """Chỉ nhận màu đủ tươi; màu xám/trắng/đen → None (dùng màu brand Smart Penguin)."""
+    import colorsys
+    if not hexc or not re.fullmatch(r"#[0-9A-Fa-f]{6}", hexc):
+        return None
+    r, g, b = (int(hexc[i:i + 2], 16) / 255 for i in (1, 3, 5))
+    h, l, sat = colorsys.rgb_to_hls(r, g, b)
+    return hexc if sat >= 0.35 and 0.25 <= l <= 0.85 else None
+
+
+def norm(t: str) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", t.lower()).strip()
+
+
+def verified_quotes(s: dict, posts: list) -> list:
+    """Chỉ giữ câu trích có thật NGUYÊN VĂN trong bài gốc (không để AI bịa lời tác giả)."""
+    src = norm(" ".join(p.get("text", "") for p in posts))
+    out = []
+    for q in s.get("x_quotes") or []:
+        t = (q or {}).get("text", "").strip().strip('"“”')
+        if 6 <= len(t.split()) <= 40 and norm(t) and norm(t) in src:
+            out.append({"text": t, "vi": V.en_money((q or {}).get("vi", ""))})
+    return out[:2]
+
+
+def term_times(s: dict, words: list) -> list:
+    out = []
+    for tm in (s.get("terms") or [])[:2]:
+        term = (tm or {}).get("term", "").strip()
+        if not term or not tm.get("explain"):
+            continue
+        first = norm(term).split()[0] if norm(term) else ""
+        at = next((w["s"] for w in words if first and norm(w["t"]) == first), None)
+        out.append({"term": term, "explain": tm["explain"], "at": round(at if at is not None else 2.0 + 6 * len(out), 2)})
+    return out
+
+
+def auto_speed(plan, pcm, target_wpm: float) -> float:
+    words = sum(len(p["text"].split()) for p in plan["parts"])
+    secs = sum(len(v) for v in pcm.values()) / SR / 2
+    wpm = words / max(1, secs) * 60
+    return max(0.95, min(1.12, target_wpm / max(1, wpm)))
+
+
 def project_of(s: dict, data: dict) -> dict | None:
     pj = s.get("project") or {}
     t = str(pj.get("ticker") or "").lstrip("$").upper()
@@ -105,7 +149,7 @@ def project_of(s: dict, data: dict) -> dict | None:
         return None
     c = (data.get("coins") or {}).get(t) or {}
     return {"name": name or c.get("name") or t, "ticker": t, "logo": c.get("logo"),
-            "color": c.get("color") or OVERRIDE.get(t)}
+            "color": vivid(OVERRIDE.get(t) or c.get("color"))}
 
 
 def prep_public(lab: Path):
@@ -134,7 +178,9 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     ic = cfg.get("insight") or {}
     plan, pcm, text, data, voice = load_lab(lab, voice)
     sp_cfg = ic.get("voice_speed") or {}
-    f = float(sp_cfg.get(voice.split(":")[0], 1.0)) if isinstance(sp_cfg, dict) else 1.0
+    f = sp_cfg.get(voice.split(":")[0], "auto") if isinstance(sp_cfg, dict) else "auto"
+    f = auto_speed(plan, pcm, float(ic.get("target_wpm", 215))) if f == "auto" else float(f)
+    log(f"   Tốc độ giọng ×{f:.2f}")
     pcm = {k: speed(v, f) for k, v in pcm.items()}
     audio, tl, total = build_timeline(plan, pcm, text)
     prep_public(lab)
@@ -180,7 +226,8 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                            "keyStat": V.en_money(s.get("key_stat", "")), "keyLabel": V.en_money(s.get("key_label", "")),
                            "bullets": [V.en_money(b) for b in (s.get("bullets") or [])][:3],
                            "quote": V.en_money(s.get("quote", "")), "source": ("@" + src[0]) if src[0] else "",
-                           "data": dspec or None, "project": proj})
+                           "data": dspec or None, "project": proj, "xquotes": verified_quotes(s, posts),
+                           "terms": term_times(s, sc["words"])})
     chapters[0] = (0.0, chapters[0][1])
     pinfo = {"author": post.get("author", ""), "handle": post.get("handle", ""), "avatar": post.get("avatar"),
              "cover": post.get("cover"), "title": post.get("title", ""), "likes": post.get("likes"),

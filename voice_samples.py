@@ -93,7 +93,7 @@ def main():
             print("  lỗi:", ex)
     gvoices = [x.strip() for x in a.gemini.split(",") if x.strip()]
     if gvoices:
-        gem = P.Gemini(os.getenv("GEMINI_API_KEY", ""))
+        gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))  # ưu tiên key Insight để không ăn lượt podcast
         models = (cfg or {}).get("models", {}).get("tts") or ["gemini-3.8-flash-tts"]
         for i, v in enumerate(gvoices):
             n += 1

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Img, interpolate, staticFile, useCurrentFrame, useVideoConfig, spring} from 'remotion';
-import {C, clamp, ease, FONT, useAccent} from './ui';
+import {BRAND, C, clamp, DISPLAY, ease, FONT, HEAD, useAccent} from './ui';
 
 export type DataSpec = {type: string; tickers?: string[]; items?: {label: string; value?: string}[]; title?: string};
 
@@ -11,7 +11,7 @@ const Frame: React.FC<{w: number; h: number; title: string; sub?: string; childr
     boxShadow: '0 30px 80px rgba(0,0,0,0.45)', padding: 36, boxSizing: 'border-box', fontFamily: FONT,
     display: 'flex', flexDirection: 'column', gap: 18, overflow: 'hidden'}}>
     <div style={{display: 'flex', alignItems: 'baseline', gap: 14}}>
-      <div style={{color: C.ink, fontWeight: 800, fontSize: 32, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: sub === '' ? w - 80 : w - 300}}>{title}</div>
+      <div style={{color: C.ink, fontFamily: HEAD, fontWeight: 700, fontSize: 32, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: sub === '' ? w - 80 : w - 300}}>{title}</div>
       <div style={{flex: 1}} />
       {sub === '' ? null : <div style={{color: C.muted, fontWeight: 600, fontSize: 18, whiteSpace: 'nowrap'}}>{sub || 'Dữ liệu thật · CoinGecko'}</div>}
     </div>
@@ -151,18 +151,39 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
   const col = up ? C.green : C.red;
   const chg = ((series[series.length - 1] / series[0] - 1) * 100);
   const last = pts[n - 1];
+  const f = useCurrentFrame();
+  // điểm nhấn: đỉnh, đáy, mức giá đầu kỳ
+  const iHi = series.indexOf(hi), iLo = series.indexOf(lo);
+  const y0 = pts[0][1];
+  const lab = (i: number, txt: string, c: string, above: boolean) => {
+    if (i >= n) return null;
+    const [x, y] = pts[i];
+    const o = interpolate(f, [Math.round((i / pts.length) * 50) + 6, Math.round((i / pts.length) * 50) + 16], [0, 1], clamp);
+    const lx = Math.min(W - 150, Math.max(0, x - 70));
+    return <g key={txt} opacity={o}>
+      <circle cx={x} cy={y} r={8} fill={c} stroke="#0B1530" strokeWidth={3} />
+      <rect x={lx} y={above ? y - 52 : y + 16} width={150} height={36} rx={10} fill="#0B1530" stroke={c} strokeWidth={1.5} />
+      <text x={lx + 75} y={above ? y - 27 : y + 41} fill={C.ink} fontSize={20} fontFamily="HEAD" fontWeight={700} textAnchor="middle">{txt}</text>
+    </g>;
+  };
+  const pulse = 10 + 6 * Math.abs(Math.sin(f / 8));
   return (
     <Frame w={w} h={h} title={`${m?.name || sym} · ${days} ngày`}>
       <div style={{display: 'flex', alignItems: 'center', gap: 18, marginBottom: 10}}>
-        <Img src={staticFile(`logos/${m?.sym || sym}.png`)} style={{width: 52, height: 52, borderRadius: 99}} />
-        <div style={{color: C.ink, fontSize: 52, fontWeight: 800}}>{m ? money(m.price) : ''}</div>
-        <div style={{color: col, fontSize: 40, fontWeight: 800}}>{chg >= 0 ? '+' : ''}{chg.toFixed(1)}%</div>
+        <Img src={staticFile(`logos/${m?.sym || sym}.png`)} style={{width: 52, height: 52, borderRadius: '50%'}} />
+        <div style={{color: C.ink, fontFamily: DISPLAY, fontSize: 44, fontWeight: 800}}>{m ? money(m.price) : ''}</div>
+        <div style={{color: col, fontFamily: DISPLAY, fontSize: 32, fontWeight: 800}}>{chg >= 0 ? '+' : ''}{chg.toFixed(1)}%</div>
       </div>
-      <svg width={W} height={H}>
-        <defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor={col} stopOpacity={0.45} /><stop offset="1" stopColor={col} stopOpacity={0} /></linearGradient></defs>
+      <svg width={W} height={H} style={{overflow: 'visible'}}>
+        <defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor={col} stopOpacity={0.4} /><stop offset="1" stopColor={col} stopOpacity={0} /></linearGradient></defs>
+        <line x1={0} x2={W} y1={y0} y2={y0} stroke={C.muted} strokeDasharray="6 8" strokeWidth={1.5} opacity={0.6} />
+        <text x={W} y={y0 - 8} fill={C.muted} fontSize={18} textAnchor="end" fontFamily="BODY">đầu kỳ {money(series[0])}</text>
         <path d={`${path} L${last[0]},${H} L0,${H} Z`} fill="url(#g)" />
-        <path d={path} stroke={col} strokeWidth={4} fill="none" />
-        <circle cx={last[0]} cy={last[1]} r={10} fill="#fff" />
+        <path d={path} stroke={col} strokeWidth={4} fill="none" strokeLinejoin="round" />
+        {lab(iHi, `Đỉnh ${money(hi)}`, BRAND.orange, true)}
+        {lab(iLo, `Đáy ${money(lo)}`, BRAND.sky, false)}
+        <circle cx={last[0]} cy={last[1]} r={pulse} fill={col} opacity={0.25} />
+        <circle cx={last[0]} cy={last[1]} r={8} fill="#fff" />
       </svg>
     </Frame>
   );
