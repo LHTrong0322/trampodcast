@@ -598,10 +598,33 @@ def elevenlabs_tts(el: dict, text: str, prev_text: str = "", next_text: str = ""
     raise RuntimeError("ElevenLabs: hết lượt thử")
 
 
+_vieneu = None
+
+
+def vieneu_tts(text: str, voice: str) -> bytes:
+    """Giọng VieNeu-TTS (mã nguồn mở, chạy trên CPU, không tốn lượt Gemini). Ra 48kHz → đổi về 24kHz."""
+    global _vieneu
+    if _vieneu is None:
+        from vieneu import Vieneu
+        log("   (tải mô hình VieNeu-TTS lần đầu…)")
+        _vieneu = Vieneu()
+    import numpy as np
+    try:
+        audio = _vieneu.infer(text, voice=voice) if voice else _vieneu.infer(text)
+    except Exception as ex:   # tên giọng sai → dùng giọng mặc định
+        log(f"   ! giọng VieNeu '{voice}' lỗi ({ex}) → dùng giọng mặc định")
+        audio = _vieneu.infer(text)
+    a = np.asarray(audio, dtype=np.float32).reshape(-1)
+    raw = (np.clip(a, -1, 1) * 32767).astype("<i2").tobytes()
+    return _ffmpeg_pcm(["-f", "s16le", "-ar", "48000", "-ac", "1"], raw)
+
+
 def speak_chunk(gem, cfg, chunks, n) -> bytes:
     pc = cfg["podcast"]
     provider = pc.get("tts_provider", "gemini")
     ch = chunks[n]
+    if provider == "vieneu":
+        return vieneu_tts(ch, (cfg.get("vieneu") or {}).get("voice", "Mai Anh"))
     if provider == "elevenlabs":
         return elevenlabs_tts(cfg.get("elevenlabs") or {}, ch,
                               chunks[n - 1] if n > 0 else "",

@@ -1048,7 +1048,10 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
     for s in segs:
         for it in s["items"]:
             it = dict(it, date=s["date"])
-            it["pcm"] = slice_pcm(s["pcm"], it["t0"], it["t1"])
+            if cfg["podcast"].get("tts_provider") == "vieneu":   # đọc lại bằng giọng VieNeu
+                it["pcm"] = P.clean_chunk(P.speak_chunk(None, cfg, [it["narration"]], 0))
+            else:
+                it["pcm"] = slice_pcm(s["pcm"], it["t0"], it["t1"])
             pool.append(it)
     if not pool:
         raise RuntimeError("Chưa có đoạn video nào trong tuần (cần chạy daily hoặc --backfill)")
@@ -1293,9 +1296,19 @@ def main():
     ap.add_argument("--out", default="public")
     ap.add_argument("--backfill", type=int, default=0, help="làm bù đoạn video cho N tập gần nhất")
     ap.add_argument("--days", type=int, default=7)
+    ap.add_argument("--voice-provider", default="", help="gemini | vieneu (ghi đè cho lần chạy này)")
+    ap.add_argument("--voice-name", default="", help="tên giọng (vd 'Mai Anh' cho VieNeu)")
     args = ap.parse_args()
     out = Path(args.out)
     cfg = load_cfg()
+    if args.voice_provider:
+        cfg["podcast"]["tts_provider"] = args.voice_provider
+        if args.voice_provider == "vieneu":
+            cfg.setdefault("vieneu", {})
+            if args.voice_name:
+                cfg["vieneu"]["voice"] = args.voice_name
+            BRAND["tag_prefix"] = "weekly-vieneu"
+            BRAND["tg_header"] = "Video tổng hợp tuần {week} · giọng VieNeu " + cfg["vieneu"].get("voice", "Mai Anh")
     if not (cfg.get("video") or {}).get("enabled", True):
         log("Video đang tắt trong sources.yaml")
         return

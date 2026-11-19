@@ -122,10 +122,13 @@ def read_web(url: str) -> dict | None:
 # ---------------------------------------------------------------------------
 # 1. HỘP THƯ: nhận link từ Telegram
 # ---------------------------------------------------------------------------
-def inbox(out: Path, cfg: dict) -> dict:
+def inbox(out: Path, cfg: dict, extra_links: str = "") -> dict:
     st = load_store(out)
     owner = str(os.getenv("TELEGRAM_CHAT_ID", "")).strip()
     res = tg("getUpdates", offset=st["offset"] + 1, timeout=0, allowed_updates='["message"]') or {}
+    if extra_links.strip():   # link nhập trực tiếp khi bấm chạy trên GitHub
+        res.setdefault("result", []).append({"update_id": st["offset"],
+                                             "message": {"chat": {"id": owner}, "text": extra_links}})
     known = {p["url"] for p in st["posts"]}
     added = 0
     for up in res.get("result", []):
@@ -244,7 +247,8 @@ def tts_parts(gem, cfg, parts: list[str], max_chars=3600) -> list[bytes]:
         for a, b in V.split_points(pcm, batch):
             out.append(V.slice_pcm(pcm, a, b))
         batch.clear()
-        time.sleep(int(cfg["podcast"].get("tts_pause_seconds", 25)))
+        if cfg["podcast"].get("tts_provider", "gemini") == "gemini":
+            time.sleep(int(cfg["podcast"].get("tts_pause_seconds", 25)))
     for ptxt in parts:
         if batch and sum(map(len, batch)) + len(ptxt) > max_chars:
             flush()
@@ -413,6 +417,9 @@ def main():
     ap.add_argument("mode", choices=["inbox", "cook"])
     ap.add_argument("--out", default="public")
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--links", default="", help="thêm link trực tiếp (cách nhau bởi dấu cách)")
+    ap.add_argument("--voice-provider", default="", help="gemini | vieneu")
+    ap.add_argument("--voice-name", default="")
     args = ap.parse_args()
     out = Path(args.out)
     cfg = V.load_cfg()
@@ -420,7 +427,7 @@ def main():
         log("Trạm Insight đang tắt trong sources.yaml")
         return
     if args.mode == "inbox":
-        st = inbox(out, cfg)
+        st = inbox(out, cfg, args.links)
         go = should_cook(st, cfg, args.force)
         log(f"   Cook hôm nay: {'CÓ' if go else 'chưa'}")
         if os.getenv("GITHUB_OUTPUT"):
@@ -435,6 +442,9 @@ def main():
     ic = cfg.get("insight") or {}
     # giọng riêng cho Trạm Insight
     cfg["podcast"]["voice"] = ic.get("voice", "Charon")
+    cfg["podcast"]["tts_provider"] = args.voice_provider or ic.get("tts_provider", "gemini")
+    if cfg["podcast"]["tts_provider"] == "vieneu":
+        cfg.setdefault("vieneu", {})["voice"] = args.voice_name or ic.get("vieneu_voice", "Mai Anh")
     cfg["podcast"]["voice_style"] = ic.get("voice_style", "")
     cfg["podcast"]["host_name"] = ic.get("host_name", "")
     key = os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", "")
