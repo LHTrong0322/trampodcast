@@ -1014,7 +1014,8 @@ Nhiệm vụ:
 5. Tiêu đề video YouTube hấp dẫn (≤ 90 ký tự, đúng chính tả) và mô tả ngắn (2-3 câu).
 6. "hook": 1 câu MỞ MÀN cực sốc, đọc trong ~3 giây (≤ 16 từ), nêu con số/sự kiện gây chú ý nhất
    tuần, KHÔNG chào hỏi (vd "Sáu tỷ đô bị thanh lý chỉ trong bảy ngày, chuyện gì đang xảy ra?").
-   "hook_stat": con số đó viết kiểu tiếng Anh để hiện chữ to (vd "$6B", "$400M", "-15%"); "hook_label": giải thích ≤ 6 từ.
+   "hook_stat": con số đó viết kiểu tiếng Anh để hiện chữ to (vd "$6B", "$400M", "-15%"); CHỈ điền khi là số liệu
+   thật, có ý nghĩa rõ ràng trong tin; không có thì để trống "". "hook_label": giải thích ≤ 6 từ.
 7. Ảnh bìa YouTube: "thumb_text" 3-5 từ IN HOA gây tò mò; "thumb_stat" con số ngắn (có thể trống).
 8. Với MỖI tin trong "shorts": "short_hooks" là 1 câu mở đầu giật tít đọc trong ~2-3 giây
    (≤ 12 từ), khiến người lướt phải dừng lại xem.

@@ -207,7 +207,7 @@ Trả về DUY NHẤT JSON:
   "description": "mô tả 2-3 câu",
   "theme": "chủ đề chung của tập, ≤ 6 từ (vd 'Quản trị rủi ro khi trade')",
   "hook": "câu mở màn ≤ 16 từ gây tò mò mạnh, đọc ~3 giây, không chào hỏi",
-  "hook_stat": "con số/cụm từ ngắn hiện chữ to (vd '90%', '\\$1M'), có thể trống",
+  "hook_stat": "con số ngắn hiện chữ to (vd '90%', '\\$1M'); CHỈ điền khi là số liệu thật có trong bài nguồn và người xem hiểu ngay ý nghĩa, nếu không để trống",
   "hook_label": "giải thích ≤ 6 từ",
   "intro": "lời chào + giới thiệu tập (~300 ký tự)",
   "sections": [
@@ -215,7 +215,7 @@ Trả về DUY NHẤT JSON:
       "key_stat": "con số/cụm từ đắt giá nhất phần này (kiểu tiếng Anh: '\\$400M', '3x', '80%'), có thể trống",
       "key_label": "giải thích ≤ 6 từ",
       "narration": "lời giảng 4-7 câu (~450-700 ký tự): insight là gì, vì sao đúng, ví dụ, cách áp dụng",
-      "visual_queries": ["4 từ khoá TIẾNG ANH tìm ảnh minh hoạ, 2-4 từ, đa dạng góc"],
+      "visual_queries": ["4 từ khoá TIẾNG ANH tìm ảnh stock, 2-4 từ, mô tả VẬT/CẢNH CỤ THỂ nhìn thấy được và đúng chủ đề tài chính/công nghệ (vd 'revenue growth chart', 'business handshake contract', 'trader laptop charts'); tránh từ trừu tượng dễ ra ảnh lạc đề"],
       "source_ids": [id bài nguồn]}}
   ],
   "outro": "tổng kết 2-3 ý chính + nhắc không phải lời khuyên đầu tư + mời đăng ký (~280 ký tự)",
