@@ -44,9 +44,12 @@ def stats(pcm: bytes, words: int) -> str:
     return f"{dur:.0f}s · {words / dur * 60:.0f} từ/phút · cao độ ~{pitch:.0f}Hz"
 
 
+WORDS = [60]
+
+
 def to_mp3(pcm: bytes, path: Path):
     pcm = P.clean_chunk(pcm)
-    print("  ", stats(pcm, len(TEXT.split())))
+    print("  ", stats(pcm, WORDS[0]))
     with tempfile.NamedTemporaryFile(suffix=".pcm", delete=False) as f:
         f.write(pcm)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "s16le", "-ar", str(P.SAMPLE_RATE), "-ac", "1",
@@ -73,6 +76,7 @@ def main():
     ap.add_argument("--no-send", default="", help="giọng chỉ đo, không gửi Telegram")
     a = ap.parse_args()
     text = a.text.strip() or TEXT
+    WORDS[0] = len(text.split())
     out = Path("samples"); out.mkdir(exist_ok=True)
     import yaml
     cfg = yaml.safe_load((P.ROOT / "sources.yaml").read_text(encoding="utf-8"))
