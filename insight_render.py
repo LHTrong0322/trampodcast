@@ -135,6 +135,16 @@ def verified_quotes(s: dict, posts: list) -> list:
     return out[:2]
 
 
+def real_number(stat: str, posts: list) -> str:
+    """Chỉ giữ con số CÓ THẬT trong bài gốc (không để AI bịa số). Chữ không có số (vd DCA) giữ nguyên."""
+    nums = re.findall(r"\d+(?:[.,]\d+)?", stat or "")
+    if not nums:
+        return stat or ""
+    src = " ".join(p.get("text", "") for p in posts)
+    src_nums = set(x.replace(",", ".") for x in re.findall(r"\d+(?:[.,]\d+)?", src))
+    return stat if all(n.replace(",", ".") in src_nums for n in nums) else ""
+
+
 def term_times(s: dict, words: list) -> list:
     out = []
     for tm in (s.get("terms") or [])[:2]:
@@ -215,7 +225,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
         base = {"from": sc["from"], "dur": sc["dur"], "words": sc["words"]}
         if k == "hook":
             scenes.append({**base, "type": "hook", "hook": V.en_money(plan.get("hook", "")),
-                           "stat": V.en_money(plan.get("hook_stat", "")), "label": V.en_money(plan.get("hook_label", "")),
+                           "stat": real_number(V.en_money(plan.get("hook_stat", "")), posts), "label": V.en_money(plan.get("hook_label", "")) if real_number(V.en_money(plan.get("hook_stat", "")), posts) else "",
                            "images": [f"img/{x}" for x in imgs.get("intro", [])][:1]})
         elif k == "intro":
             chapters.append((sc["from"], "Mở đầu"))
@@ -237,7 +247,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                     ((data.get("coins") or {}).get(proj["ticker"]) or {}).get("series"):
                 dspec = {**dspec, "type": "coin_chart", "tickers": [proj["ticker"]]}  # có dự án → biểu đồ giá của chính dự án
             scenes.append({**base, "type": "section", "idx": i + 1, "total": len(secs), "heading": V.en_money(s["heading"]),
-                           "keyStat": V.en_money(s.get("key_stat", "")), "keyLabel": V.en_money(s.get("key_label", "")),
+                           "keyStat": real_number(V.en_money(s.get("key_stat", "")), posts), "keyLabel": V.en_money(s.get("key_label", "")),
                            "bullets": [V.en_money(b) for b in (s.get("bullets") or [])][:3],
                            "quote": V.en_money(s.get("quote", "")), "source": ("@" + src[0]) if src[0] else "",
                            "data": dspec or None, "project": proj, "xquotes": verified_quotes(s, posts),

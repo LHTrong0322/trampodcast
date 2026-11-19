@@ -102,7 +102,8 @@ def thumbnail(res: dict, out: Path) -> Path | None:
     if not text or len(text.split()) > 6:
         text = " ".join((text or plan.get("title", "")).replace(":", "").split()[:5])
     props = {"comp": "Thumb", "width": 1280, "height": 720, "text": R.nodash(V.en_money(text)),
-             "stat": V.en_money(plan.get("thumb_stat") or plan.get("hook_stat", ""))[:8], "accent": (proj or {}).get("color"),
+             "stat": (R.real_number(V.en_money(plan.get("thumb_stat", "")), plan.get("posts") or [])
+                      or R.real_number(V.en_money(plan.get("hook_stat", "")), plan.get("posts") or []))[:8], "accent": (proj or {}).get("color"),
              "projectLogo": (proj or {}).get("logo"), "bg": None, "theme": os.getenv("INSIGHT_THEME") or (V.load_cfg().get("insight") or {}).get("theme", "dark"),
              "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")}
     try:
