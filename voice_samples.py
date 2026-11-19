@@ -23,8 +23,30 @@ TEXT = ("Chào mọi người, đây là bản tin crypto tuần này. "
 GEMINI_STYLE = "Đọc bằng giọng nam miền Bắc, giọng Hà Nội, trầm ấm, rõ ràng, nhịp vừa phải như người dẫn bản tin"
 
 
+def stats(pcm: bytes, words: int) -> str:
+    """Tốc độ đọc (từ/phút) và cao độ giọng trung bình (Hz) — để so sánh khách quan."""
+    import numpy as np
+    sr = P.SAMPLE_RATE
+    x = np.frombuffer(pcm, dtype="<i2").astype(np.float32) / 32768
+    dur = len(x) / sr
+    f0 = []
+    n = int(sr * 0.04)
+    for i in range(0, len(x) - n, n):
+        fr = x[i:i + n] - x[i:i + n].mean()
+        if np.sqrt((fr ** 2).mean()) < 0.03:
+            continue
+        ac = np.correlate(fr, fr, "full")[n - 1:]
+        lo, hi = sr // 300, sr // 70
+        k = lo + int(np.argmax(ac[lo:hi]))
+        if ac[k] > 0.4 * ac[0]:
+            f0.append(sr / k)
+    pitch = float(np.median(f0)) if f0 else 0
+    return f"{dur:.0f}s · {words / dur * 60:.0f} từ/phút · cao độ ~{pitch:.0f}Hz"
+
+
 def to_mp3(pcm: bytes, path: Path):
     pcm = P.clean_chunk(pcm)
+    print("  ", stats(pcm, len(TEXT.split())))
     with tempfile.NamedTemporaryFile(suffix=".pcm", delete=False) as f:
         f.write(pcm)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "s16le", "-ar", str(P.SAMPLE_RATE), "-ac", "1",
