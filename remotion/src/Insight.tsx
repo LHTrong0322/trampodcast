@@ -64,11 +64,11 @@ const HookScene: React.FC<{sc: Scene; brand: string; source?: string}> = ({sc, b
     <Backdrop img={sc.images?.[0]} dim={0.75} />
     <TopBar brand={brand} source={source} />
     {sc.stat ? [0, 1, 2].map((k) => <div key={k} style={{position: 'absolute', left: '50%', top: '34%', width: 900, height: 900,
-      marginLeft: -450, marginTop: -450, borderRadius: '50%', border: `3px solid ${BRAND.orange}`,
-      transform: `scale(${0.3 + ring(k) * 1.2})`, opacity: (1 - ring(k)) * 0.35}} />) : null}
+      marginLeft: -450, marginTop: -450, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.5)',
+      transform: `scale(${0.3 + ring(k) * 1.2})`, opacity: (1 - ring(k)) * 0.18}} />) : null}
     <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 26}}>
       {sc.stat ? <CountUp value={sc.stat} size={240} delay={3} color={BRAND.orange} frames={40} /> : null}
-      {sc.label ? <div style={{fontFamily: HEAD, fontWeight: 700, fontSize: 38, color: BRAND.sky, letterSpacing: 4, textTransform: 'uppercase'}}>{sc.label}</div> : null}
+      {sc.label ? <div style={{fontFamily: HEAD, fontWeight: 700, fontSize: 34, color: C.muted, letterSpacing: 4, textTransform: 'uppercase'}}>{sc.label}</div> : null}
       <div style={{maxWidth: 1500, textAlign: 'center', display: 'flex', justifyContent: 'center'}}>
         <RevealWords text={sc.hook || ''} size={sc.stat ? 58 : 84} delay={sc.stat ? 22 : 4} stagger={2} maxWidth={1500} />
       </div>
@@ -216,6 +216,7 @@ const XQuoteCard: React.FC<{post: Post | null; text: string; vi?: string; w: num
 // chú thích nhanh thuật ngữ (FDV, Low Float…) hiện đúng lúc được nhắc
 const TermCallout: React.FC<{terms: {term: string; explain: string; at: number}[]}> = ({terms}) => {
   const f = useCurrentFrame();
+  const ac = useAccent();
   const {fps} = useVideoConfig();
   const t = f / fps;
   const cur = [...terms].reverse().find((x) => t >= x.at && t < x.at + 5.5);
@@ -224,10 +225,10 @@ const TermCallout: React.FC<{terms: {term: string; explain: string; at: number}[
   const o = interpolate(lt, [0, 0.25, 5.1, 5.5], [0, 1, 1, 0], clamp);
   return (
     <div style={{position: 'absolute', left: 110, top: 770, display: 'flex', alignItems: 'center', gap: 16, opacity: o,
-      transform: `translateY(${(1 - o) * 16}px)`, padding: '14px 22px', borderRadius: 16, background: 'rgba(200,255,61,0.10)',
-      border: `1.5px solid ${BRAND.orange}88`, maxWidth: 820, fontFamily: FONT}}>
+      transform: `translateY(${(1 - o) * 16}px)`, padding: '14px 22px', borderRadius: 16, background: 'rgba(255,255,255,0.05)',
+      border: `1px solid ${C.line}`, maxWidth: 820, fontFamily: FONT}}>
       <div style={{fontSize: 30}}>💡</div>
-      <div style={{color: C.ink, fontSize: 25, lineHeight: 1.3}}><b style={{fontFamily: HEAD, color: BRAND.orange}}>{cur.term}</b>: {cur.explain}</div>
+      <div style={{color: C.ink, fontSize: 25, lineHeight: 1.3}}><b style={{fontFamily: HEAD, color: ac}}>{cur.term}</b>: {cur.explain}</div>
     </div>
   );
 };

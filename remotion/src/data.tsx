@@ -114,7 +114,7 @@ const Heatmap: React.FC<{data: any; w: number; h: number}> = ({data, w, h}) => {
         {mk.map((m: any, i: number) => {
           const c = m.chg7 ?? 0;
           const k = Math.min(1, Math.abs(c) / 15);
-          const bg = c >= 0 ? `rgba(46,229,157,${0.18 + 0.6 * k})` : `rgba(255,84,112,${0.18 + 0.6 * k})`;
+          const bg = c >= 0 ? `rgba(60,196,141,${0.12 + 0.38 * k})` : `rgba(229,103,125,${0.12 + 0.38 * k})`;
           const s = interpolate(f - i * 2, [0, 12], [0, 1], clamp);
           return (
             <div key={m.sym} style={{width: cw, height: 112, borderRadius: 16, background: bg, display: 'flex', flexDirection: 'column',

@@ -6,19 +6,19 @@ import {
 
 // Bảng màu "crypto cao cấp & sạch": nền tối xanh-tím sâu (không đen trơn), 1 quầng màu nhấn tím→xanh rất nhẹ,
 // thẻ kính mờ tinh tế, chữ trắng; màu nổi chỉ dùng cho số liệu. (blue = màu nhấn chính, sky = cyan, orange = màu số)
-export const BRAND = {blue: '#7C6CFF', sky: '#4FD1FF', orange: '#C6F432', navy: '#0C0E24', pink: '#B07CFF'};
+export const BRAND = {blue: '#8E9BFF', sky: '#A9B8FF', orange: '#FFFFFF', navy: '#0C0E24', pink: '#B9A8FF'};
 export const C = {
   bg: '#0C0E24',
   panel: 'rgba(255,255,255,0.05)',
   line: 'rgba(255,255,255,0.10)',
   ink: '#F7F8FC',
   muted: '#A9AECB',
-  violet: '#7C6CFF',
-  cyan: '#4FD1FF',
-  pink: '#B07CFF',
-  gold: '#C6F432',
-  green: '#34D399',
-  red: '#F25F78',
+  violet: '#8E9BFF',
+  cyan: '#A9B8FF',
+  pink: '#B9A8FF',
+  gold: '#E8EAF6',
+  green: '#3CC48D',
+  red: '#E5677D',
 };
 export const glass: React.CSSProperties = {background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.10)',
   backdropFilter: 'blur(14px)', boxShadow: '0 20px 60px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)'};
@@ -73,8 +73,8 @@ export const Backdrop: React.FC<{accent?: string; img?: string; dim?: number}> =
           objectFit: 'cover', filter: 'blur(26px) saturate(1.2)', opacity: 1 - dim, mixBlendMode: 'screen',
           transform: `scale(${1.05 + 0.02 * Math.sin(t * 0.15)})`}} />
       ) : null}
-      {blob(15, 18, 900, ac, 0.28, 0.1, 0)}
-      {blob(88, 85, 800, BRAND.sky, 0.14, 0.08, 2)}
+      {blob(15, 18, 900, ac, 0.18, 0.1, 0)}
+      {blob(88, 85, 800, BRAND.sky, 0.08, 0.08, 2)}
       <AbsoluteFill style={{backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1.4px, transparent 1.4px)', backgroundSize: '36px 36px',
         backgroundPosition: `${(f * 0.25) % 36}px 0px`,
         maskImage: 'radial-gradient(ellipse 85% 75% at 65% 40%, black 15%, transparent 80%)'}} />
@@ -139,8 +139,8 @@ export const RevealWords: React.FC<{text: string; size: number; weight?: number;
         return (
           <span key={i} style={{display: 'inline-block', overflow: 'hidden', paddingBottom: size * 0.08}}>
             <span style={{display: 'inline-block', transform: `translateY(${(1 - s) * 110}%) rotate(${(1 - s) * 6}deg)`,
-              opacity: s, color: hl ? 'transparent' : color, textShadow: hl ? 'none' : '0 2px 12px rgba(0,0,0,0.3)',
-              ...(hl ? {backgroundImage: `linear-gradient(90deg, ${accentColor}, ${BRAND.sky})`, WebkitBackgroundClip: 'text', backgroundClip: 'text'} : {})}}>{w}</span>
+              opacity: s, color: color, textShadow: hl ? 'none' : '0 2px 12px rgba(0,0,0,0.3)',
+              ...(hl ? {color: accentColor} : {})}}>{w}</span>
           </span>
         );
       })}
@@ -168,7 +168,7 @@ export const CountUp: React.FC<{value: string; delay?: number; size: number; col
   const bump = spring({frame: f - delay - frames, fps, config: {damping: 8, mass: 0.4}});
   const sc = interpolate(s, [0, 1], [0.6, 1]) * (1 + 0.08 * Math.sin(Math.min(1, bump) * Math.PI));
   return <div style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: size, color, lineHeight: 1, transform: `scale(${sc})`, opacity: s,
-    textShadow: `0 0 ${24 * bump}px ${color}55, 0 6px 24px rgba(0,0,0,0.35)`, letterSpacing: -2, fontVariantNumeric: 'tabular-nums'}}>{shown}</div>;
+    textShadow: '0 6px 24px rgba(0,0,0,0.35)', letterSpacing: -2, fontVariantNumeric: 'tabular-nums'}}>{shown}</div>;
 };
 
 // ---------- phụ đề: hiện cả cụm câu (không chạy từng chữ), gọn & dễ đọc ----------
