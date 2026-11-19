@@ -145,8 +145,34 @@ def frames_of(video: Path, n: int, w: int = 640) -> list[bytes]:
     return out
 
 
+def claude_review_cli(prompt: str, imgs: list[tuple[str, bytes]]) -> dict:
+    """Bot review bằng Claude qua gói Claude Pro (secret CLAUDE_CODE_OAUTH_TOKEN, chạy Claude Code không giao diện)."""
+    import shutil
+    import tempfile
+    tok = re.sub(r"\s+", "", os.getenv("CLAUDE_CODE_OAUTH_TOKEN", ""))
+    if not tok or not shutil.which("claude"):
+        raise RuntimeError("chưa có CLAUDE_CODE_OAUTH_TOKEN hoặc chưa cài Claude Code")
+    d = Path(tempfile.mkdtemp(prefix="review-"))
+    names = []
+    for label, b in imgs:
+        (d / f"{label}.jpg").write_bytes(b)
+        names.append(f"{label}.jpg")
+    ask = (prompt + "\n\nCác khung hình nằm trong thư mục hiện tại: " + ", ".join(names)
+           + ". Hãy dùng công cụ Read để XEM TỪNG ẢNH trước khi đánh giá. Cuối cùng chỉ in ra JSON hợp lệ, không thêm chữ nào khác.")
+    env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
+    env["CLAUDE_CODE_OAUTH_TOKEN"] = tok
+    model = (V.load_cfg().get("insight") or {}).get("review_model_cli", "sonnet")
+    r = subprocess.run(["claude", "-p", ask, "--allowedTools", "Read", "--max-turns", "40", "--model", model,
+                        "--output-format", "text"], cwd=d, env=env, capture_output=True, text=True, timeout=900)
+    txt = r.stdout.strip()
+    m = re.search(r"\{.*\}", txt, re.S)
+    if not m:
+        raise RuntimeError(f"Claude không trả JSON: {(txt or r.stderr)[:300]}")
+    return json.loads(m.group(0))
+
+
 def claude_review(prompt: str, imgs: list[tuple[str, bytes]]) -> dict:
-    """Bot review bằng Claude (cần secret ANTHROPIC_API_KEY)."""
+    """Bot review bằng Claude API (secret ANTHROPIC_API_KEY, tính phí theo lượt)."""
     key = os.getenv("ANTHROPIC_API_KEY", "")
     if not key:
         raise RuntimeError("chưa có ANTHROPIC_API_KEY")
@@ -185,12 +211,14 @@ def review(gem, cfg, res: dict, thumb: Path | None) -> dict:
         imgs.append(("thumbnail", b.getvalue()))
     prompt = REVIEW_PROMPT.format(n=10, ns=len(imgs) - 10, title=plan.get("title", ""), minutes=res["duration"] / 60,
                                   voice=res["voice"], wpm=wpm, hook=plan.get("hook", ""))
-    try:
-        rv = claude_review(prompt, imgs)
-        rv["by"] = "Claude"
-        return rv
-    except Exception as ex:
-        log(f"   ! review bằng Claude chưa chạy được ({ex}) → dùng Gemini")
+    for fn in (claude_review_cli, claude_review):
+        try:
+            rv = fn(prompt, imgs)
+            rv["by"] = "Claude"
+            return rv
+        except Exception as ex:
+            log(f"   ! review Claude ({fn.__name__}) chưa chạy được: {str(ex)[:200]}")
+    log("   → dùng Gemini")
     try:
         return {**L.gem_vision(gem, cfg, prompt, imgs), "by": "Gemini"}
     except Exception as ex:

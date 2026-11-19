@@ -72,10 +72,12 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Cài Remotion (bộ dựng video)
+      - name: Cài Remotion (bộ dựng video) + Claude Code (bot review)
         if: steps.inbox.outputs.cook == 'true' || github.event.inputs.links != ''
         working-directory: remotion
-        run: npm ci --silent
+        run: |
+          npm ci --silent
+          npm i -g --silent @anthropic-ai/claude-code
 
       - name: Cook video Insight + gửi Telegram
         if: steps.inbox.outputs.cook == 'true' || github.event.inputs.links != ''
@@ -90,6 +92,7 @@ jobs:
           INSIGHT_VOICE: ${{ github.event.inputs.voice }}
           INSIGHT_THEMES: ${{ github.event.inputs.themes }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
           python insight.py cook --out public --force --links "${{ github.event.inputs.links }}"
 
