@@ -152,7 +152,11 @@ def tts_once(gem, cfg, text: str) -> bytes:
 def llm_json(gem, cfg, system: str, prompt: str) -> dict:
     raw = gem.text(cfg["models"]["text"], system, prompt + "\nKhông dùng dấu gạch ngang dài (— –) ở bất kỳ đâu.", json_mode=True)
     raw = re.sub(r"^```(?:json)?|```$", "", raw.strip(), flags=re.M)
-    return P.nodash(json.loads(raw))
+    data = json.loads(raw)
+    if isinstance(data, list):  # một số model bọc kết quả trong [ ... ]
+        dicts = [x for x in data if isinstance(x, dict)]
+        data = dicts[0] if len(dicts) == 1 else ({"items": data} if not dicts else dicts[0])
+    return P.nodash(data)
 
 
 # ---------------------------------------------------------------------------
