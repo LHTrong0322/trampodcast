@@ -432,7 +432,8 @@ def produce(out: Path, cfg: dict, st: dict, links: str = ""):
     if rp.exists():
         for r in json.loads(rp.read_text(encoding="utf-8"))[-3:]:
             tips += r.get("script_tips") or []
-    lab = L.prepare(src, Path("lab"), notes=tips[-6:])
+    forced = [v.strip() for v in os.getenv("INSIGHT_VOICE", "").split(",") if v.strip()]
+    lab = L.prepare(src, Path("lab"), voices=forced or None, notes=tips[-6:])
     res = R.render(lab, Path("render_out"))
     PB.publish(lab, res, Path("render_out"), data_dir=out)
     for p in st["posts"]:
