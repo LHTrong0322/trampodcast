@@ -8,9 +8,9 @@ on:
         required: false
         default: "Hải Đăng,Minh Đức,Phạm Tuyên,Quốc Tuấn,Xuân Vĩnh,Thanh Bình"
       gemini:
-        description: "Các giọng Gemini nam (tốn lượt Gemini, mỗi giọng 1 lượt)"
+        description: "Các giọng Gemini (tốn lượt Gemini, mỗi giọng 1 lượt) — để trống = không thử"
         required: false
-        default: "Charon,Orus"
+        default: ""
       no_send:
         description: "Giọng chỉ đo thông số, không gửi lại Telegram"
         required: false
