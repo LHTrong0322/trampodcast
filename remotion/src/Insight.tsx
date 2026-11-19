@@ -92,19 +92,41 @@ const PostCard: React.FC<{post: Post; delay: number}> = ({post, delay}) => {
   );
 };
 
-const IntroScene: React.FC<{sc: Scene; post: Post | null}> = ({sc, post}) => (
+const IntroScene: React.FC<{sc: Scene; post: Post | null}> = ({sc, post}) => {
+  const f = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const t = f / fps;
+  const agendaAt = Math.min(12, sc.dur * 0.4);
+  const out = interpolate(t - agendaAt, [0, 0.6], [1, 0], clamp);
+  return (
   <AbsoluteFill>
     <Backdrop img={sc.images?.[0]} />
     <AbsoluteFill style={{flexDirection: 'row', alignItems: 'center', padding: '0 110px', gap: 70}}>
-      <div style={{flex: 1, display: 'flex', flexDirection: 'column', gap: 28}}>
-        <div><Chip text={`INSIGHT · ${(sc.theme || '').toUpperCase()}`} color={C.cyan} /></div>
-        <RevealWords text={sc.title || ''} size={76} delay={6} stagger={3} maxWidth={900} />
-        {post ? <div style={{fontFamily: FONT, color: C.muted, fontSize: 30, fontWeight: 600}}>Ý tưởng gốc từ bài viết của <span style={{color: C.ink}}>@{post.handle}</span></div> : null}
+      <div style={{flex: 1, position: 'relative', height: 700}}>
+        <div style={{position: 'absolute', top: 60, display: 'flex', flexDirection: 'column', gap: 28, opacity: out, transform: `translateY(${(1 - out) * -30}px)`}}>
+          <div><Chip text={`INSIGHT · ${(sc.theme || '').toUpperCase()}`} color={C.cyan} /></div>
+          <RevealWords text={sc.title || ''} size={72} delay={6} stagger={3} maxWidth={900} />
+          {post ? <div style={{fontFamily: FONT, color: C.muted, fontSize: 30, fontWeight: 600}}>Ý tưởng gốc từ bài viết của <span style={{color: C.ink}}>@{post.handle}</span></div> : null}
+        </div>
+        {t >= agendaAt ? (
+          <Sequence from={Math.round(agendaAt * fps)} layout="none">
+            <div style={{position: 'absolute', top: 60, display: 'flex', flexDirection: 'column', gap: 26}}>
+              <div><Chip text={`${(sc.points || []).length} INSIGHT HÔM NAY`} color={C.gold} /></div>
+              {(sc.points || []).map((p, i) => {
+                const s = interpolate(f - Math.round(agendaAt * fps) - 8 - i * 10, [0, 14], [0, 1], clamp);
+                return <div key={i} style={{display: 'flex', gap: 22, alignItems: 'center', opacity: s, transform: `translateX(${(1 - s) * -40}px)`,
+                  fontFamily: FONT, fontWeight: 700, fontSize: 40, color: C.ink, maxWidth: 900}}>
+                  <span style={{fontWeight: 800, color: 'transparent', WebkitTextStroke: `2px ${C.violet}`, fontSize: 54, width: 80}}>{String(i + 1).padStart(2, '0')}</span>{p}</div>;
+              })}
+            </div>
+          </Sequence>
+        ) : null}
       </div>
       {post ? <PostCard post={post} delay={14} /> : <ImageDeck images={sc.images || []} dur={sc.dur} w={760} h={560} />}
     </AbsoluteFill>
   </AbsoluteFill>
-);
+  );
+};
 
 // ---------- SECTION ----------
 const Bullets: React.FC<{items: string[]; dur: number; fps: number}> = ({items, dur, fps}) => {
@@ -162,11 +184,14 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; mode?: st
       <Backdrop img={dataMode ? undefined : sc.images?.[0]} dim={0.86} accent={dataMode ? C.cyan : C.violet} />
       <TopBar label={sc.source ? `Insight · theo ${sc.source}` : 'Insight'} idx={sc.idx} total={sc.total} brand={brandName} logo="logo.png" />
       {/* big outlined chapter number */}
-      <div style={{position: 'absolute', left: 60, top: 120, fontFamily: FONT, fontWeight: 800, fontSize: 300, lineHeight: 1,
-        color: 'transparent', WebkitTextStroke: `3px ${C.violet}66`, opacity: numS, transform: `translateY(${(1 - numS) * 60}px)`}}>
-        {String(sc.idx).padStart(2, '0')}
+      <div style={{position: 'absolute', left: 110, top: 150, display: 'flex', alignItems: 'center', gap: 18, opacity: numS,
+        transform: `translateX(${(1 - numS) * -40}px)`, fontFamily: FONT}}>
+        <div style={{fontWeight: 800, fontSize: 96, lineHeight: 1, color: 'transparent', WebkitTextStroke: `2.5px ${C.violet}`,
+          textShadow: `0 0 30px ${C.violet}66`}}>{String(sc.idx).padStart(2, '0')}</div>
+        <div style={{width: 80 * numS, height: 4, borderRadius: 4, background: `linear-gradient(90deg, ${C.violet}, ${C.cyan})`}} />
+        <div style={{color: C.cyan, fontWeight: 700, fontSize: 24, letterSpacing: 4}}>INSIGHT</div>
       </div>
-      <div style={{position: 'absolute', left: 110, top: 250, width: 820, display: 'flex', flexDirection: 'column', gap: 40}}>
+      <div style={{position: 'absolute', left: 110, top: 290, width: 820, display: 'flex', flexDirection: 'column', gap: 40}}>
         <RevealWords text={sc.heading || ''} size={62} delay={6} stagger={3} maxWidth={820} highlight={sc.keyStat ? [sc.keyStat] : []} />
         {sc.bullets?.length ? <Bullets items={sc.bullets} dur={sc.dur} fps={fps} /> : null}
       </div>
@@ -195,10 +220,10 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; mode?: st
           </>
         )}
         {sc.keyStat ? (
-          <div style={{position: 'absolute', right: -20, top: 440, padding: '18px 30px', borderRadius: 24, background: 'rgba(12,10,24,0.92)',
+          <div style={{position: 'absolute', right: 0, top: 570, padding: '14px 30px', display: 'flex', alignItems: 'center', gap: 22, borderRadius: 24, background: 'rgba(12,10,24,0.92)',
             border: `2px solid ${C.gold}99`, boxShadow: `0 0 40px ${C.gold}44`, minWidth: 260}}>
-            <CountUp value={sc.keyStat} size={74} delay={20} />
-            <div style={{fontFamily: FONT, color: C.muted, fontWeight: 600, fontSize: 22, marginTop: 6}}>{sc.keyLabel}</div>
+            <CountUp value={sc.keyStat} size={64} delay={20} />
+            <div style={{fontFamily: FONT, color: C.muted, fontWeight: 600, fontSize: 24, width: 330, lineHeight: 1.25}}>{sc.keyLabel}</div>
           </div>
         ) : null}
       </div>

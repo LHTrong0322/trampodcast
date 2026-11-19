@@ -9,9 +9,9 @@ const Frame: React.FC<{w: number; h: number; title: string; sub?: string; childr
     boxShadow: `0 40px 120px rgba(0,0,0,0.6), 0 0 60px ${C.cyan}33`, padding: 36, boxSizing: 'border-box', fontFamily: FONT,
     display: 'flex', flexDirection: 'column', gap: 18, overflow: 'hidden'}}>
     <div style={{display: 'flex', alignItems: 'baseline', gap: 14}}>
-      <div style={{color: C.ink, fontWeight: 800, fontSize: 34}}>{title}</div>
+      <div style={{color: C.ink, fontWeight: 800, fontSize: 32, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: w - 330}}>{title}</div>
       <div style={{flex: 1}} />
-      <div style={{color: C.muted, fontWeight: 600, fontSize: 20}}>{sub || 'Dữ liệu thật · CoinGecko'}</div>
+      <div style={{color: C.muted, fontWeight: 600, fontSize: 18, whiteSpace: 'nowrap'}}>{sub || 'Dữ liệu thật · CoinGecko'}</div>
     </div>
     <div style={{flex: 1, position: 'relative'}}>{children}</div>
   </div>
@@ -32,7 +32,7 @@ const FearGreed: React.FC<{data: any; w: number; h: number}> = ({data, w, h}) =>
   const p = useP(4, 40);
   const v = now * p;
   const ang = -180 + (v / 100) * 180;
-  const R = 230;
+  const R = 210;
   const cx = (w - 72) / 2;
   const color = v < 25 ? C.red : v < 45 ? '#FF8A3D' : v < 55 ? C.gold : v < 75 ? '#9BE15D' : C.green;
   const arc = (a0: number, a1: number) => {
@@ -44,15 +44,15 @@ const FearGreed: React.FC<{data: any; w: number; h: number}> = ({data, w, h}) =>
   const week = fg[7]?.v, month = fg[29]?.v;
   return (
     <Frame w={w} h={h} title="Chỉ số Sợ hãi & Tham lam" sub="Dữ liệu thật · alternative.me">
-      <svg width={w - 72} height={330}>
+      <svg width={w - 72} height={300} style={{position: 'absolute', top: -10}}>
         {segs.map(([c, a, b], i) => <path key={i} d={arc(a as number, b as number)} stroke={c as string} strokeWidth={34} fill="none" opacity={0.85} />)}
         <line x1={cx} y1={280} x2={cx + (R - 40) * Math.cos((ang * Math.PI) / 180)} y2={280 + (R - 40) * Math.sin((ang * Math.PI) / 180)}
           stroke="#fff" strokeWidth={10} strokeLinecap="round" />
         <circle cx={cx} cy={280} r={18} fill="#fff" />
       </svg>
-      <div style={{position: 'absolute', left: 0, right: 0, top: 150, textAlign: 'center'}}>
-        <div style={{fontSize: 96, fontWeight: 800, color, textShadow: `0 0 30px ${color}`}}>{Math.round(v)}</div>
-        <div style={{fontSize: 30, fontWeight: 800, color: C.ink, marginTop: -6}}>{fg[0]?.label || ''}</div>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 285, display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 22}}>
+        <div style={{fontSize: 84, fontWeight: 800, color, textShadow: `0 0 30px ${color}`, lineHeight: 1}}>{Math.round(v)}</div>
+        <div style={{fontSize: 34, fontWeight: 800, color: C.ink}}>{fg[0]?.label || ''}</div>
       </div>
       <div style={{position: 'absolute', bottom: 0, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 50, color: C.muted, fontSize: 24, fontWeight: 600}}>
         {week != null ? <span>7 ngày trước: <b style={{color: C.ink}}>{week}</b></span> : null}
@@ -101,11 +101,12 @@ const Dominance: React.FC<{data: any; w: number; h: number}> = ({data, w, h}) =>
 // ---- heatmap of top coins ----
 const Heatmap: React.FC<{data: any; w: number; h: number}> = ({data, w, h}) => {
   const f = useCurrentFrame();
-  const mk = (data?.markets || []).filter((m: any) => !['USDT', 'USDC', 'DAI', 'USDE', 'FDUSD', 'USDS'].includes(m.sym)).slice(0, 15);
+  const mk = (data?.markets || []).filter((m: any) => !['USDT', 'USDC', 'DAI', 'USDE', 'FDUSD', 'USDS', 'PYUSD', 'USD1', 'BUIDL', 'USDTB', 'WBTC', 'STETH', 'WSTETH', 'WEETH', 'CBBTC', 'WETH', 'BSC-USD'].includes(m.sym)
+    && /^[A-Z0-9]{2,5}$/.test(m.sym)).slice(0, 15);
   const cols = 5;
-  const cw = (w - 72 - (cols - 1) * 10) / cols;
+  const cw = Math.floor((w - 84 - (cols - 1) * 10) / cols);
   return (
-    <Frame w={w} h={h} title="Toàn cảnh thị trường · 7 ngày">
+    <Frame w={w} h={h} title="Top coin · 7 ngày">
       <div style={{display: 'flex', flexWrap: 'wrap', gap: 10}}>
         {mk.map((m: any, i: number) => {
           const c = m.chg7 ?? 0;
@@ -113,7 +114,7 @@ const Heatmap: React.FC<{data: any; w: number; h: number}> = ({data, w, h}) => {
           const bg = c >= 0 ? `rgba(46,229,157,${0.18 + 0.6 * k})` : `rgba(255,84,112,${0.18 + 0.6 * k})`;
           const s = interpolate(f - i * 2, [0, 12], [0, 1], clamp);
           return (
-            <div key={m.sym} style={{width: cw, height: 128, borderRadius: 16, background: bg, display: 'flex', flexDirection: 'column',
+            <div key={m.sym} style={{width: cw, height: 112, borderRadius: 16, background: bg, display: 'flex', flexDirection: 'column',
               alignItems: 'center', justifyContent: 'center', gap: 4, opacity: s, transform: `scale(${0.8 + 0.2 * s})`}}>
               <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
                 <Img src={staticFile(`logos/${m.sym}.png`)} style={{width: 30, height: 30, borderRadius: 99}} />
@@ -131,8 +132,11 @@ const Heatmap: React.FC<{data: any; w: number; h: number}> = ({data, w, h}) => {
 // ---- coin chart ----
 const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = ({data, spec, w, h}) => {
   const sym = (spec.tickers?.[0] || 'BTC').replace('$', '').toUpperCase();
-  const m = (data?.markets || []).find((x: any) => x.sym === sym) || (data?.markets || [])[0];
-  const series: number[] = sym === 'BTC' && data?.btc_90d?.length ? data.btc_90d : m?.spark || [];
+  const coin = data?.coins?.[sym];
+  const mk = (data?.markets || []).find((x: any) => x.sym === sym);
+  const m = coin ? {sym, name: coin.name, price: coin.price} : mk;
+  const series: number[] = coin?.series || (sym === 'BTC' && data?.btc_90d?.length ? data.btc_90d : mk?.spark || []);
+  const days = coin ? coin.days : sym === 'BTC' && data?.btc_90d ? 90 : 7;
   const p = useP(4, 50);
   const W = w - 72, H = h - 200;
   if (!series.length) return <Frame w={w} h={h} title={sym}><div /></Frame>;
@@ -145,7 +149,7 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
   const chg = ((series[series.length - 1] / series[0] - 1) * 100);
   const last = pts[n - 1];
   return (
-    <Frame w={w} h={h} title={`${m?.name || sym} · ${sym === 'BTC' && data?.btc_90d ? '90' : '7'} ngày`}>
+    <Frame w={w} h={h} title={`${m?.name || sym} · ${days} ngày`}>
       <div style={{display: 'flex', alignItems: 'center', gap: 18, marginBottom: 10}}>
         <Img src={staticFile(`logos/${m?.sym || sym}.png`)} style={{width: 56, height: 56, borderRadius: 99}} />
         <div style={{color: C.ink, fontSize: 52, fontWeight: 800}}>{m ? money(m.price) : ''}</div>
@@ -212,7 +216,11 @@ export const DataPanel: React.FC<{spec: DataSpec; data: any; w: number; h: numbe
     case 'fear_greed': return <FearGreed data={data} w={w} h={h} />;
     case 'dominance': return <Dominance data={data} w={w} h={h} />;
     case 'market_heatmap': return <Heatmap data={data} w={w} h={h} />;
-    case 'coin_chart': return <CoinChart data={data} spec={spec} w={w} h={h} />;
+    case 'coin_chart': {
+      const sym = (spec.tickers?.[0] || '').replace('$', '').toUpperCase();
+      const ok = data?.coins?.[sym] || (data?.markets || []).some((x: any) => x.sym === sym);
+      return ok ? <CoinChart data={data} spec={spec} w={w} h={h} /> : <Heatmap data={data} w={w} h={h} />;
+    }
     case 'stat_compare': return (spec.items || []).length ? <StatCompare spec={spec} w={w} h={h} /> : <Heatmap data={data} w={w} h={h} />;
     case 'checklist': return (spec.items || []).length ? <Checklist spec={spec} w={w} h={h} /> : <FearGreed data={data} w={w} h={h} />;
     default: return null;

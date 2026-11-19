@@ -183,7 +183,7 @@ export const CountUp: React.FC<{value: string; delay?: number; size: number; col
     const dec = (m[2].split(/[.]/)[1] || '').length;
     const p = interpolate(f - delay, [0, 28], [0, 1], {...clamp, easing: ease});
     const v = target * p;
-    const num = dec ? v.toFixed(dec) : Math.round(v).toLocaleString('en-US');
+    const num = dec ? v.toFixed(dec) : m[2].includes(',') ? Math.round(v).toLocaleString('en-US') : String(Math.round(v));
     shown = m[1] + num + m[3];
   }
   const s = useSpring(delay, 10, 0.6);

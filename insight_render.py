@@ -108,6 +108,7 @@ def remotion(lab: Path, voice: str, mode: str, out: Path) -> Path:
                            "images": [f"img/{x}" for x in imgs.get("intro", [])]})
         elif k == "intro":
             scenes.append({**base, "type": "intro", "title": V.en_money(plan.get("title", "")), "theme": plan.get("theme", ""),
+                           "points": [V.en_money(s["heading"]) for s in secs][:6],
                            "images": [f"img/{x}" for x in imgs.get("intro", [])[1:]]})
         elif k == "outro":
             scenes.append({**base, "type": "outro", "points": [s["heading"] for s in secs][:4]})
