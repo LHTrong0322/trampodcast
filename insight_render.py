@@ -101,7 +101,7 @@ def english_subs(scenes: list, pcm: dict, text: dict) -> None:
         try:
             r = V.llm_json(gem, cfg, EN_SYSTEM, "Translate each line. Return JSON {\"en\": [...]} with EXACTLY "
                            f"{len(chunk)} items in the same order.\n" + json.dumps(chunk, ensure_ascii=False))
-            got = r.get("en") or []
+            got = r.get("en") or r.get("items") or []
         except Exception as ex:
             log(f"   ! dịch phụ đề lỗi: {ex}")
             got = []
