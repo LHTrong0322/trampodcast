@@ -230,7 +230,7 @@ def write_script(gem, cfg: dict, posts: list[dict]) -> dict:
     listing = "\n\n".join(f"[{i}] @{p.get('handle', '')} ({p.get('author', '')})"
                           + (f" — ghi chú của chủ kênh: {p['note']}" if p.get("note") else "")
                           + f":\n{p['text'][:3500]}" for i, p in enumerate(posts))
-    system = SYSTEM.format(name=ic.get("name", "Trạm Insight"), host_desc=ic.get("host_desc", "điềm đạm, sâu sắc, gần gũi"),
+    system = SYSTEM.format(name=ic.get("name", "Smart Penguin Insights"), host_desc=ic.get("host_desc", "điềm đạm, sâu sắc, gần gũi"),
                            self_word=ic.get("self_word", "mình"), audience=ic.get("audience", "mọi người"))
     return V.llm_json(gem, cfg, system, PROMPT.format(posts=listing, minutes=ic.get("target_minutes", 7),
                                                       max_sections=ic.get("max_sections", 6)))
@@ -263,7 +263,7 @@ def tts_parts(gem, cfg, parts: list[str], max_chars=3600) -> list[bytes]:
 def cook(out: Path, cfg: dict, gem, st: dict) -> dict:
     ic = cfg.get("insight") or {}
     vcfg = cfg.get("video") or {}
-    V.BRAND.update(name=ic.get("brand", "TRẠM INSIGHT").upper(), title_tag=ic.get("title_tag", "INSIGHT CRYPTO"),
+    V.BRAND.update(name=ic.get("brand", "SMART PENGUIN INSIGHTS").upper(), title_tag=ic.get("title_tag", "INSIGHT CRYPTO"),
                    outro_line=ic.get("outro_line", "Đăng ký kênh để nhận insight crypto mỗi tuần"),
                    cta_v=ic.get("cta_v", "Xem full trên YouTube · @Trong0322"), thumb_tag="{week}",
                    tg_header="Video Insight: {week}", tag_prefix="insight")

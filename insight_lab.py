@@ -202,7 +202,7 @@ def prepare(links: str, voices: str, out: Path):
     gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))
     listing = "\n\n".join(f"[{i}] @{p['handle']} ({p['author']}) — {p.get('title', '')}:\n{p['text'][:9000]}"
                           for i, p in enumerate(posts))
-    system = I.SYSTEM.format(name=ic.get("name", "Trạm Insight"), host_desc=ic.get("host_desc", "điềm đạm, sâu sắc"),
+    system = I.SYSTEM.format(name=ic.get("name", "Smart Penguin Insights"), host_desc=ic.get("host_desc", "điềm đạm, sâu sắc"),
                              self_word=ic.get("self_word", "mình"), audience=ic.get("audience", "mọi người"))
     log("② Viết kịch bản")
     plan = V.llm_json(gem, cfg, system, PROMPT.format(posts=listing, minutes=ic.get("target_minutes", 7),

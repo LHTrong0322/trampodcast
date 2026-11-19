@@ -99,9 +99,10 @@ video:
 # ---------------------------------------------------------------------
 insight:
   enabled: true
-  brand: "Trạm Insight"
+  name: "Smart Penguin Insights"   # tên kênh (AI dùng khi chào / kết)
+  brand: "Smart Penguin Insights"
   title_tag: "INSIGHT CRYPTO"
-  outro_line: "Đăng ký kênh để nhận insight crypto mỗi tuần"
+  outro_line: "Đăng ký Smart Penguin Insights để nhận insight crypto mỗi tuần"
   cta_v: "Xem full trên YouTube · @Trong0322"
   tts_provider: "gemini"      # "gemini" hoặc "vieneu" (giọng VieNeu-TTS miễn phí, không tốn lượt Gemini)
   vieneu_voice: "Mai Anh"     # giọng VieNeu khi tts_provider: "vieneu"
