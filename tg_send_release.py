@@ -9,10 +9,19 @@ from pathlib import Path
 import requests
 
 tag = sys.argv[1]
+src = sys.argv[2] if len(sys.argv) > 2 else ""
 repo = os.environ["GITHUB_REPOSITORY"]
-d = Path("rel")
-d.mkdir(exist_ok=True)
-subprocess.run(["gh", "release", "download", tag, "-R", repo, "-D", str(d), "--clobber"], check=True)
+if src:  # thư mục file dựng sẵn (từ nhánh lab-renders) → tạo Release rồi gửi
+    d = Path(src)
+    caps0 = json.loads((d / "captions.json").read_text(encoding="utf-8")) if (d / "captions.json").exists() else {}
+    files = [str(p) for p in sorted(d.iterdir()) if p.is_file()]
+    subprocess.run(["gh", "release", "delete", tag, "-y", "--cleanup-tag", "-R", repo], capture_output=True)
+    subprocess.run(["gh", "release", "create", tag, *files, "-R", repo, "--title", caps0.get("_title", tag),
+                    "--notes", caps0.get("_notes", "")], check=True)
+else:
+    d = Path("rel")
+    d.mkdir(exist_ok=True)
+    subprocess.run(["gh", "release", "download", tag, "-R", repo, "-D", str(d), "--clobber"], check=True)
 caps = json.loads((d / "captions.json").read_text(encoding="utf-8")) if (d / "captions.json").exists() else {}
 token, chat = os.environ["TELEGRAM_BOT_TOKEN"], os.environ["TELEGRAM_CHAT_ID"]
 api = f"https://api.telegram.org/bot{token}"

@@ -6,6 +6,13 @@ on:
       tag:
         description: "Tag của GitHub Release"
         required: true
+      renders_dir:
+        description: "Thư mục trong nhánh lab-renders (để trống = gửi Release có sẵn)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
 
 jobs:
   send:
@@ -13,6 +20,9 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      - name: Lấy file dựng sẵn
+        if: github.event.inputs.renders_dir != ''
+        run: git fetch -q --depth 1 origin lab-renders && git checkout -q FETCH_HEAD -- "${{ github.event.inputs.renders_dir }}"
       - name: Cài ffmpeg
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null && pip install -q requests
       - name: Gửi
@@ -20,4 +30,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python tg_send_release.py "${{ github.event.inputs.tag }}"
+        run: python tg_send_release.py "${{ github.event.inputs.tag }}" "${{ github.event.inputs.renders_dir }}"
