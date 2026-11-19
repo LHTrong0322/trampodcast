@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Img, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {AccentCtx, Backdrop, BRAND, C, Captions, Chip, clamp, CountUp, DISPLAY, FONT, Glitch, HEAD, RevealWords, useAccent, useFonts, useSpring, Word} from './ui';
+import {AccentCtx, Backdrop, BRAND, Handle, C, Captions, Chip, clamp, CountUp, DISPLAY, FONT, Glitch, HEAD, RevealWords, useAccent, useFonts, useSpring, Word} from './ui';
 import {DataPanel, DataSpec} from './data';
 
 export type Post = {author: string; handle: string; avatar?: string; cover?: string; title?: string; text?: string;
@@ -324,8 +324,7 @@ const Chrome: React.FC = () => {
   return (
     <>
       <div style={{position: 'absolute', left: 0, bottom: 0, height: 5, width: (f / durationInFrames) * width, background: ac}} />
-      <div style={{position: 'absolute', right: 40, bottom: 24, fontFamily: FONT, fontWeight: 700, fontSize: 22,
-        color: 'rgba(255,255,255,0.45)'}}>@Trong0322</div>
+      <Handle size={22} style={{position: 'absolute', right: 40, bottom: 24}} />
     </>
   );
 };

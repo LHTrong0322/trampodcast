@@ -216,3 +216,15 @@ export const Chip: React.FC<{text: string; color?: string; size?: number}> = ({t
     background: `${color}24`, border: `1.5px solid ${color}99`, color: C.ink, fontFamily: HEAD, fontWeight: 700, fontSize: size,
     letterSpacing: 1}}>{text}</div>;
 };
+
+// logo X + @Trong0322 (watermark kênh)
+export const XMark: React.FC<{size: number; color?: string}> = ({size, color = '#fff'}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" style={{display: 'inline-block', flexShrink: 0}}>
+    <path fill={color} d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
+export const Handle: React.FC<{size: number; color?: string; style?: React.CSSProperties}> = ({size, color = 'rgba(255,255,255,0.55)', style}) => (
+  <div style={{display: 'flex', alignItems: 'center', gap: size * 0.35, fontFamily: HEAD, fontWeight: 700, fontSize: size, color, ...style}}>
+    <XMark size={size * 0.9} color={color} />@Trong0322
+  </div>
+);

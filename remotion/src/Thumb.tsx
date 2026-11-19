@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Img, staticFile} from 'remotion';
-import {AccentCtx, BRAND, C, DISPLAY, FONT, HEAD, useFonts} from './ui';
+import {AccentCtx, BRAND, Handle, C, DISPLAY, FONT, HEAD, useFonts} from './ui';
 
 // Ảnh bìa YouTube 1280×720: chữ to, 1 con số, logo dự án + logo kênh
 export type ThumbProps = {text: string; stat?: string; accent?: string; projectLogo?: string | null; bg?: string | null; brand: string};
@@ -27,7 +27,7 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent = BRAND.blue, pr
           boxShadow: '0 20px 60px rgba(200,255,61,0.35)'}}>{stat}</div> : null}
         {projectLogo ? <Img src={staticFile(projectLogo)} style={{position: 'absolute', right: 110, top: 200, width: 300, height: 300, borderRadius: '50%',
           boxShadow: `0 0 0 10px ${accent}55, 0 30px 80px rgba(0,0,0,0.6)`}} /> : null}
-        <div style={{position: 'absolute', right: 40, bottom: 30, color: 'rgba(255,255,255,0.7)', fontWeight: 700, fontSize: 28}}>@Trong0322</div>
+        <Handle size={28} color='rgba(255,255,255,0.75)' style={{position: 'absolute', right: 40, bottom: 30}} />
       </AbsoluteFill>
     </AccentCtx.Provider>
   );
