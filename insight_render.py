@@ -97,6 +97,18 @@ def mix_music(voice_wav: Path, out_wav: Path, seconds: float, seed: int):
     tmp.unlink()
 
 
+def nodash(x):
+    """Không dùng dấu gạch ngang dài (— –) trên video: thay bằng dấu phẩy/hai chấm."""
+    if isinstance(x, str):
+        x = re.sub(r"\s*[—–]\s*(?=\S)", ", ", x)
+        return re.sub(r"\s*[—–]\s*", "", x).replace(" , ", ", ")
+    if isinstance(x, list):
+        return [nodash(i) for i in x]
+    if isinstance(x, dict):
+        return {k: nodash(v) for k, v in x.items()}
+    return x
+
+
 def vivid(hexc: str | None) -> str | None:
     """Chỉ nhận màu đủ tươi; màu xám/trắng/đen → None (dùng màu brand Smart Penguin)."""
     import colorsys
@@ -229,9 +241,11 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                            "data": dspec or None, "project": proj, "xquotes": verified_quotes(s, posts),
                            "terms": term_times(s, sc["words"])})
     chapters[0] = (0.0, chapters[0][1])
+    post = nodash(post)
     pinfo = {"author": post.get("author", ""), "handle": post.get("handle", ""), "avatar": post.get("avatar"),
              "cover": post.get("cover"), "title": post.get("title", ""), "likes": post.get("likes"),
              "views": post.get("views"), "retweets": post.get("retweets")} if post else None
+    scenes = nodash(scenes)
     props = {"fps": 30, "width": 1920, "height": 1080, "audio": audio_file, "duration": round(total, 3),
              "scenes": scenes, "data": data, "brand": brand, "post": pinfo}
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -259,7 +273,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
         sprops = {"fps": 30, "width": 1080, "height": 1920, "audio": f"short{n}.wav", "duration": round(len(a) / SR / 2, 3),
                   "scenes": [{**sc, "from": 0, "dur": round(len(a) / SR / 2, 3), "words": [x for x in w if x["s"] < end]}],
                   "data": data, "brand": brand, "post": pinfo,
-                  "shortTitle": V.en_money(str(shr.get(str(i)) or shr.get(i) or sc["heading"]))}
+                  "shortTitle": nodash(V.en_money(str(shr.get(str(i)) or shr.get(i) or sc["heading"])))}
         sp = out_dir / f"smart-penguin-{tag}-short{n + 1}-9x16.mp4"
         log(f"Dựng video ngắn {n + 1} · {len(a) / SR / 2:.0f}s")
         run_remotion(sprops, sp)

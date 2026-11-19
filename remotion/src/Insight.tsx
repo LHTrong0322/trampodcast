@@ -225,7 +225,7 @@ const TermCallout: React.FC<{terms: {term: string; explain: string; at: number}[
       transform: `translateY(${(1 - o) * 16}px)`, padding: '14px 22px', borderRadius: 16, background: 'rgba(200,255,61,0.10)',
       border: `1.5px solid ${BRAND.orange}88`, maxWidth: 820, fontFamily: FONT}}>
       <div style={{fontSize: 30}}>💡</div>
-      <div style={{color: C.ink, fontSize: 25, lineHeight: 1.3}}><b style={{fontFamily: HEAD, color: BRAND.orange}}>{cur.term}</b> — {cur.explain}</div>
+      <div style={{color: C.ink, fontSize: 25, lineHeight: 1.3}}><b style={{fontFamily: HEAD, color: BRAND.orange}}>{cur.term}</b>: {cur.explain}</div>
     </div>
   );
 };
