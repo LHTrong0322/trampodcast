@@ -1,0 +1,256 @@
+{
+ "title": "Crypto bước vào kỷ nguyên đầu tư giá trị: Cách chọn coin để DCA và thắng lớn",
+ "description": "Video phân tích sự chuyển dịch từ thị trường đầu cơ sang đầu tư giá trị trong crypto dựa trên kinh nghiệm của Kyle. Chúng ta sẽ cùng tìm hiểu checklist chọn lọc những dự án có thực lực thay vì những dự án rác.",
+ "theme": "Kỷ nguyên đầu tư crypto mới",
+ "hook": "Đã đến lúc chúng ta ngừng coi mọi altcoin trên thị trường đều là những cú lừa đảo",
+ "hook_stat": "90%",
+ "hook_label": "Mức sụt giảm của các dự án kém",
+ "intro": "Chào mọi người mình là Smart Penguin đây. Sau nhiều năm lăn lộn với thị trường chúng ta thường có một tâm lý PTSD đó là sợ hãi và nghi ngờ mọi thứ. Theo chia sẻ của anh Kyle một nhà đầu tư dày dạn kinh nghiệm trên X thì crypto đang bước vào một giai đoạn hoàn toàn mới. Đó là sự giao thoa giữa các đồng coin có nền tảng cơ bản tốt và sự chấp nhận của thị trường tài chính truyền thống. Trong tập hôm nay mình sẽ cùng mọi người bóc tách lý do tại sao các chiến thuật cũ không còn hiệu quả và làm sao để tìm ra những viên kim cương thực sự trong kỷ nguyên internet capital markets này.",
+ "sections": [
+  {
+   "heading": "Cái bẫy thị trường chanh và nỗi đau của nhà đầu tư",
+   "key_stat": "High FDV",
+   "key_label": "Áp lực bán từ token rác",
+   "narration": "Theo góc nhìn của Kyle thị trường crypto lâu nay giống như một thị trường chanh nơi mà thông tin bất cân xứng khiến người mua luôn mặc định mọi thứ là đồ lỏm. Những dự án có mức định giá pha loãng hoàn toàn hay còn gọi là FDV cực cao nhưng lượng cung lưu hành thực tế lại rất thấp đã tạo ra một bức tường người bán vĩnh cửu. Thêm vào đó là việc thiếu sự liên kết giữa giá trị công ty và giá trị token khiến chúng ta nắm giữ token mà không có quyền lợi thực tế nào. Kết quả là nhiều người chọn rời bỏ thị trường ngay tại đáy vì mất niềm tin vào những lời hứa về sự xuất hiện của các định chế tài chính lớn.",
+   "visual_queries": [
+    "sad trader looking at screen",
+    "broken lemon on table",
+    "financial market chart crashing",
+    "confused investor crypto"
+   ],
+   "source_ids": [
+    0
+   ],
+   "bullets": [
+    "Thị trường thiếu sự minh bạch",
+    "Token không gắn liền lợi ích",
+    "Áp lực xả hàng từ VC"
+   ],
+   "quote": "Khi người mua không thể phân biệt tốt xấu họ sẽ coi tất cả là xấu",
+   "data": {
+    "type": "market_heatmap",
+    "tickers": [],
+    "items": [],
+    "title": "Bức tranh toàn cảnh các dự án kém"
+   }
+  },
+  {
+   "heading": "Bước ngoặt từ Hyperliquid và tư duy DCA mới",
+   "key_stat": "DCA",
+   "key_label": "Chiến lược thắng dài hạn",
+   "narration": "Anh Kyle nhấn mạnh rằng Hyperliquid là một ví dụ điển hình đã thay đổi cuộc chơi. Trước đây chúng ta thường được dạy rằng mọi thứ trong crypto đều là scam và phải bán ngay khi có lời. Nhưng với những dự án có mô hình kinh doanh thực thụ và tăng trưởng bền vững chúng ta hoàn toàn có thể áp dụng chiến lược mua trung bình giá hay DCA như cách đầu tư vào chỉ số chứng khoán S&P năm trăm. Khi một doanh nghiệp crypto thực sự kiếm được tiền nó sẽ tạo ra một vòng lặp tích cực: kinh doanh tốt thu hút dòng vốn khiến giá tăng và từ đó lại giúp doanh nghiệp mở rộng hơn nữa. Đây chính là lúc chúng ta cần chuyển dịch từ tư duy đánh bạc sang tư duy cổ đông.",
+   "visual_queries": [
+    "growing green plant money",
+    "bull market chart upward",
+    "investor smiling laptop",
+    "stack of gold coins"
+   ],
+   "source_ids": [
+    0
+   ],
+   "bullets": [
+    "Thay đổi tư duy từ đánh bạc",
+    "Vòng lặp tăng trưởng tích cực",
+    "DCA vào dự án có thực lực"
+   ],
+   "quote": "Thời gian là đồng minh nếu doanh nghiệp thực sự tăng trưởng",
+   "data": {
+    "type": "coin_chart",
+    "tickers": [
+     "BTC"
+    ],
+    "items": [],
+    "title": "Sự phục hồi của các dự án top"
+   }
+  },
+  {
+   "heading": "Học cách chọn lọc tài sản theo tiêu chuẩn Ethena",
+   "key_stat": "95%",
+   "key_label": "Tăng trưởng trong mười bốn ngày",
+   "narration": "Làm sao để biết một dự án đã thoát khỏi cái mác dự án rác? Hãy nhìn vào ví dụ về Ethena mà Kyle đã phân tích. Đội ngũ của họ đã thực hiện những bước đi mang tính cách mạng: mua lại cổ phần từ các nhà đầu tư sớm để giảm áp lực xả hàng và thực hiện chương trình buyback token từ doanh thu của giao thức. Đặc biệt nhất là họ đã loại bỏ lịch unlock hàng tháng của các quỹ đầu tư mạo hiểm VC để giải tỏa nỗi lo bị xả lên đầu cộng đồng. Khi một dự án biết cách đồng nhất lợi ích giữa đội ngũ phát triển và người nắm giữ token thị trường sẽ ngay lập tức thưởng cho họ bằng sự tăng trưởng vượt bậc về giá.",
+   "visual_queries": [
+    "business team handshake",
+    "shield protecting money",
+    "rocket taking off digital",
+    "modern office finance"
+   ],
+   "source_ids": [
+    0
+   ],
+   "bullets": [
+    "Cơ chế buyback từ doanh thu",
+    "Giảm áp lực bán từ VC",
+    "Đồng nhất lợi ích token holder"
+   ],
+   "quote": "Thị trường sẽ thưởng cho những dự án biết sửa sai",
+   "data": {
+    "type": "checklist",
+    "tickers": [],
+    "items": [
+     {
+      "label": "Token Equity Alignment",
+      "value": ""
+     },
+     {
+      "label": "Revenue Buyback",
+      "value": ""
+     },
+     {
+      "label": "No monthly VC unlock",
+      "value": ""
+     },
+     {
+      "label": "Transparency",
+      "value": ""
+     }
+    ],
+    "title": "Checklist chọn dự án chất lượng"
+   }
+  }
+ ],
+ "outro": "Tổng kết lại mình muốn mọi người nhớ rằng chu kỳ tới sẽ là sân chơi của những dự án có dòng tiền thực và sự minh bạch cao. Hãy tập trung vào những team thực sự quan tâm đến giá trị token và biết cách bảo vệ nhà đầu tư cá nhân. Những chia sẻ này đều dựa trên góc nhìn của Kyle và không phải là lời khuyên đầu tư. Nếu mọi người thấy những kiến thức này hữu ích thì đừng quên nhấn đăng ký để đồng hành cùng mình trong những tập tiếp theo nhé.",
+ "shorts": [
+  1,
+  2
+ ],
+ "short_hooks": {
+  "1": "Tại sao Hyperliquid lại thay đổi tư duy DCA của chúng ta",
+  "2": "Bí mật đằng sau cú tăng trưởng chín mươi lăm phần trăm của Ethena"
+ },
+ "thumb_text": "CÁCH CHỌN COIN KHÔNG SCAM",
+ "thumb_stat": "DCA",
+ "posts": [
+  {
+   "author": "Kyle",
+   "handle": "zeroxkyle",
+   "url": "https://x.com/zeroxkyle/status/2106571278929010769",
+   "text": "PS. This article was posted for subscribers a week beforehand. Now releasing to the public. Numbers were not updated.\nBefore I start, I want to thank every single one of my 637 subscribers - thank you all for subscribing to me! Since starting subscriptions only a few months ago, I've been blessed by massive support across the world, seriously. I love you all and I hope you guys will continue making money from my trades. From inception, we have a few subscribers who have made centuries worth of their subscription back ; I await the first one who makes a milleniums' worth. (1,000 years = $420,000 USD) ; So far the highest that has been DM'ed to me is someone who made 280k (insane)\nAlso P.S - if anyone knows someone at X, would love to be put in touch - I'm experiencing problems receiving payments at the moment (so I haven't actually received a single dollar from my subscriptions, lol). But still, grateful.\nThe 2026 cycle may be one where we're finally seeing the convergence of fundamental coins and market appetite for such coins. This thesis is not new - since the dawn of the first smart contract, OG DeFi evangelists saw the vision of institutional financial rails on the blockchain. Each cycle, however, proved that it was too early each time - and that market participants only wanted number to go up.\nIn particular, the 2025 cycle was really one in which many market participants believed we had hit the \"tipping point\" - Trump had just been elected, Gary Gensler was out of office, there was a Crypto Czar in the White House - yet nothing happened.\nInstead, what we got was Trump coin siphoning billions of dollars from the crypto system, DATs engineering a double top, and 10/10 being the final nail in the coffin - the largest liquidation event in history, coming out of seemingly nowhere.\nThis came amidst a backdrop of rising equity prices especially in semicon and memory stocks, the S&P hitting ATHs, and relative economic euphoria throughout the market. The natural result was the departure of many crypto-natives from the space - myself included.\nObviously, in hindsight, the depressive token prices, shut down of many projects, countless DeFi hacks, and leaving of many capital allocators marked the bottom of the bear market. But there was something that made this bear market more brutal - it was the crush of hope as we all expected \"TradFi to come\" and all we got in return, was a president rugging a coin, and crypto people masquerading as TradFi people, selling to other crypto people, using hold-cos on the Nasdaq.\nAnd so, with this backdrop, I do believe that will be the reason why market participants will face the current state of crypto with massive PTSD ; Luckily for me, I had great friends who advised me to come back to crypto - and that was when I made this comment:\nAnd after the bull market started, this:\nAnd so, I think, at some level, we were all too early; and that the old guard of crypto market participants all have too much PTSD to believe in something again - and from a markets perspective, this is literally the \"Wall Of Worry\" every market has to climb at the beginning.\nBut at the end of the tunnel lies the dream that we have all been waiting for, the Golden Road, the final frontier. This is, unironically, the end of what we have known, and the beginning of a new era. I frankly believe that we have reached the point of \"Internet Capital Markets\" - and that the coming cycles will have a focus on the intersection of traditional markets and internet equity.\nOf course, all this is not new. I am pretty sure I said the same thing in 2025, and we have all been steadily moving towards this end-state since the creation of smart contracts. This has always been a timing problem more than a growth problem. Metrics everywhere point to the same thing: Adoption is up and to the right, even if prices aren't.\nThe Investor's Playbook\nHowever, as I mentioned above - this is all a timing problem more than a adoption problem; And so, the first thing I would like to underline with regard to approaching this market as an investor is to have longer timeframes, and be prepared for more volatility than ever before.\nThis is one of those moments where it pays to have had experience investing in traditional equity markets in the past year. As many on this website are familiar, there has been a slow descent towards hyper-gamblification of the world, and all markets are slowly trending towards speculative-asset bubbles rather than \"deep value fundamentals\" that ruled the era of Benjamin Graham.\nI highly suggest reading this piece by 0xSmac about this: Let The Bubble Wash Over You.\nIn such a market, we are seeing more and more macro headlines impact markets. We cannot go a week without Trump having a deal with Iran, the 10Y yield rising to \"numbers unseen since 1990\", a currency crisis (likely the yen), AI doomerism (or accelerationism), or geo-political uncertainty.\nAs such, it pays to be invested over long-timeframes to avoid the short-term noise. There has been and will continue to be lots of noise, but this strategy has worked well in equity markets, and I believe it is the main strategy moving forward in crypto. Hyperliquid is the first example of a coin where you can truly \"DCA and win\".\nAsset Selection\nIt's so incredibly to underline how important this is in crypto. Crypto market participants have been raised with the underlying mindset that \"everything is a scam, it will all go to 0 at some point, so you have to sell\". And for most of crypto's history, that belief was correct. However, Hyperliquid has paved the way for an asset you can truly invest over time and win.\nThis matters more than people think - it changes market dynamics greatly. A big reason why altcoins are uninvestable is because of the simple reason that people don't want to DCA something that can go down 90%. In equities, time is on your side, because the businesses underneath are expected to grow over time. That's the whole case for buying the S&P: the US economy keeps growing, so you keep buying.\nAs such, the presence of growing crypto businesses indicate a shift towards a genuinely investable asset class.  It's a positive feedback loop, where growing biz -> attracts capital for investment -> price goes up -> causes biz to grow even more. This is exactly how Internet Capital Markets are formed.\nTo add on, crypto has had structural reasons why it has been a lemon market for so long:\nLow float, high FDV tokens with huge unlocks (selling pressure) that drip supply into the market for years. Even if the project does fine, there's a permanent wall of sellers.\nNot profitable - no product-market fit, and so no growth over-time - just flash in the pan narratives that fit a bubble narrative, but here today, gone tomorrow\nLack of token-equity alignment. Whatever value the business made went to the company's equity, and the token was basically a marketing tool. Holding it gave you no real claim on what the business earned.\nNo disclosure, no accountability. In equities, companies have to report revenue, insider sales, and risks, and there are consequences for lying. In crypto, insiders, VCs, and market makers know the unlock schedules, OTC deals, and real numbers. Teams can dump, fake metrics, or quietly walk away with basically no recourse. When buyers can't tell the good projects from the bad, they assume everything is bad.\nWhat's changing\nAll of the above coalesced into the moment we're seeing today. We have seemed to reach a tipping point, where the lemon market problem in crypto has a visible fix. Market participants for the most part have stricter requirements on what to invest, and this forms a feedback loop for founder-operators to know what to fix. Example:\nThe Ethena team did the following:\nBuyout of early investors (dumpers)\nAlignment of Token & Equity:  IP and ownership of value accrued by the protocol is assigned to the Foundation exclusively and governed by token holders\nRevenue Buybacks: Governance proposal where revenue will be used to programmatically buy back the ENA token.\nRemoval of monthly VC unlocks: The Ethena Foundation and lead investors have agreed to eliminate future overhang associated with monthly VC investor unlocks by releasing unvested tokens.\nAnd the market has rewarded Ethena for it - ENA is up 95% in the past 14 days. Thus, a postive-feedback loop is formed:\nAnd so, asset selection is pretty clear: buy the ones that have fixed the lemon problems, and avoid the ones that haven't. This is the checklist I have. These are not hard and fast rules, but I have observed that the teams, should at minimum, be following most of these, if not all:\nHave token alignment. The market has a few interesting experiments where they have allowed equity if done well - see Venice for a good example. At minimum, what market participants need to see is that the team A) cares about the token, and B) doesn’t siphon value away from the token to an equity vehicle somewhere\nHave product market fit and profitability. This underscores what makes something attractive to capital allocators - the pursuit of growth and profitability successfully. Intuitively, people only want to buy assets that go up, and what goes up is either an expansion of multiple, or expansion of earnings. For businesses, the multiple is mostly out of your control. It depends on market mood, narratives, and rates. Earnings are the part that compounds. Multiples depend on narratives which rotate quickly - but growing earnings give people a reason to hold\nToken supply. There is no one size fits all solution to this - there are tokens with little overhang doing badly, and some overhang doing well. But generally, too much overhang is a bad thing as it limits upside. Some overhang is okay, it seems. The best teams go further to fix it, like Ethena buying out its investors.\nSome nice to haves:\nBuybacks. I don’t think the amount of buybacks matter unless you’re Hyperliquid and doing huge amounts. For most protocols, they would be better re-investing that money instead. Buybacks for the most part signal to market participants that founders are taking the token seriously. There is basically a sweet spot to do with buybacks - not enough, and you’re burning money. Too much, your business can’t grow. And on its own - it’s pretty worthless. The market generally can sniff these things out\nTransparency & IR. I’d say this should be mandatory. It just makes sense: if you want people to hold your token, there should be some clear communication on what it does. Public companies do this by default. Quarterly earnings, investor calls, etc. It's simply the cost of asking people for their capital.\nThere might be other factors I’m missing, but these come to me off the top of my head. And so - putting it all together - we are starting to see the crypto market heal. Real businesses are emerging, teams are fixing their tokens, and the market is finally rewarding quality over hype. For the first time, digital assets are becoming something you can hold for longer, not just trade. But this only works if you hold the right thigs. The market still has many lemons, so asset selection matters more than ever. But for those with a good eye, the playbook is simple:\nBuy good assets, hold them through the noise, and let time do the work.\nThe Best Food At The Buffet\nNow comes the good part - my ranking of what I think is the best food at the buffet. The spread is as such - a bunch of sashimi, but one of them is a bluefin tuna cheek, while the rest are just normal gas station tuna. My job is to figure out which one is the bluefin.\nIt’s easier to go top-down for this. Thematically, there has only been a few verticals that have seen strong product-market fit. And so, this is my tier list. I did not include verticals that have no liquid token to bet on (e.g Prediction Markets).\nAnd I have an additional section for my thoughts on the on-chain market. The TLDR is I think it’s not even worth the time to be on",
+   "title": "The Liquid Investors Buffet ",
+   "likes": 256,
+   "retweets": 23,
+   "views": 25663,
+   "created": "Sun Oct 04 02:25:05 +0000 2026",
+   "followers": 62446,
+   "avatar": "img/avatar.jpg",
+   "cover": "img/cover.jpg"
+  }
+ ],
+ "images": {
+  "intro": [
+   "intro_0.jpg",
+   "intro_1.jpg",
+   "intro_2.jpg"
+  ],
+  "s0": [
+   "s0_2.jpg",
+   "intro_1.jpg",
+   "s0_3.jpg",
+   "intro_2.jpg"
+  ],
+  "s0v": [
+   "s0v_0.jpg",
+   "s0v_1.jpg",
+   "s0v_2.jpg",
+   "s0v_3.jpg"
+  ],
+  "s1": [
+   "s1_1.jpg",
+   "s1_0.jpg",
+   "s1_3.jpg",
+   "s1_5.jpg"
+  ],
+  "s1v": [
+   "s1v_0.jpg",
+   "s1v_1.jpg",
+   "s1v_2.jpg",
+   "s1v_3.jpg"
+  ],
+  "s2": [
+   "s2_0.jpg",
+   "s2_3.jpg",
+   "intro_0.jpg",
+   "s1_5.jpg"
+  ],
+  "s2v": [
+   "s2v_0.jpg",
+   "s2v_1.jpg",
+   "s2v_2.jpg",
+   "s2v_3.jpg"
+  ]
+ },
+ "image_credits": {
+  "intro_0.jpg": "MichaelWuensch / Pixabay",
+  "intro_1.jpg": "PriismaDesign / Pixabay",
+  "intro_2.jpg": "Michael_Pointner / Pixabay",
+  "intro_3.jpg": "Pixelkult / Pixabay",
+  "intro_4.jpg": "MichaelWuensch / Pixabay",
+  "s0_0.jpg": "Pexels / Pixabay",
+  "s0_1.jpg": "JillWellington / Pixabay",
+  "s0_2.jpg": "Pexels / Pixabay",
+  "s0_3.jpg": "MichaelWuensch / Pixabay",
+  "s0_4.jpg": "TieuBaoTruong / Pixabay",
+  "s0_5.jpg": "geralt / Pixabay",
+  "s0v_0.jpg": "Bessi / Pixabay",
+  "s0v_1.jpg": "jan_photo / Pixabay",
+  "s0v_2.jpg": "AbsolutVision / Pixabay",
+  "s0v_3.jpg": "TheDigitalArtist / Pixabay",
+  "s1_0.jpg": "Pexels / Pixabay",
+  "s1_1.jpg": "Tumisu / Pixabay",
+  "s1_2.jpg": "StartupStockPhotos / Pixabay",
+  "s1_3.jpg": "soofiatailor / Pixabay",
+  "s1_4.jpg": "motlancuoi2018 / Pixabay",
+  "s1_5.jpg": "TheDigitalArtist / Pixabay",
+  "s1v_0.jpg": "TeeFarm / Pixabay",
+  "s1v_1.jpg": "chartlogic / Pixabay",
+  "s1v_2.jpg": "StockSnap / Pixabay",
+  "s1v_3.jpg": "PublicDomainPictures / Pixabay",
+  "s2_0.jpg": "089photoshootings / Pixabay",
+  "s2_1.jpg": "HelenJank / Pixabay",
+  "s2_2.jpg": "IqbalStock / Pixabay",
+  "s2_3.jpg": "ChiemSeherin / Pixabay",
+  "s2_4.jpg": "dangquangn / Pixabay",
+  "s2_5.jpg": "LoboStudioHamburg / Pixabay",
+  "s2v_0.jpg": "ZaidAysh_Graphix / Pixabay",
+  "s2v_1.jpg": "15414483 / Pixabay",
+  "s2v_2.jpg": "WikiImages / Pixabay",
+  "s2v_3.jpg": "michasekdzi / Pixabay"
+ },
+ "parts": [
+  {
+   "key": "hook",
+   "text": "Đã đến lúc chúng ta ngừng coi mọi altcoin trên thị trường đều là những cú lừa đảo"
+  },
+  {
+   "key": "intro",
+   "text": "Chào mọi người mình là Smart Penguin đây. Sau nhiều năm lăn lộn với thị trường chúng ta thường có một tâm lý PTSD đó là sợ hãi và nghi ngờ mọi thứ. Theo chia sẻ của anh Kyle một nhà đầu tư dày dạn kinh nghiệm trên X thì crypto đang bước vào một giai đoạn hoàn toàn mới. Đó là sự giao thoa giữa các đồng coin có nền tảng cơ bản tốt và sự chấp nhận của thị trường tài chính truyền thống. Trong tập hôm nay mình sẽ cùng mọi người bóc tách lý do tại sao các chiến thuật cũ không còn hiệu quả và làm sao để tìm ra những viên kim cương thực sự trong kỷ nguyên internet capital markets này."
+  },
+  {
+   "key": "s0",
+   "text": "Theo góc nhìn của Kyle thị trường crypto lâu nay giống như một thị trường chanh nơi mà thông tin bất cân xứng khiến người mua luôn mặc định mọi thứ là đồ lỏm. Những dự án có mức định giá pha loãng hoàn toàn hay còn gọi là FDV cực cao nhưng lượng cung lưu hành thực tế lại rất thấp đã tạo ra một bức tường người bán vĩnh cửu. Thêm vào đó là việc thiếu sự liên kết giữa giá trị công ty và giá trị token khiến chúng ta nắm giữ token mà không có quyền lợi thực tế nào. Kết quả là nhiều người chọn rời bỏ thị trường ngay tại đáy vì mất niềm tin vào những lời hứa về sự xuất hiện của các định chế tài chính lớn."
+  },
+  {
+   "key": "s1",
+   "text": "Anh Kyle nhấn mạnh rằng Hyperliquid là một ví dụ điển hình đã thay đổi cuộc chơi. Trước đây chúng ta thường được dạy rằng mọi thứ trong crypto đều là scam và phải bán ngay khi có lời. Nhưng với những dự án có mô hình kinh doanh thực thụ và tăng trưởng bền vững chúng ta hoàn toàn có thể áp dụng chiến lược mua trung bình giá hay DCA như cách đầu tư vào chỉ số chứng khoán S&P năm trăm. Khi một doanh nghiệp crypto thực sự kiếm được tiền nó sẽ tạo ra một vòng lặp tích cực: kinh doanh tốt thu hút dòng vốn khiến giá tăng và từ đó lại giúp doanh nghiệp mở rộng hơn nữa. Đây chính là lúc chúng ta cần chuyển dịch từ tư duy đánh bạc sang tư duy cổ đông."
+  },
+  {
+   "key": "s2",
+   "text": "Làm sao để biết một dự án đã thoát khỏi cái mác dự án rác? Hãy nhìn vào ví dụ về Ethena mà Kyle đã phân tích. Đội ngũ của họ đã thực hiện những bước đi mang tính cách mạng: mua lại cổ phần từ các nhà đầu tư sớm để giảm áp lực xả hàng và thực hiện chương trình buyback token từ doanh thu của giao thức. Đặc biệt nhất là họ đã loại bỏ lịch unlock hàng tháng của các quỹ đầu tư mạo hiểm VC để giải tỏa nỗi lo bị xả lên đầu cộng đồng. Khi một dự án biết cách đồng nhất lợi ích giữa đội ngũ phát triển và người nắm giữ token thị trường sẽ ngay lập tức thưởng cho họ bằng sự tăng trưởng vượt bậc về giá."
+  },
+  {
+   "key": "outro",
+   "text": "Tổng kết lại mình muốn mọi người nhớ rằng chu kỳ tới sẽ là sân chơi của những dự án có dòng tiền thực và sự minh bạch cao. Hãy tập trung vào những team thực sự quan tâm đến giá trị token và biết cách bảo vệ nhà đầu tư cá nhân. Những chia sẻ này đều dựa trên góc nhìn của Kyle và không phải là lời khuyên đầu tư. Nếu mọi người thấy những kiến thức này hữu ích thì đừng quên nhấn đăng ký để đồng hành cùng mình trong những tập tiếp theo nhé."
+  },
+  {
+   "key": "sh1",
+   "text": "Tại sao Hyperliquid lại thay đổi tư duy DCA của chúng ta"
+  },
+  {
+   "key": "sh2",
+   "text": "Bí mật đằng sau cú tăng trưởng chín mươi lăm phần trăm của Ethena"
+  }
+ ],
+ "voices": {
+  "vieneu:Hải Đăng": "vieneu_Hải_Đăng",
+  "gemini:Ludo": "gemini_Ludo"
+ }
+}

@@ -1,0 +1,2418 @@
+{
+ "code": 200,
+ "message": "OK",
+ "tweet": {
+  "url": "https://x.com/zeroxkyle/status/2106571278929010769",
+  "id": "2106571278929010769",
+  "text": "Investors this cycle should focus on real, growing fundamentals and ignore all else. \n\nMany teams will try and use partnerships with big names as pretense to pump their token.\n\nAlas, there is only one metric to rule them all. https://x.com/i/article/2106556612332978176",
+  "raw_text": {
+   "text": "Investors this cycle should focus on real, growing fundamentals and ignore all else. \n\nMany teams will try and use partnerships with big names as pretense to pump their token.\n\nAlas, there is only one metric to rule them all. https://t.co/FLcb4Z8B2N",
+   "display_text_range": [
+    0,
+    249
+   ],
+   "facets": [
+    {
+     "type": "url",
+     "indices": [
+      226,
+      249
+     ],
+     "original": "https://t.co/FLcb4Z8B2N",
+     "replacement": "https://x.com/i/article/2106556612332978176",
+     "display": "x.com/i/article/2106…"
+    }
+   ]
+  },
+  "author": {
+   "screen_name": "zeroxkyle",
+   "url": "https://x.com/zeroxkyle",
+   "id": "4110654312",
+   "followers": 62446,
+   "following": 324,
+   "likes": 33109,
+   "media_count": 883,
+   "name": "Kyle",
+   "description": "discretionary investor | sub for investment analysis\n\nnot financial advice",
+   "raw_description": {
+    "text": "discretionary investor | sub for investment analysis\n\nnot financial advice",
+    "facets": []
+   },
+   "location": "my website",
+   "banner_url": "https://pbs.twimg.com/profile_banners/4110654312/1681523477",
+   "avatar_url": "https://pbs.twimg.com/profile_images/2009079698765303808/Pch25ugN_200x200.jpg",
+   "joined": "Tue Nov 03 07:58:32 +0000 2015",
+   "protected": false,
+   "website": {
+    "url": "https://grandlineresearch.com/terminal",
+    "display_url": "grandlineresearch.com/terminal"
+   },
+   "verification": {
+    "verified": true,
+    "verified_at": null,
+    "type": "individual"
+   },
+   "avatar_color": null
+  },
+  "replies": 23,
+  "retweets": 23,
+  "likes": 256,
+  "bookmarks": 232,
+  "quotes": 8,
+  "created_at": "Sun Oct 04 02:25:05 +0000 2026",
+  "created_timestamp": 1791080705,
+  "possibly_sensitive": false,
+  "views": 25663,
+  "is_note_tweet": false,
+  "community_note": null,
+  "lang": "en",
+  "replying_to": null,
+  "replying_to_status": null,
+  "article": {
+   "created_at": "2026-10-04T02:25:05.000Z",
+   "modified_at": "2026-10-04T02:25:05.000Z",
+   "id": "2106556612332978176",
+   "title": "The Liquid Investors Buffet ",
+   "preview_text": "PS. This article was posted for subscribers a week beforehand. Now releasing to the public. Numbers were not updated. \n \nBefore I start, I want to thank every single one of my 637 subscribers - thank",
+   "cover_media": {
+    "id": "QXBpTWVkaWE6DAAFCgABHTwHRVwacAIKAAIAAAAA9QObaAAA",
+    "media_id": "2106566720181923842",
+    "media_info": {
+     "__typename": "ApiImage",
+     "color_info": {
+      "palette": [
+       {
+        "percentage": 93.28,
+        "rgb": {
+         "blue": 255,
+         "green": 255,
+         "red": 255
+        }
+       },
+       {
+        "percentage": 4.01,
+        "rgb": {
+         "blue": 212,
+         "green": 177,
+         "red": 176
+        }
+       },
+       {
+        "percentage": 2.54,
+        "rgb": {
+         "blue": 170,
+         "green": 170,
+         "red": 242
+        }
+       },
+       {
+        "percentage": 0.15,
+        "rgb": {
+         "blue": 165,
+         "green": 97,
+         "red": 97
+        }
+       }
+      ]
+     },
+     "original_img_height": 778,
+     "original_img_url": "https://pbs.twimg.com/media/HTwHRVwacAIDbQu.jpg",
+     "original_img_width": 1946
+    },
+    "media_key": "3_2106566720181923842"
+   },
+   "content": {
+    "blocks": [
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 118,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "e7ulr",
+      "text": "PS. This article was posted for subscribers a week beforehand. Now releasing to the public. Numbers were not updated. ",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 0,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "7d2co",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 569,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "4imhc",
+      "text": "Before I start, I want to thank every single one of my 637 subscribers - thank you all for subscribing to me! Since starting subscriptions only a few months ago, I've been blessed by massive support across the world, seriously. I love you all and I hope you guys will continue making money from my trades. From inception, we have a few subscribers who have made centuries worth of their subscription back ; I await the first one who makes a milleniums' worth. (1,000 years = $420,000 USD) ; So far the highest that has been DM'ed to me is someone who made 280k (insane)",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 229,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "7840i",
+      "text": "Also P.S - if anyone knows someone at X, would love to be put in touch - I'm experiencing problems receiving payments at the moment (so I haven't actually received a single dollar from my subscriptions, lol). But still, grateful.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 1,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "acn48",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "cbqsb",
+      "text": "The 2026 cycle may be one where we're finally seeing the convergence of fundamental coins and market appetite for such coins. This thesis is not new - since the dawn of the first smart contract, OG DeFi evangelists saw the vision of institutional financial rails on the blockchain. Each cycle, however, proved that it was too early each time - and that market participants only wanted number to go up.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "bq6qj",
+      "text": "In particular, the 2025 cycle was really one in which many market participants believed we had hit the \"tipping point\" - Trump had just been elected, Gary Gensler was out of office, there was a Crypto Czar in the White House - yet nothing happened.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "cdb03",
+      "text": "Instead, what we got was Trump coin siphoning billions of dollars from the crypto system, DATs engineering a double top, and 10/10 being the final nail in the coffin - the largest liquidation event in history, coming out of seemingly nowhere.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 2,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "2pnou",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "fh71v",
+      "text": "This came amidst a backdrop of rising equity prices especially in semicon and memory stocks, the S&P hitting ATHs, and relative economic euphoria throughout the market. The natural result was the departure of many crypto-natives from the space - myself included.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "2tg5q",
+      "text": "Obviously, in hindsight, the depressive token prices, shut down of many projects, countless DeFi hacks, and leaving of many capital allocators marked the bottom of the bear market. But there was something that made this bear market more brutal - it was the crush of hope as we all expected \"TradFi to come\" and all we got in return, was a president rugging a coin, and crypto people masquerading as TradFi people, selling to other crypto people, using hold-cos on the Nasdaq.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "aam0h",
+      "text": "And so, with this backdrop, I do believe that will be the reason why market participants will face the current state of crypto with massive PTSD ; Luckily for me, I had great friends who advised me to come back to crypto - and that was when I made this comment:",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 3,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "cj6jb",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "c5634",
+      "text": "And after the bull market started, this:",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 4,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "7n4ta",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "bc5tl",
+      "text": "And so, I think, at some level, we were all too early; and that the old guard of crypto market participants all have too much PTSD to believe in something again - and from a markets perspective, this is literally the \"Wall Of Worry\" every market has to climb at the beginning.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "2um5d",
+      "text": "But at the end of the tunnel lies the dream that we have all been waiting for, the Golden Road, the final frontier. This is, unironically, the end of what we have known, and the beginning of a new era. I frankly believe that we have reached the point of \"Internet Capital Markets\" - and that the coming cycles will have a focus on the intersection of traditional markets and internet equity.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 5,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "8mggi",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "8boc9",
+      "text": "Of course, all this is not new. I am pretty sure I said the same thing in 2025, and we have all been steadily moving towards this end-state since the creation of smart contracts. This has always been a timing problem more than a growth problem. Metrics everywhere point to the same thing: Adoption is up and to the right, even if prices aren't.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 6,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "frusg",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 7,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "7oevc",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 8,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "ej7jh",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 9,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "10b9",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "9l72e",
+      "text": "The Investor's Playbook",
+      "type": "header-one"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 77,
+        "offset": 201,
+        "style": "Bold"
+       }
+      ],
+      "key": "ehd8k",
+      "text": "However, as I mentioned above - this is all a timing problem more than a adoption problem; And so, the first thing I would like to underline with regard to approaching this market as an investor is to have longer timeframes, and be prepared for more volatility than ever before.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 10,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "elrq2",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "cp6l4",
+      "text": "This is one of those moments where it pays to have had experience investing in traditional equity markets in the past year. As many on this website are familiar, there has been a slow descent towards hyper-gamblification of the world, and all markets are slowly trending towards speculative-asset bubbles rather than \"deep value fundamentals\" that ruled the era of Benjamin Graham.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 11,
+        "length": 29,
+        "offset": 58
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "arki",
+      "text": "I highly suggest reading this piece by 0xSmac about this: Let The Bubble Wash Over You.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 12,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "7his8",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "bn77t",
+      "text": "In such a market, we are seeing more and more macro headlines impact markets. We cannot go a week without Trump having a deal with Iran, the 10Y yield rising to \"numbers unseen since 1990\", a currency crisis (likely the yen), AI doomerism (or accelerationism), or geo-political uncertainty.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 75,
+        "offset": 8,
+        "style": "Bold"
+       }
+      ],
+      "key": "4jhjd",
+      "text": "As such, it pays to be invested over long-timeframes to avoid the short-term noise. There has been and will continue to be lots of noise, but this strategy has worked well in equity markets, and I believe it is the main strategy moving forward in crypto. Hyperliquid is the first example of a coin where you can truly \"DCA and win\".",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 13,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "d8dh",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "fitcj",
+      "text": "Asset Selection",
+      "type": "header-one"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "e532q",
+      "text": "It's so incredibly to underline how important this is in crypto. Crypto market participants have been raised with the underlying mindset that \"everything is a scam, it will all go to 0 at some point, so you have to sell\". And for most of crypto's history, that belief was correct. However, Hyperliquid has paved the way for an asset you can truly invest over time and win.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "8a275",
+      "text": "This matters more than people think - it changes market dynamics greatly. A big reason why altcoins are uninvestable is because of the simple reason that people don't want to DCA something that can go down 90%. In equities, time is on your side, because the businesses underneath are expected to grow over time. That's the whole case for buying the S&P: the US economy keeps growing, so you keep buying.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 33,
+        "offset": 78,
+        "style": "Bold"
+       }
+      ],
+      "key": "47ncb",
+      "text": "As such, the presence of growing crypto businesses indicate a shift towards a genuinely investable asset class.  It's a positive feedback loop, where growing biz -> attracts capital for investment -> price goes up -> causes biz to grow even more. This is exactly how Internet Capital Markets are formed.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 14,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "14rgi",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "5qh13",
+      "text": "To add on, crypto has had structural reasons why it has been a lemon market for so long:",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "bd86k",
+      "text": "Low float, high FDV tokens with huge unlocks (selling pressure) that drip supply into the market for years. Even if the project does fine, there's a permanent wall of sellers.",
+      "type": "ordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "6ut12",
+      "text": "Not profitable - no product-market fit, and so no growth over-time - just flash in the pan narratives that fit a bubble narrative, but here today, gone tomorrow",
+      "type": "ordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "cjeeo",
+      "text": "Lack of token-equity alignment. Whatever value the business made went to the company's equity, and the token was basically a marketing tool. Holding it gave you no real claim on what the business earned.",
+      "type": "ordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "bfc6i",
+      "text": "No disclosure, no accountability. In equities, companies have to report revenue, insider sales, and risks, and there are consequences for lying. In crypto, insiders, VCs, and market makers know the unlock schedules, OTC deals, and real numbers. Teams can dump, fake metrics, or quietly walk away with basically no recourse. When buyers can't tell the good projects from the bad, they assume everything is bad.",
+      "type": "ordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "2vro8",
+      "text": "What's changing",
+      "type": "header-one"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "ajr31",
+      "text": "All of the above coalesced into the moment we're seeing today. We have seemed to reach a tipping point, where the lemon market problem in crypto has a visible fix. Market participants for the most part have stricter requirements on what to invest, and this forms a feedback loop for founder-operators to know what to fix. Example:",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 15,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "a32gn",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "5ai25",
+      "text": "The Ethena team did the following:",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "ammkv",
+      "text": "Buyout of early investors (dumpers)",
+      "type": "ordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "flpat",
+      "text": "Alignment of Token & Equity:  IP and ownership of value accrued by the protocol is assigned to the Foundation exclusively and governed by token holders",
+      "type": "ordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "c914g",
+      "text": "Revenue Buybacks: Governance proposal where revenue will be used to programmatically buy back the ENA token.",
+      "type": "ordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "8m5s8",
+      "text": "Removal of monthly VC unlocks: The Ethena Foundation and lead investors have agreed to eliminate future overhang associated with monthly VC investor unlocks by releasing unvested tokens.",
+      "type": "ordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "d7gn4",
+      "text": "And the market has rewarded Ethena for it - ENA is up 95% in the past 14 days. Thus, a postive-feedback loop is formed:",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 16,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "ba3ho",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "919pq",
+      "text": "And so, asset selection is pretty clear: buy the ones that have fixed the lemon problems, and avoid the ones that haven't. This is the checklist I have. These are not hard and fast rules, but I have observed that the teams, should at minimum, be following most of these, if not all:",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "67ln5",
+      "text": "Have token alignment. The market has a few interesting experiments where they have allowed equity if done well - see Venice for a good example. At minimum, what market participants need to see is that the team A) cares about the token, and B) doesn’t siphon value away from the token to an equity vehicle somewhere",
+      "type": "ordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "dufr",
+      "text": "Have product market fit and profitability. This underscores what makes something attractive to capital allocators - the pursuit of growth and profitability successfully. Intuitively, people only want to buy assets that go up, and what goes up is either an expansion of multiple, or expansion of earnings. For businesses, the multiple is mostly out of your control. It depends on market mood, narratives, and rates. Earnings are the part that compounds. Multiples depend on narratives which rotate quickly - but growing earnings give people a reason to hold",
+      "type": "ordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "1r1q1",
+      "text": "Token supply. There is no one size fits all solution to this - there are tokens with little overhang doing badly, and some overhang doing well. But generally, too much overhang is a bad thing as it limits upside. Some overhang is okay, it seems. The best teams go further to fix it, like Ethena buying out its investors.",
+      "type": "ordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "95p40",
+      "text": "Some nice to haves:",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 29,
+        "offset": 205,
+        "style": "Bold"
+       }
+      ],
+      "key": "4mh5q",
+      "text": "Buybacks. I don’t think the amount of buybacks matter unless you’re Hyperliquid and doing huge amounts. For most protocols, they would be better re-investing that money instead. Buybacks for the most part signal to market participants that founders are taking the token seriously. There is basically a sweet spot to do with buybacks - not enough, and you’re burning money. Too much, your business can’t grow. And on its own - it’s pretty worthless. The market generally can sniff these things out",
+      "type": "ordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "c9jk6",
+      "text": "Transparency & IR. I’d say this should be mandatory. It just makes sense: if you want people to hold your token, there should be some clear communication on what it does. Public companies do this by default. Quarterly earnings, investor calls, etc. It's simply the cost of asking people for their capital.",
+      "type": "ordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "6rncv",
+      "text": "There might be other factors I’m missing, but these come to me off the top of my head. And so - putting it all together - we are starting to see the crypto market heal. Real businesses are emerging, teams are fixing their tokens, and the market is finally rewarding quality over hype. For the first time, digital assets are becoming something you can hold for longer, not just trade. But this only works if you hold the right thigs. The market still has many lemons, so asset selection matters more than ever. But for those with a good eye, the playbook is simple:",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 71,
+        "offset": 0,
+        "style": "Bold"
+       }
+      ],
+      "key": "6chir",
+      "text": "Buy good assets, hold them through the noise, and let time do the work.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "7gvcc",
+      "text": "The Best Food At The Buffet",
+      "type": "header-one"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "cj1cd",
+      "text": "Now comes the good part - my ranking of what I think is the best food at the buffet. The spread is as such - a bunch of sashimi, but one of them is a bluefin tuna cheek, while the rest are just normal gas station tuna. My job is to figure out which one is the bluefin.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "aps30",
+      "text": "It’s easier to go top-down for this. Thematically, there has only been a few verticals that have seen strong product-market fit. And so, this is my tier list. I did not include verticals that have no liquid token to bet on (e.g Prediction Markets).",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 17,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "269tg",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "fdaag",
+      "text": "And I have an additional section for my thoughts on the on-chain market. The TLDR is I think it’s not even worth the time to be on-chain besides a few good coins. I’ve written it in a tweet here - but I’ll repeat it again for good measure:",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 18,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "bprr1",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "2deaq",
+      "text": "What we're seeing on-chain is, very simply, the downstream effect of AI-enabled software. AI is incredibly good for small, niche projects that are fast to build and fast to ship, but much harder to roll out across an entire enterprise. So we get this weird, diametric effect: the productivity gains aren't showing up at the top, among the largest corporations, but they are showing up at the bottom, among entrepreneurs shipping fast. The result, again, is a more K-shaped world.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "ueeh",
+      "text": "On-chain, this has made the lemon problem worse than ever. Previously, you could at least say \"they had a good website, they clearly put effort into this.\" Now effort is free. Every sub-$10M coin looks polished on the surface, whether it's run by a real team or a scammer, and it's nearly impossible to tell the difference. Ideas are cheap too. After Orbio hit all-time highs, we saw 20 different inference markets pop up, and we'll likely see 200 more, because anyone can throw Orbio's website into an AI and say \"replicate this for me.\"",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "cgp8m",
+      "text": "And so, the edge on-chain can no longer come from the software itself. It has to come from the team: who they are, and how well they deliver. Founder quality is everything. This is also why I think alts are much easier than on-chain right now. To reach a certain market cap, a project has to have already proven itself in some way. It's far easier to dig through 100 alts above $1B and figure out which are good, than to dig through 10,000 sub-$10M coins where a new \"good idea\" launches every hour.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "7hk3d",
+      "text": "Breaking Down S & A Tier",
+      "type": "header-one"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "auf3k",
+      "text": "Inference",
+      "type": "header-two"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 7,
+        "offset": 67,
+        "style": "Italic"
+       }
+      ],
+      "key": "bmvn4",
+      "text": "Inference is the only crypto vertical with real demand coming from outside crypto. People and businesses pay for AI because they need it, not because of token incentives. As open-weight models get cheaper and better, the cost of serving AI falls, which lets businesses compete on price and privacy with the big labs.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 4,
+        "offset": 310,
+        "style": "Bold"
+       }
+      ],
+      "key": "5r12o",
+      "text": "It's also the one theme normie retail understands instantly. Everyone uses AI; and looking at the hockey stick growth on certain assets, there is true product market fit here. I believe inference demand is in Jevon’s Paradox mode atm and all the data points towards that. All the data also points to the shift away from frontier model intelligence towards other forms of intelligence, including Open Source",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 65,
+        "offset": 237,
+        "style": "Bold"
+       }
+      ],
+      "key": "ble6e",
+      "text": "While Open Source could come under regulatory scrutiny, there is no doubt that we have already reached a general sense of intelligence across many models that can satisfy 99% of all work. So, honestly, no one has to use frontier models. People want to use AI, and don’t care about which model they use.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 77,
+        "offset": 78,
+        "style": "Bold"
+       }
+      ],
+      "key": "1eami",
+      "text": "And I can’t believe I’m saying this - so if you put two and two together, and want to bet on a good AI product, and want to bet on inference demand growing, there is literally only crypto tokens to bet on. Semis are a second order effect of that demand growing that has been priced in. Anthropic and OpenAI are private. You COULD long ZhiPu, but HK markets don’t have the smae premium. Yet there are coins which literally let you bet on the same thematic narrative. Crypto is blessed with one of the best vehicles to bet on growing inference demand.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "1iirp",
+      "text": "Top Choice: VVV & ORBIO Others: NEAR & CHIP",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "fie19",
+      "text": "Recommended Readings:",
+      "type": "unstyled"
+     },
+     {
+      "data": {
+       "urls": [
+        {
+         "fromIndex": 0,
+         "text": "https://www.galaxy.com/insights/research/inference-capital-markets-ai-compute-gpu-futures-onchain-crypto",
+         "toIndex": 104
+        }
+       ]
+      },
+      "entityRanges": [
+       {
+        "key": 19,
+        "length": 104,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "97tq3",
+      "text": "https://www.galaxy.com/insights/research/inference-capital-markets-ai-compute-gpu-futures-onchain-crypto",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "2eqop",
+      "text": "Tokenized Stocks & RWAs",
+      "type": "header-two"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "87ir6",
+      "text": "This is the biggest opportunity on the board simply because of how small it still is. The US exported the dollar through stablecoins and got to around $300B. Tokenized stocks are at about $2.5B, sitting against a $69T US stock market. Regulators are opening the door, a pipeline of big IPOs is coming, and there's huge demand from countries that can't easily access US stocks.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 20,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "fl01c",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "dpnue",
+      "text": "Top Choice: BP",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "bh1he",
+      "text": "Recommended Readings:",
+      "type": "unstyled"
+     },
+     {
+      "data": {
+       "urls": [
+        {
+         "fromIndex": 0,
+         "text": "https://frictionless.capital/articles/backpack-the-tokenization-engine-of-internet-capital-markets",
+         "toIndex": 98
+        }
+       ]
+      },
+      "entityRanges": [
+       {
+        "key": 21,
+        "length": 98,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "1r252",
+      "text": "https://frictionless.capital/articles/backpack-the-tokenization-engine-of-internet-capital-markets",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "375sg",
+      "text": "DATs",
+      "type": "header-two"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "e5n2c",
+      "text": "I’m just going to copy Evan’s words for this one (link below for his full article). From Evan's Article: ",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "14pk7",
+      "text": "I theorized that a good opportunity for this thesis would have the following characteristics:",
+      "type": "unordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "fob9u",
+      "text": "big discount to mNAV (around 0.15x mNAV at summer lows)",
+      "type": "unordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "5dd9t",
+      "text": "top tier team still shipping despite coin down 95+% from ATH in a relevant market sector (stablecoins, perps, etc)",
+      "type": "unordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "7pmur",
+      "text": "fundamentals will improve over the next few years during which vesting/unlocks end (USDE in circulation rising, basis yield coming back, expand to equity perpetuals basis, and more institutional partnerships that boost TVL and protocol revenue)",
+      "type": "unordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "8cqgt",
+      "text": "Ultimately I thought the Ethena DAT hit on these the hardest. They've since shipped their Neobank product and increased USDE in circulation by over $1B.",
+      "type": "unordered-list-item"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "d7akd",
+      "text": "Recommended Readings:",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 22,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "207fc",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "aorfa",
+      "text": "Top Choice: USDE",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "61il9",
+      "text": "Privacy",
+      "type": "header-two"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "cqmlp",
+      "text": "Lee Goon Wang mode. I’m not really the guy to ask for this, I own 0 ZEC, so I’ll just link a few of Taiki’s videos.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "4muv8",
+      "text": "Top Choice: ZEC",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "aclnb",
+      "text": "Recommended Watches:",
+      "type": "unstyled"
+     },
+     {
+      "data": {
+       "urls": [
+        {
+         "fromIndex": 0,
+         "text": "https://www.youtube.com/watch?v=oSrg5Awm0jU&t=558s",
+         "toIndex": 50
+        }
+       ]
+      },
+      "entityRanges": [
+       {
+        "key": 23,
+        "length": 50,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "d8f5p",
+      "text": "https://www.youtube.com/watch?v=oSrg5Awm0jU&t=558s",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 24,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "3f97s",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "eeb7h",
+      "text": "Perp DEXs",
+      "type": "header-two"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "2imi",
+      "text": "Perp DEXs have the strongest product-market fit in all of crypto: real users, real volume, and real fees. They're A tier rather than S only because the market already knows it. Hyperliquid is priced as a proven winner, and competition is heating up. The next leg of growth is perps going mainstream through apps like Robinhood and IBKR, which grows the pie for everyone.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "cdsdr",
+      "text": "Top Choice: LIT / HYPE",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "5orsu",
+      "text": "Stablecoins",
+      "type": "header-two"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "1pm2g",
+      "text": "Stablecoins are the most successful product crypto has ever made, and they'll keep growing. They're A tier because the biggest winners, Tether and Circle, aren't liquid tokens you can buy onchain, so there are very few ways to bet on the growth directly. Ethena is the rare exception: a stablecoin issuer with a token that captures the upside.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "c6acj",
+      "text": "Top Choice: USDE",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 25,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "ere0",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "b9fih",
+      "text": "And so, that's the buffet. To recap: I think we've finally reached the point where crypto is investable again. Lemons are slowly being separated from the real businesses, and the market is finally paying teams for doing things properly. The old guard still has PTSD but that's exactly what the wall of worry looks like at the start of every real bull market.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "69hfi",
+      "text": "Have longer timeframes, expect more volatility than ever, and be extremely picky about what you hold. The edge this cycle isn't in finding the next 100x from a sub-$10M coin that some guy vibe-coded over the weekend. It's in finding  the ones with real revenue, real alignment, and real teams, and having the conviction to sit on them while everyone else gets shaken out by the latest headline.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "84dgs",
+      "text": "Buy good assets, hold them through the noise, and let time do the work.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "a8h46",
+      "text": "Internet Capital Markets.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "5e93g",
+      "text": "As always, thank you all for the support, and see you in the next one.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [
+       {
+        "key": 26,
+        "length": 1,
+        "offset": 0
+       }
+      ],
+      "inlineStyleRanges": [],
+      "key": "ejb2i",
+      "text": " ",
+      "type": "atomic"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "key": "d9dai",
+      "text": "DISCLAIMERS",
+      "type": "header-one"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 840,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "4is1f",
+      "text": "Not financial advice. I may hold some of the assets mentioned. Please do your own research. This content, which contains opinions and/or information related to any products, services, tokens, or projects, is provided for informational purposes only and should not be relied upon in any manner as professional advice, or to be regarded as an endorsement of any products, services, tokens, or projects. There can be no guarantees or assurances that the views expressed here will be applicable for any particular facts or circumstances, and should not be relied upon in any manner. Investments in any products, services, tokens, or projects involve the risk of loss. Past performance is no guarantee of future results. You should always consult your own advisers as to legal, business, tax, and other related matters concerning any investment.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 26,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "co9id",
+      "text": "Views expressed are my own",
+      "type": "unstyled"
+     },
+     {
+      "data": {
+       "urls": [
+        {
+         "fromIndex": 608,
+         "text": "https://grandlineresearch.substack.com",
+         "toIndex": 646
+        },
+        {
+         "fromIndex": 666,
+         "text": "https://x.com/zeroxkyle",
+         "toIndex": 689
+        }
+       ]
+      },
+      "entityRanges": [
+       {
+        "key": 27,
+        "length": 38,
+        "offset": 608
+       },
+       {
+        "key": 28,
+        "length": 23,
+        "offset": 666
+       }
+      ],
+      "inlineStyleRanges": [
+       {
+        "length": 689,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "8bl6u",
+      "text": ")) reflects the personal opinions, viewpoints, and analyses of myself only, and should not be regarded as the views of my employer or its respective affiliates. Commentary on any projects, protocols, companies, or other subject matter discussed in my posts should not be taken or interpreted as an indication that my employer holds any interest in the subject matter discussed. Neither my employer nor myself will be liable for any actions arising from assumptions made with respect to myself or my employer based on my posts.The commentary in any of my posts (including but not limited to those on my blog (https://grandlineresearch.substack.com) and social media (https://x.com/zeroxkyle",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 75,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "3qjrf",
+      "text": "Views expressed are not investment advice, endorsements, or recommendations",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 367,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "93m8u",
+      "text": "Any opinions expressed herein do not constitute or imply endorsement, sponsorship, or recommendation by me. I may invest in any of the projects, protocols, companies, or other subject matter discussed without obligations to inform or disclose such investments to you, the reader. The views reflected in the commentary are subject to change at any time without notice.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 615,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "84h6s",
+      "text": "Nothing on this website constitutes investment advice, performance data, or any recommendation that any particular product, service, token, project, transaction, or investment strategy is suitable for any specific person. It also should not be construed as an offer soliciting the purchase or sale of any product, service, token, or project mentioned. Nor should it be construed as an offer to provide investment advisory services by myself. Any mention of a particular product, service, token, or project and related performance data is not a recommendation to buy or sell that product, service, token, or project.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 31,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "75ve2",
+      "text": "Statistics are only informative",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 1193,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "aeh8d",
+      "text": "Any charts provided here or on any of my personal platforms are for informational purposes only and should not be relied upon when making any investment decision. Any indices referenced for comparison are unmanaged and cannot be invested into directly. Any projections, estimates, forecasts, targets, prospects, and/or opinions expressed in these materials are subject to change without notice and may differ or be contrary to opinions expressed by others. Information in charts has been obtained from third-party sources and data. While taken from sources believed to be reliable, I have not independently verified such information and make no representations about the enduring accuracy of the information or its appropriateness for a given situation. In addition, posts may include third-party advertisements; I make no representations of having reviewed such advertisements and do not endorse any advertising content contained therein. All content speaks only as of the date indicated. The information provided here (including any information that may be accessed through this website) is not directed at any investor or category of investors and is provided solely as general information.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 14,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "8onq4",
+      "text": "Advertisements",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 446,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "6gd0p",
+      "text": "I may receive payment from various entities for advertisements on my blog or social media from time to time. Inclusion of such advertisements does not constitute or imply endorsement, sponsorship, or recommendation thereof, or any affiliation therewith by me. In addition, any mention of a particular product, service, token, or project and related performance data is not a recommendation to buy or sell that product, service, token, or project.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 421,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "pnhv",
+      "text": "I DO NOT WARRANT, ENDORSE, GUARANTEE, OR ASSUME RESPONSIBILITY FOR ANY PRODUCT OR SERVICE ADVERTISED OR OFFERED BY A THIRD-PARTY WEBSITE, AND I WILL NOT BE A PARTY TO OR IN ANY WAY MONITOR ANY TRANSACTION BETWEEN YOU AND THIRD-PARTY PROVIDERS OF PRODUCTS OR SERVICES. I SHALL NOT BE LIABLE FOR ANY DAMAGES OR COSTS OF ANY TYPE ARISING OUT OF OR IN ANY WAY CONNECTED WITH YOUR USE OF THE SERVICES OF ANY BROKERAGE COMPANY.",
+      "type": "unstyled"
+     },
+     {
+      "data": {},
+      "entityRanges": [],
+      "inlineStyleRanges": [
+       {
+        "length": 139,
+        "offset": 0,
+        "style": "Italic"
+       }
+      ],
+      "key": "9sg1m",
+      "text": "As always, please remember investing involves risk and possible loss of principal capital; please seek advice from a licensed professional.",
+      "type": "unstyled"
+     }
+    ],
+    "entityMap": [
+     {
+      "key": "12",
+      "value": {
+       "data": {
+        "entityKey": "01fcf03f-e8ca-4474-9418-3b6064baff05",
+        "mediaItems": [
+         {
+          "localMediaId": "29",
+          "mediaCategory": "DraftTweetImage",
+          "mediaId": "2106568821423427584"
+         }
+        ]
+       },
+       "mutability": "Immutable",
+       "type": "MEDIA"
+      }
+     },
+     {
+      "key": "8",
+      "value": {
+       "data": {
+        "entityKey": "63121fc5-3f66-48f0-91d9-6becbd2ebfd0",
+        "mediaItems": [
+         {
+          "localMediaId": "25",
+          "mediaCategory": "DraftTweetImage",
+          "mediaId": "2106568069309145088"
+         }
+        ]
+       },
+       "mutability": "Immutable",
+       "type": "MEDIA"
+      }
+     },
+     {
+      "key": "19",
+      "value": {
+       "data": {
+        "entityKey": "faae67f5-37c3-4309-ab64-dd615eee1cd7",
+        "url": "https://www.galaxy.com/insights/research/inference-capital-markets-ai-compute-gpu-futures-onchain-crypto"
+       },
+       "mutability": "Mutable",
+       "type": "LINK"
+      }
+     },
+     {
+      "key": "23",
+      "value": {
+       "data": {
+        "entityKey": "4ba07721-2a86-424e-a935-0ad8886e3b82",
+        "url": "https://www.youtube.com/watch?v=oSrg5Awm0jU&t=558s"
+       },
+       "mutability": "Mutable",
+       "type": "LINK"
+      }
+     },
+     {
+      "key": "4",
+      "value": {
+       "data": {
+        "tweetId": "2101671924426478008"
+       },
+       "mutability": "Immutable",
+       "type": "TWEET"
+      }
+     },
+     {
+      "key": "15",
+      "value": {
+       "data": {
+        "tweetId": "2092976592738001383"
+       },
+       "mutability": "Immutable",
+       "type": "TWEET"
+      }
+     },
+     {
+      "key": "11",
+      "value": {
+       "data": {
+        "entityKey": "b55b0667-c1b1-4bd5-ad15-7c442d4b7502",
+        "url": "https://0xsmac.substack.com/p/let-the-bubble-wash-over-you"
+       },
+       "mutability": "Mutable",
+       "type": "LINK"
+      }
+     },
+     {
+      "key": "9",
+      "value": {
+       "data": {
+        "entityKey": "523f6ec8-921f-4e0a-b5b1-7a0ec052bb5f",
+        "mediaItems": [
+         {
+          "localMediaId": "27",
+          "mediaCategory": "DraftTweetImage",
+          "mediaId": "2106568101194240000"
+         }
+        ]
+       },
+       "mutability": "Immutable",
+       "type": "MEDIA"
+      }
+     },
+     {
+      "key": "22",
+      "value": {
+       "data": {
+        "tweetId": "2103170478739185885"
+       },
+       "mutability": "Immutable",
+       "type": "TWEET"
+      }
+     },
+     {
+      "key": "26",
+      "value": {
+       "data": {},
+       "mutability": "Immutable",
+       "type": "DIVIDER"
+      }
+     },
+     {
+      "key": "13",
+      "value": {
+       "data": {
+        "entityKey": "4f58be96-c372-415c-ae46-32adaebbe667",
+        "mediaItems": [
+         {
+          "localMediaId": "33",
+          "mediaCategory": "DraftTweetImage",
+          "mediaId": "2106569087908503552"
+         }
+        ]
+       },
+       "mutability": "Immutable",
+       "type": "MEDIA"
+      }
+     },
+     {
+      "key": "24",
+      "value": {
+       "data": {
+        "entityKey": "281725b2-fbba-4dc2-8409-a6ca027ef458",
+        "mediaItems": [
+         {
+          "localMediaId": "43",
+          "mediaCategory": "DraftTweetImage",
+          "mediaId": "2106570163705552896"
+         }
+        ]
+       },
+       "mutability": "Immutable",
+       "type": "MEDIA"
+      }
+     },
+     {
+      "key": "16",
+      "value": {
+       "data": {
+        "entityKey": "5745eb00-5651-4e2b-866d-e9f07c4aa090",
+        "mediaItems": [
+         {
+          "localMediaId": "37",
+          "mediaCategory": "DraftTweetImage",
+          "mediaId": "2106569699333214208"
+         }
+        ]
+       },
+       "mutability": "Immutable",
+       "type": "MEDIA"
+      }
+     },
+     {
+      "key": "5",
+      "value": {
+       "data": {
+        "entityKey": "526e635e-dde4-4784-88c6-4f97aaea4c9d",
+        "mediaItems": [
+         {
+          "localMediaId": "17",
+          "mediaCategory": "DraftTweetImage",
+          "mediaId": "2106567625652449280"
+         }
+        ]
+       },
+       "mutability": "Immutable",
+       "type": "MEDIA"
+      }
+     },
+     {
+      "key": "10",
+      "value": {
+       "data": {
+        "tweetId": "2103329580534927440"
+       },
+       "mutability": "Immutable",
+       "type": "TWEET"
+      }
+     },
+     {
+      "key": "21",
+      "value": {
+       "data": {
+        "entityKey": "7e30838b-fd89-42cc-9893-bcf094193551",
+        "url": "https://frictionless.capital/articles/backpack-the-tokenization-engine-of-internet-capital-markets"
+       },
+       "mutability": "Mutable",
+       "type": "LINK"
+      }
+     },
+     {
+      "key": "6",
+      "value": {
+       "data": {
+        "entityKey": "b7d6ef93-f7d3-45bc-b644-f9a27a10ca8e",
+        "mediaItems": [
+         {
+          "localMediaId": "19",
+          "mediaCategory": "DraftTweetImage",
+          "mediaId": "2106567851180253184"
+         }
+        ]
+       },
+       "mutability": "Immutable",
+       "type": "MEDIA"
+      }
+     },
+     {
+      "key": "1",
+      "value": {
+       "data": {},
+       "mutability": "Immutable",
+       "type": "DIVIDER"
+      }
+     },
+     {
+      "key": "17",
+      "value": {
+       "data": {
+        "entityKey": "32f07649-b2af-4ca9-aeee-c05d9fea3d2b",
+        "mediaItems": [
+         {
+          "localMediaId": "39",
+          "mediaCategory": "DraftTweetImage",
+          "mediaId": "2106569887250579457"
+         }
+        ]
+       },
+       "mutability": "Immutable",
+       "type": "MEDIA"
+      }
+     },
+     {
+      "key": "25",
+      "value": {
+       "data": {},
+       "mutability": "Immutable",
+       "type": "DIVIDER"
+      }
+     },
+     {
+      "key": "14",
+      "value": {
+       "data": {
+        "entityKey": "e5d91946-d444-4a2f-a193-03043d9d5c28",
+        "mediaItems": [
+         {
+          "localMediaId": "35",
+          "mediaCategory": "DraftTweetImage",
+          "mediaId": "2106569404343549952"
+         }
+        ]
+       },
+       "mutability": "Immutable",
+       "type": "MEDIA"
+      }
+     },
+     {
+      "key": "0",
+      "value": {
+       "data": {},
+       "mutability": "Immutable",
+       "type": "DIVIDER"
+      }
+     },
+     {
+      "key": "20",
+      "value": {
+       "data": {
+        "entityKey": "a92ea115-f429-4f29-8e4c-86e18a8c4d3d",
+        "mediaItems": [
+         {
+          "localMediaId": "41",
+          "mediaCategory": "DraftTweetImage",
+          "mediaId": "2106569980468973568"
+         }
+        ]
+       },
+       "mutability": "Immutable",
+       "type": "MEDIA"
+      }
+     },
+     {
+      "key": "27",
+      "value": {
+       "data": {
+        "entityKey": "8c16c7b4-2d5e-4437-b517-561a2f4f20f4",
+        "url": "https://grandlineresearch.substack.com/"
+       },
+       "mutability": "Mutable",
+       "type": "LINK"
+      }
+     },
+     {
+      "key": "2",
+      "value": {
+       "data": {
+        "entityKey": "cf4e1c31-3991-4b7c-a27e-eeb551f72a26",
+        "mediaItems": [
+         {
+          "localMediaId": "14",
+          "mediaCategory": "DraftTweetImage",
+          "mediaId": "2106556844059856896"
+         }
+        ]
+       },
+       "mutability": "Immutable",
+       "type": "MEDIA"
+      }
+     },
+     {
+      "key": "18",
+      "value": {
+       "data": {
+        "tweetId": "2103095740948250859"
+       },
+       "mutability": "Immutable",
+       "type": "TWEET"
+      }
+     },
+     {
+      "key": "7",
+      "value": {
+       "data": {
+        "entityKey": "75772b20-826c-4a91-8bd1-2b9f5e635e19",
+        "mediaItems": [
+         {
+          "localMediaId": "23",
+          "mediaCategory": "DraftTweetImage",
+          "mediaId": "2106567981547585536"
+         }
+        ]
+       },
+       "mutability": "Immutable",
+       "type": "MEDIA"
+      }
+     },
+     {
+      "key": "3",
+      "value": {
+       "data": {
+        "tweetId": "2097577476411248734"
+       },
+       "mutability": "Immutable",
+       "type": "TWEET"
+      }
+     },
+     {
+      "key": "28",
+      "value": {
+       "data": {
+        "entityKey": "125d5982-d93d-4d41-aeeb-cc68ff46f0e9",
+        "url": "https://x.com/zeroxkyle"
+       },
+       "mutability": "Mutable",
+       "type": "LINK"
+      }
+     }
+    ]
+   },
+   "media_entities": [
+    {
+     "id": "QXBpTWVkaWE6DAAFCgABHTwIhubaEAAKAAIAAAAA9QObaAAA",
+     "media_id": "2106568101194240000",
+     "media_info": {
+      "__typename": "ApiImage",
+      "color_info": {
+       "palette": [
+        {
+         "percentage": 70.38,
+         "rgb": {
+          "blue": 20,
+          "green": 19,
+          "red": 14
+         }
+        },
+        {
+         "percentage": 8.88,
+         "rgb": {
+          "blue": 206,
+          "green": 66,
+          "red": 56
+         }
+        },
+        {
+         "percentage": 7.42,
+         "rgb": {
+          "blue": 87,
+          "green": 36,
+          "red": 29
+         }
+        },
+        {
+         "percentage": 3.07,
+         "rgb": {
+          "blue": 135,
+          "green": 50,
+          "red": 40
+         }
+        },
+        {
+         "percentage": 1.49,
+         "rgb": {
+          "blue": 37,
+          "green": 49,
+          "red": 167
+         }
+        }
+       ]
+      },
+      "original_img_height": 438,
+      "original_img_url": "https://pbs.twimg.com/media/HTwIhubaEAAOdYD.png",
+      "original_img_width": 778
+     },
+     "media_key": "3_2106568101194240000"
+    },
+    {
+     "id": "QXBpTWVkaWE6DAAFCgABHTwITLDbYAAKAAIAAAAA9QObaAAA",
+     "media_id": "2106567851180253184",
+     "media_info": {
+      "__typename": "ApiImage",
+      "color_info": {
+       "palette": [
+        {
+         "percentage": 78.05,
+         "rgb": {
+          "blue": 255,
+          "green": 255,
+          "red": 255
+         }
+        },
+        {
+         "percentage": 15.83,
+         "rgb": {
+          "blue": 26,
+          "green": 146,
+          "red": 185
+         }
+        },
+        {
+         "percentage": 1.19,
+         "rgb": {
+          "blue": 128,
+          "green": 171,
+          "red": 42
+         }
+        },
+        {
+         "percentage": 1.17,
+         "rgb": {
+          "blue": 102,
+          "green": 182,
+          "red": 208
+         }
+        },
+        {
+         "percentage": 0.87,
+         "rgb": {
+          "blue": 185,
+          "green": 165,
+          "red": 155
+         }
+        }
+       ]
+      },
+      "original_img_height": 2304,
+      "original_img_url": "https://pbs.twimg.com/media/HTwITLDbYAAb6pA.jpg",
+      "original_img_width": 4096
+     },
+     "media_key": "3_2106567851180253184"
+    },
+    {
+     "id": "QXBpTWVkaWE6DAAFCgABHTv+SeVbEAAKAAIAAAAA9QObaAAA",
+     "media_id": "2106556844059856896",
+     "media_info": {
+      "__typename": "ApiImage",
+      "color_info": {
+       "palette": [
+        {
+         "percentage": 99.46,
+         "rgb": {
+          "blue": 254,
+          "green": 254,
+          "red": 254
+         }
+        },
+        {
+         "percentage": 0.28,
+         "rgb": {
+          "blue": 145,
+          "green": 144,
+          "red": 143
+         }
+        },
+        {
+         "percentage": 0.12,
+         "rgb": {
+          "blue": 165,
+          "green": 223,
+          "red": 244
+         }
+        }
+       ]
+      },
+      "original_img_height": 594,
+      "original_img_url": "https://pbs.twimg.com/media/HTv-SeVbEAATG7e.jpg",
+      "original_img_width": 2332
+     },
+     "media_key": "3_2106556844059856896"
+    },
+    {
+     "id": "QXBpTWVkaWE6DAAFCgABHTwKPHRa0AAKAAIAAAAA9QObaAAA",
+     "media_id": "2106569980468973568",
+     "media_info": {
+      "__typename": "ApiImage",
+      "color_info": {
+       "palette": [
+        {
+         "percentage": 95.28,
+         "rgb": {
+          "blue": 255,
+          "green": 255,
+          "red": 255
+         }
+        },
+        {
+         "percentage": 3.71,
+         "rgb": {
+          "blue": 207,
+          "green": 99,
+          "red": 64
+         }
+        },
+        {
+         "percentage": 0.88,
+         "rgb": {
+          "blue": 227,
+          "green": 166,
+          "red": 145
+         }
+        },
+        {
+         "percentage": 0.13,
+         "rgb": {
+          "blue": 147,
+          "green": 147,
+          "red": 147
+         }
+        }
+       ]
+      },
+      "original_img_height": 337,
+      "original_img_url": "https://pbs.twimg.com/media/HTwKPHRa0AAEI1R.png",
+      "original_img_width": 772
+     },
+     "media_key": "3_2106569980468973568"
+    },
+    {
+     "id": "QXBpTWVkaWE6DAAFCgABHTwKZx4bIAAKAAIAAAAA9QObaAAA",
+     "media_id": "2106570163705552896",
+     "media_info": {
+      "__typename": "ApiImage",
+      "color_info": {
+       "palette": [
+        {
+         "percentage": 29.41,
+         "rgb": {
+          "blue": 255,
+          "green": 255,
+          "red": 255
+         }
+        },
+        {
+         "percentage": 17.95,
+         "rgb": {
+          "blue": 96,
+          "green": 121,
+          "red": 140
+         }
+        },
+        {
+         "percentage": 14.19,
+         "rgb": {
+          "blue": 30,
+          "green": 33,
+          "red": 40
+         }
+        },
+        {
+         "percentage": 13.79,
+         "rgb": {
+          "blue": 60,
+          "green": 167,
+          "red": 211
+         }
+        },
+        {
+         "percentage": 8.07,
+         "rgb": {
+          "blue": 124,
+          "green": 144,
+          "red": 213
+         }
+        }
+       ]
+      },
+      "original_img_height": 303,
+      "original_img_url": "https://pbs.twimg.com/media/HTwKZx4bIAAdqyE.png",
+      "original_img_width": 444
+     },
+     "media_key": "3_2106570163705552896"
+    },
+    {
+     "id": "QXBpTWVkaWE6DAAFCgABHTwJLpfbUAAKAAIAAAAA9QObaAAA",
+     "media_id": "2106568821423427584",
+     "media_info": {
+      "__typename": "ApiImage",
+      "color_info": {
+       "palette": [
+        {
+         "percentage": 99.97,
+         "rgb": {
+          "blue": 249,
+          "green": 251,
+          "red": 251
+         }
+        }
+       ]
+      },
+      "original_img_height": 1446,
+      "original_img_url": "https://pbs.twimg.com/media/HTwJLpfbUAAvXxW.jpg",
+      "original_img_width": 936
+     },
+     "media_key": "3_2106568821423427584"
+    },
+    {
+     "id": "QXBpTWVkaWE6DAAFCgABHTwJ+v9bkAAKAAIAAAAA9QObaAAA",
+     "media_id": "2106569699333214208",
+     "media_info": {
+      "__typename": "ApiImage",
+      "color_info": {
+       "palette": [
+        {
+         "percentage": 96.05,
+         "rgb": {
+          "blue": 255,
+          "green": 255,
+          "red": 255
+         }
+        },
+        {
+         "percentage": 2.29,
+         "rgb": {
+          "blue": 219,
+          "green": 180,
+          "red": 185
+         }
+        },
+        {
+         "percentage": 1.66,
+         "rgb": {
+          "blue": 192,
+          "green": 207,
+          "red": 185
+         }
+        }
+       ]
+      },
+      "original_img_height": 500,
+      "original_img_url": "https://pbs.twimg.com/media/HTwJ-v9bkAA1DEc.jpg",
+      "original_img_width": 1100
+     },
+     "media_key": "3_2106569699333214208"
+    },
+    {
+     "id": "QXBpTWVkaWE6DAAFCgABHTwJbKOa4AAKAAIAAAAA9QObaAAA",
+     "media_id": "2106569087908503552",
+     "media_info": {
+      "__typename": "ApiImage",
+      "color_info": {
+       "palette": [
+        {
+         "percentage": 98.77,
+         "rgb": {
+          "blue": 255,
+          "green": 255,
+          "red": 255
+         }
+        },
+        {
+         "percentage": 1.21,
+         "rgb": {
+          "blue": 117,
+          "green": 112,
+          "red": 111
+         }
+        }
+       ]
+      },
+      "original_img_height": 448,
+      "original_img_url": "https://pbs.twimg.com/media/HTwJbKOa4AAwqRi.jpg",
+      "original_img_width": 1634
+     },
+     "media_key": "3_2106569087908503552"
+    },
+    {
+     "id": "QXBpTWVkaWE6DAAFCgABHTwJtlCagAAKAAIAAAAA9QObaAAA",
+     "media_id": "2106569404343549952",
+     "media_info": {
+      "__typename": "ApiImage",
+      "color_info": {
+       "palette": [
+        {
+         "percentage": 97.79,
+         "rgb": {
+          "blue": 255,
+          "green": 255,
+          "red": 255
+         }
+        },
+        {
+         "percentage": 1.59,
+         "rgb": {
+          "blue": 220,
+          "green": 183,
+          "red": 187
+         }
+        },
+        {
+         "percentage": 0.63,
+         "rgb": {
+          "blue": 194,
+          "green": 209,
+          "red": 188
+         }
+        }
+       ]
+      },
+      "original_img_height": 246,
+      "original_img_url": "https://pbs.twimg.com/media/HTwJtlCagAAdNtb.jpg",
+      "original_img_width": 1062
+     },
+     "media_key": "3_2106569404343549952"
+    },
+    {
+     "id": "QXBpTWVkaWE6DAAFCgABHTwIf3paIAAKAAIAAAAA9QObaAAA",
+     "media_id": "2106568069309145088",
+     "media_info": {
+      "__typename": "ApiImage",
+      "color_info": {
+       "palette": [
+        {
+         "percentage": 99.94,
+         "rgb": {
+          "blue": 255,
+          "green": 255,
+          "red": 255
+         }
+        }
+       ]
+      },
+      "original_img_height": 932,
+      "original_img_url": "https://pbs.twimg.com/media/HTwIf3paIAAsmeQ.jpg",
+      "original_img_width": 2224
+     },
+     "media_key": "3_2106568069309145088"
+    },
+    {
+     "id": "QXBpTWVkaWE6DAAFCgABHTwKJsAbAAEKAAIAAAAA9QObaAAA",
+     "media_id": "2106569887250579457",
+     "media_info": {
+      "__typename": "ApiImage",
+      "color_info": {
+       "palette": [
+        {
+         "percentage": 99.03,
+         "rgb": {
+          "blue": 248,
+          "green": 250,
+          "red": 251
+         }
+        },
+        {
+         "percentage": 1.02,
+         "rgb": {
+          "blue": 152,
+          "green": 170,
+          "red": 177
+         }
+        }
+       ]
+      },
+      "original_img_height": 578,
+      "original_img_url": "https://pbs.twimg.com/media/HTwKJsAbAAEPumX.jpg",
+      "original_img_width": 1086
+     },
+     "media_key": "3_2106569887250579457"
+    },
+    {
+     "id": "QXBpTWVkaWE6DAAFCgABHTwIGC5aMAAKAAIAAAAA9QObaAAA",
+     "media_id": "2106567625652449280",
+     "media_info": {
+      "__typename": "ApiImage",
+      "color_info": {
+       "palette": [
+        {
+         "percentage": 95.73,
+         "rgb": {
+          "blue": 255,
+          "green": 255,
+          "red": 255
+         }
+        },
+        {
+         "percentage": 3.39,
+         "rgb": {
+          "blue": 208,
+          "green": 174,
+          "red": 173
+         }
+        },
+        {
+         "percentage": 0.86,
+         "rgb": {
+          "blue": 163,
+          "green": 167,
+          "red": 232
+         }
+        }
+       ]
+      },
+      "original_img_height": 848,
+      "original_img_url": "https://pbs.twimg.com/media/HTwIGC5aMAA6Qye.jpg",
+      "original_img_width": 1946
+     },
+     "media_key": "3_2106567625652449280"
+    },
+    {
+     "id": "QXBpTWVkaWE6DAAFCgABHTwIawtbAAAKAAIAAAAA9QObaAAA",
+     "media_id": "2106567981547585536",
+     "media_info": {
+      "__typename": "ApiImage",
+      "color_info": {
+       "palette": [
+        {
+         "percentage": 74.57,
+         "rgb": {
+          "blue": 255,
+          "green": 255,
+          "red": 255
+         }
+        },
+        {
+         "percentage": 5.65,
+         "rgb": {
+          "blue": 157,
+          "green": 158,
+          "red": 31
+         }
+        },
+        {
+         "percentage": 3.62,
+         "rgb": {
+          "blue": 101,
+          "green": 60,
+          "red": 25
+         }
+        },
+        {
+         "percentage": 3.59,
+         "rgb": {
+          "blue": 33,
+          "green": 152,
+          "red": 181
+         }
+        },
+        {
+         "percentage": 3.03,
+         "rgb": {
+          "blue": 91,
+          "green": 176,
+          "red": 97
+         }
+        }
+       ]
+      },
+      "original_img_height": 2304,
+      "original_img_url": "https://pbs.twimg.com/media/HTwIawtbAAAJHVx.jpg",
+      "original_img_width": 4096
+     },
+     "media_key": "3_2106567981547585536"
+    }
+   ]
+  },
+  "twitter_card": "tweet",
+  "color": null,
+  "provider": "twitter",
+  "reposted_by": null
+ }
+}
