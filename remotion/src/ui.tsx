@@ -270,10 +270,32 @@ export const CountUp: React.FC<{value: string; delay?: number; size: number; col
 };
 
 // ---------- phụ đề: hiện cả cụm câu (không chạy từng chữ), gọn & dễ đọc ----------
-export const Captions: React.FC<{words: Word[]; bottom: number; size: number; maxWidth: number; perChunk?: number; emph?: string[]}> = ({
-  words, bottom, size, maxWidth, perChunk = 12, emph = [],
+// phụ đề tiếng Anh theo câu, **chữ đậm** do người dịch đánh dấu
+const BoldMd: React.FC<{text: string; color: string}> = ({text, color}) => (
+  <>{text.split(/(\*\*[^*]+\*\*)/g).map((p, i) => p.startsWith('**') && p.endsWith('**')
+    ? <b key={i} style={{fontWeight: 800, color}}>{p.slice(2, -2)}</b> : <React.Fragment key={i}>{p.replace(/\*/g, '')}</React.Fragment>)}</>
+);
+export type Sub = {t: string; s: number; e: number};
+export const Captions: React.FC<{words: Word[]; bottom: number; size: number; maxWidth: number; perChunk?: number; emph?: string[]; subs?: Sub[] | null}> = ({
+  words, bottom, size, maxWidth, perChunk = 12, emph = [], subs,
 }) => {
   const ac = useAccent();
+  const fr = useCurrentFrame();
+  const {fps: fps0} = useVideoConfig();
+  if (subs && subs.length) {
+    const t = fr / fps0;
+    const i = subs.findIndex((x, k) => t >= x.s - 0.05 && t < (subs[k + 1]?.s ?? x.e + 0.4) - 0.05);
+    if (i < 0) return null;
+    const c = subs[i];
+    const op = interpolate(t - c.s, [-0.05, 0.12], [0, 1], clamp);
+    return (
+      <div style={{position: 'absolute', left: 0, right: 0, bottom, display: 'flex', justifyContent: 'center'}}>
+        <div style={{maxWidth, textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: size, lineHeight: 1.35,
+          color: C.ink, opacity: op, padding: '10px 26px', borderRadius: 14, background: T.capBg, backdropFilter: 'blur(8px)',
+          textShadow: T.capShadow}}><BoldMd text={c.t} color={ac} /></div>
+      </div>
+    );
+  }
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const t = f / fps;

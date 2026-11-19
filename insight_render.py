@@ -69,6 +69,69 @@ def word_times(text: str, pcm: bytes) -> list[dict]:
     return out
 
 
+def sent_times(text: str, pcm: bytes) -> list[tuple[str, float, float]]:
+    """Mốc thời gian từng câu (bám chỗ ngừng thật trong giọng đọc)."""
+    sents = [s for s in re.split(r"(?<=[.!?…])\s+", V.en_money(text).strip()) if s]
+    if not sents:
+        return []
+    bounds = V.chunk_bounds({"pcm": pcm}, [s.split() for s in sents], len(pcm) / SR / 2)
+    return [(s, a, b) for s, (a, b) in zip(sents, bounds)]
+
+
+EN_SYSTEM = """You translate Vietnamese crypto video narration into natural, concise English subtitles.
+Keep crypto terms (DCA, FDV, token, airdrop...), numbers and project names exact. Short, readable lines.
+Wrap the 1-3 most important words of each line in **double asterisks** for bold. Never use em dashes or en dashes."""
+
+
+def english_subs(scenes: list, pcm: dict, text: dict) -> None:
+    """Phụ đề TIẾNG ANH (giọng đọc đã là tiếng Việt): dịch theo câu, hiện đúng lúc câu đó được đọc."""
+    cfg = V.load_cfg()
+    items = []
+    for sc in scenes:
+        k = sc["key"]
+        st = sent_times(text[k], pcm[k])
+        sc["_st"] = st
+        items += [s for s, _, _ in st]
+    if not items:
+        return
+    gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))
+    en = []
+    for i in range(0, len(items), 60):
+        chunk = items[i:i + 60]
+        try:
+            r = V.llm_json(gem, cfg, EN_SYSTEM, "Translate each line. Return JSON {\"en\": [...]} with EXACTLY "
+                           f"{len(chunk)} items in the same order.\n" + json.dumps(chunk, ensure_ascii=False))
+            got = r.get("en") or []
+        except Exception as ex:
+            log(f"   ! dịch phụ đề lỗi: {ex}")
+            got = []
+        en += got if len(got) == len(chunk) else [None] * len(chunk)
+    if not any(en):
+        log("   ! không dịch được → giữ phụ đề tiếng Việt")
+        return
+    j = 0
+    for sc in scenes:
+        subs = []
+        for (vi, a, b) in sc.pop("_st"):
+            e = (en[j] or "").strip()
+            j += 1
+            if not e:
+                continue
+            # câu dài → chia ≤ 10 từ/dòng, chia thời gian theo độ dài
+            ws = e.split()
+            pieces = [" ".join(ws[x:x + 10]) for x in range(0, len(ws), 10)]
+            if len(pieces) > 1 and len(pieces[-1].split()) < 4:
+                pieces[-2] += " " + pieces.pop()
+            tot = sum(len(p) for p in pieces)
+            acc = 0
+            for p_ in pieces:
+                s0 = a + (b - a) * acc / tot
+                acc += len(p_)
+                subs.append({"t": P.nodash(p_), "s": round(s0, 2), "e": round(a + (b - a) * acc / tot, 2)})
+        sc["subs"] = subs
+    log(f"   Phụ đề tiếng Anh: {sum(1 for x in en if x)}/{len(en)} câu")
+
+
 def build_timeline(plan, pcm, text, gap=0.35, tail=2.6):
     """Ghép audio các đoạn (nghỉ ngắn giữa đoạn để giữ nhịp) + lập danh sách cảnh (giây)."""
     secs = plan["sections"]
@@ -197,6 +260,8 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     log(f"   Tốc độ giọng ×{f:.2f}")
     pcm = {k: speed(v, f) for k, v in pcm.items()}
     audio, tl, total = build_timeline(plan, pcm, text, tail=float(ic.get("end_screen_seconds", 12)))
+    if ic.get("subtitle_lang", "en") == "en":
+        english_subs(tl, pcm, text)
     prep_public(lab)
     V.pcm_to_wav(audio, RD / "voice.wav")
     try:
@@ -213,7 +278,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     scenes, chapters = [], []
     for sc in tl:
         k = sc["key"]
-        base = {"from": sc["from"], "dur": sc["dur"], "words": sc["words"]}
+        base = {"from": sc["from"], "dur": sc["dur"], "words": sc["words"], "subs": sc.get("subs")}
         if k == "hook":
             scenes.append({**base, "type": "hook", "hook": V.en_money(plan.get("hook", "")),
                            "stat": real_number(V.en_money(plan.get("hook_stat", "")), posts), "label": V.en_money(plan.get("hook_label", "")) if real_number(V.en_money(plan.get("hook_stat", "")), posts) else "",
@@ -276,7 +341,8 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
         V.pcm_to_wav(a, RD / f"short{n}.wav")
         sc = next(x for x in scenes if x.get("idx") == i + 1)
         sprops = {"fps": 30, "width": 1080, "height": 1920, "audio": f"short{n}.wav", "duration": round(len(a) / SR / 2, 3),
-                  "scenes": [{**sc, "from": 0, "dur": round(len(a) / SR / 2, 3), "words": [x for x in w if x["s"] < end]}],
+                  "scenes": [{**sc, "from": 0, "dur": round(len(a) / SR / 2, 3), "words": [x for x in w if x["s"] < end],
+                              "subs": [x for x in (sc.get("subs") or []) if x["s"] < end] or None}],
                   "data": data, "brand": brand, "post": pinfo, "theme": os.getenv("INSIGHT_THEME") or ic.get("theme", "dark"),
                   "shortTitle": nodash(V.en_money(str(shr.get(str(i)) or shr.get(i) or sc["heading"])))}
         sp = out_dir / f"smart-penguin-{tag}-short{n + 1}-9x16.mp4"

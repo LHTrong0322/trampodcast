@@ -13,7 +13,7 @@ export type Scene = {
   title?: string; theme?: string;
   idx?: number; total?: number; heading?: string; keyStat?: string; keyLabel?: string; bullets?: string[];
   quote?: string; source?: string; data?: DataSpec | null; points?: string[]; project?: Project | null;
-  endAt?: number; emph?: string[]; xquotes?: {text: string; vi?: string}[]; terms?: {term: string; explain: string; at: number}[];
+  endAt?: number; emph?: string[]; subs?: {t: string; s: number; e: number}[] | null; xquotes?: {text: string; vi?: string}[]; terms?: {term: string; explain: string; at: number}[];
 };
 export type InsightProps = {fps: number; width: number; height: number; audio: string; music?: string; duration: number;
   scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string; mode?: string; shortTitle?: string;
@@ -368,7 +368,7 @@ export const Insight: React.FC<InsightProps> = (raw) => {
             {sc.type === 'intro' ? <IntroScene sc={sc} post={props.post} brand={brandName} /> : null}
             {sc.type === 'section' ? <SectionScene sc={sc} data={props.data} brandName={brandName} post={props.post} /> : null}
             {sc.type === 'outro' ? <OutroScene sc={sc} brandName={brandName} /> : null}
-            {sc.type !== 'hook' ? <Captions words={sc.words} bottom={64} size={40} maxWidth={1500} emph={sc.emph || props.emph} /> : null}
+            {sc.type !== 'hook' ? <Captions words={sc.words} bottom={64} size={40} maxWidth={1500} emph={sc.emph || props.emph} subs={sc.subs} /> : null}
             {i > 0 ? <Glitch /> : null}
           </AccentCtx.Provider>
         </Sequence>

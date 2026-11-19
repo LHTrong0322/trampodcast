@@ -39,7 +39,7 @@ export const InsightShort: React.FC<InsightProps> = (raw) => {
         {sc.keyStat ? <div style={{position: 'absolute', top: 1250, left: 70, display: 'flex', alignItems: 'center', gap: 24}}>
           <CountUp value={sc.keyStat} size={76} delay={20} color={BRAND.orange} /><div style={{fontFamily: FONT, color: C.muted, fontSize: 30, fontWeight: 600, maxWidth: 480}}>{sc.keyLabel}</div>
         </div> : null}
-        <Captions words={sc.words} bottom={300} size={50} maxWidth={960} perChunk={8} emph={sc.emph} />
+        <Captions words={sc.words} bottom={300} size={50} maxWidth={960} perChunk={8} emph={sc.emph} subs={sc.subs} />
         <div style={{position: 'absolute', bottom: 120, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
           <Chip text="Xem full trên YouTube · Smart Penguin Insights" color={C.red} size={26} />
         </div>
