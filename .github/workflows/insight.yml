@@ -1,10 +1,6 @@
 name: Smart Penguin Insights (link X → video insight + shorts)
 
 on:
-  schedule:
-    # Mỗi 3 tiếng: đọc link mới bạn gửi vào bot Telegram (Telegram chỉ giữ tin nhắn 24h).
-    # Nếu đủ link và đang trong khung giờ cook (19h–23h VN) hoặc bạn gửi /cook → dựng video.
-    - cron: "17 */3 * * *"
   workflow_dispatch:
     inputs:
       force:
@@ -12,9 +8,13 @@ on:
         required: false
         default: "false"
       links:
-        description: "Thêm link bài X trực tiếp (cách nhau bởi dấu cách) — không bắt buộc"
+        description: "Thêm link bài X trực tiếp (cách nhau bởi dấu cách), không bắt buộc"
         required: false
         default: ""
+      voice:
+        description: "Giọng đọc (vd gemini:Ludo)"
+        required: false
+        default: "gemini:Ludo"
 
 permissions:
   contents: write
@@ -74,6 +74,8 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           INSIGHT_GEMINI_API_KEY: ${{ secrets.INSIGHT_GEMINI_API_KEY }}
+          GEMINI_API_KEY2: ${{ secrets.GEMINI_API_KEY2 }}
+          INSIGHT_VOICE: ${{ github.event.inputs.voice }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
@@ -81,6 +83,16 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           python insight.py cook --out public --force --links "${{ github.event.inputs.links }}"
+
+      - name: Báo lỗi vào Telegram
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          curl -s -o /dev/null "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=⚠️ Dựng video Insight (kiểu 2125) bị lỗi, bot đang tự kiểm tra và chạy lại. Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" || true
 
       - name: Lưu dữ liệu (nhánh podcast-data)
         if: always()

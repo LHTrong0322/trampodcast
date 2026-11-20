@@ -129,6 +129,28 @@ def run_remotion(props: dict, out: Path, frames: str = ""):
     subprocess.run(["node", "render.mjs", str(pj), str(out.resolve())], cwd=ROOT / "remotion", check=True, env=env)
 
 
+def real_number(stat: str, posts: list) -> str:
+    """Chỉ giữ con số CÓ THẬT trong bài gốc (không để AI bịa số). Chữ không có số (vd DCA) giữ nguyên."""
+    nums = re.findall(r"\d+(?:[.,]\d+)?", stat or "")
+    if not nums:
+        return stat or ""
+    src = " ".join(p.get("text", "") for p in posts)
+    src_nums = set(x.replace(",", ".") for x in re.findall(r"\d+(?:[.,]\d+)?", src))
+    return stat if all(n.replace(",", ".") in src_nums for n in nums) else ""
+
+
+def _guard(props: dict):
+    """Lớp chặn cuối: chữ trên hình/phụ đề không được có gạch ngang dài hay đoạn ENA 95% (Trọng cấm)."""
+    import insight_lab as L
+    props["scenes"] = P.nodash(props.get("scenes") or [])
+    if "shortTitle" in props:
+        props["shortTitle"] = P.nodash(props["shortTitle"])
+    chk = {k: v for k, v in props.items() if k != "data"}
+    if L._banned(chk):
+        raise RuntimeError("Chữ trên video còn nhắc ENA/95%/14 ngày, dừng dựng")
+    return props
+
+
 def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "", shorts: bool = True) -> dict:
     cfg = V.load_cfg()
     ic = cfg.get("insight") or {}
@@ -156,7 +178,8 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
         base = {"from": sc["from"], "dur": sc["dur"], "words": sc["words"]}
         if k == "hook":
             scenes.append({**base, "type": "hook", "hook": V.en_money(plan.get("hook", "")),
-                           "stat": V.en_money(plan.get("hook_stat", "")), "label": V.en_money(plan.get("hook_label", "")),
+                           "stat": real_number(V.en_money(plan.get("hook_stat", "")), posts),
+                           "label": V.en_money(plan.get("hook_label", "")) if real_number(V.en_money(plan.get("hook_stat", "")), posts) else "",
                            "images": [f"img/{x}" for x in imgs.get("intro", [])][:1]})
         elif k == "intro":
             chapters.append((sc["from"], "Mở đầu"))
@@ -177,7 +200,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                     ((data.get("coins") or {}).get(proj["ticker"]) or {}).get("series"):
                 dspec = {**dspec, "type": "coin_chart", "tickers": [proj["ticker"]]}  # có dự án → biểu đồ giá của chính dự án
             scenes.append({**base, "type": "section", "idx": i + 1, "total": len(secs), "heading": V.en_money(s["heading"]),
-                           "keyStat": V.en_money(s.get("key_stat", "")), "keyLabel": V.en_money(s.get("key_label", "")),
+                           "keyStat": real_number(V.en_money(s.get("key_stat", "")), posts), "keyLabel": V.en_money(s.get("key_label", "")),
                            "bullets": [V.en_money(b) for b in (s.get("bullets") or [])][:3],
                            "quote": V.en_money(s.get("quote", "")), "source": ("@" + src[0]) if src[0] else "",
                            "data": dspec or None, "project": proj})
@@ -191,7 +214,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     tag = lab.name
     long_path = out_dir / f"smart-penguin-{tag}-16x9.mp4"
     log(f"Dựng video dài · {total / 60:.1f} phút · giọng {voice}")
-    run_remotion(props, long_path, frames)
+    run_remotion(_guard(props), long_path, frames)
     res = {"long": long_path, "shorts": [], "chapters": chapters, "duration": total, "voice": voice, "plan": plan,
            "scenes": scenes}
     if not shorts or frames:
@@ -215,7 +238,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                   "shortTitle": V.en_money(str(shr.get(str(i)) or shr.get(i) or sc["heading"]))}
         sp = out_dir / f"smart-penguin-{tag}-short{n + 1}-9x16.mp4"
         log(f"Dựng video ngắn {n + 1} · {len(a) / SR / 2:.0f}s")
-        run_remotion(sprops, sp)
+        run_remotion(_guard(sprops), sp)
         res["shorts"].append({"path": sp, "section": i, "title": sprops["shortTitle"]})
     return res
 

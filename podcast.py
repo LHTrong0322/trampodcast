@@ -270,7 +270,11 @@ def transition_sound() -> bytes:
 
 class Gemini:
     def __init__(self, key: str):
-        self.key = key
+        # key dự phòng GEMINI_API_KEY2: chỉ dùng khi key chính hết lượt trong ngày hoặc hết credit
+        self.keys = [k for k in [key, os.getenv("GEMINI_API_KEY2", "").strip()] if k]
+        self.keys = list(dict.fromkeys(self.keys)) or [key]
+        self.ki = 0
+        self.key = self.keys[0]
         self.dead: set[str] = set()  # model đã lỗi trong lần chạy này → bỏ qua luôn
 
     def _post(self, model: str, body: dict, timeout=240) -> dict:
@@ -281,16 +285,31 @@ class Gemini:
             if r.status_code == 429 or r.status_code >= 500:
                 txt = r.text
                 if r.status_code == 429 and "PerDay" in txt:
+                    if self._next_key("hết lượt trong ngày"):
+                        continue
                     raise RuntimeError(f"{model}: hết lượt miễn phí trong ngày. {txt[:400]}")
                 m = re.search(r'"retryDelay":\s*"(\d+)', txt)
                 wait = int(m.group(1)) + 5 if m else min(30 * (attempt + 1), 120)
                 log(f"   … {model} bận ({r.status_code}), đợi {wait}s rồi thử lại")
                 time.sleep(wait)
                 continue
+            if r.status_code in (400, 401, 403) and re.search(r"credit|billing|quota|API_KEY_INVALID|PERMISSION_DENIED", r.text, re.I) \
+                    and self._next_key(f"lỗi {r.status_code}"):
+                continue
             if r.status_code != 200:
                 raise RuntimeError(f"{model} HTTP {r.status_code}: {r.text[:300]}")
             return r.json()
         raise RuntimeError(f"{model}: hết lượt thử (rate limit)")
+
+    def _next_key(self, why: str) -> bool:
+        """Chuyển sang key dự phòng (GEMINI_API_KEY2). Trả False nếu không còn key nào."""
+        if self.ki + 1 >= len(self.keys):
+            return False
+        self.ki += 1
+        self.key = self.keys[self.ki]
+        self.dead.clear()
+        log(f"   ↪ Key Gemini chính {why}, chuyển sang key dự phòng GEMINI_API_KEY2")
+        return True
 
     def _try_models(self, models: list[str], fn):
         last = None
@@ -525,7 +544,44 @@ def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: dat
     return ed, stories, script
 
 
+DASHES = "\u2014\u2013\u2015\u2012\u2E3A\u2E3B\uFE58\uFE63\uFF0D"  # các loại gạch ngang dài (em dash, en dash, horizontal bar...)
+
+
+def nodash(x):
+    """KHÔNG BAO GIỜ dùng gạch ngang dài (em dash, en dash...) hay gạch nối đứng giữa câu ( - ): thay bằng dấu phẩy.
+    Dùng cho mọi chữ: kịch bản, chữ trên video, phụ đề, SEO, tin Telegram. Áp dụng đệ quy cho list/dict."""
+    if isinstance(x, str):
+        x = re.sub(rf"\s*[{DASHES}]+\s*(?=\S)", ", ", x)
+        x = re.sub(rf"\s*[{DASHES}]+\s*", "", x)
+        x = re.sub(r"(?<=\S)\s+-{1,3}\s+(?=\S)", ", ", x)   # "a - b", "a -- b" → "a, b"
+        x = re.sub(r",\s*,", ",", x).replace(" ,", ",")
+        return re.sub(r"([.!?:;]),", r"\1", x)
+    if isinstance(x, list):
+        return [nodash(i) for i in x]
+    if isinstance(x, tuple):
+        return tuple(nodash(i) for i in x)
+    if isinstance(x, dict):
+        return {k: nodash(v) for k, v in x.items()}
+    return x
+
+
+# LỚP CHẶN CUỐI cho Telegram: MỌI tin nhắn / chú thích gửi qua api.telegram.org (từ bất kỳ file nào đã import podcast)
+# đều đi qua nodash, nên không thể lọt gạch ngang dài vào Telegram dù code ở đâu quên lọc.
+_raw_post = requests.post
+
+
+def _tg_safe_post(url, *a, **kw):
+    if "api.telegram.org" in str(url) and isinstance(kw.get("data"), dict):
+        kw["data"] = {k: (nodash(v) if k in ("text", "caption") and isinstance(v, str) else v) for k, v in kw["data"].items()}
+    return _raw_post(url, *a, **kw)
+
+
+if getattr(requests.post, "__name__", "") != "_tg_safe_post":
+    requests.post = _tg_safe_post
+
+
 def sanitize_script(s: str) -> str:
+    s = nodash(s)
     s = re.sub(r"https?://\S+", "", s)
     s = re.sub(r"[*#_`>\[\]{}|~]", "", s)
     s = re.sub(r"^\s*[-•]\s*", "", s, flags=re.M)

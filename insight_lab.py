@@ -42,7 +42,56 @@ PROMPT += """
 Không nhắc đến AI, máy, bot hay "nội dung tổng hợp" ở bất kỳ đâu trong lời đọc.
 Gợi ý chọn data.type: nói về tâm lý thị trường → fear_greed; về altcoin vs bitcoin, dòng tiền → dominance;
 về coin cụ thể → coin_chart; so sánh 2-4 thứ có số → stat_compare (điền items); danh sách việc cần làm /
-tiêu chí đánh giá → checklist (điền items, value để trống); bức tranh toàn thị trường → market_heatmap."""
+tiêu chí đánh giá → checklist (điền items, value để trống); bức tranh toàn thị trường → market_heatmap.
+TUYỆT ĐỐI KHÔNG dùng dấu gạch ngang dài (em dash, en dash) ở bất kỳ đâu; cần ngắt ý thì dùng dấu phẩy hoặc dấu chấm.
+CẤM HOÀN TOÀN (chủ kênh yêu cầu): KHÔNG nhắc tới ENA / Ethena và chuyện "ENA tăng 95% trong 14 ngày nhờ một thay đổi
+duy nhất" ở bất kỳ đâu: không trong hook, intro, lời đọc, tiêu đề, bullets, quote, key_stat, hook_stat, thumb_text,
+thumb_stat, short_hooks; không làm phần nào về Ethena; không dùng con số 95% hay mốc 14 ngày. Hãy khai thác các ý khác
+của bài (thị trường lemon/coin rác, FDV, PMF, token alignment, Hyperliquid, tâm lý nhà đầu tư, cách chọn tài sản...)."""
+
+# Nội dung chủ kênh cấm đưa vào video (Trọng chốt 20/11): đoạn ENA/Ethena tăng 95% trong 14 ngày
+BANNED = re.compile(r"\bENA\b|\$ENA|ethena|\b95\s*%|\b95\s*phần trăm|chín mươi lăm phần trăm|\b14\s*(ngày|days?)\b|mười bốn ngày", re.I)
+
+
+def _banned(x) -> bool:
+    return bool(BANNED.search(json.dumps(x, ensure_ascii=False) if not isinstance(x, str) else x))
+
+
+def _scrub_text(t: str) -> str:
+    """Bỏ hẳn các câu có nhắc nội dung bị cấm."""
+    if not isinstance(t, str) or not _banned(t):
+        return t
+    sents = re.split(r"(?<=[.!?])\s+", t)
+    return " ".join(x for x in sents if not _banned(x)).strip()
+
+
+def scrub_plan(plan: dict) -> dict:
+    """Lọc bằng code: bỏ section/quote/key_stat/hook_stat/thumb_stat... có nhắc ENA 95% hay 14 ngày."""
+    secs = plan.get("sections") or []
+    keep = [i for i, s in enumerate(secs) if not _banned(s)]
+    remap = {old: new for new, old in enumerate(keep)}
+    plan["sections"] = [secs[i] for i in keep]
+    plan["shorts"] = [remap[i] for i in (plan.get("shorts") or []) if isinstance(i, int) and i in remap]
+    sh = plan.get("short_hooks") or {}
+    if isinstance(sh, dict):
+        nh = {}
+        for k, v in sh.items():
+            try:
+                ki = int(k)
+            except Exception:
+                continue
+            if ki in remap and not _banned(v):
+                nh[str(remap[ki])] = v
+        plan["short_hooks"] = nh
+    for k in ("hook_stat", "hook_label", "thumb_stat", "thumb_text", "thumb", "key_stat", "x_quote"):
+        if k in plan and _banned(plan.get(k)):
+            plan[k] = ""
+    if not plan.get("hook_stat"):
+        plan["hook_label"] = ""
+    for k in ("title", "description", "theme", "hook", "intro", "outro"):
+        if isinstance(plan.get(k), str):
+            plan[k] = _scrub_text(plan[k])
+    return plan
 
 
 def fx_raw(url: str) -> dict:
@@ -180,6 +229,8 @@ def market_data(lab: Path) -> dict:
         d["markets"] = []
         for c in mk:
             sym = c["symbol"].upper()
+            if sym == "ENA":   # Trọng cấm đoạn ENA trong video
+                continue
             try:
                 (logos / f"{sym}.png").write_bytes(requests.get(c["image"], timeout=20).content)
             except Exception:
@@ -212,7 +263,7 @@ def coin_data(lab: Path, plan: dict, data: dict):
         if pj:
             tick.append(str(pj).lstrip("$").upper())
     data.setdefault("coins", {})
-    for t in dict.fromkeys(x for x in tick if re.fullmatch(r"[A-Z0-9]{2,10}", x)):
+    for t in dict.fromkeys(x for x in tick if re.fullmatch(r"[A-Z0-9]{2,10}", x) and x != "ENA"):
         info = V.coin_info(t)
         if not info:
             log(f"   ! không tìm thấy coin {t}")
@@ -316,7 +367,9 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     hết lượt thì VieNeu Hải Đăng) — cả video luôn dùng MỘT giọng."""
     cfg = V.load_cfg()
     ic = cfg.get("insight") or {}
-    voices = voices or [ic.get("voice_primary", "gemini:Ludo"), ic.get("voice_fallback", "vieneu:Hải Đăng")]
+    env_v = os.getenv("INSIGHT_VOICE", "").strip()
+    # Trọng chốt 20/11: chỉ dùng giọng Ludo, hết lượt Gemini thì DỪNG (không tự đổi sang giọng khác)
+    voices = voices or [env_v or ic.get("voice_primary", "gemini:Ludo")]
     tag = datetime.now(P.VN_TZ).strftime("%Y%m%d-%H%M")
     lab = out / tag
     lab.mkdir(parents=True, exist_ok=True)
@@ -339,7 +392,17 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     prompt = PROMPT.format(posts=listing, minutes=ic.get("target_minutes", 7), max_sections=ic.get("max_sections", 6))
     if notes:
         prompt += "\nRút kinh nghiệm từ review các video trước (áp dụng):\n" + "\n".join(f"- {n}" for n in notes)
-    plan = V.llm_json(gem, cfg, system, prompt)
+    plan = {}
+    for attempt in range(3):
+        plan = P.nodash(V.llm_json(gem, cfg, system, prompt))
+        top = {k: plan.get(k) for k in ("title", "hook", "hook_stat", "intro", "thumb_text", "thumb_stat")}
+        n_ok = len([s for s in plan.get("sections", []) if s.get("narration") and not _banned(s)])
+        if not _banned(top) and n_ok >= 3:
+            break
+        log(f"   ! kịch bản còn nhắc ENA/95%/14 ngày (lần {attempt + 1}), viết lại")
+    plan = scrub_plan(plan)
+    if len([s for s in plan.get("sections", []) if s.get("narration")]) < 2 or not plan.get("hook"):
+        raise RuntimeError("Kịch bản không đủ nội dung sau khi bỏ đoạn ENA")
     plan["sections"] = [s for s in plan.get("sections", []) if s.get("narration")][: int(ic.get("max_sections", 6))]
     plan["posts"] = posts
     log("③ Dữ liệu thị trường + ảnh (AI lọc ảnh lạc đề)")

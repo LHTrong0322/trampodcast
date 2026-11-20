@@ -42,7 +42,7 @@ const TopBar: React.FC<{source?: string; idx?: number; total?: number; brand: st
       ) : null}
       {total ? (
         <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
-          {Array.from({length: total}, (_, i) => <div key={i} style={{width: i + 1 === idx ? 40 : 12, height: 6, borderRadius: 9,
+          {Array.from({length: total}, (_, i) => <div key={i} style={{width: i + 1 === idx ? 14 : 10, height: i + 1 === idx ? 14 : 10, borderRadius: 99,
             background: i + 1 <= (idx || 0) ? ac : 'rgba(255,255,255,0.15)'}} />)}
           <div style={{color: C.ink, fontWeight: 800, fontSize: 24, marginLeft: 10}}>{String(idx).padStart(2, '0')}<span style={{color: C.muted}}>/{String(total).padStart(2, '0')}</span></div>
         </div>
@@ -186,7 +186,7 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Po
       <TopBar source={sc.source} idx={sc.idx} total={sc.total} brand={brandName} project={sc.project} />
       <div style={{position: 'absolute', left: 110, top: 170, display: 'flex', alignItems: 'center', gap: 16, opacity: numS, fontFamily: FONT}}>
         <div style={{fontWeight: 800, fontSize: 30, color: ac}}>{String(sc.idx).padStart(2, '0')}</div>
-        <div style={{width: 60 * numS, height: 3, borderRadius: 3, background: ac}} />
+        <div style={{width: 10, height: 10, borderRadius: 99, background: ac, transform: `scale(${numS})`}} />
         <div style={{color: C.muted, fontWeight: 700, fontSize: 22, letterSpacing: 4}}>INSIGHT</div>
       </div>
       <div style={{position: 'absolute', left: 110, top: 230, width: 800, display: 'flex', flexDirection: 'column', gap: 40}}>

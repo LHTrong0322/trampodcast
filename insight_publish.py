@@ -85,7 +85,17 @@ def seo_pack(gem, cfg, res: dict) -> dict:
         tags.append(t)
         n += len(t) + 1
     seo["yt_tags"] = tags
-    return seo
+    import insight_lab as L   # bỏ mọi dòng SEO nhắc đoạn ENA 95% (Trọng cấm)
+    for k in ("yt_titles", "yt_takeaways", "yt_tags", "hashtags"):
+        if isinstance(seo.get(k), list):
+            seo[k] = [x for x in seo[k] if not L._banned(x)] or ([plan.get("title", "")] if k == "yt_titles" else [])
+    for k in ("yt_intro", "pinned_comment", "keyword"):
+        if isinstance(seo.get(k), str):
+            seo[k] = L._scrub_text(seo[k])
+    seo["shorts"] = [{kk: ("" if L._banned(vv) else vv) for kk, vv in sh.items()} for sh in seo.get("shorts") or [] if isinstance(sh, dict)]
+    if L._banned(seo.get("yt_description", "")):
+        seo["yt_description"] = "\n".join(l for l in seo["yt_description"].split("\n") if not L._banned(l) or "x.com/" in l)
+    return P.nodash(seo)
 
 
 # ---------------------------------------------------------------------------
@@ -94,8 +104,8 @@ def seo_pack(gem, cfg, res: dict) -> dict:
 def thumbnail(res: dict, out: Path) -> Path | None:
     plan = res["plan"]
     proj = next((s.get("project") for s in res["scenes"] if s.get("project") and s["project"].get("logo")), None)
-    props = {"comp": "Thumb", "width": 1280, "height": 720, "text": V.en_money(plan.get("thumb") or plan.get("title", ""))[:48],
-             "stat": V.en_money(plan.get("hook_stat", ""))[:8], "accent": (proj or {}).get("color") or "#7C6CFF",
+    props = {"comp": "Thumb", "width": 1280, "height": 720, "text": P.nodash(V.en_money(plan.get("thumb") or plan.get("title", "")))[:48],
+             "stat": R.real_number(V.en_money(plan.get("hook_stat", "")), plan.get("posts") or [])[:8], "accent": (proj or {}).get("color") or "#7C6CFF",
              "projectLogo": (proj or {}).get("logo"), "bg": None,
              "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")}
     try:
@@ -173,14 +183,14 @@ def review_text(rv: dict) -> str:
     lines = [f"🧐 BOT REVIEW · điểm tổng {rv.get('score', '?')}/10", ""]
     lines += [f"• {names.get(k, k)}: {v}/10" for k, v in sc.items()]
     if rv.get("tot"):
-        lines += ["", "👍 Đang tốt:"] + [f"– {x}" for x in rv["tot"]]
+        lines += ["", "👍 Đang tốt:"] + [f"• {x}" for x in rv["tot"]]
     if rv.get("can_sua"):
         lines += ["", "🔧 Nên sửa:"] + [f"{i + 1}. {x}" for i, x in enumerate(rv["can_sua"])]
     if rv.get("retention_risk"):
         lines += ["", "⚠️ Dễ mất người xem: " + rv["retention_risk"]]
     if rv.get("script_tips"):
-        lines += ["", "✍️ Mẹo kịch bản (bot tự áp dụng cho video sau):"] + [f"– {x}" for x in rv["script_tips"]]
-    return "\n".join(lines)
+        lines += ["", "✍️ Mẹo kịch bản:"] + [f"• {x}" for x in rv["script_tips"]]
+    return P.nodash("\n".join(lines))
 
 
 # ---------------------------------------------------------------------------
@@ -251,12 +261,12 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None) -> di
     for i, s in enumerate(res["shorts"]):
         sh = (seo.get("shorts") or [{}] * 9)[i] if i < len(seo.get("shorts") or []) else {}
         tg_video(s["path"], f"📱 Short {i + 1}: {sh.get('yt_title') or s['title']}")
-    yt = ("📺 YOUTUBE — copy dán khi đăng\n\nTIÊU ĐỀ (chọn 1):\n" + "\n".join(f"{i + 1}. {t}" for i, t in enumerate(seo.get("yt_titles", [])))
+    yt = ("📺 YOUTUBE: copy dán khi đăng\n\nTIÊU ĐỀ (chọn 1):\n" + "\n".join(f"{i + 1}. {t}" for i, t in enumerate(seo.get("yt_titles", [])))
           + "\n\nMÔ TẢ:\n" + seo["yt_description"] + "\n\nTAGS:\n" + ", ".join(seo.get("yt_tags", []))
           + ("\n\nBÌNH LUẬN GHIM:\n" + seo["pinned_comment"] if seo.get("pinned_comment") else ""))
     tg_text(yt)
     if seo.get("shorts"):
-        tk = ["🎵 TIKTOK / SHORTS — caption từng video ngắn"]
+        tk = ["🎵 TIKTOK / SHORTS: caption từng video ngắn"]
         for i, sh in enumerate(seo["shorts"][: len(res["shorts"])]):
             tk += ["", f"Short {i + 1}", f"Shorts title: {sh.get('yt_title', '')}",
                    f"TikTok: {sh.get('tiktok_caption', '')} {' '.join(sh.get('tiktok_hashtags', []))}"]
