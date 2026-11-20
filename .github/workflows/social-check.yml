@@ -34,9 +34,25 @@ jobs:
                                     headers={"Authorization": "Bearer " + r["access_token"]}).json()
                   for c in ch.get("items", []):
                       print("YOUTUBE OK, kênh:", c["snippet"]["title"], "| id:", c["id"], "| đã xác minh dài:", c.get("status", {}).get("longUploadsStatus"))
+                  st = requests.get("https://www.googleapis.com/youtube/v3/channels", params={"part": "statistics,contentDetails", "mine": "true"},
+                                    headers={"Authorization": "Bearer " + r["access_token"]}).json()["items"][0]
+                  print("YOUTUBE SỐ VIDEO:", st["statistics"].get("videoCount"))
+                  up = st["contentDetails"]["relatedPlaylists"]["uploads"]
+                  vs = requests.get("https://www.googleapis.com/youtube/v3/playlistItems", params={"part": "snippet,status", "playlistId": up, "maxResults": 10},
+                                    headers={"Authorization": "Bearer " + r["access_token"]}).json().get("items", [])
+                  for v in vs:
+                      print("YOUTUBE VIDEO:", v["snippet"]["title"], "|", v.get("status", {}).get("privacyStatus"), "|", v["snippet"]["resourceId"]["videoId"])
                   if not ch.get("items"):
                       print("YOUTUBE: token đúng nhưng không thấy kênh", ch.get("error", {}).get("message", ""))
           if os.getenv("FB_PAGE_TOKEN"):
               j = requests.get(f"https://graph.facebook.com/v25.0/{os.environ['FB_PAGE_ID'].strip()}",
                                params={"fields": "name", "access_token": os.environ["FB_PAGE_TOKEN"].strip()}).json()
               print("FACEBOOK:", j.get("name") or j.get("error", {}).get("message"))
+              rl = requests.get(f"https://graph.facebook.com/v25.0/{os.environ['FB_PAGE_ID'].strip()}/video_reels",
+                                params={"fields": "id,description,status", "access_token": os.environ["FB_PAGE_TOKEN"].strip()}).json()
+              print("FACEBOOK SỐ REELS:", len(rl.get("data", [])), rl.get("error", {}).get("message", ""))
+              for x in rl.get("data", [])[:10]:
+                  print("FACEBOOK REEL:", x.get("id"), "|", (x.get("status") or {}).get("video_status"), "|", (x.get("description") or "")[:60])
+              vv = requests.get(f"https://graph.facebook.com/v25.0/{os.environ['FB_PAGE_ID'].strip()}/videos",
+                                params={"fields": "id,title,published", "access_token": os.environ["FB_PAGE_TOKEN"].strip()}).json()
+              print("FACEBOOK SỐ VIDEO:", len(vv.get("data", [])), vv.get("error", {}).get("message", ""))
