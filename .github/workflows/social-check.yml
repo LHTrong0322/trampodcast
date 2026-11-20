@@ -1,0 +1,42 @@
+name: Kiểm tra key mạng xã hội (không đăng gì)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: YouTube, Facebook, TikTok
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          SOCIAL_AUTOPOST: ${{ vars.SOCIAL_AUTOPOST }}
+          SOCIAL_PRIVACY: ${{ vars.SOCIAL_PRIVACY }}
+        shell: python
+        run: |
+          import os, requests
+          print("SOCIAL_AUTOPOST =", os.getenv("SOCIAL_AUTOPOST") or "(chưa có)", "| SOCIAL_PRIVACY =", os.getenv("SOCIAL_PRIVACY") or "(chưa có)")
+          for k in ["YT_CLIENT_ID","YT_CLIENT_SECRET","YT_REFRESH_TOKEN","FB_PAGE_ID","FB_PAGE_TOKEN","TIKTOK_CLIENT_KEY"]:
+              print(k, "CÓ" if os.getenv(k, "").strip() else "chưa có")
+          if os.getenv("YT_REFRESH_TOKEN"):
+              r = requests.post("https://oauth2.googleapis.com/token", data={"client_id": os.environ["YT_CLIENT_ID"].strip(),
+                  "client_secret": os.environ["YT_CLIENT_SECRET"].strip(), "refresh_token": os.environ["YT_REFRESH_TOKEN"].strip(),
+                  "grant_type": "refresh_token"}).json()
+              if "access_token" not in r:
+                  print("YOUTUBE LỖI:", r.get("error"), r.get("error_description"))
+              else:
+                  ch = requests.get("https://www.googleapis.com/youtube/v3/channels", params={"part": "snippet,status", "mine": "true"},
+                                    headers={"Authorization": "Bearer " + r["access_token"]}).json()
+                  for c in ch.get("items", []):
+                      print("YOUTUBE OK, kênh:", c["snippet"]["title"], "| đã xác minh dài:", c.get("status", {}).get("longUploadsStatus"))
+                  if not ch.get("items"):
+                      print("YOUTUBE: token đúng nhưng không thấy kênh", ch.get("error", {}).get("message", ""))
+          if os.getenv("FB_PAGE_TOKEN"):
+              j = requests.get(f"https://graph.facebook.com/v25.0/{os.environ['FB_PAGE_ID'].strip()}",
+                               params={"fields": "name", "access_token": os.environ["FB_PAGE_TOKEN"].strip()}).json()
+              print("FACEBOOK:", j.get("name") or j.get("error", {}).get("message"))
