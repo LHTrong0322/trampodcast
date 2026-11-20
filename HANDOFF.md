@@ -66,7 +66,12 @@ giọng gemini:Ludo (dự phòng vieneu:Hải Đăng), theme light.
 5. ✅ compliance.py (bot tuân thủ) chạy trong publish() trước Release/Telegram: quét props/SEO/notes, OCR khung hình;
    gạch ngang trên hình → Release NHÁP + báo Telegram. Mọi tin Telegram qua podcast._tg_safe_post (nodash).
    Đã quét sạch gạch ngang dài trong mã nguồn. Tiến độ trên video đổi thành chấm tròn (vạch ngang bị OCR nhầm).
-6. ⏳ Dựng lại bài https://x.com/zeroxkyle/status/2106571278929010769: run 44711829987 (dispatch 16:34 VN 20/11).
+6. ✅ Run 44711829987 (giọng Riko, 16:36) → Release insight-20261120-1636-light, review 6,3/10 (trước 5,4), bot tuân thủ đạt.
+   Vòng sửa 2 (commit "Vòng sửa 2 theo review 6,3/10", đẩy lúc ~17:50): hook teaser 3 tiêu chí, cảnh số liệu toàn màn hình,
+   phần chẵn đảo bố cục, phụ đề nền xanh than chữ trắng 50px, short ẩn phụ đề lúc hook, không lặp số hook, thử lại
+   CoinGecko range (lần trước báo "không có giá" ENA 20/09→04/10), lưu lab zip vào Release + input lab_tag để dựng lại
+   không tốn TTS. Một phiên khác (đang nói chuyện với Trọng) đã chạy run 44721587962 (commit e416259, giọng Ludo,
+   CHƯA có vòng sửa 2). Việc tiếp: đọc review run đó; nếu < 9 thì dispatch lại với code mới (giọng Ludo, theme light).
 7. Sau mỗi lần dựng: tải Release, tự xem khung hình, đọc review mới nhất, báo Trọng ngắn gọn.
 
 ## 7. Bài học vận hành
