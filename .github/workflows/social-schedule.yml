@@ -1,0 +1,50 @@
+name: Đặt lịch đăng + bình luận đúng giờ
+
+on:
+  workflow_dispatch:
+    inputs:
+      plan:
+        description: "File kế hoạch đã duyệt (vd scripts/posts/20261120-1915.json). Trống = chỉ đăng bình luận tới giờ"
+        required: false
+        default: ""
+  schedule:
+    - cron: "7 * * * *"   # mỗi giờ phút 07: đăng bình luận nào đã tới giờ
+
+permissions:
+  contents: write
+
+concurrency:
+  group: social-schedule
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests feedparser pyyaml beautifulsoup4 pillow numpy
+      - name: Chạy
+        env:
+          GH_TOKEN: ${{ github.token }}
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ -n "${{ github.event.inputs.plan }}" ]; then python social_schedule.py post "${{ github.event.inputs.plan }}"; fi
+          python social_schedule.py comments
+      - name: Lưu trạng thái
+        if: always()
+        run: |
+          git config user.name "tram-podcast-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add scripts/posts/*.state.json 2>/dev/null || true
+          git diff --cached --quiet && exit 0
+          git commit -q -m "Trạng thái đăng lịch $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do git pull -q --rebase origin main && git push -q origin HEAD:main && break; sleep 5; done
