@@ -1,20 +1,17 @@
 import React from 'react';
 import {Img, interpolate, staticFile, useCurrentFrame, useVideoConfig, spring} from 'remotion';
-import {BRAND, T, C, clamp, DISPLAY, ease, fitSize, FONT, glass, HEAD, useAccent} from './ui';
+import {C, clamp, ease, FONT, useAccent} from './ui';
 
-export type Chart = {ticker: string; series: number[]; days: number; start?: string; end?: string; recent?: boolean};
-export type DataSpec = {type: string; tickers?: string[]; items?: {label: string; value?: string; num?: number}[]; title?: string; chart?: Chart | null};
+export type DataSpec = {type: string; tickers?: string[]; items?: {label: string; value?: string}[]; title?: string};
 
 const Frame: React.FC<{w: number; h: number; title: string; sub?: string; children: React.ReactNode}> = ({w, h, title, sub, children}) => {
   const ac = useAccent();
   return (
-  <div style={{width: w, height: h, borderRadius: 26, ...glass, borderTop: `4px solid ${ac}`,
-    boxShadow: T.shadow, padding: 36, boxSizing: 'border-box', fontFamily: FONT,
+  <div style={{width: w, height: h, borderRadius: 26, background: C.panel, border: `1px solid ${C.line}`, borderTop: `4px solid ${ac}`,
+    boxShadow: '0 18px 50px rgba(40,50,110,0.12)', padding: 36, boxSizing: 'border-box', fontFamily: FONT,
     display: 'flex', flexDirection: 'column', gap: 18, overflow: 'hidden'}}>
     <div style={{display: 'flex', alignItems: 'baseline', gap: 14}}>
-      {/* tiêu đề tự co cỡ chữ cho vừa, không bao giờ cắt bằng dấu … */}
-      <div style={{color: C.ink, fontFamily: HEAD, fontWeight: 700, lineHeight: 1.15, maxWidth: sub === '' ? w - 80 : w - 300,
-        fontSize: fitSize(title, sub === '' ? w - 80 : w - 300, 76, 32, 20)}}>{title}</div>
+      <div style={{color: C.ink, fontWeight: 800, fontSize: 32, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: sub === '' ? w - 80 : w - 300}}>{title}</div>
       <div style={{flex: 1}} />
       {sub === '' ? null : <div style={{color: C.muted, fontWeight: 600, fontSize: 18, whiteSpace: 'nowrap'}}>{sub || 'Dữ liệu thật · CoinGecko'}</div>}
     </div>
@@ -117,16 +114,16 @@ const Heatmap: React.FC<{data: any; w: number; h: number}> = ({data, w, h}) => {
         {mk.map((m: any, i: number) => {
           const c = m.chg7 ?? 0;
           const k = Math.min(1, Math.abs(c) / 15);
-          const bg = c >= 0 ? `rgba(60,196,141,${0.12 + 0.38 * k})` : `rgba(229,103,125,${0.12 + 0.38 * k})`;
+          const bg = c >= 0 ? `rgba(46,229,157,${0.18 + 0.6 * k})` : `rgba(255,84,112,${0.18 + 0.6 * k})`;
           const s = interpolate(f - i * 2, [0, 12], [0, 1], clamp);
           return (
             <div key={m.sym} style={{width: cw, height: 112, borderRadius: 16, background: bg, display: 'flex', flexDirection: 'column',
               alignItems: 'center', justifyContent: 'center', gap: 4, opacity: s, transform: `scale(${0.8 + 0.2 * s})`}}>
               <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
                 <Img src={staticFile(`logos/${m.sym}.png`)} style={{width: 30, height: 30, borderRadius: 99}} />
-                <span style={{color: T.tileInk, fontWeight: 800, fontSize: 26}}>{m.sym}</span>
+                <span style={{color: '#fff', fontWeight: 800, fontSize: 26}}>{m.sym}</span>
               </div>
-              <div style={{color: T.tileInk, fontWeight: 800, fontSize: 28}}>{c >= 0 ? '+' : ''}{c.toFixed(1)}%</div>
+              <div style={{color: '#fff', fontWeight: 800, fontSize: 28}}>{c >= 0 ? '+' : ''}{c.toFixed(1)}%</div>
             </div>
           );
         })}
@@ -137,15 +134,12 @@ const Heatmap: React.FC<{data: any; w: number; h: number}> = ({data, w, h}) => {
 
 // ---- coin chart ----
 const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = ({data, spec, w, h}) => {
-  // biểu đồ đã kiểm tra khớp lời đọc (đúng khoảng thời gian sự kiện) do Python gắn vào spec.chart
-  const ch = spec.chart;
-  const sym = (ch?.ticker || spec.tickers?.[0] || 'BTC').replace('$', '').toUpperCase();
+  const sym = (spec.tickers?.[0] || 'BTC').replace('$', '').toUpperCase();
   const coin = data?.coins?.[sym];
   const mk = (data?.markets || []).find((x: any) => x.sym === sym);
-  const series: number[] = ch?.series || coin?.series || (sym === 'BTC' && data?.btc_90d?.length ? data.btc_90d : mk?.spark || []);
-  const m = {sym, name: coin?.name || mk?.name || sym, price: series[series.length - 1]};
-  const days = ch ? ch.days : coin ? coin.days : sym === 'BTC' && data?.btc_90d ? 90 : 7;
-  const period = ch?.start ? `${days} ngày, từ ${ch.start} đến ${ch.end}` : ch?.end ? `${days} ngày gần nhất, đến ${ch.end}` : `${days} ngày`;
+  const m = coin ? {sym, name: coin.name, price: coin.price} : mk;
+  const series: number[] = coin?.series || (sym === 'BTC' && data?.btc_90d?.length ? data.btc_90d : mk?.spark || []);
+  const days = coin ? coin.days : sym === 'BTC' && data?.btc_90d ? 90 : 7;
   const p = useP(4, 50);
   const W = w - 72, H = h - 200;
   if (!series.length) return <Frame w={w} h={h} title={sym}><div /></Frame>;
@@ -157,53 +151,30 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
   const col = up ? C.green : C.red;
   const chg = ((series[series.length - 1] / series[0] - 1) * 100);
   const last = pts[n - 1];
-  const f = useCurrentFrame();
-  // điểm nhấn: đỉnh, đáy, mức giá đầu kỳ
-  const iHi = series.indexOf(hi), iLo = series.indexOf(lo);
-  const y0 = pts[0][1];
-  const lab = (i: number, txt: string, c: string, above: boolean) => {
-    if (i >= n) return null;
-    const [x, y] = pts[i];
-    const o = interpolate(f, [Math.round((i / pts.length) * 50) + 6, Math.round((i / pts.length) * 50) + 16], [0, 1], clamp);
-    const lx = Math.min(W - 150, Math.max(0, x - 70));
-    const ly = above ? Math.max(4, y - 52) : Math.min(H - 40, y + 16);   // không tràn lên dòng giá phía trên
-    return <g key={txt} opacity={o}>
-      <circle cx={x} cy={y} r={8} fill={c} stroke={T.solid} strokeWidth={3} />
-      <rect x={lx} y={ly} width={150} height={36} rx={10} fill={T.solid} stroke={c} strokeWidth={1.5} />
-      <text x={lx + 75} y={ly + 25} fill={C.ink} fontSize={20} fontFamily="HEAD" fontWeight={700} textAnchor="middle">{txt}</text>
-    </g>;
-  };
-  const pulse = 10 + 6 * Math.abs(Math.sin(f / 8));
   return (
-    <Frame w={w} h={h} title={`${m.name} · ${period}`} sub={ch?.start ? 'Giá thật · CoinGecko' : undefined}>
+    <Frame w={w} h={h} title={`${m?.name || sym} · ${days} ngày`}>
       <div style={{display: 'flex', alignItems: 'center', gap: 18, marginBottom: 10}}>
-        <Img src={staticFile(`logos/${m?.sym || sym}.png`)} style={{width: 52, height: 52, borderRadius: '50%'}} />
-        <div style={{color: C.ink, fontFamily: DISPLAY, fontSize: 44, fontWeight: 800}}>{money(m.price)}</div>
-        <div style={{color: col, fontFamily: DISPLAY, fontSize: 32, fontWeight: 800}}>{chg >= 0 ? '+' : ''}{chg.toFixed(1)}%</div>
+        <Img src={staticFile(`logos/${m?.sym || sym}.png`)} style={{width: 52, height: 52, borderRadius: 99}} />
+        <div style={{color: C.ink, fontSize: 52, fontWeight: 800}}>{m ? money(m.price) : ''}</div>
+        <div style={{color: col, fontSize: 40, fontWeight: 800}}>{chg >= 0 ? '+' : ''}{chg.toFixed(1)}%</div>
       </div>
-      <svg width={W} height={H} style={{overflow: 'hidden'}}>
-        <defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor={col} stopOpacity={0.4} /><stop offset="1" stopColor={col} stopOpacity={0} /></linearGradient></defs>
-        <line x1={0} x2={W} y1={y0} y2={y0} stroke={C.muted} strokeDasharray="6 8" strokeWidth={1.5} opacity={0.6} />
-        <text x={W} y={y0 - 8} fill={C.muted} fontSize={18} textAnchor="end" fontFamily="BODY">đầu kỳ {money(series[0])}</text>
+      <svg width={W} height={H}>
+        <defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor={col} stopOpacity={0.45} /><stop offset="1" stopColor={col} stopOpacity={0} /></linearGradient></defs>
         <path d={`${path} L${last[0]},${H} L0,${H} Z`} fill="url(#g)" />
-        <path d={path} stroke={col} strokeWidth={4} fill="none" strokeLinejoin="round" />
-        {lab(iHi, `Đỉnh ${money(hi)}`, BRAND.orange, true)}
-        {lab(iLo, `Đáy ${money(lo)}`, BRAND.sky, false)}
-        <circle cx={last[0]} cy={last[1]} r={pulse} fill={col} opacity={0.25} />
-        <circle cx={last[0]} cy={last[1]} r={8} fill={C.ink} />
+        <path d={path} stroke={col} strokeWidth={4} fill="none" />
+        <circle cx={last[0]} cy={last[1]} r={10} fill="#fff" />
       </svg>
     </Frame>
   );
 };
 
-// ---- stat compare bars: CHỈ khi mọi giá trị là số cùng đơn vị (Python đã tính sẵn num) ----
+// ---- stat compare bars ----
 const StatCompare: React.FC<{spec: DataSpec; w: number; h: number}> = ({spec, w, h}) => {
   const items = (spec.items || []).slice(0, 4);
-  const nums = items.map((it) => (typeof it.num === 'number' ? it.num : NaN));
+  const nums = items.map((it) => parseFloat(String(it.value || '').replace(/[^\d.]/g, '')) || 0);
+  const mx = Math.max(1, ...nums);
   const p = useP(4, 40);
   const ac = useAccent();
-  if (nums.some((n) => !isFinite(n)) || items.length < 2) return <TextCards spec={spec} w={w} h={h} />;
-  const mx = Math.max(...nums) || 1;
   const cols = [ac, `${ac}CC`, `${ac}99`, `${ac}77`];
   return (
     <Frame w={w} h={h} title={spec.title || 'So sánh'} sub="Số liệu từ bài gốc">
@@ -213,36 +184,11 @@ const StatCompare: React.FC<{spec: DataSpec; w: number; h: number}> = ({spec, w,
             <div style={{display: 'flex', justifyContent: 'space-between', color: C.ink, fontSize: 28, fontWeight: 700, marginBottom: 8}}>
               <span>{it.label}</span><span style={{color: cols[i], fontWeight: 800}}>{it.value}</span>
             </div>
-            <div style={{height: 26, borderRadius: 13, background: T.track}}>
-              <div style={{height: 26, borderRadius: 13, width: `${Math.max(3, (nums[i] / mx) * 100) * p}%`, background: cols[i]}} />
+            <div style={{height: 26, borderRadius: 13, background: 'rgba(25,35,80,0.08)'}}>
+              <div style={{height: 26, borderRadius: 13, width: `${(nums[i] / mx) * 100 * p}%`, background: cols[i]}} />
             </div>
           </div>
         ))}
-      </div>
-    </Frame>
-  );
-};
-
-// ---- thẻ chữ: so sánh dạng bảng khi giá trị là chữ hoặc khác đơn vị (không vẽ thanh rỗng) ----
-const TextCards: React.FC<{spec: DataSpec; w: number; h: number}> = ({spec, w, h}) => {
-  const f = useCurrentFrame();
-  const {fps} = useVideoConfig();
-  const ac = useAccent();
-  const items = (spec.items || []).slice(0, 4);
-  const two = items.length === 2;
-  return (
-    <Frame w={w} h={h} title={spec.title || 'So sánh'} sub="Từ bài gốc">
-      <div style={{display: 'flex', flexDirection: two ? 'row' : 'column', gap: 18, height: '100%', justifyContent: 'center', alignItems: two ? 'center' : 'stretch'}}>
-        {items.map((it, i) => {
-          const s = Math.max(0.35, spring({frame: f - i * 6, fps, config: {damping: 14}}));
-          return <div key={i} style={{flex: two ? 1 : undefined, height: two ? '78%' : undefined, boxSizing: 'border-box', borderRadius: 18, padding: two ? '26px 28px' : '14px 24px', background: `${ac}14`,
-            border: `1.5px solid ${ac}55`, display: 'flex', flexDirection: two ? 'column' : 'row', justifyContent: two ? 'center' : 'space-between',
-            alignItems: two ? 'flex-start' : 'center', gap: two ? 16 : 20, opacity: s, transform: `translateY(${(1 - s) * 24}px)`}}>
-            <div style={{color: C.muted, fontFamily: HEAD, fontWeight: 700, fontSize: two ? 30 : 28}}>{it.label}</div>
-            {it.value ? <div style={{color: C.ink, fontFamily: two ? DISPLAY : HEAD, fontWeight: 800, fontSize: two ? 50 : 32, lineHeight: 1.15,
-              textAlign: two ? 'left' : 'right'}}>{it.value}</div> : null}
-          </div>;
-        })}
       </div>
     </Frame>
   );
@@ -260,7 +206,7 @@ const Checklist: React.FC<{spec: DataSpec; w: number; h: number}> = ({spec, w, h
         {items.map((it, i) => {
           const s = spring({frame: f - 6 - i * 14, fps, config: {damping: 12}});
           return <div key={i} style={{display: 'flex', gap: 20, alignItems: 'center', opacity: s, transform: `translateX(${(1 - s) * 40}px)`}}>
-            <div style={{width: 48, height: 48, borderRadius: 12, background: ac, color: '#0A0C12', fontSize: 30, fontWeight: 800,
+            <div style={{width: 48, height: 48, borderRadius: 12, background: ac, color: '#FFFFFF', fontSize: 30, fontWeight: 800,
               display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${s})`}}>✓</div>
             <div style={{color: C.ink, fontSize: 34, fontWeight: 700}}>{it.label}</div>
           </div>;
@@ -270,35 +216,18 @@ const Checklist: React.FC<{spec: DataSpec; w: number; h: number}> = ({spec, w, h
   );
 };
 
-// hình dữ liệu này có gì để vẽ không (không có → cảnh đó dùng nhịp hình khác, không để khung trống)
-export const dataOk = (spec: DataSpec | null | undefined, data: any): boolean => {
-  if (!spec || !spec.type || spec.type === 'none') return false;
-  if (['stat_compare', 'checklist', 'text_cards'].includes(spec.type)) return (spec.items || []).length > 0;
-  if (spec.type === 'coin_chart') {
-    if (spec.chart?.series?.length) return true;
-    const sym = (spec.tickers?.[0] || '').replace('$', '').toUpperCase();
-    return !!(data?.coins?.[sym] || (data?.markets || []).some((x: any) => x.sym === sym));
-  }
-  if (spec.type === 'fear_greed') return !!data?.fear_greed?.length;
-  if (spec.type === 'dominance') return !!data?.global?.dominance;
-  if (spec.type === 'market_heatmap') return !!data?.markets?.length;
-  return false;
-};
-
 export const DataPanel: React.FC<{spec: DataSpec; data: any; w: number; h: number}> = ({spec, data, w, h}) => {
   switch (spec.type) {
     case 'fear_greed': return <FearGreed data={data} w={w} h={h} />;
     case 'dominance': return <Dominance data={data} w={w} h={h} />;
     case 'market_heatmap': return <Heatmap data={data} w={w} h={h} />;
-    case 'text_cards': return (spec.items || []).length ? <TextCards spec={spec} w={w} h={h} /> : null;
     case 'coin_chart': {
-      if (spec.chart?.series?.length) return <CoinChart data={data} spec={spec} w={w} h={h} />;
       const sym = (spec.tickers?.[0] || '').replace('$', '').toUpperCase();
       const ok = data?.coins?.[sym] || (data?.markets || []).some((x: any) => x.sym === sym);
       return ok ? <CoinChart data={data} spec={spec} w={w} h={h} /> : <Heatmap data={data} w={w} h={h} />;
     }
-    case 'stat_compare': return (spec.items || []).length ? <StatCompare spec={spec} w={w} h={h} /> : null;
-    case 'checklist': return (spec.items || []).length ? <Checklist spec={spec} w={w} h={h} /> : null;
+    case 'stat_compare': return (spec.items || []).length ? <StatCompare spec={spec} w={w} h={h} /> : <Heatmap data={data} w={w} h={h} />;
+    case 'checklist': return (spec.items || []).length ? <Checklist spec={spec} w={w} h={h} /> : <FearGreed data={data} w={w} h={h} />;
     default: return null;
   }
 };

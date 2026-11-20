@@ -95,7 +95,7 @@ def read_x(url: str) -> dict | None:
         if r.ok:
             j = r.json()
             text = P.clean_text(re.sub(r"<a [^>]*>pic\.twitter\.com[^<]*</a>", "", j.get("html", "")), 6000)
-            text = re.sub(r"\u2014 .*$", "", text).strip()  # bỏ phần đuôi "(em dash) Tên (@handle) ngày" của oEmbed
+            text = re.sub(r"— .*$", "", text).strip()
             if text:
                 return {"author": j.get("author_name", user), "handle": user, "text": text, "url": url}
     except Exception as ex:
@@ -196,7 +196,9 @@ khung tư duy, kinh nghiệm thực chiến có thể áp dụng; giải thích 
 thích ngay bằng lời đơn giản), có ví dụ cụ thể. KHÔNG đọc nguyên văn bài gốc, phải diễn giải lại
 bằng lời của mình; luôn ghi nhận ý tưởng thuộc về ai (vd "theo chia sẻ của @abc").
 Không hô hào mua bán, không hứa lợi nhuận. Lời văn NÓI, đọc bằng máy: không markdown, không
-emoji, không link; số đọc tự nhiên. """ + V.TERMS
+emoji, không link; số đọc tự nhiên.
+Từ ngữ Trọng chốt (21/11): nói "insider", KHÔNG nói "người trong cuộc"; nói "retail", KHÔNG nói "nhỏ lẻ"
+(vd "insider biết lịch mở khoá, còn retail thì không"). """ + V.TERMS
 
 PROMPT = """Các bài viết nguồn (mỗi bài có số [id]):
 {posts}
@@ -412,6 +414,9 @@ def cook(out: Path, cfg: dict, gem, st: dict) -> dict:
             "shorts": v_files, "thumb": thumb}
 
 
+STANDARD_TAG = "20261120-1915"   # video chuẩn Trọng duyệt 21/11: chất lượng từ đây trở lên
+
+
 def produce(out: Path, cfg: dict, st: dict, links: str = ""):
     """Quy trình chính thức (kiểu video 2): nguyên liệu → dựng Remotion → SEO + Release + Telegram → bot review."""
     import insight_lab as L
@@ -426,66 +431,21 @@ def produce(out: Path, cfg: dict, st: dict, links: str = ""):
     else:
         log("Không có link nào đang chờ.")
         return
-    # rút kinh nghiệm từ 3 lần review gần nhất
+    # Tự học từ bot review (Trọng 21/11: luôn tham khảo review để cải tiến). CHỈ học từ video làm theo chuẩn
+    # mới (từ 20261120-1915, bản Trọng khen ổn), bỏ qua review các bản cũ bị chê để không học nhầm.
     rp = out / "insight" / "reviews.json"
     tips = []
     if rp.exists():
-        for r in json.loads(rp.read_text(encoding="utf-8"))[-3:]:
+        good = [r for r in json.loads(rp.read_text(encoding="utf-8")) if str(r.get("tag", "")) >= STANDARD_TAG]
+        for r in good[-3:]:
             tips += r.get("script_tips") or []
-    forced = [v.strip() for v in os.getenv("INSIGHT_VOICE", "").split(",") if v.strip()]
-    themes = [t.strip() for t in os.getenv("INSIGHT_THEMES", "").split(",") if t.strip()] or [""]
-    names = {"light": "Video nền trắng", "blue": "Video nền xanh đại dương", "slate": "Video nền xám xanh", "dark": "Video nền tối", "": "Video"}
-    pg = PB.Progress("Smart Penguin Insights đang dựng")
-    pg.set("Kịch bản + giọng đọc", 5, "đang viết kịch bản")
-    for th in themes:
-        pg.set(names.get(th, th), 0, "chờ")
-    L.PROGRESS = lambda p_, n_: pg.set("Kịch bản + giọng đọc", p_, n_)
-    import glob
-    import shutil
-    zips = glob.glob(os.getenv("INSIGHT_LAB_ZIP", "") or "__none__")
-    if zips:  # dựng lại từ "nguyên liệu" cũ (kịch bản + giọng đã đọc) → không tốn lượt TTS
-        # tên mới (thêm -r<giờ phút>) để KHÔNG ghi đè/xoá Release cũ
-        lab = Path("lab") / (Path(zips[0]).stem.replace("lab-", "") + datetime.now(P.VN_TZ).strftime("-r%H%M"))
-        shutil.unpack_archive(zips[0], lab)
-        log(f"♻️ Dùng lại nguyên liệu cũ {zips[0]} (không đọc giọng lại)")
-    else:
-        lab = L.prepare(src, Path("lab"), voices=forced or None, notes=tips[-6:])
-    L.PROGRESS = None
-    # lưu nguyên liệu (kịch bản, ảnh, giọng) vào Release để lần sau dựng lại không tốn lượt TTS
-    Path("render_out").mkdir(exist_ok=True)
-    lab_zip = Path(shutil.make_archive(f"render_out/lab-{lab.name}", "zip", lab))
-    pg.set("Kịch bản + giọng đọc", 100, "xong")
-    seo = None
-    for i, th in enumerate(themes):
-        nm = names.get(th, th)
-        if th:
-            os.environ["INSIGHT_THEME"] = th
-        log(f"🎨 Kiểu nền: {th or 'mặc định'}")
-        stage = {"n": 0}
-
-        def prog(x, nm=nm, stage=stage):  # video dài 0-75%, mỗi video ngắn chia đều 75-92%
-            if stage["n"] == 0:
-                pg.set(nm, 75 * x, "đang dựng video dài")
-            else:
-                pg.set(nm, 75 + 17 * ((stage["n"] - 1) + x) / 3, f"đang dựng video ngắn {stage['n']}")
-        R.PROGRESS = prog
-        orig = R.run_remotion
-
-        def counted(props, out_p, frames="", orig=orig, stage=stage):
-            r_ = orig(props, out_p, frames)
-            if not frames:
-                stage["n"] += 1
-            return r_
-        R.run_remotion = counted
-        res = R.render(lab, Path("render_out") / (th or "default"), shorts=(i == 0))
-        R.run_remotion = orig
-        R.PROGRESS = None
-        pg.set(nm, 93, "đang gửi Telegram + SEO" + (" + review" if i == 0 else ""))
-        pub = PB.publish(lab, res, Path("render_out") / (th or "default"), data_dir=out, do_review=(i == 0), seo=seo,
-                         extra_files=[lab_zip] if i == 0 else None)
-        seo = pub["seo"]
-        pg.set(nm, 100, "✅ đã gửi")
-    os.environ.pop("INSIGHT_THEME", None)
+            if r.get("retention_risk"):
+                tips.append("Đoạn dễ mất người xem lần trước: " + str(r["retention_risk"]))
+        tips = list(dict.fromkeys(tips))[:8]
+        log(f"   Học từ {len(good[-3:])} review gần nhất: {len(tips)} mẹo")
+    lab = L.prepare(src, Path("lab"), notes=tips)
+    res = R.render(lab, Path("render_out"))
+    PB.publish(lab, res, Path("render_out"), data_dir=out)
     for p in st["posts"]:
         if (links.strip() and p.get("url") and p["url"].split("?")[0] in links) or (not links.strip() and p in posts):
             p["used"] = True

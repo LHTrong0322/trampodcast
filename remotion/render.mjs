@@ -24,12 +24,7 @@ if (only) {
   let last = -1;
   await renderMedia({
     composition, serveUrl, codec: 'h264', outputLocation: outPath, inputProps, browserExecutable, chromiumOptions,
-    // Thông số nguồn sạch cho bước hậu kỳ platform_export.py (nó mã hoá lại theo chuẩn YouTube/TikTok/Reels):
-    // CRF 16 (ít mất chi tiết), màu BT.709, 4:2:0, âm thanh AAC 320k. LONG_RENDER_SCALE=1.3333 → dựng thẳng 1440p
-    // cho video dài (chữ nét hơn nâng cấp bằng ffmpeg nhưng chậm hơn ~1,5-1,8 lần; mặc định 1 = 1080p rồi nâng 1440p).
-    crf: 16, pixelFormat: 'yuv420p', colorSpace: 'bt709', audioCodec: 'aac', audioBitrate: '320k',
-    scale: composition.width > composition.height ? Number(process.env.LONG_RENDER_SCALE || 1) : 1,
-    concurrency: Number(process.env.CONCURRENCY || 0) || null, licenseKey: 'free-license',
+    crf: 20, concurrency: Number(process.env.CONCURRENCY || 0) || null, licenseKey: 'free-license',
     onProgress: ({progress}) => {
       const p = Math.floor(progress * 20);
       if (p !== last) { last = p; console.log(`render ${Math.round(progress * 100)}%`); }

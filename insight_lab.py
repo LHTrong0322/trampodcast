@@ -27,44 +27,7 @@ import insight as I
 log = P.log
 SR = V.SR
 
-def _rep(s: str, old: str, new: str) -> str:
-    """Thay 1 đoạn trong PROMPT gốc; báo lỗi ngay nếu không tìm thấy (tránh âm thầm dùng prompt cũ)."""
-    if old not in s:
-        raise RuntimeError(f"PROMPT gốc đã đổi, không tìm thấy: {old[:60]}")
-    return s.replace(old, new)
-
-
-_P = I.PROMPT
-_P = _rep(_P, '"hook": "câu mở màn ≤ 16 từ gây tò mò mạnh, đọc ~3 giây, không chào hỏi"',
-          '"hook": "ĐÚNG 2 câu ngắn, tổng ≤ 24 từ, không chào hỏi. Câu 1 chứa MỘT con số gây sốc có thật trong bài '
-          '(chính là hook_stat) và chạm vào nỗi đau/lợi ích người xem. Câu 2 hứa giá trị CỤ THỂ người xem nhận được '
-          '(vd \'Đây là lý do, và 3 tiêu chí để lọc.\')"')
-_P = re.sub(r'"hook_stat": "[^\n]*",', lambda m: '"hook_stat": "CHÍNH LÀ con số trong câu 1 của hook, viết y hệt '
-            '(vd \'90%\'); hook không có số thật thì để trống",', _P, count=1)
-_P = _rep(_P, '"hook_label": "giải thích ≤ 6 từ"', '"hook_label": "giải thích con số ≤ 6 từ"')
-_P = _rep(_P, '"intro": "lời chào + giới thiệu tập (~300 ký tự)"',
-          '"intro": "≤ 28 từ, đọc ≤ 8 giây: nửa câu ghi nguồn (vd \'Ý tưởng từ bài viết của @abc.\') rồi đọc NGUYÊN VĂN câu open_loop",\n'
-          '  "open_loop": "câu vòng lặp mở ≤ 14 từ, hứa điều sẽ có ở CUỐI video, khớp actions (vd \'Cuối video, mình chỉ 3 tiêu chí lọc coin làm được ngay.\')"')
-_P = _rep(_P, '"narration": "lời giảng 4-7 câu (~450-700 ký tự): insight là gì, vì sao đúng, ví dụ, cách áp dụng"',
-          '"narration": "lời giảng 7-11 câu NGẮN, mỗi câu 10-15 từ, 1 ý = 1 câu. Câu ĐẦU TIÊN là câu hỏi hoặc con số '
-          '(vd \'Vì sao Ethena tăng 95% trong 14 ngày?\'), KHÔNG mở bằng \'Theo Kyle trên X\' (nêu nguồn tự nhiên ở giữa phần). '
-          'Gồm: insight là gì, vì sao đúng, 1 ví dụ đời thường, cách áp dụng"')
-_P = _rep(_P, '"outro": "tổng kết 2-3 ý chính + nhắc không phải lời khuyên đầu tư + mời đăng ký (~280 ký tự)"',
-          '"outro": "≤ 75 từ: đọc lần lượt 3 tiêu chí trong actions (Một là..., Hai là..., Ba là...), rồi đọc NGUYÊN VĂN câu question, '
-          'nhắc không phải lời khuyên đầu tư, mời đăng ký",\n'
-          '  "actions": ["ĐÚNG 3 tiêu chí/hành động người xem làm được NGAY, mỗi cái ≤ 7 từ (vd \'Có doanh thu thật\', '
-          '\'Lịch unlock rõ ràng\', \'Có cơ chế buyback\')"],\n'
-          '  "question": "1 câu hỏi ≤ 16 từ kéo bình luận, gắn chủ đề (vd \'Coin bạn đang giữ đạt mấy tiêu chí?\')"')
-_P = _rep(_P, '"short_hooks": {{"số thứ tự section": "câu hook ≤ 12 từ đọc ~2 giây"}}',
-          '"short_hooks": {{"số thứ tự section": "câu hook GÂY SỐC ≤ 10 từ hiện chữ to ở giây đầu video ngắn; nếu có số thì dùng '
-          'đúng con số trong lời đọc phần đó"}}')
-_P = _rep(_P, '"thumb_text": "3-5 từ IN HOA cho ảnh bìa", "thumb_stat": "con số ngắn cho ảnh bìa, có thể trống"}}',
-          '"thumb_text": "2-5 từ IN HOA hứa GIÁ TRỊ HÀNH ĐỘNG ĐƯỢC (vd \'CÁCH LỌC COIN RÁC\', \'3 TIÊU CHÍ CHỌN ALTCOIN\'), '
-          'KHÔNG giật tít tiêu cực kiểu \'SẮP CHẾT\', \'SẬP\', \'TOANG\'", '
-          '"thumb_stat": "con số ngắn cho ảnh bìa (thường = hook_stat), có thể trống", '
-          '"thumb_points": ["3 nhãn ≤ 3 từ rút gọn từ actions để hiện checklist trên ảnh bìa (vd \'Doanh thu thật\')"]}}')
-
-PROMPT = _P.replace(
+PROMPT = I.PROMPT.replace(
     '"source_ids": [id bài nguồn]}}',
     '''"source_ids": [id bài nguồn],
       "bullets": ["2-3 ý chính hiện chữ trên màn hình, mỗi ý ≤ 7 từ, tiếng Việt, kiểu ghi chú"],
@@ -72,75 +35,64 @@ PROMPT = _P.replace(
       "data": {{"type": "chọn 1 hình dữ liệu THẬT hợp nhất cho phần này: coin_chart | fear_greed | dominance | market_heatmap | stat_compare | checklist | none",
                 "tickers": ["ticker coin nếu type=coin_chart, vd 'BTC'"],
                 "items": [{{"label": "≤ 5 từ", "value": "con số/kiểu tiếng Anh ngắn hoặc trống"}}],
-                "title": "tiêu đề ngắn cho hình, ≤ 6 từ",
-                "period_days": "CHỈ cho coin_chart nói về 1 SỰ KIỆN giá trong quá khứ: số ngày của sự kiện (vd 14 nếu 'tăng 95% trong 14 ngày'), không rõ thì null",
-                "end_days_before_post": "sự kiện đó kết thúc bao nhiêu ngày TRƯỚC ngày đăng bài nguồn (0 nếu kéo dài tới lúc đăng), không rõ thì null",
-                "claim_pct": "% thay đổi giá mà lời đọc khẳng định (vd 95 hoặc -40), không nói thì null"}},
-      "project": {{"name": "tên dự án/coin CHÍNH được bàn trong phần này (vd Hyperliquid), trống nếu không có", "ticker": "vd HYPE"}},
-      "x_quotes": [{{"text": "1-2 câu highlight NGUYÊN VĂN của tác giả, COPY CHÍNH XÁC từng chữ từ bài nguồn (giữ tiếng Anh), mỗi câu ≤ 30 từ", "vi": "bản dịch tiếng Việt tự nhiên, sát nghĩa, đọc mượt (đây là chữ hiện trên video)"}}],
-      "emphasis": ["3-5 cụm từ QUAN TRỌNG NHẤT trong lời đọc phần này (2-4 từ mỗi cụm, chép ĐÚNG từng chữ trong narration) để in đậm trên phụ đề"],
-      "terms": [{{"term": "thuật ngữ crypto khó xuất hiện trong lời đọc phần này (vd FDV, Low Float), tối đa 2", "explain": "giải thích ≤ 12 từ bằng TIẾNG VIỆT dễ hiểu"}}]}}''')
+                "title": "tiêu đề ngắn cho hình, ≤ 6 từ"}},
+      "project": {{"name": "tên dự án/coin CHÍNH được bàn trong phần này (vd Hyperliquid), trống nếu không có", "ticker": "vd HYPE"}}}}''')
 PROMPT += """
-Độ dài: nếu bài nguồn đủ ý, viết đủ {max_sections} phần, mỗi phần 120-170 từ.
+Độ dài: nếu bài nguồn đủ ý, viết đủ {max_sections} phần, mỗi phần 130-180 từ; hook ≤ 2 câu thật cuốn.
 Không nhắc đến AI, máy, bot hay "nội dung tổng hợp" ở bất kỳ đâu trong lời đọc.
-key_stat mỗi phần phải là con số/bằng chứng MỚI, KHÔNG lặp lại hook_stat.
-Gợi ý chọn data.type: lời đọc phần đó nói trực tiếp về tâm lý thị trường HIỆN TẠI → fear_greed (không dùng làm hình minh hoạ chung chung); về altcoin vs bitcoin, dòng tiền → dominance;
-về giá 1 coin cụ thể → coin_chart; so sánh 2-4 thứ có số → stat_compare (điền items); danh sách việc cần làm,
+Gợi ý chọn data.type: nói về tâm lý thị trường → fear_greed; về altcoin vs bitcoin, dòng tiền → dominance;
+về coin cụ thể → coin_chart; so sánh 2-4 thứ có số → stat_compare (điền items); danh sách việc cần làm /
 tiêu chí đánh giá → checklist (điền items, value để trống); bức tranh toàn thị trường → market_heatmap.
-stat_compare CHỈ dùng khi MỌI value là con số cùng đơn vị, so sánh được (vd doanh thu dự án A vs B); không trộn % với ngày;
-value là chữ thì dùng checklist.
-coin_chart nói về sự kiện giá trong QUÁ KHỨ (vd "ENA tăng 95% trong 14 ngày") thì BẮT BUỘC điền period_days,
-end_days_before_post, claim_pct để vẽ đúng khoảng thời gian đó; không xác định được thời gian thì chọn type none.
-hook_stat / thumb_stat: con số THẬT trong bài, nói về THỊ TRƯỜNG hoặc DỰ ÁN và gắn trực tiếp với luận điểm chính của video
-(vd % altcoin sụt giảm, doanh thu dự án, % tăng sau khi đổi tokenomics). TUYỆT ĐỐI không lấy số về thu nhập/lợi nhuận cá nhân,
-số người đăng ký, quảng cáo của tác giả, hay điểm số kiểu "10/10". Không chắc thì để trống. Cả video chỉ xoay quanh MỘT
-con số mở màn; số liệu mỗi phần phải khớp đúng bài nguồn (không làm tròn khác nhau giữa các chỗ).
-Giữa video (cuối phần 2) chèn 1 câu ngắn mời người xem bình luận ý kiến của họ.
-Thuật ngữ crypto (DCA, FDV, unlock, buyback, tokenomics, airdrop...) giữ tiếng Anh. Thuật ngữ KHÔNG thuộc crypto
-(vd PTSD, lemon market, survivorship bias, sunk cost) PHẢI nói bằng TIẾNG VIỆT trong lời đọc và mọi chữ trên hình
-(vd PTSD → "sang chấn tâm lý", lemon market → "thị trường chanh, nơi hàng tốt bị hàng xấu đè"), không để nguyên tiếng Anh.
-Không dùng dấu gạch ngang dài ở bất kỳ trường nào; dùng dấu phẩy hoặc hai chấm.
-Lời đọc: câu ngắn 10-15 từ, nhiều từ nối kiểu "Nhưng...", "Tại sao?", "Kết quả là..." để giữ nhịp; không lan man."""
+TUYỆT ĐỐI KHÔNG dùng dấu gạch ngang dài (em dash, en dash) ở bất kỳ đâu; cần ngắt ý thì dùng dấu phẩy hoặc dấu chấm.
+CẤM HOÀN TOÀN (chủ kênh yêu cầu): KHÔNG nhắc tới ENA / Ethena và chuyện "ENA tăng 95% trong 14 ngày nhờ một thay đổi
+duy nhất" ở bất kỳ đâu: không trong hook, intro, lời đọc, tiêu đề, bullets, quote, key_stat, hook_stat, thumb_text,
+thumb_stat, short_hooks; không làm phần nào về Ethena; không dùng con số 95% hay mốc 14 ngày. Hãy khai thác các ý khác
+của bài (thị trường lemon/coin rác, FDV, PMF, token alignment, Hyperliquid, tâm lý nhà đầu tư, cách chọn tài sản...)."""
 
-# thuật ngữ KHÔNG thuộc crypto → tiếng Việt (lưới an toàn sau khi AI viết kịch bản)
-NONCRYPTO_VI = {
-    r"PTSD": "sang chấn tâm lý",
-    r"post[- ]traumatic stress(?: disorder)?": "sang chấn tâm lý",
-    r"lemons? markets?|market for lemons|market of lemons": "thị trường chanh",
-    r"adverse selection": "lựa chọn bất lợi",
-    r"information asymmetry|asymmetric information": "bất cân xứng thông tin",
-    r"survivorship bias": "thiên kiến kẻ sống sót",
-    r"confirmation bias": "thiên kiến xác nhận",
-    r"sunk cost(?: fallacy)?": "chi phí chìm",
-    r"opportunity cost": "chi phí cơ hội",
-    r"game theory": "lý thuyết trò chơi",
-    r"burn ?out": "kiệt sức",
-    r"trauma": "sang chấn",
-    r"learned helplessness": "bất lực tập nhiễm",
-}
+# Nội dung chủ kênh cấm đưa vào video (Trọng chốt 20/11): đoạn ENA/Ethena tăng 95% trong 14 ngày
+# 19:09 20/11: Trọng đã duyệt kịch bản có nhắc Ethena/ENA (4 việc tự sửa), chỉ cấm con số 95% và mốc 14 ngày
+BANNED = re.compile(r"\b95\s*%|\b95\s*phần trăm|chín mươi lăm phần trăm|\b14\s*(ngày|days?)\b|mười bốn ngày", re.I)
 
 
-def vi_terms(x, skip=("posts", "visual_queries")):
-    """Đổi thuật ngữ không thuộc crypto sang tiếng Việt trong mọi chữ của kịch bản (đệ quy).
-    Câu trích nguyên văn tiếng Anh (x_quotes.text) giữ nguyên để còn đối chiếu bài gốc; bản dịch (vi) thì đổi."""
-    if isinstance(x, str):
-        for pat, vi in NONCRYPTO_VI.items():
-            x = re.sub(rf"(?i)(?<![\w]){pat}(?![\w])", vi, x)
-        # "thị trường chanh (thị trường chanh)" → bỏ phần lặp
-        return re.sub(r"([^()\n]{3,40}?)\s*\(\s*\1\s*\)", r"\1", x)
-    if isinstance(x, list):
-        return [vi_terms(i, skip) for i in x]
-    if isinstance(x, dict):
-        out = {}
-        for k, v in x.items():
-            if k in skip:
-                out[k] = v
-            elif k == "x_quotes" and isinstance(v, list):
-                out[k] = [{**q, "vi": vi_terms(q.get("vi", ""))} if isinstance(q, dict) else q for q in v]
-            else:
-                out[k] = vi_terms(v, skip)
-        return out
-    return x
+def _banned(x) -> bool:
+    return bool(BANNED.search(json.dumps(x, ensure_ascii=False) if not isinstance(x, str) else x))
+
+
+def _scrub_text(t: str) -> str:
+    """Bỏ hẳn các câu có nhắc nội dung bị cấm."""
+    if not isinstance(t, str) or not _banned(t):
+        return t
+    sents = re.split(r"(?<=[.!?])\s+", t)
+    return " ".join(x for x in sents if not _banned(x)).strip()
+
+
+def scrub_plan(plan: dict) -> dict:
+    """Lọc bằng code: bỏ section/quote/key_stat/hook_stat/thumb_stat... có nhắc ENA 95% hay 14 ngày."""
+    secs = plan.get("sections") or []
+    keep = [i for i, s in enumerate(secs) if not _banned(s)]
+    remap = {old: new for new, old in enumerate(keep)}
+    plan["sections"] = [secs[i] for i in keep]
+    plan["shorts"] = [remap[i] for i in (plan.get("shorts") or []) if isinstance(i, int) and i in remap]
+    sh = plan.get("short_hooks") or {}
+    if isinstance(sh, dict):
+        nh = {}
+        for k, v in sh.items():
+            try:
+                ki = int(k)
+            except Exception:
+                continue
+            if ki in remap and not _banned(v):
+                nh[str(remap[ki])] = v
+        plan["short_hooks"] = nh
+    for k in ("hook_stat", "hook_label", "thumb_stat", "thumb_text", "thumb", "key_stat", "x_quote"):
+        if k in plan and _banned(plan.get(k)):
+            plan[k] = ""
+    if not plan.get("hook_stat"):
+        plan["hook_label"] = ""
+    for k in ("title", "description", "theme", "hook", "intro", "outro"):
+        if isinstance(plan.get(k), str):
+            plan[k] = _scrub_text(plan[k])
+    return plan
 
 
 def fx_raw(url: str) -> dict:
@@ -153,7 +105,7 @@ def fx_raw(url: str) -> dict:
 
 
 BRAND_OVERRIDE = {  # màu nhận diện chuẩn của vài dự án lớn (logo đơn sắc khó tự lấy màu)
-    "BTC": "#F7931A", "ETH": "#8C9EFF", "SOL": "#14F195", "BNB": "#F3BA2F", "HYPE": "#97FCE4", 
+    "BTC": "#F7931A", "ETH": "#8C9EFF", "SOL": "#14F195", "BNB": "#F3BA2F", "HYPE": "#97FCE4", "ENA": "#F2F2F2",
     "XRP": "#5DB2FF", "DOGE": "#E0C068", "TON": "#3AA6F5", "SUI": "#6FBCF0", "ARB": "#28A0F0", "OP": "#FF0420",
     "AAVE": "#B6509E", "UNI": "#FF007A", "LINK": "#5B8DEF", "PENDLE": "#5BC0DE", "TRX": "#FF3B4B", "AVAX": "#E84142",
 }
@@ -278,6 +230,8 @@ def market_data(lab: Path) -> dict:
         d["markets"] = []
         for c in mk:
             sym = c["symbol"].upper()
+            if sym == "ENA":   # Trọng cấm đoạn ENA trong video
+                continue
             try:
                 (logos / f"{sym}.png").write_bytes(requests.get(c["image"], timeout=20).content)
             except Exception:
@@ -310,7 +264,7 @@ def coin_data(lab: Path, plan: dict, data: dict):
         if pj:
             tick.append(str(pj).lstrip("$").upper())
     data.setdefault("coins", {})
-    for t in dict.fromkeys(x for x in tick if re.fullmatch(r"[A-Z0-9]{2,10}", x)):
+    for t in dict.fromkeys(x for x in tick if re.fullmatch(r"[A-Z0-9]{2,10}", x) and x != "ENA"):
         info = V.coin_info(t)
         if not info:
             log(f"   ! không tìm thấy coin {t}")
@@ -331,81 +285,6 @@ def coin_data(lab: Path, plan: dict, data: dict):
             log(f"   Coin {t}: {len(pts)} điểm giá")
         except Exception as ex:
             log(f"   ! giá {t} lỗi: {ex}")
-    event_charts(plan, data)
-
-
-def post_date(plan: dict):
-    """Ngày đăng bài nguồn (fxtwitter: 'Sun Oct 04 02:25:05 +0000 2026')."""
-    for p in plan.get("posts") or []:
-        c = p.get("created") or ""
-        for fmt in ("%a %b %d %H:%M:%S %z %Y", "%Y-%m-%dT%H:%M:%S%z"):
-            try:
-                return datetime.strptime(c.replace("Z", "+0000"), fmt)
-            except Exception:
-                pass
-    return None
-
-
-def _num(x):
-    try:
-        return float(str(x).replace("%", "").replace("+", "").strip())
-    except Exception:
-        return None
-
-
-def event_charts(plan: dict, data: dict):
-    """Biểu đồ KHỚP MẠCH KỂ: sự kiện giá trong quá khứ (vd 'ENA tăng 95% trong 14 ngày') → lấy giá đúng khoảng
-    thời gian đó (CoinGecko market_chart/range, tính từ ngày đăng bài). Không xác định được, hoặc giá thật trái
-    ngược lời nói → bỏ biểu đồ (cảnh đó dùng thẻ số liệu). Kết quả: data['charts']['s<k>']."""
-    import time
-    from datetime import timedelta
-    pd = post_date(plan)
-    data.setdefault("charts", {})
-    for k, s in enumerate(plan.get("sections", [])):
-        d = s.get("data") or {}
-        if d.get("type") != "coin_chart":
-            continue
-        t = str((d.get("tickers") or [""])[0] or "").lstrip("$").upper()
-        days, endb, claim = _num(d.get("period_days")), _num(d.get("end_days_before_post")), _num(d.get("claim_pct"))
-        key = f"s{k}"
-        if not days:
-            # biểu đồ "giá gần đây" chỉ được dùng khi lời đọc không khẳng định % tăng/giảm nào
-            c = (data.get("coins") or {}).get(t)
-            if c and c.get("series") and claim is None:
-                data["charts"][key] = {"ticker": t, "series": c["series"], "days": c.get("days", 30), "recent": True,
-                                       "end": datetime.now(P.VN_TZ).strftime("%d/%m/%Y")}
-            else:
-                log(f"   Biểu đồ {key} ({t}): lời đọc nói {claim}% nhưng không rõ thời điểm → dùng thẻ số liệu")
-            continue
-        info = V.coin_info(t) if pd else None
-        if not info:
-            log(f"   Biểu đồ {key} ({t}): thiếu ngày đăng bài hoặc không tìm thấy coin → thẻ số liệu")
-            continue
-        end = pd - timedelta(days=endb or 0)
-        start = end - timedelta(days=days)
-        pts = []
-        for attempt in range(3):  # CoinGecko miễn phí hay báo 429 (gọi quá nhanh) → chờ rồi thử lại
-            try:
-                time.sleep(2 + 8 * attempt)
-                r = requests.get(f"https://api.coingecko.com/api/v3/coins/{info['id']}/market_chart/range", timeout=30,
-                                 params={"vs_currency": "usd", "from": int(start.timestamp()), "to": int(end.timestamp())},
-                                 headers={"User-Agent": P.UA})
-                if r.ok:
-                    pts = [p[1] for p in r.json().get("prices", [])]
-                    break
-                log(f"   ! giá {t} theo khoảng: HTTP {r.status_code} {r.text[:120]}")
-            except Exception as ex:
-                log(f"   ! giá {t} theo khoảng lỗi: {ex}")
-        if len(pts) < 5:
-            log(f"   Biểu đồ {key} ({t}): không có giá {start:%d/%m/%Y}→{end:%d/%m/%Y} → thẻ số liệu")
-            continue
-        chg = (pts[-1] / pts[0] - 1) * 100
-        if claim is not None and (chg * claim < 0 or abs(chg - claim) > max(15, 0.35 * abs(claim))):
-            log(f"   Biểu đồ {key} ({t}): giá thật {chg:+.0f}% khác lời đọc {claim:+.0f}% → thẻ số liệu")
-            continue
-        data["charts"][key] = {"ticker": t, "series": pts[::max(1, len(pts) // 120)], "days": int(days),
-                               "start": start.strftime("%d/%m/%Y"), "end": end.strftime("%d/%m/%Y")}
-        log(f"   Biểu đồ {key} ({t}): {start:%d/%m/%Y}→{end:%d/%m/%Y}, {chg:+.0f}% (khớp lời đọc)")
 
 
 def save_images(lab: Path, plan: dict, gem=None, cfg=None):
@@ -446,7 +325,6 @@ def save_images(lab: Path, plan: dict, gem=None, cfg=None):
                      "trẻ em, ảnh văn phòng chung chung không ăn nhập, ảnh có chữ/logo thương hiệu khác. "
                      'Trả JSON: {"scores": {"<nhãn>": số}}')
             sc = gem_vision(gem, cfg, ask, thumbs).get("scores", {})
-            plan["image_scores"] = {k: float(v) for k, v in sc.items() if isinstance(v, (int, float, str)) and str(v).replace(".", "", 1).isdigit()}
             for name in list(plan["images"]):
                 keep = [f for f in plan["images"][name] if float(sc.get(f, 0)) >= 7]
                 drop = [f for f in plan["images"][name] if f not in keep]
@@ -484,24 +362,15 @@ def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
     return True
 
 
-PROGRESS = None  # hàm báo tiến độ (pct, ghi chú) do insight.py gắn vào
-
-
-def _pg(p, note):
-    if PROGRESS:
-        try:
-            PROGRESS(p, note)
-        except Exception:
-            pass
-
-
 def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release: bool = False,
             notes: list[str] | None = None) -> Path:
     """Viết kịch bản + lấy dữ liệu/ảnh + đọc giọng. Giọng: thử lần lượt theo danh sách (Gemini Ludo trước,
     hết lượt thì VieNeu Hải Đăng), cả video luôn dùng MỘT giọng."""
     cfg = V.load_cfg()
     ic = cfg.get("insight") or {}
-    voices = voices or [ic.get("voice_primary", "gemini:Ludo"), ic.get("voice_fallback", "vieneu:Hải Đăng")]
+    env_v = os.getenv("INSIGHT_VOICE", "").strip()
+    # Trọng chốt 20/11: chỉ dùng giọng Ludo, hết lượt Gemini thì DỪNG (không tự đổi sang giọng khác)
+    voices = voices or [env_v or ic.get("voice_primary", "gemini:Ludo")]
     tag = datetime.now(P.VN_TZ).strftime("%Y%m%d-%H%M")
     lab = out / tag
     lab.mkdir(parents=True, exist_ok=True)
@@ -524,19 +393,23 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     prompt = PROMPT.format(posts=listing, minutes=ic.get("target_minutes", 7), max_sections=ic.get("max_sections", 6))
     if notes:
         prompt += "\nRút kinh nghiệm từ review các video trước (áp dụng):\n" + "\n".join(f"- {n}" for n in notes)
-    plan = V.llm_json(gem, cfg, system, prompt)
-    plan = P.nodash(plan)  # triệt gạch ngang dài ngay từ kịch bản
-    plan = vi_terms(plan)  # thuật ngữ không thuộc crypto (PTSD...) → tiếng Việt
-    _pg(25, "đã viết xong kịch bản, đang lấy dữ liệu + ảnh")
+    plan = {}
+    approved = os.getenv("INSIGHT_SCRIPT", "").strip()   # kịch bản Trọng đã duyệt (JSON) → dựng đúng lời đọc, không để AI viết lại
+    if approved:
+        plan = P.nodash(json.loads(Path(approved).read_text(encoding="utf-8")))
+        log(f"   Dùng kịch bản đã duyệt: {approved} ({len(plan.get('sections', []))} phần)")
+    for attempt in range(0 if approved else 3):
+        plan = P.nodash(V.llm_json(gem, cfg, system, prompt))
+        top = {k: plan.get(k) for k in ("title", "hook", "hook_stat", "intro", "thumb_text", "thumb_stat")}
+        n_ok = len([s for s in plan.get("sections", []) if s.get("narration") and not _banned(s)])
+        if not _banned(top) and n_ok >= 3:
+            break
+        log(f"   ! kịch bản còn nhắc ENA/95%/14 ngày (lần {attempt + 1}), viết lại")
+    plan = scrub_plan(plan)
+    if len([s for s in plan.get("sections", []) if s.get("narration")]) < 2 or not plan.get("hook"):
+        raise RuntimeError("Kịch bản không đủ nội dung sau khi bỏ đoạn ENA")
     plan["sections"] = [s for s in plan.get("sections", []) if s.get("narration")][: int(ic.get("max_sections", 6))]
     plan["posts"] = posts
-    # chữ hiện trên hình phải khớp lời đọc: vòng lặp mở nằm trong intro, câu hỏi kéo bình luận nằm trong outro
-    _n = lambda s: re.sub(r"\W+", " ", (s or "").lower()).strip()
-    if plan.get("open_loop") and _n(plan["open_loop"]) not in _n(plan.get("intro")):
-        plan["intro"] = (plan.get("intro", "").rstrip() + " " + plan["open_loop"].strip()).strip()
-    plan["actions"] = [a for a in (plan.get("actions") or []) if isinstance(a, str) and a.strip()][:3]
-    if plan.get("question") and _n(plan["question"]) not in _n(plan.get("outro")):
-        plan["outro"] = (plan.get("outro", "").rstrip() + " " + plan["question"].strip()).strip()
     log("③ Dữ liệu thị trường + ảnh (AI lọc ảnh lạc đề)")
     md = market_data(lab)
     coin_data(lab, plan, md)
@@ -550,7 +423,6 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     plan["shorts"] = [i for i in plan.get("shorts", []) if isinstance(i, int) and 0 <= i < len(plan["sections"])][
                      : int(ic.get("shorts", 3))]
     plan["voices"] = {}
-    _pg(40, "đang đọc giọng")
     for v in voices:
         log(f"④ Đọc giọng {v}")
         vd = re.sub(r"\W+", "_", v)
@@ -569,7 +441,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     if release and os.getenv("GITHUB_REPOSITORY") and os.getenv("GH_TOKEN"):
         zp = shutil.make_archive(str(out / f"lab-{tag}"), "zip", lab)
         subprocess.run(["gh", "release", "create", f"lab-{tag}", zp, "-R", os.environ["GITHUB_REPOSITORY"], "--prerelease",
-                        "--title", f"Lab nguyên liệu {tag}", "--notes", P.nodash(plan.get("title", ""))], check=True)
+                        "--title", f"Lab nguyên liệu {tag}", "--notes", plan.get("title", "")], check=True)
     log(f"✓ Nguyên liệu xong: {lab} · giọng {plan['voice']}")
     return lab
 

@@ -30,7 +30,7 @@ def ts(sec: float) -> str:
 SEO_SYSTEM = """Bạn là chuyên gia SEO YouTube & TikTok mảng crypto/đầu tư tại Việt Nam (khán giả Việt, tìm kiếm bằng
 tiếng Việt lẫn từ khoá tiếng Anh như crypto, altcoin, DCA, tokenomics...). Viết chuẩn thuật toán: từ khoá chính nằm
 đầu tiêu đề và 2 câu đầu mô tả; tiêu đề gây tò mò nhưng KHÔNG câu view sai sự thật; không hứa lợi nhuận;
-không nhắc AI/bot; không dùng dấu gạch ngang dài (em dash, en dash). Tên kênh: {brand}."""
+không nhắc AI/bot. Tên kênh: {brand}."""
 
 SEO_PROMPT = """Video dài ({minutes:.1f} phút): "{title}"
 Chủ đề: {theme}
@@ -66,7 +66,7 @@ def seo_pack(gem, cfg, res: dict) -> dict:
         log(f"   ! SEO lỗi: {ex}")
         seo = {"yt_titles": [plan.get("title", "")], "yt_intro": plan.get("description", ""), "yt_tags": [], "hashtags": ["#crypto"]}
     chapters = "\n".join(f"{ts(t)} {name}" for t, name in res["chapters"])
-    used = {i.split("/")[-1] for sc in res.get("scenes", []) for i in (sc.get("images") or [])}  # chỉ ảnh thật sự xuất hiện
+    used = {x for k, v in (plan.get("images") or {}).items() for x in v}
     credits = "; ".join(dict.fromkeys(v for k, v in (plan.get("image_credits") or {}).items() if k in used and v))
     src = "\n".join(f"• @{p.get('handle', '')}: {p.get('url', '')}" for p in plan.get("posts") or [])
     desc = (seo.get("yt_intro", "") + "\n\n"
@@ -78,7 +78,6 @@ def seo_pack(gem, cfg, res: dict) -> dict:
             + "\n⚠️ Không phải lời khuyên đầu tư. Hãy tự nghiên cứu (DYOR) trước khi xuống tiền.\n"
             + "🐧 Smart Penguin Insights · @Trong0322\n\n" + " ".join(seo.get("hashtags", [])))
     seo["yt_description"] = desc[:4900]
-    seo = R.nodash(seo)  # không bao giờ dùng dấu gạch ngang dài
     tags, n = [], 0
     for t in seo.get("yt_tags", []):
         if n + len(t) + 1 > 480:
@@ -86,39 +85,34 @@ def seo_pack(gem, cfg, res: dict) -> dict:
         tags.append(t)
         n += len(t) + 1
     seo["yt_tags"] = tags
-    return seo
+    import insight_lab as L   # bỏ mọi dòng SEO nhắc đoạn ENA 95% (Trọng cấm)
+    for k in ("yt_titles", "yt_takeaways", "yt_tags", "hashtags"):
+        if isinstance(seo.get(k), list):
+            seo[k] = [x for x in seo[k] if not L._banned(x)] or ([plan.get("title", "")] if k == "yt_titles" else [])
+    for k in ("yt_intro", "pinned_comment", "keyword"):
+        if isinstance(seo.get(k), str):
+            seo[k] = L._scrub_text(seo[k])
+    seo["shorts"] = [{kk: ("" if L._banned(vv) else vv) for kk, vv in sh.items()} for sh in seo.get("shorts") or [] if isinstance(sh, dict)]
+    if L._banned(seo.get("yt_description", "")):
+        seo["yt_description"] = "\n".join(l for l in seo["yt_description"].split("\n") if not L._banned(l) or "x.com/" in l)
+    return P.nodash(seo)
 
 
 # ---------------------------------------------------------------------------
 # ảnh bìa
 # ---------------------------------------------------------------------------
-BAD_THUMB = r"SẮP CHẾT|\bCHẾT\b|\bSẬP\b|TOANG|BAY MÀU|VỀ 0|VỀ MO|LỪA ĐẢO|\bSCAM\b"
-
-
 def thumbnail(res: dict, out: Path) -> Path | None:
     plan = res["plan"]
-    hook = " ".join([plan.get("hook", ""), plan.get("hook_label", ""), plan.get("thumb_text", "")]).lower()
-    projs = [s["project"] for s in res["scenes"] if s.get("project") and s["project"].get("logo")]
-    # logo trên ảnh bìa phải khớp con số/hook (vd 95% của ENA → logo Ethena)
-    proj = next((p for p in projs if (p.get("ticker") or "#").lower() in hook or (p.get("name") or "#").lower() in hook), None)
-    text = (plan.get("thumb_text") or plan.get("thumb") or "").strip()
-    if not text or len(text.split()) > 6:
-        text = " ".join((text or plan.get("title", "")).replace(":", "").split()[:5])
-    acts = [a for a in (plan.get("actions") or []) if a]
-    points = [p for p in (plan.get("thumb_points") or []) if p][:3] or [" ".join(a.split()[:3]) for a in acts[:3]]
-    # ảnh bìa hứa GIÁ TRỊ hành động được, không giật tít tiêu cực (vd "SẮP CHẾT")
-    if re.search(BAD_THUMB, text.upper()):
-        log(f"   Ảnh bìa: bỏ chữ tiêu cực '{text}'")
-        text = f"{len(acts)} TIÊU CHÍ CHỌN ALTCOIN" if len(acts) >= 2 else "CÁCH LỌC COIN RÁC"
-    props = {"comp": "Thumb", "width": 1280, "height": 720, "text": R.nodash(V.en_money(text)),
-             # cùng MỘT con số với hook để nhất quán (không khớp hook thì mới dùng thumb_stat có thật trong bài)
-             "stat": (R.hook_stat(plan, plan.get("posts") or [])
-                      or R.real_number(V.en_money(plan.get("thumb_stat", "")), plan.get("posts") or []))[:8], "accent": (proj or {}).get("color"),
-             "projectLogo": (proj or {}).get("logo"), "bg": None, "theme": os.getenv("INSIGHT_THEME") or (V.load_cfg().get("insight") or {}).get("theme", "dark"),
-             "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights"),
-             "points": R.nodash([V.en_money(x) for x in points]) if not proj else []}
+    proj = next((s.get("project") for s in res["scenes"] if s.get("project") and s["project"].get("logo")), None)
+    approved = bool(os.getenv("INSIGHT_SCRIPT", "").strip())   # kịch bản Trọng duyệt: dùng đúng chữ ảnh bìa đã duyệt
+    stat = P.nodash(plan.get("thumb_stat", ""))[:12] if approved else R.real_number(V.en_money(plan.get("hook_stat", "")), plan.get("posts") or [])[:8]
+    props = {"comp": "Thumb", "width": 1280, "height": 720,
+             "text": P.nodash(V.en_money(plan.get("thumb_text") or plan.get("thumb") or plan.get("title", "")))[:48],
+             "stat": stat, "accent": (proj or {}).get("color") or "#4F5BD5",
+             "points": [P.nodash(x)[:28] for x in (plan.get("thumb_points") or [])][:3],
+             "projectLogo": (proj or {}).get("logo"), "bg": None,
+             "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")}
     try:
-        out.with_suffix(".props.json").write_text(json.dumps(props, ensure_ascii=False), encoding="utf-8")
         R.run_remotion(props, out, frames="0")
         return out
     except Exception as ex:
@@ -158,54 +152,6 @@ def frames_of(video: Path, n: int, w: int = 640) -> list[bytes]:
     return out
 
 
-def claude_review_cli(prompt: str, imgs: list[tuple[str, bytes]]) -> dict:
-    """Bot review bằng Claude qua gói Claude Pro (secret CLAUDE_CODE_OAUTH_TOKEN, chạy Claude Code không giao diện)."""
-    import shutil
-    import tempfile
-    tok = re.sub(r"\s+", "", os.getenv("CLAUDE_CODE_OAUTH_TOKEN", ""))
-    if not tok or not shutil.which("claude"):
-        raise RuntimeError("chưa có CLAUDE_CODE_OAUTH_TOKEN hoặc chưa cài Claude Code")
-    d = Path(tempfile.mkdtemp(prefix="review-"))
-    names = []
-    for label, b in imgs:
-        (d / f"{label}.jpg").write_bytes(b)
-        names.append(f"{label}.jpg")
-    ask = (prompt + "\n\nCác khung hình nằm trong thư mục hiện tại: " + ", ".join(names)
-           + ". Hãy dùng công cụ Read để XEM TỪNG ẢNH trước khi đánh giá. Cuối cùng chỉ in ra JSON hợp lệ, không thêm chữ nào khác.")
-    env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
-    env["CLAUDE_CODE_OAUTH_TOKEN"] = tok
-    model = (V.load_cfg().get("insight") or {}).get("review_model_cli", "sonnet")
-    r = subprocess.run(["claude", "-p", ask, "--allowedTools", "Read", "--max-turns", "40", "--model", model,
-                        "--output-format", "text"], cwd=d, env=env, capture_output=True, text=True, timeout=900)
-    txt = r.stdout.strip()
-    m = re.search(r"\{.*\}", txt, re.S)
-    if not m:
-        raise RuntimeError(f"Claude không trả JSON: {(txt or r.stderr)[:300]}")
-    return json.loads(m.group(0))
-
-
-def claude_review(prompt: str, imgs: list[tuple[str, bytes]]) -> dict:
-    """Bot review bằng Claude API (secret ANTHROPIC_API_KEY, tính phí theo lượt)."""
-    key = os.getenv("ANTHROPIC_API_KEY", "")
-    if not key:
-        raise RuntimeError("chưa có ANTHROPIC_API_KEY")
-    content = []
-    for label, b in imgs:
-        content += [{"type": "text", "text": f"[{label}]"},
-                    {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg",
-                                                 "data": base64.b64encode(b).decode()}}]
-    content.append({"type": "text", "text": prompt + "\nChỉ trả về JSON hợp lệ, không thêm chữ nào khác."})
-    model = (V.load_cfg().get("insight") or {}).get("review_model", "claude-sonnet-5-5")
-    r = requests.post("https://api.anthropic.com/v1/messages", timeout=300, headers={
-        "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json"},
-        json={"model": model, "max_tokens": 2500, "messages": [{"role": "user", "content": content}]})
-    if r.status_code != 200:
-        raise RuntimeError(f"Claude HTTP {r.status_code}: {r.text[:300]}")
-    txt = "".join(c.get("text", "") for c in r.json().get("content", []) if c.get("type") == "text")
-    m = re.search(r"\{.*\}", txt, re.S)
-    return json.loads(m.group(0) if m else txt)
-
-
 def review(gem, cfg, res: dict, thumb: Path | None) -> dict:
     import insight_lab as L
     plan = res["plan"]
@@ -224,16 +170,8 @@ def review(gem, cfg, res: dict, thumb: Path | None) -> dict:
         imgs.append(("thumbnail", b.getvalue()))
     prompt = REVIEW_PROMPT.format(n=10, ns=len(imgs) - 10, title=plan.get("title", ""), minutes=res["duration"] / 60,
                                   voice=res["voice"], wpm=wpm, hook=plan.get("hook", ""))
-    for fn in (claude_review_cli, claude_review):
-        try:
-            rv = fn(prompt, imgs)
-            rv["by"] = "Claude"
-            return rv
-        except Exception as ex:
-            log(f"   ! review Claude ({fn.__name__}) chưa chạy được: {str(ex)[:200]}")
-    log("   → dùng Gemini")
     try:
-        return {**L.gem_vision(gem, cfg, prompt, imgs), "by": "Gemini"}
+        return L.gem_vision(gem, cfg, prompt, imgs)
     except Exception as ex:
         log(f"   ! review lỗi: {ex}")
         return {}
@@ -246,7 +184,7 @@ def review_text(rv: dict) -> str:
     names = {"hook_3s": "Hook 3 giây đầu", "hinh_anh_ro_rang": "Hình rõ ràng", "mau_sac_brand": "Màu & brand",
              "nhip_do": "Nhịp độ", "phu_de": "Phụ đề", "du_lieu_lien_quan": "Dữ liệu đúng ý", "thumbnail": "Ảnh bìa",
              "short_9x16": "Video ngắn"}
-    lines = [f"🧐 BOT REVIEW ({rv.get('by', 'AI')}) · điểm tổng {rv.get('score', '?')}/10", ""]
+    lines = [f"🧐 BOT REVIEW · điểm tổng {rv.get('score', '?')}/10", ""]
     lines += [f"• {names.get(k, k)}: {v}/10" for k, v in sc.items()]
     if rv.get("tot"):
         lines += ["", "👍 Đang tốt:"] + [f"• {x}" for x in rv["tot"]]
@@ -255,8 +193,8 @@ def review_text(rv: dict) -> str:
     if rv.get("retention_risk"):
         lines += ["", "⚠️ Dễ mất người xem: " + rv["retention_risk"]]
     if rv.get("script_tips"):
-        lines += ["", "✍️ Mẹo kịch bản (bot tự áp dụng cho video sau):"] + [f"• {x}" for x in rv["script_tips"]]
-    return "\n".join(lines)
+        lines += ["", "✍️ Mẹo kịch bản:"] + [f"• {x}" for x in rv["script_tips"]]
+    return P.nodash("\n".join(lines))
 
 
 # ---------------------------------------------------------------------------
@@ -268,7 +206,6 @@ def _tg():
 
 
 def tg_text(text: str):
-    text = R.nodash(text)
     api, chat = _tg()
     if not api:
         return
@@ -278,7 +215,6 @@ def tg_text(text: str):
 
 
 def tg_video(path: Path, caption: str):
-    caption = R.nodash(caption)
     api, chat = _tg()
     if not api:
         return
@@ -286,7 +222,7 @@ def tg_video(path: Path, caption: str):
         small = path.with_name(path.stem + "-preview.mp4")
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(path), "-vf", "scale=-2:720", "-c:v", "libx264",
                         "-crf", "27", "-preset", "veryfast", "-c:a", "aac", "-b:a", "128k", str(small)], check=True)
-        path, caption = small, caption + "\n(bản xem trước 720p · bản gốc 1440p ở GitHub Release)"
+        path, caption = small, caption + "\n(bản xem trước 720p · bản gốc 1080p ở GitHub Release)"
     with open(path, "rb") as f:
         r = requests.post(f"{api}/sendVideo", timeout=600, data={"chat_id": chat, "caption": caption[:1000],
                                                                  "supports_streaming": "true"},
@@ -296,7 +232,6 @@ def tg_video(path: Path, caption: str):
 
 
 def tg_photo(path: Path, caption: str):
-    caption = R.nodash(caption)
     api, chat = _tg()
     if api and path and path.exists():
         with open(path, "rb") as f:
@@ -304,105 +239,51 @@ def tg_photo(path: Path, caption: str):
 
 
 # ---------------------------------------------------------------------------
-class Progress:
-    """1 tin nhắn Telegram tự cập nhật % hoàn thành (sửa tin cũ, không gửi tin mới)."""
-
-    def __init__(self, title: str):
-        import time
-        self.title, self.mid, self.last, self.lines = title, None, -1, {}
-        self.t0 = time.time()
-
-    def set(self, key: str, pct: float, note: str = ""):
-        import time
-        pct = max(0, min(100, int(pct)))
-        self.lines[key] = (pct, note)
-        tot = sum(v[0] for v in self.lines.values()) / max(1, len(self.lines))
-        if abs(tot - self.last) < 4 and pct not in (0, 100):
-            return
-        self.last = tot
-        bar = lambda p: "█" * (p // 10) + "░" * (10 - p // 10)
-        mins = int((time.time() - self.t0) / 60)
-        text = (f"⏳ {self.title}\nTổng: {bar(int(tot))} {int(tot)}% · đã chạy {mins} phút\n\n"
-                + "\n".join(f"{bar(p)} {p:3d}%  {k}" + (f" · {n}" if n else "") for k, (p, n) in self.lines.items()))
-        api, chat = _tg()
-        if not api:
-            log(text)
-            return
-        try:
-            if self.mid is None:
-                r = requests.post(f"{api}/sendMessage", timeout=30, data={"chat_id": chat, "text": text}).json()
-                self.mid = r.get("result", {}).get("message_id")
-            else:
-                requests.post(f"{api}/editMessageText", timeout=30, data={"chat_id": chat, "message_id": self.mid, "text": text})
-        except Exception:
-            pass
-
-
-THEME_NAMES = {"light": "Nền sáng", "blue": "Nền xanh đại dương", "slate": "Nền xám xanh", "dark": "Nền tối"}
-
-
-def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, do_review: bool = True,
-            seo: dict | None = None, extra_files: list | None = None) -> dict:
+def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None) -> dict:
     cfg = V.load_cfg()
     gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))
-    th = os.getenv("INSIGHT_THEME", "")
-    tag = lab.name + (f"-{th}" if th else "")
+    tag = lab.name
     thumb = thumbnail(res, out / f"thumbnail-{tag}.png")
     log("⑥ Gói SEO")
-    seo = seo or seo_pack(gem, cfg, res)
+    seo = seo_pack(gem, cfg, res)
+    if os.getenv("INSIGHT_SCRIPT", "").strip() and res["plan"].get("title"):   # tiêu đề Trọng duyệt luôn đứng đầu
+        seo["yt_titles"] = [res["plan"]["title"]] + [t for t in seo.get("yt_titles", []) if t != res["plan"]["title"]][:2]
     (out / f"seo-{tag}.json").write_text(json.dumps(seo, ensure_ascii=False, indent=1), encoding="utf-8")
-    # ---- BOT TUÂN THỦ: quét mọi chữ + OCR khung hình TRƯỚC khi tạo Release / gửi Telegram ----
-    import compliance as CP
-    log("⑥b Bot tuân thủ (gạch ngang dài, watermark, Source, số liệu)")
-    try:
-        rep = CP.check_publish(res, seo, out, thumb)
-    except Exception as ex:
-        log(f"   ! bot tuân thủ lỗi: {ex}")
-        rep = {"ok": True, "blocked": False, "fixed": [], "warnings": [f"bot tuân thủ lỗi: {str(ex)[:150]}"], "ocr_dash": []}
-    (out / f"seo-{tag}.json").write_text(json.dumps(seo, ensure_ascii=False, indent=1), encoding="utf-8")
-    (out / f"compliance-{tag}.json").write_text(json.dumps(rep, ensure_ascii=False, indent=1), encoding="utf-8")
-    log("   " + CP.report_text(rep).replace("\n", "\n   "))
-    import platform_export as PE; res, thumb, pe_extra = PE.prepare(res, thumb, log=log)  # chuẩn thông số nền tảng
-    files = [res["long"]] + [s["path"] for s in res["shorts"]] + ([thumb] if thumb else []) + pe_extra + [out / f"seo-{tag}.json"] + [f for f in (extra_files or []) if Path(f).exists()]
+    files = [res["long"]] + [s["path"] for s in res["shorts"]] + ([thumb] if thumb else []) + [out / f"seo-{tag}.json"]
     url = ""
     repo = os.getenv("GITHUB_REPOSITORY")
     if repo and os.getenv("GH_TOKEN"):
         rt = f"insight-{tag}"
         subprocess.run(["gh", "release", "delete", rt, "-y", "--cleanup-tag", "-R", repo], capture_output=True)
-        # bị chặn → chỉ lưu bản NHÁP (ẩn, chưa xuất bản) để kiểm tra, không gửi video
-        subprocess.run(["gh", "release", "create", rt, *map(str, files), "-R", repo, *(["--draft"] if rep["blocked"] else []),
-                        "--title", R.nodash((seo.get("yt_titles") or [res["plan"].get("title", "")])[0]),
-                        "--notes", R.nodash(seo["yt_description"])], check=True)
+        subprocess.run(["gh", "release", "create", rt, *map(str, files), "-R", repo, "--title",
+                        (seo.get("yt_titles") or [res["plan"].get("title", "")])[0], "--notes", seo["yt_description"]], check=True)
         url = f"https://github.com/{repo}/releases/tag/{rt}"
-    if rep["blocked"]:
-        tg_text("⛔ Video Insight bị CHẶN XUẤT BẢN (bản nháp, chưa gửi video)\n\n" + CP.report_text(rep))
-        for d in rep["ocr_dash"][:2]:
-            tg_photo(Path(d["frame"]), f"Khung hình có gạch ngang dài: {d['file']} giây {d['t']}")
-        return {"release": url, "seo": seo, "review": None, "thumb": str(thumb) if thumb else None, "blocked": True,
-                "compliance": rep}
     log("⑦ Gửi Telegram")
     plan = res["plan"]
-    tg_text((f"🎨 BẢN {THEME_NAMES.get(th, th).upper()}\n" if th else "") + f"🐧 SMART PENGUIN INSIGHTS · video mới ({res['duration'] / 60:.1f} phút · giọng {res['voice'].split(':')[1]})\n"
-            f"1 video YouTube 16:9 + {len(res['shorts'])} video ngắn 9:16 (TikTok/Shorts/Reels)\n" + (f"📦 File gốc: {url}\n" if url else "")
-            + "\n" + CP.report_text(rep))
+    tg_text(f"🐧 SMART PENGUIN INSIGHTS · video mới ({res['duration'] / 60:.1f} phút · giọng {res['voice'].split(':')[1]})\n"
+            f"1 video YouTube 16:9 + {len(res['shorts'])} video ngắn 9:16 (TikTok/Shorts/Reels)\n" + (f"📦 File gốc: {url}" if url else ""))
     tg_photo(thumb, "🖼 Ảnh bìa YouTube")
     tg_video(res["long"], "🎬 " + (seo.get("yt_titles") or [plan.get("title", "")])[0])
     for i, s in enumerate(res["shorts"]):
         sh = (seo.get("shorts") or [{}] * 9)[i] if i < len(seo.get("shorts") or []) else {}
         tg_video(s["path"], f"📱 Short {i + 1}: {sh.get('yt_title') or s['title']}")
-    yt = ("📺 YOUTUBE, copy dán khi đăng\n\nTIÊU ĐỀ (chọn 1):\n" + "\n".join(f"{i + 1}. {t}" for i, t in enumerate(seo.get("yt_titles", [])))
+    yt = ("📺 YOUTUBE: copy dán khi đăng\n\nTIÊU ĐỀ (chọn 1):\n" + "\n".join(f"{i + 1}. {t}" for i, t in enumerate(seo.get("yt_titles", [])))
           + "\n\nMÔ TẢ:\n" + seo["yt_description"] + "\n\nTAGS:\n" + ", ".join(seo.get("yt_tags", []))
           + ("\n\nBÌNH LUẬN GHIM:\n" + seo["pinned_comment"] if seo.get("pinned_comment") else ""))
-    if do_review:
-        tg_text(yt)
-    if seo.get("shorts") and res["shorts"]:
-        tk = ["🎵 TIKTOK / SHORTS, caption từng video ngắn"]
+    tg_text(yt)
+    if seo.get("shorts"):
+        tk = ["🎵 TIKTOK / SHORTS: caption từng video ngắn"]
         for i, sh in enumerate(seo["shorts"][: len(res["shorts"])]):
             tk += ["", f"Short {i + 1}", f"Shorts title: {sh.get('yt_title', '')}",
                    f"TikTok: {sh.get('tiktok_caption', '')} {' '.join(sh.get('tiktok_hashtags', []))}"]
         tg_text("\n".join(tk))
-    if not do_review:
-        return {"release": url, "seo": seo, "review": None, "thumb": str(thumb) if thumb else None, "compliance": rep}
+    try:   # đăng tự động (chỉ chạy khi SOCIAL_AUTOPOST=1 và có key), xem docs/social-setup.md
+        import social_upload as SU
+        posted = SU.run(res, seo, thumb)
+        if posted:
+            tg_text("📤 ĐĂNG TỰ ĐỘNG\n" + "\n".join(posted))
+    except Exception as ex:
+        log(f"   ! đăng tự động lỗi: {ex}")
     log("⑧ Bot review")
     rv = review(gem, cfg, res, thumb)
     if rv:
@@ -411,6 +292,6 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, do_re
             p = data_dir / "insight" / "reviews.json"
             p.parent.mkdir(parents=True, exist_ok=True)
             arr = json.loads(p.read_text(encoding="utf-8")) if p.exists() else []
-            arr.append({"tag": tag, "at": datetime.now(P.VN_TZ).isoformat(timespec="minutes"), **R.nodash(rv)})
+            arr.append({"tag": tag, "at": datetime.now(P.VN_TZ).isoformat(timespec="minutes"), **rv})
             p.write_text(json.dumps(arr[-30:], ensure_ascii=False, indent=1), encoding="utf-8")
-    return {"release": url, "seo": seo, "review": rv, "thumb": str(thumb) if thumb else None, "compliance": rep}
+    return {"release": url, "seo": seo, "review": rv, "thumb": str(thumb) if thumb else None}

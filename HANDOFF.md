@@ -1,6 +1,29 @@
 # HANDOFF: Smart Penguin Insights + Trạm Podcast Crypto (bàn giao cho đoạn chat mới)
 
-## ⚠️ TRỌNG CHỐT 18:55 NGÀY 20/11 (GHI ĐÈ MỌI CHỈ ĐẠO TRƯỚC, ĐỌC TRƯỚC TIÊN)
+## ✅ TRỌNG CHỐT 01:41 NGÀY 21/11 (MỚI NHẤT, ĐỌC TRƯỚC TIÊN)
+- VIDEO CHUẨN MỚI = release insight-20261120-1915 (bài zeroxkyle, giọng gemini:Ludo, nền TRẮNG SẠCH, bố cục + nhịp kiểu 2125).
+  Trọng: "video này đã ổn, sau này chất lượng như này trở lên". Không làm video nào kém hơn bản này.
+- Code chuẩn đã đưa lên main (21/11): các file video insight (insight*.py, remotion/, .github/workflows/insight.yml,
+  scripts/) lấy từ nhánh style-2125. Main cũ trước khi đổi được sao lưu ở nhánh backup-main-20261121.
+  File podcast hằng ngày (podcast.py, video.py, tg_send_release.py...) giữ nguyên bản main.
+- Bổ sung 21/11: câu chào mở đầu luôn có logo kênh (logo.png) + SMART PENGUIN INSIGHTS + @Trong0322.
+- QUY TRÌNH BẮT BUỘC: AI viết kịch bản nháp → gửi Trọng đọc trong chat (hook, tiêu đề, lời đọc từng phần, chữ trên hình,
+  ảnh bìa) → Trọng sửa → Trọng nhắn "ok kịch bản" → mới dựng, dựng ĐÚNG lời đọc đã duyệt:
+  lưu scripts/<ten>-approved.json (mẫu scripts/TEMPLATE-approved.json, có thumb_text/thumb_stat/thumb_points/hook_screen)
+  rồi dispatch insight.yml: force=true, links=<link X>, voice=gemini:Ludo, script=scripts/<ten>-approved.json.
+- TỰ HỌC TỪ BOT REVIEW (Trọng 21/11): luôn đọc podcast-data insight/reviews.json trước khi viết kịch bản nháp.
+  Code tự nạp script_tips + retention_risk của 3 review gần nhất có tag >= 20261120-1915 (STANDARD_TAG trong insight.py).
+  Mục "can_sua" về hình ảnh thì phiên Claude tự đánh giá rồi sửa code, dựng thử khung hình xem tận mắt trước khi đẩy.
+  Review của 1915 (6,8/10) còn nêu: short chữ sát mép trên/dưới (safe zone TikTok/Reels), danh sách mở đầu nên hiện
+  từng dòng theo lời đọc, biểu đồ giá giảm cần chú thích, ảnh bìa nên phóng to ô số và bớt chữ.
+- TỪ NGỮ (Trọng 21/11): dùng "insider" thay "người trong cuộc", "retail" thay "nhỏ lẻ / nhà đầu tư nhỏ lẻ" trong lời đọc
+  và chữ trên hình (đã thêm vào SYSTEM trong insight.py; nhớ áp dụng khi viết kịch bản nháp).
+- insight.yml đang TẮT (disabled_manually) để chặn lịch tự dựng 3 tiếng/lần khi chưa duyệt kịch bản.
+  Dispatch: bật (PUT .../workflows/insight.yml/enable), dispatch, rồi tắt lại ngay; run đang chạy vẫn chạy tiếp.
+- Đăng tự động lên YouTube/TikTok/Facebook: xem docs/social-setup.md (chờ Trọng thêm key vào GitHub Secrets).
+- Phiên Claude chat không đặt được hẹn giờ tự kiểm tra (send_later bị chặn vì chưa gắn máy tính), nhắc Trọng nhắn lại.
+
+## (CŨ) TRỌNG CHỐT 18:55 NGÀY 20/11
 - Các video dựng hôm nay 20/11 (Riko 16:36, Ludo 17:43, các "vòng sửa theo review") Trọng chê QUÁ TỆ.
   DỪNG hướng "sửa theo review 6,3/10" (vòng sửa 2...). Không dispatch thêm từ main theo hướng đó.
 - KIỂU CHUẨN = video Trọng ưng ý: release insight-20261119-2125 (smart-penguin-20261119-2125-16x9.mp4, 4 phút 17 giây),

@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Img, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {AccentCtx, applyTheme, deepClean, EmphText, fitSize, tone, Backdrop, BRAND, glass, Handle, T, C, Captions, Chip, clamp, CountUp, DISPLAY, FONT, Glitch, HEAD, RevealWords, useAccent, useFonts, useSpring, Word} from './ui';
-import {DataPanel, DataSpec, dataOk} from './data';
+import {AccentCtx, tone, Backdrop, C, Captions, Chip, clamp, CountUp, FONT, Glitch, RevealWords, useAccent, useFonts, useSpring, Word} from './ui';
+import {DataPanel, DataSpec} from './data';
 
 export type Post = {author: string; handle: string; avatar?: string; cover?: string; title?: string; text?: string;
   likes?: number; views?: number; retweets?: number};
@@ -13,24 +13,23 @@ export type Scene = {
   title?: string; theme?: string;
   idx?: number; total?: number; heading?: string; keyStat?: string; keyLabel?: string; bullets?: string[];
   quote?: string; source?: string; data?: DataSpec | null; points?: string[]; project?: Project | null;
-  endAt?: number; emph?: string[]; openLoop?: string; actions?: string[]; question?: string; cuts?: number[]; srcDate?: string; subs?: {t: string; s: number; e: number}[] | null; xquotes?: {text: string; vi?: string}[]; terms?: {term: string; explain: string; at: number}[];
 };
 export type InsightProps = {fps: number; width: number; height: number; audio: string; music?: string; duration: number;
-  scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string; mode?: string; shortTitle?: string;
-  theme?: string; emph?: string[]; shortHook?: string};
+  scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string; mode?: string; shortTitle?: string};
 
-export const accentDefault = () => BRAND.blue;
+export const DEFAULT_ACCENT = '#4F5BD5';
 const fmt = (n?: number) => (n == null ? '' : n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'K' : String(n));
 
 // ---------- thanh trên: logo kênh + nguồn ----------
 const TopBar: React.FC<{source?: string; idx?: number; total?: number; brand: string; project?: Project | null}> = ({source, idx, total, brand, project}) => {
+  const s = useSpring(2, 18);
   const ac = useAccent();
-  // logo + "SMART PENGUIN INSIGHTS" + Source hiện rõ ngay từ khung hình đầu tiên (không hiệu ứng mờ dần)
   return (
-    <div style={{position: 'absolute', top: 44, left: 80, right: 80, display: 'flex', alignItems: 'center', gap: 18, fontFamily: FONT}}>
+    <div style={{position: 'absolute', top: 44, left: 80, right: 80, display: 'flex', alignItems: 'center', gap: 18,
+      opacity: s, transform: `translateY(${(1 - s) * -20}px)`, fontFamily: FONT}}>
       <Img src={staticFile('logo.png')} style={{width: 54, height: 54, borderRadius: 99, border: `1.5px solid ${C.line}`}} />
       <div>
-        <div style={{color: C.ink, fontFamily: HEAD, fontWeight: 700, fontSize: 24, letterSpacing: 2}}>{brand}</div>
+        <div style={{color: C.ink, fontWeight: 800, fontSize: 24, letterSpacing: 2}}>{brand}</div>
         {source ? <div style={{color: C.muted, fontWeight: 600, fontSize: 19}}>Source: <span style={{color: C.ink}}>{source}</span></div> : null}
       </div>
       <div style={{flex: 1}} />
@@ -43,79 +42,28 @@ const TopBar: React.FC<{source?: string; idx?: number; total?: number; brand: st
       ) : null}
       {total ? (
         <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
-          {/* tiến độ dạng chấm tròn (không dùng vạch ngang để không ai nhìn nhầm thành dấu gạch ngang dài) */}
-          {Array.from({length: total}, (_, i) => <div key={i} style={{width: i + 1 === idx ? 16 : 10, height: i + 1 === idx ? 16 : 10, borderRadius: 99,
-            background: i + 1 <= (idx || 0) ? ac : T.dim}} />)}
-          <div style={{color: C.ink, fontFamily: DISPLAY, fontWeight: 800, fontSize: 22, marginLeft: 10}}>{String(idx).padStart(2, '0')}<span style={{color: C.muted}}>/{String(total).padStart(2, '0')}</span></div>
+          {Array.from({length: total}, (_, i) => <div key={i} style={{width: i + 1 === idx ? 14 : 10, height: i + 1 === idx ? 14 : 10, borderRadius: 99,
+            background: i + 1 <= (idx || 0) ? ac : 'rgba(25,35,80,0.15)'}} />)}
+          <div style={{color: C.ink, fontWeight: 800, fontSize: 24, marginLeft: 10}}>{String(idx).padStart(2, '0')}<span style={{color: C.muted}}>/{String(total).padStart(2, '0')}</span></div>
         </div>
       ) : null}
     </div>
   );
 };
 
-// ---------- chữ tiêu đề: hiện CẢ CÂU cùng lúc (mờ → rõ trong ~0,3s), không gõ từng chữ ----------
-export const FadeText: React.FC<{text: string; size: number; maxWidth?: number; highlight?: string[]; color?: string}> = ({text, size, maxWidth, highlight = [], color}) => {
-  const f = useCurrentFrame();
-  const ac = useAccent();
-  const o = interpolate(f, [0, 8], [0, 1], clamp);
-  return <div style={{maxWidth, fontFamily: HEAD, fontWeight: 700, fontSize: size, lineHeight: 1.14, letterSpacing: -0.5, color: color || C.ink,
-    opacity: o, transform: `translateY(${(1 - o) * 14}px)`, textShadow: T.textShadow}}>
-    {text.split(/(\s+)/).map((w, i) => highlight.some((h) => h && w.toLowerCase().includes(h.toLowerCase())) ? <span key={i} style={{color: ac}}>{w}</span> : w)}
-  </div>;
-};
-
-// ---------- HOOK: chữ hiện ĐỦ ngay giây 0 (không hiệu ứng gõ), cỡ lớn nhất khung, MỘT con số tô màu ----------
-export const splitHook = (t: string) => {
-  const parts = (t || '').split(/(?<=[.!?…])\s+/).filter(Boolean);
-  return {main: parts[0] || '', rest: parts.slice(1).join(' ')};
-};
-export const StatText: React.FC<{text: string; stat?: string; size: number; color?: string; weight?: number; align?: 'center' | 'left'}> = ({text, stat, size, color, weight = 700, align = 'center'}) => {
-  const ac = useAccent();
-  const key = (stat || '').replace(/[^\d.,%$xKMBT]/g, '');
-  return <div style={{fontFamily: HEAD, fontWeight: weight, fontSize: size, lineHeight: 1.14, color: color || C.ink, textAlign: align,
-    letterSpacing: -0.5, textShadow: T.textShadow}}>
-    {text.split(/(\s+)/).map((w, i) => (key && w.includes(key)) ? <span key={i} style={{color: ac, fontFamily: DISPLAY, fontWeight: 800}}>{w}</span> : w)}
-  </div>;
-};
-
-const HookScene: React.FC<{sc: Scene; brand: string; source?: string}> = ({sc, brand, source}) => {
-  const f = useCurrentFrame();
-  const {main, rest} = splitHook(sc.hook || '');
-  const size = fitSize(main, 1560, rest ? 400 : 560, 124, 72);
-  const ring = (k: number) => ((f + k * 18) % 54) / 54;
-  const ac = useAccent();
-  const {fps} = useVideoConfig();
-  // con số "đập" nhẹ ở 0,5 giây đầu (chữ vẫn hiện đủ ngay khung đầu tiên)
-  const pop = 1 + 0.06 * Math.max(0, 1 - f / 14) * Math.sin(f / 2.2);
-  // câu 2 (lời hứa) được đọc → hiện lần lượt 3 tiêu chí dạng teaser 1-2-3
-  const restAt = sc.dur * (main.length / Math.max(1, (main + ' ' + rest).length));
-  const acts = (sc.actions || []).slice(0, 3);
-  return (
+// ---------- HOOK ----------
+const HookScene: React.FC<{sc: Scene}> = ({sc}) => (
   <AbsoluteFill>
-    <Backdrop img={sc.images?.[0]} dim={0.75} />
-    <TopBar brand={brand} source={source} />
-    {[0, 1, 2].map((k) => <div key={k} style={{position: 'absolute', left: '50%', top: '50%', width: 1100, height: 1100,
-      marginLeft: -550, marginTop: -550, borderRadius: '50%', border: `3px solid ${ac}`,
-      transform: `scale(${0.3 + ring(k) * 1.2})`, opacity: (1 - ring(k)) * 0.22}} />)}
-    <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 34, padding: '150px 160px 60px'}}>
-      {sc.stat && sc.label ? <Chip text={`${sc.stat} · ${sc.label}`.toUpperCase()} size={30} /> : null}
-      <div style={{maxWidth: 1600, transform: `scale(${pop * (1 + 0.015 * Math.min(1, f / 90))})`}}>
-        <StatText text={main} stat={sc.stat} size={size} />
+    <Backdrop img={sc.images?.[0]} dim={0.7} />
+    <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 26}}>
+      {sc.stat ? <CountUp value={sc.stat} size={220} delay={4} /> : null}
+      {sc.label ? <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 36, color: C.muted, letterSpacing: 4, textTransform: 'uppercase'}}>{sc.label}</div> : null}
+      <div style={{maxWidth: 1500, textAlign: 'center', display: 'flex', justifyContent: 'center'}}>
+        <RevealWords text={sc.hook || ''} size={sc.stat ? 58 : 84} delay={sc.stat ? 16 : 4} stagger={2} maxWidth={1500} />
       </div>
-      {rest ? <div style={{maxWidth: 1400}}><StatText text={rest} size={Math.min(58, Math.round(size * 0.55))} color={C.muted} weight={500} /></div> : null}
-      {acts.length ? <div style={{display: 'flex', gap: 22, marginTop: 6}}>
-        {acts.map((a, i) => {
-          const o = interpolate(f / fps - restAt - i * 0.35, [0, 0.25], [0, 1], clamp);
-          return <div key={i} style={{display: 'flex', alignItems: 'center', gap: 12, padding: '12px 22px', borderRadius: 16, ...glass,
-            opacity: o, transform: `translateY(${(1 - o) * 18}px)`, fontFamily: HEAD, fontWeight: 700, fontSize: 30, color: C.ink}}>
-            <span style={{width: 40, height: 40, borderRadius: 99, background: ac, color: '#fff', display: 'flex', alignItems: 'center',
-              justifyContent: 'center', fontFamily: DISPLAY, fontSize: 22}}>{i + 1}</span>{a}</div>;
-        })}
-      </div> : null}
     </AbsoluteFill>
   </AbsoluteFill>
-  );
-};
+);
 
 // ---------- thẻ bài X ----------
 const PostCard: React.FC<{post: Post; delay: number}> = ({post, delay}) => {
@@ -123,21 +71,21 @@ const PostCard: React.FC<{post: Post; delay: number}> = ({post, delay}) => {
   const s = useSpring(delay, 18);
   return (
     <div style={{perspective: 1800}}>
-      <div style={{width: 740, borderRadius: 26, ...glass,
-        boxShadow: '0 40px 100px rgba(0,0,0,0.55)', overflow: 'hidden', fontFamily: FONT,
+      <div style={{width: 740, borderRadius: 26, background: C.panel, border: `1px solid ${C.line}`,
+        boxShadow: '0 18px 50px rgba(40,50,110,0.12)', overflow: 'hidden', fontFamily: FONT,
         transform: `rotateY(${interpolate(s, [0, 1], [-25, -6]) + Math.sin(f / 50)}deg) translateX(${(1 - s) * 200}px)`, opacity: s}}>
         {post.cover ? <Img src={staticFile(post.cover)} style={{width: '100%', height: 280, objectFit: 'cover'}} /> : null}
         <div style={{padding: 32}}>
           <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
             {post.avatar ? <Img src={staticFile(post.avatar)} style={{width: 68, height: 68, borderRadius: 99}} /> : null}
             <div>
-              <div style={{color: C.ink, fontFamily: HEAD, fontSize: 30, fontWeight: 700}}>{post.author}</div>
+              <div style={{color: C.ink, fontSize: 30, fontWeight: 800}}>{post.author}</div>
               <div style={{color: C.muted, fontSize: 22, fontWeight: 600}}>@{post.handle}</div>
             </div>
             <div style={{flex: 1}} />
             <div style={{color: C.ink, fontSize: 40, fontWeight: 800}}>𝕏</div>
           </div>
-          {post.title ? <div style={{color: C.ink, fontFamily: HEAD, fontSize: 34, fontWeight: 700, marginTop: 20, lineHeight: 1.2}}>{post.title}</div> : null}
+          {post.title ? <div style={{color: C.ink, fontSize: 34, fontWeight: 800, marginTop: 20, lineHeight: 1.2}}>{post.title}</div> : null}
           <div style={{display: 'flex', gap: 30, marginTop: 18, color: C.muted, fontSize: 22, fontWeight: 600}}>
             {post.views ? <span>{fmt(post.views)} views</span> : null}
             {post.likes ? <span>{fmt(post.likes)} likes</span> : null}
@@ -149,46 +97,66 @@ const PostCard: React.FC<{post: Post; delay: number}> = ({post, delay}) => {
   );
 };
 
-// ---------- INTRO: rất ngắn, tiêu đề + VÒNG LẶP MỞ (điều sẽ có ở cuối video), không còn mục lục dài ----------
-const IntroScene: React.FC<{sc: Scene; post: Post | null; brand: string}> = ({sc, post, brand}) => {
+// ---------- INTRO: tiêu đề → danh sách insight ----------
+const IntroScene: React.FC<{sc: Scene; post: Post | null}> = ({sc, post}) => {
+  const f = useCurrentFrame();
+  const {fps} = useVideoConfig();
   const ac = useAccent();
-  const ol = useSpring(10, 16);
+  const t = f / fps;
+  const agendaAt = Math.min(11, sc.dur * 0.4);
+  const out = interpolate(t - agendaAt, [0, 0.5], [1, 0], clamp);
   return (
     <AbsoluteFill>
       <Backdrop img={sc.images?.[0]} dim={0.88} />
-      <TopBar brand={brand} source={post ? '@' + post.handle : undefined} />
-      <AbsoluteFill style={{flexDirection: 'row', alignItems: 'center', padding: '60px 110px 120px', gap: 70}}>
-        <div style={{flex: 1, display: 'flex', flexDirection: 'column', gap: 30}}>
-          <div><Chip text={(sc.theme || 'INSIGHT').toUpperCase()} /></div>
-          <FadeText text={sc.title || ''} size={fitSize(sc.title || '', 900, 260, 66, 44)} maxWidth={900} />
-          {sc.openLoop ? (
-            <div style={{display: 'flex', alignItems: 'center', gap: 22, padding: '24px 30px', borderRadius: 22, ...glass,
-              borderLeft: `6px solid ${ac}`, opacity: ol, transform: `translateY(${(1 - ol) * 24}px)`, maxWidth: 900}}>
-              <div style={{fontSize: 46}}>🎯</div>
-              <div style={{fontFamily: HEAD, fontWeight: 700, fontSize: fitSize(sc.openLoop, 760, 130, 42, 30), color: C.ink, lineHeight: 1.25}}>{sc.openLoop}</div>
+      <AbsoluteFill style={{flexDirection: 'row', alignItems: 'center', padding: '0 110px', gap: 70}}>
+        <div style={{flex: 1, position: 'relative', height: 700}}>
+          {/* Trọng 21/11: câu chào mở đầu phải có logo kênh */}
+          <div style={{position: 'absolute', top: 0, display: 'flex', alignItems: 'center', gap: 22,
+            opacity: interpolate(t, [0.1, 0.6], [0, 1], clamp), transform: `scale(${interpolate(t, [0.1, 0.6], [0.85, 1], clamp)})`, transformOrigin: 'left center'}}>
+            <Img src={staticFile('logo.png')} style={{width: 112, height: 112, borderRadius: 999, boxShadow: `0 0 0 6px ${ac}33, 0 14px 40px rgba(40,50,110,0.18)`}} />
+            <div style={{display: 'flex', flexDirection: 'column', gap: 4}}>
+              <div style={{fontFamily: FONT, fontWeight: 800, fontSize: 40, letterSpacing: 2, color: C.ink}}>SMART PENGUIN INSIGHTS</div>
+              <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 26, color: C.muted}}>@Trong0322</div>
             </div>
+          </div>
+          <div style={{position: 'absolute', top: 175, display: 'flex', flexDirection: 'column', gap: 28, opacity: out}}>
+            <div><Chip text={(sc.theme || 'INSIGHT').toUpperCase()} /></div>
+            <RevealWords text={sc.title || ''} size={70} delay={6} stagger={3} maxWidth={900} />
+          </div>
+          {t >= agendaAt ? (
+            <Sequence from={Math.round(agendaAt * fps)} layout="none">
+              <div style={{position: 'absolute', top: 165, display: 'flex', flexDirection: 'column', gap: 24}}>
+                <div><Chip text={`${(sc.points || []).length} INSIGHT TRONG VIDEO`} /></div>
+                {(sc.points || []).map((p, i) => {
+                  const s = interpolate(f - Math.round(agendaAt * fps) - 8 - i * 9, [0, 12], [0, 1], clamp);
+                  return <div key={i} style={{display: 'flex', gap: 22, alignItems: 'baseline', opacity: s, transform: `translateX(${(1 - s) * -30}px)`,
+                    fontFamily: FONT, fontWeight: 700, fontSize: 38, color: C.ink, maxWidth: 900, lineHeight: 1.25}}>
+                    <span style={{fontWeight: 800, color: ac, fontSize: 34, width: 56, flexShrink: 0}}>{String(i + 1).padStart(2, '0')}</span>{p}</div>;
+                })}
+              </div>
+            </Sequence>
           ) : null}
         </div>
-        {post ? <PostCard post={post} delay={4} /> : null}
+        {post ? <PostCard post={post} delay={14} /> : null}
       </AbsoluteFill>
     </AbsoluteFill>
   );
 };
 
 // ---------- SECTION (kiểu "dữ liệu thật") ----------
-const Bullets: React.FC<{items: string[]; dur: number; fps: number; emph?: string[]}> = ({items, dur, fps, emph}) => {
+const Bullets: React.FC<{items: string[]; dur: number; fps: number}> = ({items, dur, fps}) => {
   const f = useCurrentFrame();
   const ac = useAccent();
   return (
-    <div style={{display: 'flex', flexDirection: 'column', gap: 18}}>
+    <div style={{display: 'flex', flexDirection: 'column', gap: 20}}>
       {items.map((b, i) => {
         const at = Math.round(fps * (1.2 + (dur * 0.6 * i) / Math.max(1, items.length)));
         const s = interpolate(f - at, [0, 12], [0, 1], clamp);
         return (
-          <div key={i} style={{display: 'flex', alignItems: 'center', gap: 16, opacity: s, transform: `translateX(${(1 - s) * -40}px)`,
-            fontFamily: FONT, fontSize: 32, fontWeight: 500, color: C.ink}}>
-            <div style={{width: 10, height: 10, borderRadius: 3, background: ac, flexShrink: 0, transform: 'rotate(45deg)'}} />
-            <span><EmphText text={b} emph={emph} weight={700} /></span>
+          <div key={i} style={{display: 'flex', alignItems: 'center', gap: 18, opacity: s, transform: `translateX(${(1 - s) * -40}px)`,
+            fontFamily: FONT, fontSize: 34, fontWeight: 600, color: C.ink}}>
+            <div style={{width: 10, height: 10, borderRadius: 99, background: ac, flexShrink: 0}} />
+            <span>{b}</span>
           </div>
         );
       })}
@@ -196,272 +164,88 @@ const Bullets: React.FC<{items: string[]; dur: number; fps: number; emph?: strin
   );
 };
 
-export const QuoteCard: React.FC<{post: Post | null; quote: string; w: number; h: number; emph?: string[]}> = ({post, quote, w, h, emph}) => {
-  const s = useSpring(2, 18);
+export const QuoteCard: React.FC<{post: Post | null; quote: string; w: number; h: number}> = ({post, quote, w, h}) => {
+  const s = useSpring(4, 18);
   const ac = useAccent();
   return (
-    <div style={{width: w, height: h, borderRadius: 26, ...glass, boxSizing: 'border-box',
+    <div style={{width: w, height: h, borderRadius: 26, background: C.panel, border: `1px solid ${C.line}`, boxSizing: 'border-box',
       padding: 50, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 26, fontFamily: FONT, opacity: s,
-      transform: `scale(${0.96 + 0.04 * s})`, boxShadow: '0 30px 80px rgba(0,0,0,0.4)', borderLeft: `6px solid ${ac}`}}>
-      <div style={{fontFamily: HEAD, fontSize: 44, lineHeight: 1.28, color: C.ink, fontWeight: 500}}>“<EmphText text={quote} emph={emph} color={ac} weight={700} />”</div>
+      transform: `scale(${0.96 + 0.04 * s})`, boxShadow: '0 18px 50px rgba(40,50,110,0.12)', borderLeft: `6px solid ${ac}`}}>
+      <div style={{fontSize: 44, lineHeight: 1.3, color: C.ink, fontWeight: 700}}>“{quote}”</div>
       {post ? <div style={{display: 'flex', alignItems: 'center', gap: 14}}>
-        {post.avatar ? <Img src={staticFile(post.avatar)} style={{width: 52, height: 52, borderRadius: '50%'}} /> : null}
-        <div style={{color: C.muted, fontSize: 24, fontWeight: 500}}>Source: <b style={{color: C.ink}}>@{post.handle}</b></div>
+        {post.avatar ? <Img src={staticFile(post.avatar)} style={{width: 52, height: 52, borderRadius: 99}} /> : null}
+        <div style={{color: C.muted, fontSize: 24, fontWeight: 600}}>Source: <b style={{color: C.ink}}>@{post.handle}</b></div>
       </div> : null}
     </div>
   );
 };
 
-// thẻ trích nguyên văn câu highlight của tác giả trên X (kèm dịch)
-const XQuoteCard: React.FC<{post: Post | null; text: string; vi?: string; w: number; h: number; emph?: string[]}> = ({post, text, vi, w, h, emph}) => {
-  const s = useSpring(2, 16);
-  const ac = useAccent();
-  return (
-    <div style={{width: w, height: h, borderRadius: 26, ...glass, boxSizing: 'border-box',
-      padding: '40px 46px', display: 'flex', flexDirection: 'column', gap: 22, fontFamily: FONT, opacity: s,
-      transform: `translateY(${(1 - s) * 30}px)`, boxShadow: `0 30px 80px rgba(0,0,0,0.45), 0 0 0 1px ${ac}22`}}>
-      <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
-        {post?.avatar ? <Img src={staticFile(post.avatar)} style={{width: 64, height: 64, borderRadius: '50%'}} /> : null}
-        <div>
-          <div style={{color: C.ink, fontFamily: HEAD, fontWeight: 700, fontSize: 28}}>{post?.author}</div>
-          <div style={{color: C.muted, fontSize: 22}}>@{post?.handle}</div>
-        </div>
-        <div style={{flex: 1}} />
-        <div style={{color: C.ink, fontSize: 38, fontWeight: 800}}>𝕏</div>
-      </div>
-      {/* hiện bản dịch tiếng Việt (giống video trước); câu gốc đã được kiểm tra có thật trong bài */}
-      <div style={{fontFamily: HEAD, color: C.ink, fontSize: (vi || text).length > 130 ? 36 : 42, fontWeight: 500, lineHeight: 1.3}}>“<EmphText text={vi || text} emph={emph} color={ac} weight={700} />”</div>
-      <div style={{marginTop: 'auto', color: C.muted, fontSize: 22}}>Dịch từ bài viết của <b style={{color: C.ink}}>@{post?.handle}</b> trên X</div>
-    </div>
-  );
-};
-
-// chú thích nhanh thuật ngữ (FDV, Low Float…) hiện đúng lúc được nhắc
-const TermCallout: React.FC<{terms: {term: string; explain: string; at: number}[]; left?: number}> = ({terms, left = 110}) => {
-  const f = useCurrentFrame();
-  const ac = useAccent();
-  const {fps} = useVideoConfig();
-  const t = f / fps;
-  const cur = [...terms].reverse().find((x) => t >= x.at && t < x.at + 5.5);
-  if (!cur) return null;
-  const lt = t - cur.at;
-  const o = interpolate(lt, [0, 0.25, 5.1, 5.5], [0, 1, 1, 0], clamp);
-  return (
-    <div style={{position: 'absolute', left, top: 770, display: 'flex', alignItems: 'center', gap: 16, opacity: o,
-      transform: `translateY(${(1 - o) * 16}px)`, padding: '14px 22px', borderRadius: 16, background: C.panel,
-      border: `1px solid ${C.line}`, maxWidth: 820, fontFamily: FONT}}>
-      <div style={{fontSize: 30}}>💡</div>
-      <div style={{color: C.ink, fontSize: 25, lineHeight: 1.3}}><b style={{fontFamily: HEAD, color: ac}}>{cur.term}</b>: {cur.explain}</div>
-    </div>
-  );
-};
-
-// ---------- "nhịp hình": mỗi 5-8 giây (đổi ở cuối câu) đổi 1 cảnh: dữ liệu, số lớn, ảnh Ken Burns, thuật ngữ, logo, trích X ----------
-type Beat = {kind: 'data' | 'stat' | 'image' | 'x' | 'quote' | 'term' | 'project'; text?: string; vi?: string; img?: string; term?: string; explain?: string};
-
-export const buildBeats = (sc: Scene, data: any): Beat[] => {
-  const b: Beat[] = [];
-  const add = (x: Beat | null) => { if (x) b.push(x); };
-  add(dataOk(sc.data, data) ? {kind: 'data'} : null);
-  add(sc.keyStat ? {kind: 'stat'} : null);
-  add(sc.images?.[0] ? {kind: 'image', img: sc.images[0]} : null);
-  const q = (sc.xquotes || [])[0];   // tối đa 1 thẻ trích X mỗi phần
-  add(q ? {kind: 'x', text: q.text, vi: q.vi} : null);
-  add(sc.terms?.[0] ? {kind: 'term', term: sc.terms[0].term, explain: sc.terms[0].explain} : null);
-  add(sc.project?.logo ? {kind: 'project'} : null);
-  add(sc.images?.[1] ? {kind: 'image', img: sc.images[1]} : null);
-  add(!q && sc.quote ? {kind: 'quote', text: sc.quote} : null);
-  if (!b.length) b.push({kind: 'quote', text: sc.quote || sc.heading});
-  return b;
-};
-
-const BigStat: React.FC<{sc: Scene; w: number; h: number}> = ({sc, w, h}) => {
-  const ac = useAccent();
-  return <div style={{width: w, height: h, borderRadius: 26, ...glass, boxSizing: 'border-box', padding: 50, display: 'flex',
-    flexDirection: 'column', justifyContent: 'center', gap: 22, borderTop: `4px solid ${ac}`}}>
-    <div style={{fontFamily: HEAD, color: C.muted, fontWeight: 700, fontSize: 24, letterSpacing: 3}}>CON SỐ ĐÁNG CHÚ Ý</div>
-    <CountUp value={sc.keyStat || ''} size={Math.min(190, Math.round((w - 100) / Math.max(3, (sc.keyStat || '').length) * 1.5))} delay={4} color={ac} />
-    <div style={{fontFamily: HEAD, color: C.ink, fontWeight: 700, fontSize: fitSize(sc.keyLabel || '', w - 100, 130, 44, 28), lineHeight: 1.2}}>{sc.keyLabel}</div>
-    {sc.source ? <div style={{color: C.muted, fontSize: 22, fontFamily: FONT}}>Source: <b style={{color: C.ink}}>{sc.source}</b>{sc.srcDate ? ` · bài đăng ${sc.srcDate}` : ''}</div> : null}
-  </div>;
-};
-
-// cảnh "số liệu toàn màn hình": đổi bố cục hẳn để mắt có cái mới (không lặp kiểu tiêu đề trái, thẻ phải)
-const FullStat: React.FC<{sc: Scene}> = ({sc}) => {
-  const ac = useAccent();
-  return <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 26, padding: '160px 140px 180px'}}>
-    <Chip text={(sc.heading || 'CON SỐ ĐÁNG CHÚ Ý').toUpperCase()} size={26} />
-    <CountUp value={sc.keyStat || ''} size={Math.min(300, Math.round(1500 / Math.max(3, (sc.keyStat || '').length) * 1.4))} delay={2} color={ac} />
-    <div style={{fontFamily: HEAD, color: C.ink, fontWeight: 700, fontSize: fitSize(sc.keyLabel || '', 1400, 140, 64, 36), textAlign: 'center', lineHeight: 1.2}}>{sc.keyLabel}</div>
-    {sc.source ? <div style={{color: C.muted, fontSize: 26, fontFamily: FONT}}>Source: <b style={{color: C.ink}}>{sc.source}</b>{sc.srcDate ? ` · bài đăng ${sc.srcDate}` : ''}</div> : null}
-  </AbsoluteFill>;
-};
-
-// cảnh hiện tại trong 1 phần (cùng cách chia với BeatStage)
-export const beatAt = (sc: Scene, data: any, t: number) => {
-  const beats = buildBeats(sc, data);
-  const cuts = sc.cuts && sc.cuts.length ? sc.cuts : [0];
-  let j = 0;
-  for (let k = 0; k < cuts.length; k++) if (t >= cuts[k]) j = k;
-  return {kind: beats[j % beats.length].kind, at: cuts[j], end: cuts[j + 1] ?? sc.dur};
-};
-
-const KenBurns: React.FC<{img: string; w: number; h: number; t: number; per: number; dir: number}> = ({img, w, h, t, per, dir}) => {
-  const k = Math.min(1, Math.max(0, t / per));
-  return <div style={{width: w, height: h, borderRadius: 26, overflow: 'hidden', position: 'relative', boxShadow: T.shadow, border: `1px solid ${C.line}`}}>
-    <Img src={staticFile(img)} style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover',
-      transform: `scale(${1.06 + 0.12 * k}) translateX(${dir * 24 * k}px)`}} />
-  </div>;
-};
-
-const TermCard: React.FC<{term: string; explain: string; w: number; h: number}> = ({term, explain, w, h}) => {
-  const ac = useAccent();
-  return <div style={{width: w, height: h, borderRadius: 26, ...glass, boxSizing: 'border-box', padding: 54, display: 'flex',
-    flexDirection: 'column', justifyContent: 'center', gap: 26, borderLeft: `6px solid ${ac}`}}>
-    <div><Chip text="💡 THUẬT NGỮ" size={24} /></div>
-    <div style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: fitSize(term, w - 110, 160, 92, 48), color: ac, lineHeight: 1.1}}>{term}</div>
-    <div style={{fontFamily: HEAD, fontWeight: 500, fontSize: fitSize(explain, w - 110, 170, 44, 28), color: C.ink, lineHeight: 1.3}}>{explain}</div>
-  </div>;
-};
-
-const ProjectCard: React.FC<{p: Project; w: number; h: number}> = ({p, w, h}) => {
-  const ac = useAccent();
-  const f = useCurrentFrame();
-  return <div style={{width: w, height: h, borderRadius: 26, ...glass, boxSizing: 'border-box', display: 'flex', flexDirection: 'column',
-    alignItems: 'center', justifyContent: 'center', gap: 26}}>
-    {p.logo ? <Img src={staticFile(p.logo)} style={{width: 230, height: 230, borderRadius: '50%', boxShadow: `0 0 0 ${10 + 3 * Math.sin(f / 10)}px ${ac}33`}} /> : null}
-    <div style={{fontFamily: HEAD, fontWeight: 700, fontSize: 60, color: C.ink}}>{p.name}</div>
-    {p.ticker ? <Chip text={'$' + p.ticker} size={30} /> : null}
-  </div>;
-};
-
-export const BeatStage: React.FC<{sc: Scene; data: any; post: Post | null; w: number; h: number}> = ({sc, data, post, w, h}) => {
-  const f = useCurrentFrame();
-  const {fps} = useVideoConfig();
-  const t = f / fps;
-  const beats = buildBeats(sc, data);
-  const cuts = sc.cuts && sc.cuts.length ? sc.cuts : [0];
-  const segs = cuts.map((c, j) => ({at: c, end: cuts[j + 1] ?? sc.dur}));
-  const si = Math.max(0, segs.findIndex((g) => t >= g.at && t < g.end));
-  return (
-    <div style={{position: 'relative', width: w, height: h}}>
-      {segs.map((g, j) => {
-        if (Math.abs(j - si) > 1) return null;
-        const b = beats[j % beats.length];
-        const per = Math.max(1, g.end - g.at);
-        const o = j === si ? (j === 0 ? 1 : interpolate(t - g.at, [0.12, 0.45], [0, 1], clamp)) : j === si - 1 ? interpolate(t - segs[si].at, [0, 0.18], [1, 0], clamp) : 0;
-        if (o <= 0) return null;
-        const zoom = b.kind === 'image' ? 1 : 1 + 0.03 * Math.min(1, (t - g.at) / per);   // zoom chậm kiểu Ken Burns
-        return (
-          <div key={j} style={{position: 'absolute', inset: 0, opacity: o, transform: `scale(${zoom}) translateX(${(1 - o) * (j === si ? 50 : -50)}px)`}}>
-            <Sequence from={Math.round(g.at * fps)} layout="none">
-              {b.kind === 'data' ? <DataPanel spec={sc.data!} data={data} w={w} h={h} />
-                : b.kind === 'stat' ? <BigStat sc={sc} w={w} h={h} />
-                  : b.kind === 'image' ? <KenBurns img={b.img!} w={w} h={h} t={t - g.at} per={per} dir={j % 2 ? -1 : 1} />
-                    : b.kind === 'term' ? <TermCard term={b.term!} explain={b.explain!} w={w} h={h} />
-                      : b.kind === 'project' ? <ProjectCard p={sc.project!} w={w} h={h} />
-                        : b.kind === 'x' ? <XQuoteCard post={post} text={b.text!} vi={b.vi} w={w} h={h} emph={sc.emph} />
-                          : <QuoteCard post={post} quote={b.text || ''} w={w} h={h} emph={sc.emph} />}
-            </Sequence>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
 const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Post | null}> = ({sc, data, brandName, post}) => {
-  const {fps} = useVideoConfig();
   const f = useCurrentFrame();
+  const {fps} = useVideoConfig();
   const ac = useAccent();
   const t = f / fps;
-  // phần chẵn đảo bố cục (thẻ trái, chữ phải); cảnh "số lớn" chiếm toàn màn hình
-  const mirror = (sc.idx || 1) % 2 === 0;
-  const b = beatAt(sc, data, t);
-  const full = b.kind === 'stat' && b.at > 0;   // cảnh đầu của phần vẫn giữ bố cục tiêu đề
-  const fo = full ? Math.min(interpolate(t - b.at, [0, 0.2], [0, 1], clamp), interpolate(b.end - t, [0, 0.2], [0, 1], clamp)) : 0;
-  const TX = mirror ? 1010 : 110;
+  const numS = useSpring(0, 20);
+  const hasData = !!(sc.data && sc.data.type && sc.data.type !== 'none');
+  const quoteAt = sc.dur * 0.55;
+  const toQuote = hasData && !!sc.quote;
   return (
     <AbsoluteFill>
       <Backdrop />
       <TopBar source={sc.source} idx={sc.idx} total={sc.total} brand={brandName} project={sc.project} />
-      <AbsoluteFill style={{opacity: fo < 1 ? 1 : 0}}>
-      <div style={{position: 'absolute', left: TX, top: 170, display: 'flex', alignItems: 'center', gap: 16}}>
-        <div style={{fontFamily: HEAD, color: C.muted, fontWeight: 700, fontSize: 22, letterSpacing: 4}}>INSIGHT</div>
-        <div style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: 28, color: ac}}>{String(sc.idx).padStart(2, '0')}</div>
+      <div style={{position: 'absolute', left: 110, top: 170, display: 'flex', alignItems: 'center', gap: 16, opacity: numS, fontFamily: FONT}}>
+        <div style={{fontWeight: 800, fontSize: 30, color: ac}}>{String(sc.idx).padStart(2, '0')}</div>
+        <div style={{width: 10, height: 10, borderRadius: 99, background: ac, transform: `scale(${numS})`}} />
+        <div style={{color: C.muted, fontWeight: 700, fontSize: 22, letterSpacing: 4}}>INSIGHT</div>
       </div>
-      <div style={{position: 'absolute', left: TX, top: 230, width: 800, display: 'flex', flexDirection: 'column', gap: 36}}>
-        <FadeText text={sc.heading || ''} size={fitSize(sc.heading || '', 800, 210, 58, 40)} maxWidth={800}
-          highlight={[sc.project?.name || ''].filter(Boolean)} />
-        {sc.bullets?.length ? <Bullets items={sc.bullets} dur={sc.dur} fps={fps} emph={sc.emph} /> : null}
+      <div style={{position: 'absolute', left: 110, top: 230, width: 800, display: 'flex', flexDirection: 'column', gap: 40}}>
+        <RevealWords text={sc.heading || ''} size={58} delay={6} stagger={3} maxWidth={800}
+          highlight={[sc.project?.name || '', sc.keyStat || ''].filter(Boolean)} />
+        {sc.bullets?.length ? <Bullets items={sc.bullets} dur={sc.dur} fps={fps} /> : null}
       </div>
-      {sc.terms?.length ? <TermCallout terms={sc.terms} left={TX} /> : null}
-      <div style={{position: 'absolute', left: mirror ? 100 : 980, top: 190}}>
-        <BeatStage sc={sc} data={data} post={post || null} w={840} h={560} />
+      <div style={{position: 'absolute', right: 100, top: 190, width: 840, height: 560}}>
+        <div style={{position: 'absolute', inset: 0, opacity: toQuote ? interpolate(t - quoteAt, [0, 0.5], [1, 0], clamp) : 1}}>
+          {hasData ? <DataPanel spec={sc.data!} data={data} w={840} h={560} />
+            : <QuoteCard post={post || null} quote={sc.quote || sc.heading || ''} w={840} h={560} />}
+        </div>
+        {toQuote && t >= quoteAt ? (
+          <div style={{position: 'absolute', inset: 0}}>
+            <Sequence from={Math.round(quoteAt * fps)} layout="none"><QuoteCard post={post || null} quote={sc.quote!} w={840} h={560} /></Sequence>
+          </div>
+        ) : null}
+        {sc.keyStat ? (
+          <div style={{position: 'absolute', right: 0, top: 590, padding: '14px 28px', display: 'flex', alignItems: 'center', gap: 20,
+            borderRadius: 18, background: C.panel, border: `1px solid ${C.line}`}}>
+            <div style={{whiteSpace: 'nowrap'}}><CountUp value={sc.keyStat} size={sc.keyStat.length > 6 ? 44 : 58} delay={20} /></div>
+            <div style={{fontFamily: FONT, color: C.muted, fontWeight: 600, fontSize: 22, width: 320, lineHeight: 1.25}}>{sc.keyLabel}</div>
+          </div>
+        ) : null}
       </div>
-      </AbsoluteFill>
-      {fo > 0 ? <AbsoluteFill style={{opacity: fo, transform: `scale(${0.97 + 0.03 * fo})`}}>
-        <Backdrop /><TopBar source={sc.source} idx={sc.idx} total={sc.total} brand={brandName} project={sc.project} /><FullStat sc={sc} />
-      </AbsoluteFill> : null}
     </AbsoluteFill>
   );
 };
 
-// ---------- OUTRO: 3 tiêu chí làm ngay + 1 câu hỏi kéo bình luận → màn hình kết thúc (chừa chỗ gắn 2 video + nút đăng ký) ----------
+// ---------- OUTRO (giữ như bản 1+2) ----------
 const OutroScene: React.FC<{sc: Scene; brandName: string}> = ({sc, brandName}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const ac = useAccent();
-  const t = f / fps;
-  const endAt = sc.endAt || sc.dur;
-  const recap = interpolate(t - endAt, [0, 0.6], [1, 0], clamp);
-  const es = interpolate(t - endAt, [0.2, 1], [0, 1], clamp);
   const pulse = 1 + 0.03 * Math.sin(f / 6);
-  const acts = sc.actions && sc.actions.length ? sc.actions : null;
-  const list = acts || sc.points || [];
-  // tiêu chí hiện dần theo lúc được đọc (khoảng 60% đầu lời kết), câu hỏi hiện sau đó
-  const step = (endAt * 0.6) / Math.max(1, list.length);
-  const qAt = Math.min(endAt - 1.5, endAt * 0.62);
-  const qs = interpolate(t - qAt, [0, 0.5], [0, 1], clamp);
+  const btn = useSpring(Math.round(fps * Math.max(1, sc.dur - 4)), 12);
   return (
     <AbsoluteFill>
       <Backdrop />
-      <div style={{opacity: recap}}><TopBar brand={brandName} /></div>
-      <AbsoluteFill style={{padding: '180px 140px 200px', flexDirection: 'column', justifyContent: 'center', gap: 34, opacity: recap}}>
-        <div><Chip text={acts ? `${list.length} TIÊU CHÍ LÀM NGAY` : 'TÓM LẠI'} size={30} /></div>
-        {list.map((p, i) => {
-          const s = interpolate(t - 0.3 - i * step, [0, 0.4], [0, 1], clamp);
-          return <div key={i} style={{display: 'flex', gap: 26, alignItems: 'center', opacity: 0.25 + 0.75 * s, transform: `translateX(${(1 - s) * -30}px)`,
-            fontFamily: HEAD, fontWeight: 700, fontSize: acts ? 72 : 48, color: C.ink}}>
-            {acts ? <div style={{width: 62, height: 62, borderRadius: 16, background: s > 0.5 ? ac : 'transparent', border: `3px solid ${ac}`,
-              color: '#fff', fontSize: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>{s > 0.5 ? '✓' : ''}</div>
-              : <span style={{fontFamily: DISPLAY, color: ac}}>{String(i + 1).padStart(2, '0')}</span>}
-            {p}</div>;
+      <AbsoluteFill style={{padding: '150px 140px', flexDirection: 'column', gap: 32}}>
+        <div><Chip text="TÓM LẠI" /></div>
+        {(sc.points || []).map((p, i) => {
+          const s = interpolate(f - 10 - i * 12, [0, 14], [0, 1], clamp);
+          return <div key={i} style={{display: 'flex', gap: 24, alignItems: 'baseline', opacity: s, transform: `translateX(${(1 - s) * -40}px)`,
+            fontFamily: FONT, fontWeight: 800, fontSize: 48, color: C.ink}}>
+            <span style={{color: ac}}>{String(i + 1).padStart(2, '0')}</span>{p}</div>;
         })}
-        {sc.question ? (
-          <div style={{marginTop: 18, display: 'flex', alignItems: 'center', gap: 22, padding: '26px 34px', borderRadius: 22, ...glass,
-            borderLeft: `6px solid ${ac}`, opacity: qs, transform: `translateY(${(1 - qs) * 24}px)`, maxWidth: 1500}}>
-            <div style={{fontSize: 48}}>💬</div>
-            <div style={{fontFamily: HEAD, fontWeight: 700, fontSize: 52, color: C.ink, lineHeight: 1.25}}>{sc.question}</div>
-          </div>
-        ) : null}
       </AbsoluteFill>
-      {t >= endAt ? (
-        <AbsoluteFill style={{opacity: es}}>
-          <div style={{position: 'absolute', left: 120, top: 120, display: 'flex', alignItems: 'center', gap: 22}}>
-            <Img src={staticFile('logo.png')} style={{width: 110, height: 110, borderRadius: '50%'}} />
-            <div>
-              <div style={{fontFamily: HEAD, fontWeight: 700, fontSize: 52, color: C.ink}}>{brandName}</div>
-              <div style={{fontFamily: FONT, fontSize: 28, color: C.muted}}>{sc.question ? 'Trả lời câu hỏi ở phần bình luận nhé' : 'Insight crypto dễ hiểu, mỗi tuần'}</div>
-            </div>
-          </div>
-          {[0, 1].map((k) => <div key={k} style={{position: 'absolute', top: 360, left: 120 + k * 860, width: 800, height: 450, borderRadius: 24,
-            border: `2px dashed ${C.line}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: HEAD,
-            color: C.muted, fontSize: 30}}>{k ? 'Video đề xuất' : 'Xem tiếp video này'}</div>)}
-          <div style={{position: 'absolute', left: 120, bottom: 140, transform: `scale(${pulse})`, transformOrigin: 'left center',
-            padding: '20px 44px', borderRadius: 99, background: C.red, color: '#fff', fontFamily: HEAD, fontWeight: 700, fontSize: 36}}>ĐĂNG KÝ KÊNH</div>
-        </AbsoluteFill>
-      ) : null}
+      <div style={{position: 'absolute', right: 140, bottom: 300, opacity: btn, transform: `scale(${btn * pulse})`, fontFamily: FONT,
+        padding: '24px 50px', borderRadius: 99, background: C.red, color: '#fff', fontWeight: 800, fontSize: 40}}>ĐĂNG KÝ · {brandName}</div>
     </AbsoluteFill>
   );
 };
@@ -473,14 +257,13 @@ const Chrome: React.FC = () => {
   return (
     <>
       <div style={{position: 'absolute', left: 0, bottom: 0, height: 5, width: (f / durationInFrames) * width, background: ac}} />
-      <Handle size={26} style={{position: 'absolute', right: 36, bottom: 18}} />
+      <div style={{position: 'absolute', right: 40, bottom: 24, fontFamily: FONT, fontWeight: 700, fontSize: 22,
+        color: 'rgba(19,24,54,0.55)'}}>@Trong0322</div>
     </>
   );
 };
 
-export const Insight: React.FC<InsightProps> = (raw) => {
-  const props = React.useMemo(() => deepClean(raw), [raw]);
-  applyTheme(props.theme);
+export const Insight: React.FC<InsightProps> = (props) => {
   useFonts();
   const {fps} = useVideoConfig();
   const f = useCurrentFrame();
@@ -491,17 +274,17 @@ export const Insight: React.FC<InsightProps> = (raw) => {
       {props.audio ? <Audio src={staticFile(props.audio)} /> : null}
       {props.scenes.map((sc, i) => (
         <Sequence key={i} from={Math.round(sc.from * fps)} durationInFrames={Math.max(1, Math.round(sc.dur * fps))}>
-          <AccentCtx.Provider value={tone(sc.project?.color) || accentDefault()}>
-            {sc.type === 'hook' ? <HookScene sc={sc} brand={brandName} source={props.post ? '@' + props.post.handle : undefined} /> : null}
-            {sc.type === 'intro' ? <IntroScene sc={sc} post={props.post} brand={brandName} /> : null}
+          <AccentCtx.Provider value={tone(sc.project?.color || DEFAULT_ACCENT)}>
+            {sc.type === 'hook' ? <HookScene sc={sc} /> : null}
+            {sc.type === 'intro' ? <IntroScene sc={sc} post={props.post} /> : null}
             {sc.type === 'section' ? <SectionScene sc={sc} data={props.data} brandName={brandName} post={props.post} /> : null}
             {sc.type === 'outro' ? <OutroScene sc={sc} brandName={brandName} /> : null}
-            {sc.type !== 'hook' ? <Captions words={sc.words} bottom={56} size={50} maxWidth={1560} emph={sc.emph || props.emph} subs={sc.subs} /> : null}
+            {sc.type !== 'hook' ? <Captions words={sc.words} bottom={64} size={40} maxWidth={1500} /> : null}
             {i > 0 ? <Glitch /> : null}
           </AccentCtx.Provider>
         </Sequence>
       ))}
-      <AccentCtx.Provider value={tone(cur?.project?.color) || accentDefault()}><Chrome /></AccentCtx.Provider>
+      <AccentCtx.Provider value={tone(cur?.project?.color || DEFAULT_ACCENT)}><Chrome /></AccentCtx.Provider>
     </AbsoluteFill>
   );
 };
