@@ -85,6 +85,12 @@ jobs:
           npm ci --silent
           npm i -g --silent @anthropic-ai/claude-code
 
+      - name: Kiểm tra bộ chuẩn hoá YouTube / TikTok / Reels (platform_export)
+        if: steps.inbox.outputs.cook == 'true' || github.event.inputs.links != ''
+        # Tự tạo video mẫu → mã hoá theo chuẩn nền tảng → ffprobe kiểm tra. Hỏng ở đây thì dừng sớm,
+        # khỏi mất 60-90 phút dựng. Lúc dựng thật, insight_publish gọi platform_export.prepare() trước khi tạo Release.
+        run: python platform_export.py selftest
+
       - name: Cook video Insight + gửi Telegram
         if: steps.inbox.outputs.cook == 'true' || github.event.inputs.links != ''
         env:

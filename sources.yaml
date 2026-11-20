@@ -127,3 +127,47 @@ insight:
   review_model: "claude-sonnet-5-5"   # bot review dùng Claude (secret ANTHROPIC_API_KEY); chưa có key thì tạm dùng Gemini
   end_screen_seconds: 12              # khoảng cuối video để gắn màn hình kết thúc YouTube
   cook_hours: [19, 23]        # khung giờ (VN) được phép cook tự động
+  # ---- Cấu hình xuất bản theo nền tảng (platform_export.py, chạy trước khi tạo Release) · tra cứu 20/11/2026 ----
+  # Nguồn: support.google.com/youtube/answer/1722171 (mã hoá), /answer/15424877 (Shorts 3 phút),
+  #        /answer/72431 (ảnh bìa); postfa.st + manypixels.co (TikTok, Reels: tổng hợp từ tài liệu TikTok/Meta).
+  publish:
+    strict: true                  # sai thông số → dừng, không tạo Release (báo lỗi Telegram)
+    long:                         # video dài YouTube 16:9
+      width: 2560                 # 1440p: YouTube cấp codec VP9 (nét hơn AVC1) cho video tải lên từ 1440p
+      height: 1440
+      fallback_height: 1080       # vẫn chấp nhận 1080p nếu sau này đổi về
+      fps: 30
+      crf: 16                     # chất lượng (càng nhỏ càng nét); trần bitrate bên dưới
+      maxrate: "24M"              # YouTube khuyên 16 Mbps cho 1440p30 → để dư
+      bufsize: "48M"
+      preset: "fast"              # ~1,2 phút mã hoá / 1 phút video trên máy GitHub 4 nhân
+    short:                        # 1 file dùng chung YouTube Shorts / TikTok / Facebook Reels
+      width: 1080
+      height: 1920
+      fps: 30
+      crf: 17
+      maxrate: "12M"              # YouTube khuyên 8 Mbps cho 1080p30
+      bufsize: "24M"
+      preset: "medium"
+      warn_seconds: 60            # Shorts > 60s dính bản quyền nhạc có thể bị chặn → cảnh báo
+      max_seconds: 180            # Shorts tối đa 3 phút (quá → YouTube xếp thành video thường) → lỗi
+    audio:
+      sample_rate: 48000          # YouTube: 48 kHz
+      channels: 2                 # stereo
+      bitrate: "384k"             # YouTube khuyên 384 kbps cho stereo
+      lufs: -14.0                 # độ lớn tích hợp; YouTube/TikTok/Reels đều chuẩn hoá về khoảng -14
+      true_peak: -1.0             # đỉnh thật tối đa (dBTP) tránh rè khi nền tảng nén lại
+      lra: 11.0
+      lufs_tolerance: 1.5
+    thumb: {width: 1280, height: 720, max_bytes: 2000000}   # ảnh bìa YouTube: 1280x720, dưới 2MB
+    vertical_cover: true          # thêm ảnh bìa dọc 1080x1920 (khung hook) cho từng short
+    vertical_cover_at: 1.2        # lấy khung hình ở giây thứ 1,2
+  # Độ dài short khuyên dùng: 30-45s (shorts_max_seconds ở trên = 45). Giữ dưới 60s để 1 file đăng được cả 3 nơi
+  # mà không dính rủi ro bản quyền Shorts > 1 phút; TikTok/Reels không giới hạn chặt nhưng video ngắn giữ chân tốt hơn.
+  # Vùng an toàn khung dọc 1080x1920 (px tính từ mép): chữ/số quan trọng KHÔNG đặt ngoài vùng này vì bị nút,
+  # tên kênh, caption của ứng dụng che. right_buttons = cột nút (tim, bình luận, chia sẻ) ở nửa dưới bên phải.
+  safe_zones:
+    tiktok:         {top: 240, bottom: 660, left: 120, right: 120, right_buttons: 180}   # TikTok In-Feed template
+    reels:          {top: 269, bottom: 672, left: 65,  right: 65,  right_buttons: 180}   # Meta: 14% / 35% / 6%
+    youtube_shorts: {top: 285, bottom: 285, left: 0,   right: 0,   right_buttons: 180}   # "giữ nội dung trong 4:5 ở giữa"
+    common:         {top: 285, bottom: 672, left: 120, right: 180}  # GIAO cả 3 → dùng cho 1 file chung: vùng x 120-900, y 285-1248

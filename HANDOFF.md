@@ -79,3 +79,27 @@ giọng gemini:Riko (dự phòng vieneu:Hải Đăng), theme light.
 - Session Claude: `gh auth status` báo token sai nhưng `gh api` REST vẫn chạy. CoinGecko bị chặn từ máy session
   (chỉ test được trên GitHub). Dựng thử khung hình nhanh: harness gọi insight_render.render với run_remotion bị thay
   bằng bản chỉ xuất ảnh (ONLY_FRAMES) cho cả video dài và short.
+
+## 8. Cấu hình xuất bản theo nền tảng (platform_export.py, thêm 20/11/2026)
+Sau khi Remotion dựng xong, `insight_publish.publish()` gọi `platform_export.prepare()` TRƯỚC khi tạo Release:
+mã hoá lại tại chỗ video dài + short, chuẩn hoá âm lượng, chỉnh ảnh bìa, tạo ảnh bìa dọc, rồi ffprobe kiểm tra.
+Sai thông số → `SpecError` (strict: true) → workflow fail → Telegram báo lỗi. insight.yml có bước `selftest` trước khi
+cook (hỏng thì dừng sớm). Thông số ở sources.yaml `insight.publish`, vùng an toàn ở `insight.safe_zones`.
+Lệnh tay: `python platform_export.py check|fix <file...>`.
+
+| Hạng mục | Video dài YouTube | Short (1 file cho Shorts/TikTok/Reels) |
+|---|---|---|
+| Kích thước | 2560x1440 (dựng 1080p rồi nâng bằng lanczos; `LONG_RENDER_SCALE=1.3333` để dựng thẳng 1440p) | 1080x1920 |
+| fps / GOP | 30 / GOP đóng 15 khung | 30 / GOP đóng 15 khung |
+| Codec hình | H.264 High, yuv420p, BT.709, CRF 16, trần 24 Mbps | H.264 High, yuv420p, BT.709, CRF 17, trần 12 Mbps |
+| Âm thanh | AAC 384k, 48 kHz stereo, -14 LUFS, đỉnh -1 dBTP | như video dài |
+| File | moov đầu file (faststart) | như video dài; nên 30-45s, cảnh báo > 60s, lỗi > 180s |
+| Ảnh bìa | 1280x720, dưới 2MB (PNG quá nặng → JPG) | cover-9x16-*.jpg 1080x1920 (khung giây 1,2) |
+
+Vùng an toàn 1080x1920 (px từ mép, trên/dưới/trái/phải): TikTok 240/660/120/120, Reels 269/672/65/65,
+Shorts giữ nội dung trong khung 4:5 giữa (285/285); cột nút bên phải ~180px. Vùng chung: x 120-900, y 285-1248.
+Đo thực tế: video dài 230s nâng 1440p mất 4,5 phút trên máy 2 nhân (GitHub 4 nhân ~2,5 phút), file ~170MB.
+Nguồn: support.google.com/youtube/answer/1722171 (mã hoá + bitrate: 1440p30 16 Mbps, 1080p30 8 Mbps),
+/answer/15424877 (Shorts tối đa 3 phút; > 1 phút có claim bản quyền có thể bị chặn), /answer/72431 (ảnh bìa),
+postfa.st/sizes/tiktok/video, manypixels.co (vùng an toàn TikTok), postfa.st/sizes/facebook/reels (Meta 14%/35%/6%),
+postfa.st/sizes/youtube/shorts.

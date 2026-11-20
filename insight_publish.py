@@ -286,7 +286,7 @@ def tg_video(path: Path, caption: str):
         small = path.with_name(path.stem + "-preview.mp4")
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(path), "-vf", "scale=-2:720", "-c:v", "libx264",
                         "-crf", "27", "-preset", "veryfast", "-c:a", "aac", "-b:a", "128k", str(small)], check=True)
-        path, caption = small, caption + "\n(bản xem trước 720p · bản gốc 1080p ở GitHub Release)"
+        path, caption = small, caption + "\n(bản xem trước 720p · bản gốc 1440p ở GitHub Release)"
     with open(path, "rb") as f:
         r = requests.post(f"{api}/sendVideo", timeout=600, data={"chat_id": chat, "caption": caption[:1000],
                                                                  "supports_streaming": "true"},
@@ -362,7 +362,8 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, do_re
     (out / f"seo-{tag}.json").write_text(json.dumps(seo, ensure_ascii=False, indent=1), encoding="utf-8")
     (out / f"compliance-{tag}.json").write_text(json.dumps(rep, ensure_ascii=False, indent=1), encoding="utf-8")
     log("   " + CP.report_text(rep).replace("\n", "\n   "))
-    files = [res["long"]] + [s["path"] for s in res["shorts"]] + ([thumb] if thumb else []) + [out / f"seo-{tag}.json"]
+    import platform_export as PE; res, thumb, pe_extra = PE.prepare(res, thumb, log=log)  # chuẩn thông số nền tảng
+    files = [res["long"]] + [s["path"] for s in res["shorts"]] + ([thumb] if thumb else []) + pe_extra + [out / f"seo-{tag}.json"]
     url = ""
     repo = os.getenv("GITHUB_REPOSITORY")
     if repo and os.getenv("GH_TOKEN"):
