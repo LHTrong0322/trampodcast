@@ -291,6 +291,40 @@ def tg_photo(path: Path, caption: str):
 
 
 # ---------------------------------------------------------------------------
+class Progress:
+    """1 tin nhắn Telegram tự cập nhật % hoàn thành (sửa tin cũ, không gửi tin mới)."""
+
+    def __init__(self, title: str):
+        import time
+        self.title, self.mid, self.last, self.lines = title, None, -1, {}
+        self.t0 = time.time()
+
+    def set(self, key: str, pct: float, note: str = ""):
+        import time
+        pct = max(0, min(100, int(pct)))
+        self.lines[key] = (pct, note)
+        tot = sum(v[0] for v in self.lines.values()) / max(1, len(self.lines))
+        if abs(tot - self.last) < 4 and pct not in (0, 100):
+            return
+        self.last = tot
+        bar = lambda p: "█" * (p // 10) + "░" * (10 - p // 10)
+        mins = int((time.time() - self.t0) / 60)
+        text = (f"⏳ {self.title}\nTổng: {bar(int(tot))} {int(tot)}% · đã chạy {mins} phút\n\n"
+                + "\n".join(f"{bar(p)} {p:3d}%  {k}" + (f" · {n}" if n else "") for k, (p, n) in self.lines.items()))
+        api, chat = _tg()
+        if not api:
+            log(text)
+            return
+        try:
+            if self.mid is None:
+                r = requests.post(f"{api}/sendMessage", timeout=30, data={"chat_id": chat, "text": text}).json()
+                self.mid = r.get("result", {}).get("message_id")
+            else:
+                requests.post(f"{api}/editMessageText", timeout=30, data={"chat_id": chat, "message_id": self.mid, "text": text})
+        except Exception:
+            pass
+
+
 THEME_NAMES = {"light": "Nền sáng", "blue": "Nền xanh đại dương", "slate": "Nền xám xanh", "dark": "Nền tối"}
 
 
