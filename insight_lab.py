@@ -323,6 +323,17 @@ def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
     return True
 
 
+PROGRESS = None  # hàm báo tiến độ (pct, ghi chú) do insight.py gắn vào
+
+
+def _pg(p, note):
+    if PROGRESS:
+        try:
+            PROGRESS(p, note)
+        except Exception:
+            pass
+
+
 def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release: bool = False,
             notes: list[str] | None = None) -> Path:
     """Viết kịch bản + lấy dữ liệu/ảnh + đọc giọng. Giọng: thử lần lượt theo danh sách (Gemini Ludo trước,
@@ -354,6 +365,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
         prompt += "\nRút kinh nghiệm từ review các video trước (áp dụng):\n" + "\n".join(f"- {n}" for n in notes)
     plan = V.llm_json(gem, cfg, system, prompt)
     plan = P.nodash(plan)  # triệt gạch ngang dài ngay từ kịch bản
+    _pg(25, "đã viết xong kịch bản, đang lấy dữ liệu + ảnh")
     plan["sections"] = [s for s in plan.get("sections", []) if s.get("narration")][: int(ic.get("max_sections", 6))]
     plan["posts"] = posts
     log("③ Dữ liệu thị trường + ảnh (AI lọc ảnh lạc đề)")
@@ -369,6 +381,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     plan["shorts"] = [i for i in plan.get("shorts", []) if isinstance(i, int) and 0 <= i < len(plan["sections"])][
                      : int(ic.get("shorts", 3))]
     plan["voices"] = {}
+    _pg(40, "đang đọc giọng")
     for v in voices:
         log(f"④ Đọc giọng {v}")
         vd = re.sub(r"\W+", "_", v)

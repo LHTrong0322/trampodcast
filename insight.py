@@ -433,20 +433,46 @@ def produce(out: Path, cfg: dict, st: dict, links: str = ""):
         for r in json.loads(rp.read_text(encoding="utf-8"))[-3:]:
             tips += r.get("script_tips") or []
     forced = [v.strip() for v in os.getenv("INSIGHT_VOICE", "").split(",") if v.strip()]
+    themes = [t.strip() for t in os.getenv("INSIGHT_THEMES", "").split(",") if t.strip()] or [""]
+    names = {"light": "Video nền trắng", "blue": "Video nền xanh đại dương", "slate": "Video nền xám xanh", "dark": "Video nền tối", "": "Video"}
+    pg = PB.Progress("Smart Penguin Insights đang dựng")
+    pg.set("Kịch bản + giọng đọc", 5, "đang viết kịch bản")
+    for th in themes:
+        pg.set(names.get(th, th), 0, "chờ")
+    L.PROGRESS = lambda p_, n_: pg.set("Kịch bản + giọng đọc", p_, n_)
     lab = L.prepare(src, Path("lab"), voices=forced or None, notes=tips[-6:])
-    themes = [t.strip() for t in os.getenv("INSIGHT_THEMES", "").split(",") if t.strip()]
-    if not themes:
-        res = R.render(lab, Path("render_out"))
-        PB.publish(lab, res, Path("render_out"), data_dir=out)
-    else:  # dựng nhiều kiểu nền từ CÙNG 1 kịch bản + giọng để so sánh; video ngắn chỉ làm cho kiểu đầu
-        seo = None
-        for i, th in enumerate(themes):
+    L.PROGRESS = None
+    pg.set("Kịch bản + giọng đọc", 100, "xong")
+    seo = None
+    for i, th in enumerate(themes):
+        nm = names.get(th, th)
+        if th:
             os.environ["INSIGHT_THEME"] = th
-            log(f"🎨 Kiểu nền: {th}")
-            res = R.render(lab, Path("render_out") / th, shorts=(i == 0))
-            pub = PB.publish(lab, res, Path("render_out") / th, data_dir=out, do_review=(i == 0), seo=seo)
-            seo = pub["seo"]
-        os.environ.pop("INSIGHT_THEME", None)
+        log(f"🎨 Kiểu nền: {th or 'mặc định'}")
+        stage = {"n": 0}
+
+        def prog(x, nm=nm, stage=stage):  # video dài 0-75%, mỗi video ngắn chia đều 75-92%
+            if stage["n"] == 0:
+                pg.set(nm, 75 * x, "đang dựng video dài")
+            else:
+                pg.set(nm, 75 + 17 * ((stage["n"] - 1) + x) / 3, f"đang dựng video ngắn {stage['n']}")
+        R.PROGRESS = prog
+        orig = R.run_remotion
+
+        def counted(props, out_p, frames="", orig=orig, stage=stage):
+            r_ = orig(props, out_p, frames)
+            if not frames:
+                stage["n"] += 1
+            return r_
+        R.run_remotion = counted
+        res = R.render(lab, Path("render_out") / (th or "default"), shorts=(i == 0))
+        R.run_remotion = orig
+        R.PROGRESS = None
+        pg.set(nm, 93, "đang gửi Telegram + SEO" + (" + review" if i == 0 else ""))
+        pub = PB.publish(lab, res, Path("render_out") / (th or "default"), data_dir=out, do_review=(i == 0), seo=seo)
+        seo = pub["seo"]
+        pg.set(nm, 100, "✅ đã gửi")
+    os.environ.pop("INSIGHT_THEME", None)
     for p in st["posts"]:
         if (links.strip() and p.get("url") and p["url"].split("?")[0] in links) or (not links.strip() and p in posts):
             p["used"] = True

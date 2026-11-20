@@ -121,7 +121,8 @@ def english_subs(scenes: list, pcm: dict, text: dict) -> None:
             ws = e.split()
             pieces = [" ".join(ws[x:x + 10]) for x in range(0, len(ws), 10)]
             if len(pieces) > 1 and len(pieces[-1].split()) < 4:
-                pieces[-2] += " " + pieces.pop()
+                last = pieces.pop()
+                pieces[-1] += " " + last
             tot = sum(len(p) for p in pieces)
             acc = 0
             for p_ in pieces:
@@ -240,6 +241,9 @@ def prep_public(lab: Path):
     shutil.copy(ROOT / "logo.png", RD / "logo.png")
 
 
+PROGRESS = None  # hàm báo tiến độ (đặt từ insight.py), nhận số 0-1 của bước dựng hiện tại
+
+
 def run_remotion(props: dict, out: Path, frames: str = ""):
     pj = ROOT / "remotion" / "props.json"
     pj.write_text(json.dumps(props, ensure_ascii=False), encoding="utf-8")
@@ -247,7 +251,18 @@ def run_remotion(props: dict, out: Path, frames: str = ""):
     if frames:
         env["ONLY_FRAMES"] = frames
     out.parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run(["node", "render.mjs", str(pj), str(out.resolve())], cwd=ROOT / "remotion", check=True, env=env)
+    pr = subprocess.Popen(["node", "render.mjs", str(pj), str(out.resolve())], cwd=ROOT / "remotion", env=env,
+                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    for line in pr.stdout:
+        print(line, end="")
+        m = re.match(r"render (\d+)%", line)
+        if m and PROGRESS:
+            try:
+                PROGRESS(int(m.group(1)) / 100)
+            except Exception:
+                pass
+    if pr.wait() != 0:
+        raise RuntimeError("Remotion dựng lỗi")
 
 
 def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "", shorts: bool = True) -> dict:
