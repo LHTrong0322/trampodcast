@@ -107,3 +107,13 @@ jobs:
           git add -A
           git commit -q -m "Trạm Insight $(date -u +%Y-%m-%dT%H:%MZ)"
           git push -f -q "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" podcast-data
+
+      - name: Báo lỗi vào Telegram
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            --data-urlencode chat_id="${TELEGRAM_CHAT_ID}" \
+            --data-urlencode text="❌ Dựng video Insight bị lỗi. Xem chi tiết: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > /dev/null
