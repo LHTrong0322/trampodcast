@@ -33,7 +33,7 @@ jobs:
                   ch = requests.get("https://www.googleapis.com/youtube/v3/channels", params={"part": "snippet,status", "mine": "true"},
                                     headers={"Authorization": "Bearer " + r["access_token"]}).json()
                   for c in ch.get("items", []):
-                      print("YOUTUBE OK, kênh:", c["snippet"]["title"], "| đã xác minh dài:", c.get("status", {}).get("longUploadsStatus"))
+                      print("YOUTUBE OK, kênh:", c["snippet"]["title"], "| id:", c["id"], "| đã xác minh dài:", c.get("status", {}).get("longUploadsStatus"))
                   if not ch.get("items"):
                       print("YOUTUBE: token đúng nhưng không thấy kênh", ch.get("error", {}).get("message", ""))
           if os.getenv("FB_PAGE_TOKEN"):
