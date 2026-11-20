@@ -270,7 +270,11 @@ def transition_sound() -> bytes:
 
 class Gemini:
     def __init__(self, key: str):
-        self.key = key
+        # key dự phòng GEMINI_API_KEY2: chỉ dùng khi key chính hết lượt trong ngày hoặc hết credit
+        self.keys = [k for k in [key, os.getenv("GEMINI_API_KEY2", "").strip()] if k]
+        self.keys = list(dict.fromkeys(self.keys)) or [key]
+        self.ki = 0
+        self.key = self.keys[0]
         self.dead: set[str] = set()  # model đã lỗi trong lần chạy này → bỏ qua luôn
 
     def _post(self, model: str, body: dict, timeout=240) -> dict:
@@ -281,16 +285,31 @@ class Gemini:
             if r.status_code == 429 or r.status_code >= 500:
                 txt = r.text
                 if r.status_code == 429 and "PerDay" in txt:
+                    if self._next_key("hết lượt trong ngày"):
+                        continue
                     raise RuntimeError(f"{model}: hết lượt miễn phí trong ngày. {txt[:400]}")
                 m = re.search(r'"retryDelay":\s*"(\d+)', txt)
                 wait = int(m.group(1)) + 5 if m else min(30 * (attempt + 1), 120)
                 log(f"   … {model} bận ({r.status_code}), đợi {wait}s rồi thử lại")
                 time.sleep(wait)
                 continue
+            if r.status_code in (400, 401, 403) and re.search(r"credit|billing|quota|API_KEY_INVALID|PERMISSION_DENIED", r.text, re.I) \
+                    and self._next_key(f"lỗi {r.status_code}"):
+                continue
             if r.status_code != 200:
                 raise RuntimeError(f"{model} HTTP {r.status_code}: {r.text[:300]}")
             return r.json()
         raise RuntimeError(f"{model}: hết lượt thử (rate limit)")
+
+    def _next_key(self, why: str) -> bool:
+        """Chuyển sang key dự phòng (GEMINI_API_KEY2). Trả False nếu không còn key nào."""
+        if self.ki + 1 >= len(self.keys):
+            return False
+        self.ki += 1
+        self.key = self.keys[self.ki]
+        self.dead.clear()
+        log(f"   ↪ Key Gemini chính {why}, chuyển sang key dự phòng GEMINI_API_KEY2")
+        return True
 
     def _try_models(self, models: list[str], fn):
         last = None

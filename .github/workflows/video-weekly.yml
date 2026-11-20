@@ -56,6 +56,7 @@ jobs:
       - name: Dựng video tuần + gửi Telegram
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY2: ${{ secrets.GEMINI_API_KEY2 }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           GH_TOKEN: ${{ github.token }}

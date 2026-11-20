@@ -43,6 +43,7 @@ jobs:
       - name: Chuẩn bị nguyên liệu
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY2: ${{ secrets.GEMINI_API_KEY2 }}
           INSIGHT_GEMINI_API_KEY: ${{ secrets.INSIGHT_GEMINI_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
