@@ -61,9 +61,12 @@ def post(plan_path: Path):
         vid = up.json()["id"]
         st["yt_id"] = vid
         if rel.get("thumb"):
-            SU.yt_thumb(tok, vid, rel["thumb"])
+            st["thumb_ok"] = SU.yt_thumb(tok, vid, rel["thumb"])
         SP.yt_add(tok, pl, vid)
         report.append(f"YouTube: đã tải lên, tự công khai lúc {y['publish_at']} (giờ VN +7). Link: https://youtu.be/{vid}")
+    if y and st.get("yt_id") and not st.get("thumb_ok") and rel.get("thumb"):   # gắn lại ảnh bìa nếu lần trước bị chặn
+        st["thumb_ok"] = SU.yt_thumb(SU._yt_token(), st["yt_id"], rel["thumb"])
+        report.append("YouTube ảnh bìa: " + ("đã gắn" if st["thumb_ok"] else "vẫn bị chặn, kênh chưa xác minh xong"))
     fb = plan.get("facebook")
     if fb and not st.get("fb_id"):
         page, tok = os.environ["FB_PAGE_ID"].strip(), os.environ["FB_PAGE_TOKEN"].strip()

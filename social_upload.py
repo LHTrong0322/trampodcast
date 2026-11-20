@@ -61,6 +61,8 @@ def yt_thumb(tok: str, vid: str, img: Path):
                           headers={"Authorization": f"Bearer {tok}", "Content-Type": "image/png"}, data=f, timeout=120)
     if r.status_code >= 300:  # kênh chưa xác minh số điện thoại thì không được đặt ảnh bìa tuỳ chỉnh
         log(f"   ! YouTube ảnh bìa lỗi {r.status_code}: cần xác minh kênh (youtube.com/verify)")
+        return False
+    return True
 
 
 def youtube(res: dict, seo: dict, thumb: Path | None) -> list[str]:
