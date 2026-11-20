@@ -133,6 +133,114 @@ def english_subs(scenes: list, pcm: dict, text: dict) -> None:
     log(f"   Phụ đề tiếng Anh: {sum(1 for x in en if x)}/{len(en)} câu")
 
 
+def bold_phrases(line: str, phrases: list[str]) -> str:
+    """In đậm (**...**) các cụm từ quan trọng có trong dòng phụ đề."""
+    for ph in sorted({p.strip() for p in phrases or [] if p and len(p.strip()) > 2}, key=len, reverse=True):
+        m = re.search(re.escape(ph), line, flags=re.I)
+        if m and "**" not in line[max(0, m.start() - 2):m.end() + 2]:
+            line = line[:m.start()] + "**" + m.group(0) + "**" + line[m.end():]
+    return line
+
+
+def vi_subs(scenes: list, pcm: dict, text: dict, emph: dict | None = None, maxw: int = 12) -> None:
+    """Phụ đề TIẾNG VIỆT theo CÂU ĐẦY ĐỦ, khớp đúng lời đọc (không dịch, không hiệu ứng gõ chữ).
+    Mỗi dòng ≤ maxw từ, chỉ ngắt ở chỗ ngừng thật (dấu câu) và không bao giờ nối 2 câu khác nhau vào 1 dòng."""
+    n_lines = 0
+    for sc in scenes:
+        k = sc["key"]
+        t = V.en_money(text.get(k, "")).strip()
+        sents = [s for s in re.split(r"(?<=[.!?…])\s+", t) if s.strip()]
+        clauses = []
+        for si, s in enumerate(sents):
+            for c in re.split(r"(?<=[,;:])\s+", s):
+                if c.strip():
+                    clauses.append((c.split(), si))
+        if not clauses:
+            continue
+        bounds = V.chunk_bounds({"pcm": pcm[k]}, [c for c, _ in clauses], len(pcm[k]) / SR / 2)
+        lines = []  # [từ, bắt đầu, kết thúc, số câu]
+        for (ws, si), (a, b) in zip(clauses, bounds):
+            if lines and lines[-1][3] == si and len(lines[-1][0]) + len(ws) <= maxw:
+                lines[-1][0] += ws
+                lines[-1][2] = b
+            else:
+                lines.append([list(ws), a, b, si])
+        subs = []
+        for ws, a, b, _ in lines:
+            n = -(-len(ws) // maxw)
+            size = -(-len(ws) // n)
+            pieces = [ws[x:x + size] for x in range(0, len(ws), size)]
+            tot = sum(len(" ".join(p)) for p in pieces)
+            acc = 0
+            for p_ in pieces:
+                s0 = a + (b - a) * acc / tot
+                acc += len(" ".join(p_))
+                subs.append({"t": nodash(bold_phrases(" ".join(p_), (emph or {}).get(k, []))),
+                             "s": round(s0, 2), "e": round(a + (b - a) * acc / tot, 2)})
+        sc["subs"] = subs
+        n_lines += len(subs)
+    log(f"   Phụ đề tiếng Việt theo câu: {n_lines} dòng")
+
+
+def beat_cuts(text: str, pcm: bytes, lo: float = 5.0, hi: float = 8.0) -> list[float]:
+    """Mốc đổi cảnh trong 1 phần: đổi ở cuối câu, mỗi cảnh dài 5-8 giây (1 ý = 1 cảnh)."""
+    dur = len(pcm) / SR / 2
+    ends = [b for _, _, b in sent_times(text, pcm)][:-1]
+    cuts, last = [0.0], 0.0
+    for b in ends:
+        while b - last > hi:  # câu quá dài → đổi cảnh giữa câu
+            last += hi * 0.8
+            cuts.append(round(last, 2))
+        if b - last >= lo and dur - b >= lo * 0.6:
+            cuts.append(round(b, 2))
+            last = b
+    while dur - last > hi + 2:
+        last += hi * 0.8
+        cuts.append(round(last, 2))
+    return cuts
+
+
+def hook_stat(plan: dict, posts: list) -> str:
+    """MỘT con số cho hook: phải có thật trong bài VÀ nằm ngay trong câu hook; không khớp thì bỏ."""
+    st = real_number(V.en_money(plan.get("hook_stat", "")), posts)
+    nums = re.findall(r"\d+(?:[.,]\d+)?", st)
+    hook_nums = set(re.findall(r"\d+(?:[.,]\d+)?", V.en_money(plan.get("hook", ""))))
+    return st if nums and all(n in hook_nums for n in nums) else ""
+
+
+MULT = {"k": 1e3, "ngàn": 1e3, "nghìn": 1e3, "m": 1e6, "triệu": 1e6, "b": 1e9, "tỷ": 1e9, "t": 1e12}
+
+
+def section_images(plan: dict, key: str) -> list:
+    """Ảnh minh hoạ cho 1 phần: chỉ 1 ảnh AI chấm rất khớp chủ đề (≥ 8/10); không chắc thì không dùng ảnh."""
+    files = (plan.get("images") or {}).get(key) or []
+    sc = plan.get("image_scores")
+    if sc is None:
+        return [f"img/{x}" for x in files[:1]]
+    best = sorted((x for x in files if float(sc.get(x, 0)) >= 8), key=lambda x: -float(sc.get(x, 0)))
+    return [f"img/{x}" for x in best[:1]]
+
+
+def first_sentence(t: str, mx: int = 14) -> str:
+    s = re.split(r"(?<=[.!?…])\s+", (t or "").strip())[0] if t else ""
+    return s if 0 < len(s.split()) <= mx else ""
+
+
+def numeric_items(items: list) -> list | None:
+    """stat_compare chỉ vẽ thanh khi MỌI giá trị là MỘT con số cùng đơn vị ($, %, x...).
+    Trả về danh sách giá trị số (đã nhân K/M/B), hoặc None nếu phải hiện dạng thẻ chữ."""
+    units, nums = set(), []
+    for it in items or []:
+        v = str((it or {}).get("value") or "").strip().replace(",", "")
+        m = re.fullmatch(r"([$]?)\s*[~≈+]?\s*(\d+(?:\.\d+)?)\s*([%xX]|[KMBTkmbt]|tỷ|triệu|ngàn|nghìn)?", v)
+        if not m:
+            return None
+        u = (m.group(3) or "").lower()
+        units.add((m.group(1), u if u in ("%", "x") else ""))
+        nums.append(float(m.group(2)) * MULT.get(u, 1))
+    return nums if len(nums) >= 2 and len(units) == 1 and max(nums) > 0 else None
+
+
 def build_timeline(plan, pcm, text, gap=0.35, tail=2.6):
     """Ghép audio các đoạn (nghỉ ngắn giữa đoạn để giữ nhịp) + lập danh sách cảnh (giây)."""
     secs = plan["sections"]
@@ -275,8 +383,13 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     log(f"   Tốc độ giọng ×{f:.2f}")
     pcm = {k: speed(v, f) for k, v in pcm.items()}
     audio, tl, total = build_timeline(plan, pcm, text, tail=float(ic.get("end_screen_seconds", 12)))
-    if ic.get("subtitle_lang", "en") == "en":
+    secs0 = plan["sections"]
+    emph = {f"s{i}": [V.en_money(e) for e in (s.get("emphasis") or [])] for i, s in enumerate(secs0)}
+    emph["hook"] = [V.en_money(plan.get("hook_stat", ""))] if plan.get("hook_stat") else []
+    if ic.get("subtitle_lang", "vi") == "en":
         english_subs(tl, pcm, text)
+    else:
+        vi_subs(tl, pcm, text, emph)
     prep_public(lab)
     V.pcm_to_wav(audio, RD / "voice.wav")
     try:
@@ -295,17 +408,22 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
         k = sc["key"]
         base = {"from": sc["from"], "dur": sc["dur"], "words": sc["words"], "subs": sc.get("subs")}
         if k == "hook":
+            hs = hook_stat(plan, posts)
+            if plan.get("hook_stat") and not hs:
+                log(f"   Hook: bỏ con số '{plan.get('hook_stat')}' vì không nằm trong câu hook / không có trong bài")
             scenes.append({**base, "type": "hook", "hook": V.en_money(plan.get("hook", "")),
-                           "stat": real_number(V.en_money(plan.get("hook_stat", "")), posts), "label": V.en_money(plan.get("hook_label", "")) if real_number(V.en_money(plan.get("hook_stat", "")), posts) else "",
+                           "stat": hs, "label": V.en_money(plan.get("hook_label", "")) if hs else "",
                            "images": [f"img/{x}" for x in imgs.get("intro", [])][:1]})
         elif k == "intro":
             chapters.append((sc["from"], "Mở đầu"))
             scenes.append({**base, "type": "intro", "title": V.en_money(plan.get("title", "")), "theme": plan.get("theme", ""),
-                           "points": [V.en_money(s["heading"]) for s in secs][:6],
+                           "openLoop": V.en_money(plan.get("open_loop", "")),
                            "images": [f"img/{x}" for x in imgs.get("intro", [])][:1]})
         elif k == "outro":
             chapters.append((sc["from"], "Tóm lại"))
             scenes.append({**base, "type": "outro", "points": [V.en_money(s["heading"]) for s in secs][:5],
+                           "actions": [V.en_money(a) for a in (plan.get("actions") or [])][:3],
+                           "question": V.en_money(plan.get("question", "")),
                            "endAt": round(len(pcm["outro"]) / SR / 2 + 0.6, 2)})
         else:
             i = int(k[1:])
@@ -314,10 +432,19 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
             chapters.append((sc["from"], V.en_money(s["heading"])))
             proj = project_of(s, data)
             dspec = dict(s.get("data") or {})
-            if proj and dspec.get("type") in ("coin_chart", "market_heatmap", "none", None) and \
-                    ((data.get("coins") or {}).get(proj["ticker"]) or {}).get("series"):
-                dspec = {**dspec, "type": "coin_chart", "tickers": [proj["ticker"]]}  # có dự án → biểu đồ giá của chính dự án
+            if dspec.get("type") == "coin_chart":
+                # chỉ vẽ biểu đồ đã kiểm tra KHỚP lời đọc (đúng khoảng thời gian sự kiện); không có → bỏ, dùng thẻ số liệu
+                ch = (data.get("charts") or {}).get(k)
+                dspec = {**dspec, "chart": ch} if ch else {"type": "none"}
+            elif dspec.get("type") == "stat_compare":
+                nums = numeric_items(dspec.get("items"))
+                if nums:
+                    dspec["items"] = [{**it, "num": n} for it, n in zip(dspec["items"], nums)]
+                else:
+                    dspec["type"] = "text_cards"  # giá trị là chữ / khác đơn vị → thẻ chữ, không vẽ thanh rỗng
             scenes.append({**base, "type": "section", "idx": i + 1, "total": len(secs), "heading": V.en_money(s["heading"]),
+                           "cuts": beat_cuts(text[k], pcm[k]),
+                           "images": section_images(plan, k),
                            "keyStat": real_number(V.en_money(s.get("key_stat", "")), posts), "keyLabel": V.en_money(s.get("key_label", "")),
                            "bullets": [V.en_money(b) for b in (s.get("bullets") or [])][:3],
                            "quote": V.en_money(s.get("quote", "")), "source": ("@" + src[0]) if src[0] else "",
@@ -337,6 +464,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     tag = lab.name + (f"-{os.getenv('INSIGHT_THEME')}" if os.getenv("INSIGHT_THEME") else "")
     long_path = out_dir / f"smart-penguin-{tag}-16x9.mp4"
     log(f"Dựng video dài · {total / 60:.1f} phút · giọng {voice}")
+    (out_dir / "props-long.json").write_text(json.dumps(props, ensure_ascii=False), encoding="utf-8")  # cho bot tuân thủ quét
     run_remotion(props, long_path, frames)
     res = {"long": long_path, "shorts": [], "chapters": chapters, "duration": total, "voice": voice, "plan": plan,
            "scenes": scenes}
@@ -357,13 +485,17 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
         sc = next(x for x in scenes if x.get("idx") == i + 1)
         sprops = {"fps": 30, "width": 1080, "height": 1920, "audio": f"short{n}.wav", "duration": round(len(a) / SR / 2, 3),
                   "scenes": [{**sc, "from": 0, "dur": round(len(a) / SR / 2, 3), "words": [x for x in w if x["s"] < end],
-                              "subs": [x for x in (sc.get("subs") or []) if x["s"] < end] or None}],
+                              "subs": [x for x in (sc.get("subs") or []) if x["s"] < end] or None,
+                              "cuts": [c for c in (sc.get("cuts") or [0]) if c < end - 3] or [0]}],
                   "data": data, "brand": brand, "post": pinfo, "theme": os.getenv("INSIGHT_THEME") or ic.get("theme", "dark"),
-                  "shortTitle": nodash(V.en_money(str(shr.get(str(i)) or shr.get(i) or sc["heading"])))}
+                  # 1-2 giây đầu: câu hook gây sốc hiện chữ to; tiêu đề = tên insight (tự co chữ, không cắt)
+                  "shortHook": nodash(V.en_money(str(shr.get(str(i)) or shr.get(i) or first_sentence(text[k]) or sc["heading"]))),
+                  "shortTitle": nodash(sc["heading"])}
         sp = out_dir / f"smart-penguin-{tag}-short{n + 1}-9x16.mp4"
         log(f"Dựng video ngắn {n + 1} · {len(a) / SR / 2:.0f}s")
         run_remotion(sprops, sp)
-        res["shorts"].append({"path": sp, "section": i, "title": sprops["shortTitle"]})
+        (out_dir / f"props-short{n + 1}.json").write_text(json.dumps(sprops, ensure_ascii=False), encoding="utf-8")
+        res["shorts"].append({"path": sp, "section": i, "title": sprops["shortHook"] or sprops["shortTitle"]})
     return res
 
 

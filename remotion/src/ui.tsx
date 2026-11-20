@@ -246,13 +246,15 @@ export const RevealWords: React.FC<{text: string; size: number; weight?: number;
   );
 };
 
-// ---------- số đếm: chạy số ~1,5s, nảy nhẹ khi xong ----------
-export const CountUp: React.FC<{value: string; delay?: number; size: number; color?: string; frames?: number}> = ({value, delay = 0, size, color: col, frames = 45}) => {
+// ---------- số đếm: chạy số nhanh (~0,7s) rồi đứng yên; giá trị phức tạp thì hiện tĩnh ----------
+// chỉ chạy số khi là MỘT con số đơn giản (vd "95%", "$400M", "3x"); "10/10", "1/3", nhiều số, ngày tháng → hiện tĩnh
+export const isSimpleNumber = (v: string) => /^[^\d/]*\d+(?:[.,]\d+)?[^\d/]*$/.test(v.trim()) && !/\d\s*[/:-]\s*\d/.test(v);
+export const CountUp: React.FC<{value: string; delay?: number; size: number; color?: string; frames?: number}> = ({value, delay = 0, size, color: col, frames = 20}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const ac = useAccent();
   const color = col || ac;
-  const m = value.match(/^([^\d]*)(\d+(?:[.,]\d+)?)(.*)$/);
+  const m = isSimpleNumber(value) ? value.match(/^([^\d]*)(\d+(?:[.,]\d+)?)(.*)$/) : null;
   let shown = value;
   if (m) {
     const target = parseFloat(m[2].replace(/,/g, ''));
@@ -262,11 +264,26 @@ export const CountUp: React.FC<{value: string; delay?: number; size: number; col
     const num = dec ? v.toFixed(dec) : m[2].includes(',') ? Math.round(v).toLocaleString('en-US') : String(Math.round(v));
     shown = m[1] + num + m[3];
   }
-  const s = spring({frame: f - delay, fps, config: {damping: 11, mass: 0.6}});
+  const s = m ? spring({frame: f - delay, fps, config: {damping: 11, mass: 0.6}}) : 1;
   const bump = spring({frame: f - delay - frames, fps, config: {damping: 8, mass: 0.4}});
-  const sc = interpolate(s, [0, 1], [0.6, 1]) * (1 + 0.08 * Math.sin(Math.min(1, bump) * Math.PI));
+  const sc = (m ? interpolate(s, [0, 1], [0.6, 1]) : 1) * (1 + 0.08 * Math.sin(Math.min(1, bump) * Math.PI));
   return <div style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: size, color, lineHeight: 1, transform: `scale(${sc})`, opacity: s,
-    textShadow: T.textShadow, letterSpacing: -2, fontVariantNumeric: 'tabular-nums'}}>{shown}</div>;
+    textShadow: T.textShadow, letterSpacing: -2, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap'}}>{shown}</div>;
+};
+
+// ---------- cỡ chữ tự co theo độ dài để KHÔNG BAO GIỜ bị cắt chữ (không dùng dấu …) ----------
+export const fitSize = (text: string, w: number, h: number, max: number, min: number, lh = 1.18, cw = 0.58) => {
+  const words = (text || '').split(/\s+/).filter(Boolean);
+  for (let s = max; s >= min; s -= 2) {
+    // xếp chữ theo từng dòng (ước lượng bề rộng chữ ≈ cw × cỡ chữ)
+    let lines = 1, cur = 0;
+    for (const wd of words) {
+      const ww = (wd.length + 1) * cw * s;
+      if (cur + ww > w && cur > 0) { lines++; cur = ww; } else cur += ww;
+    }
+    if (lines * s * lh <= h) return s;
+  }
+  return min;
 };
 
 // ---------- phụ đề: hiện cả cụm câu (không chạy từng chữ), gọn & dễ đọc ----------
@@ -276,8 +293,9 @@ const BoldMd: React.FC<{text: string; color: string}> = ({text, color}) => (
     ? <b key={i} style={{fontWeight: 800, color}}>{p.slice(2, -2)}</b> : <React.Fragment key={i}>{p.replace(/\*/g, '')}</React.Fragment>)}</>
 );
 export type Sub = {t: string; s: number; e: number};
-export const Captions: React.FC<{words: Word[]; bottom: number; size: number; maxWidth: number; perChunk?: number; emph?: string[]; subs?: Sub[] | null}> = ({
-  words, bottom, size, maxWidth, perChunk = 12, emph = [], subs,
+export const Captions: React.FC<{words: Word[]; bottom: number; size: number; maxWidth: number; perChunk?: number; emph?: string[]; subs?: Sub[] | null;
+  left?: number; right?: number}> = ({
+  words, bottom, size, maxWidth, perChunk = 12, emph = [], subs, left = 0, right = 0,
 }) => {
   const ac = useAccent();
   const fr = useCurrentFrame();
@@ -289,7 +307,7 @@ export const Captions: React.FC<{words: Word[]; bottom: number; size: number; ma
     const c = subs[i];
     const op = interpolate(t - c.s, [-0.05, 0.12], [0, 1], clamp);
     return (
-      <div style={{position: 'absolute', left: 0, right: 0, bottom, display: 'flex', justifyContent: 'center'}}>
+      <div style={{position: 'absolute', left, right, bottom, display: 'flex', justifyContent: 'center'}}>
         <div style={{maxWidth, textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: size, lineHeight: 1.35,
           color: C.ink, opacity: op, padding: '10px 26px', borderRadius: 14, background: T.capBg, backdropFilter: 'blur(8px)',
           textShadow: T.capShadow}}><BoldMd text={c.t} color={ac} /></div>
@@ -318,7 +336,7 @@ export const Captions: React.FC<{words: Word[]; bottom: number; size: number; ma
   const c = chunks[idx];
   const op = interpolate(t - c[0].s, [-0.05, 0.12], [0, 1], clamp);
   return (
-    <div style={{position: 'absolute', left: 0, right: 0, bottom, display: 'flex', justifyContent: 'center'}}>
+    <div style={{position: 'absolute', left, right, bottom, display: 'flex', justifyContent: 'center'}}>
       <div style={{maxWidth, textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: size, lineHeight: 1.35,
         color: C.ink, opacity: op, padding: '10px 26px', borderRadius: 14, background: T.capBg, backdropFilter: 'blur(8px)',
         textShadow: T.capShadow}}>

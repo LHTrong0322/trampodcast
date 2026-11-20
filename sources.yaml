@@ -122,7 +122,7 @@ insight:
   target_minutes: 7
   shorts: 3                   # số video ngắn highlight
   shorts_max_seconds: 45
-  subtitle_lang: "en"         # phụ đề: en = tiếng Anh (giọng đã là tiếng Việt) · vi = tiếng Việt
+  subtitle_lang: "vi"         # phụ đề: vi = tiếng Việt theo câu đầy đủ, khớp lời đọc (Trọng chốt 20/11) · en = tiếng Anh
   theme: "light"               # nền video: dark | light (sáng) | blue (xanh đại dương) | slate (xám xanh)
   review_model: "claude-sonnet-5-5"   # bot review dùng Claude (secret ANTHROPIC_API_KEY); chưa có key thì tạm dùng Gemini
   end_screen_seconds: 12              # khoảng cuối video để gắn màn hình kết thúc YouTube
