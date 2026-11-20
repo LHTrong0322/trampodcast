@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:BVP;src:url(BeVietnamPro-Regular.ttf);font-weight:400}
+@font-face{font-family:BVP;src:url(BeVietnamPro-SemiBold.ttf);font-weight:600}
+@font-face{font-family:BVP;src:url(BeVietnamPro-Bold.ttf);font-weight:700}
+@font-face{font-family:BVP;src:url(BeVietnamPro-ExtraBold.ttf);font-weight:800}
+:root{--ink:#131836;--muted:#5D6688;--ac:#4F5BD5;--line:rgba(25,35,80,.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:var(--W);height:var(--H);overflow:hidden;font-family:BVP,sans-serif;color:var(--ink)}
+.bg{position:absolute;inset:0;background:
+  radial-gradient(calc(var(--W)*.38) calc(var(--H)*.6) at 82% 18%, rgba(79,91,213,.16), transparent 70%),
+  radial-gradient(calc(var(--W)*.3) calc(var(--H)*.55) at 10% 95%, rgba(79,91,213,.10), transparent 70%),
+  linear-gradient(150deg,#FFFFFF 0%,#F3F5FB 55%,#E6ECFB 100%)}
+.grid{position:absolute;inset:0;background-image:
+  linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:var(--G) var(--G);
+  -webkit-mask-image:radial-gradient(ellipse at 70% 40%,#000 0%,transparent 75%)}
+svg.wave{position:absolute;left:0;bottom:0;width:100%;height:60%}
+.safe>*{flex-shrink:0}.safe{position:absolute;left:var(--SX);top:var(--SY);width:var(--SW);height:var(--SH);display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:calc(var(--U)*1.4)}
+.logo{width:calc(var(--U)*7.2);height:calc(var(--U)*7.2);border-radius:50%;box-shadow:0 0 0 calc(var(--U)*.45) rgba(79,91,213,.22),0 calc(var(--U)*.9) calc(var(--U)*2.6) rgba(40,50,110,.18)}
+.name{white-space:nowrap;font-weight:800;font-size:calc(var(--U)*3.0);letter-spacing:calc(var(--U)*.1);line-height:1.05}
+.name span{color:var(--ac)}
+.tag{white-space:nowrap;font-weight:600;font-size:calc(var(--U)*1.75);color:var(--muted);margin-top:calc(var(--U)*.55)}
+.chips{display:flex;gap:calc(var(--U)*.7);margin-top:calc(var(--U)*1.1)}
+.chip{white-space:nowrap;font-weight:700;font-size:calc(var(--U)*1.15);padding:calc(var(--U)*.42) calc(var(--U)*1);border-radius:999px;background:#fff;border:1px solid rgba(79,91,213,.25);color:var(--ac)}
+.card{background:#fff;border-radius:calc(var(--U)*1.4);padding:calc(var(--U)*1.3) calc(var(--U)*1.6);box-shadow:0 calc(var(--U)*.8) calc(var(--U)*2.4) rgba(40,50,110,.12);border:1px solid var(--line);min-width:calc(var(--U)*17)}
+.card h4{font-weight:800;font-size:calc(var(--U)*1.05);letter-spacing:calc(var(--U)*.12);color:var(--muted);margin-bottom:calc(var(--U)*.7)}
+.row{white-space:nowrap;display:flex;align-items:center;gap:calc(var(--U)*.75);font-weight:700;font-size:calc(var(--U)*1.35);margin-top:calc(var(--U)*.5)}
+.tick{width:calc(var(--U)*1.55);height:calc(var(--U)*1.55);border-radius:calc(var(--U)*.4);background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:calc(var(--U)*.95);flex-shrink:0}
+.foot{white-space:nowrap;line-height:1.45;margin-top:calc(var(--U)*.9);font-weight:600;font-size:calc(var(--U)*1);color:var(--muted)}
+</style></head>
+<body>
+<div class="bg"></div><div class="grid"></div>
+<svg class="wave" viewBox="0 0 1000 300" preserveAspectRatio="none">
+  <defs><linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4F5BD5" stop-opacity=".14"/><stop offset="1" stop-color="#4F5BD5" stop-opacity="0"/></linearGradient></defs>
+  <path d="M0 250 C80 240 120 200 190 210 S300 260 370 215 S480 120 560 150 S690 220 760 160 S880 60 1000 70 L1000 300 L0 300Z" fill="url(#f)"/>
+  <path d="M0 250 C80 240 120 200 190 210 S300 260 370 215 S480 120 560 150 S690 220 760 160 S880 60 1000 70" fill="none" stroke="#4F5BD5" stroke-opacity=".35" stroke-width="2.2" vector-effect="non-scaling-stroke"/>
+</svg>
+<div class="safe">
+  <div>
+    <div class="brand">
+      <img class="logo" src="logo.png">
+      <div>
+        <div class="name">SMART PENGUIN<br><span>INSIGHTS</span></div>
+        <div class="tag">Insight crypto dễ hiểu mỗi ngày</div>
+      </div>
+    </div>
+    <div class="chips"><div class="chip">Tư duy đầu tư</div><div class="chip">Tokenomics</div><div class="chip">Dòng tiền</div><div class="chip">Bài học dự án</div></div>
+  </div>
+  <div class="card">
+    <h4>MỖI VIDEO CÓ GÌ</h4>
+    <div class="row"><div class="tick">✓</div>Bài hay nhất trên X</div>
+    <div class="row"><div class="tick">✓</div>Giải thích tiếng Việt</div>
+    <div class="row"><div class="tick">✓</div>Dữ liệu thật</div>
+    <div class="foot">By @Trong0322<br>Không phải lời khuyên đầu tư</div>
+  </div>
+</div>
+</body></html>
