@@ -15,6 +15,10 @@ on:
         description: "Giọng đọc (vd gemini:Ludo)"
         required: false
         default: "gemini:Ludo"
+      script:
+        description: "Kịch bản đã duyệt (file JSON trong repo, vd scripts/zeroxkyle-approved.json); trống = AI tự viết"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -76,6 +80,7 @@ jobs:
           INSIGHT_GEMINI_API_KEY: ${{ secrets.INSIGHT_GEMINI_API_KEY }}
           GEMINI_API_KEY2: ${{ secrets.GEMINI_API_KEY2 }}
           INSIGHT_VOICE: ${{ github.event.inputs.voice }}
+          INSIGHT_SCRIPT: ${{ github.event.inputs.script }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}

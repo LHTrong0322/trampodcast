@@ -1,0 +1,28 @@
+{
+  "title": "Tiêu đề YouTube (đã duyệt)",
+  "description": "Mô tả 2-3 câu",
+  "theme": "Chủ đề ngắn (hiện ở chip đầu video)",
+  "hook": "Câu mở màn đọc ~3 giây",
+  "hook_stat": "",
+  "hook_label": "",
+  "intro": "Lời chào + giới thiệu tập",
+  "sections": [
+    {
+      "heading": "Tên insight ngắn",
+      "key_stat": "",
+      "key_label": "",
+      "narration": "Lời đọc ĐÃ DUYỆT của phần này, giữ nguyên từng chữ",
+      "bullets": ["ý chính 1 trên hình", "ý chính 2"],
+      "quote": "câu trích ngắn (có thể trống)",
+      "data": {"type": "checklist", "items": [{"label": "Low Float High FDV", "value": ""}], "title": "Tiêu đề hình"},
+      "project": {"name": "", "ticker": ""},
+      "visual_queries": ["trader laptop charts", "business meeting finance"],
+      "source_ids": [0]
+    }
+  ],
+  "outro": "Tổng kết + không phải lời khuyên đầu tư + mời đăng ký",
+  "shorts": [0, 1],
+  "short_hooks": {"0": "câu hook short 1", "1": "câu hook short 2"},
+  "thumb_text": "CHỮ ẢNH BÌA",
+  "thumb_stat": ""
+}

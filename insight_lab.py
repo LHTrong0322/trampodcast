@@ -393,7 +393,11 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     if notes:
         prompt += "\nRút kinh nghiệm từ review các video trước (áp dụng):\n" + "\n".join(f"- {n}" for n in notes)
     plan = {}
-    for attempt in range(3):
+    approved = os.getenv("INSIGHT_SCRIPT", "").strip()   # kịch bản Trọng đã duyệt (JSON) → dựng đúng lời đọc, không để AI viết lại
+    if approved:
+        plan = P.nodash(json.loads(Path(approved).read_text(encoding="utf-8")))
+        log(f"   Dùng kịch bản đã duyệt: {approved} ({len(plan.get('sections', []))} phần)")
+    for attempt in range(0 if approved else 3):
         plan = P.nodash(V.llm_json(gem, cfg, system, prompt))
         top = {k: plan.get(k) for k in ("title", "hook", "hook_stat", "intro", "thumb_text", "thumb_stat")}
         n_ok = len([s for s in plan.get("sections", []) if s.get("narration") and not _banned(s)])
