@@ -24,7 +24,7 @@ nhánh podcast-data = dữ liệu + web Cloudflare Pages "trampodcast").
 - Font: Space Grotesk (tiêu đề), Unbounded (số lớn), Lexend (phụ đề) trong fonts/web + remotion/src/fonts.json.
 - podcast.py `nodash()`: hàm lọc gạch ngang dài dùng chung.
 - sources.yaml mục `insight:`: brand, theme (light), voice_primary gemini:Ludo (MẶC ĐỊNH từ 20/11, Trọng chốt; Riko bị chê dở), voice_fallback vieneu:Hải Đăng,
-  voice_speed auto + target_wpm 228, subtitle_lang en, shorts_max_seconds 45, end_screen_seconds 12…
+  voice_speed auto + target_wpm 228, subtitle_lang vi, shorts_max_seconds 45, end_screen_seconds 12…
 
 ## 3. Workflow GitHub
 - insight.yml: chạy tay với input force=true, links=<link X>, voice=(vd vieneu:Hải Đăng | gemini:Riko),
