@@ -3,17 +3,17 @@
 Nguồn: https://x.com/zeroxkyle/status/2106571278929010769
 Kiểu: giống video chuẩn insight-20261119-2125 (giọng gemini:Ludo, mở đầu + 5 phần + tóm lại, dài khoảng 4 phút).
 ĐÃ BỎ HẲN: đoạn "ENA tăng 95% trong 14 ngày" (không lời đọc, không thẻ +95%, không biểu đồ ENA, không có trong hook, short, ảnh bìa).
-Trạng thái: CHƯA DUYỆT. Chỉ dựng khi Trọng nhắn "ok kịch bản", và dựng đúng lời đọc dưới đây.
+Trạng thái: ĐÃ SỬA THEO TRỌNG 19:08 20/11, CHỜ "ok kịch bản". Chỉ dựng khi Trọng nhắn "ok kịch bản", và dựng đúng lời đọc dưới đây.
 
 ## Tiêu đề YouTube
-Crypto 2026: Cách chọn coin đáng giữ dài hạn, checklist của Kyle
+Crypto 2026: Tip chọn Altcoins tiềm năng để hold dài hạn
 
 ## Hook (giây 0, chữ hiện đủ trên hình)
 Lời đọc: Kyle nói chu kỳ này chỉ có một thước đo đáng tin: doanh thu thật và đang tăng. Còn lại, kể cả những màn hợp tác với tên tuổi lớn, phần nhiều chỉ là cái cớ để bơm giá.
 Chữ trên hình: CHỈ MỘT THƯỚC ĐO ĐÁNG TIN: DOANH THU THẬT
 
 ## Mở đầu
-Lời đọc: Chào mọi người đã quay trở lại với Smart Penguin Insights. Hôm nay mình mổ xẻ bài viết The Liquid Investors Buffet của Kyle, một nhà đầu tư có hơn sáu mươi hai nghìn người theo dõi trên X. Thông điệp của anh ấy rất gọn: crypto đang dần trở thành thứ có thể đầu tư được, chứ không chỉ để lướt sóng. Nhưng điều đó chỉ đúng khi bạn chọn đúng tài sản. Và chúng ta đang ở giai đoạn giao thoa cực kỳ quan trọng.
+Lời đọc: Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Hôm nay mình mổ xẻ bài viết The Liquid Investors Buffet của Kyle, một nhà đầu tư có hơn sáu mươi hai nghìn người theo dõi trên X. Thông điệp của anh ấy rất gọn: crypto đang dần trở thành thứ có thể đầu tư được, chứ không chỉ để lướt sóng. Nhưng điều đó chỉ đúng khi bạn chọn đúng tài sản. Và chúng ta đang ở giai đoạn giao thoa cực kỳ quan trọng.
 Chữ trên hình: thẻ bài X của Kyle; danh sách 5 phần của video.
 
 ## Phần 1: Bức tường lo âu và bóng ma quá khứ
@@ -72,7 +72,7 @@ Chữ trên hình: danh sách 5 phần; câu chốt "Mua tài sản tốt, giữ
 - Short 2 (từ Phần 5). Hook: 3 điều Kyle kiểm tra trước khi giữ một đồng coin dài hạn.
 
 ## Ảnh bìa
-- Chữ lớn: CÁCH CHỌN COIN ĐÁNG GIỮ DÀI HẠN
+- Chữ lớn: CÁCH CHỌN COIN TIỀM NĂNG ĐỂ HOLD DÀI HẠN
 - Checklist bên phải: Token gắn lợi ích / Có doanh thu thật / Ít token chờ xả
 - Ô nhấn (thay cho ô 95% cũ): 3 TIÊU CHÍ
 - Logo SMART PENGUIN INSIGHTS góc trên, @Trong0322 góc dưới. Không có số % tăng giá nào.
