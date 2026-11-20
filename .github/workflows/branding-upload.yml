@@ -1,0 +1,53 @@
+name: Cập nhật ảnh bìa YouTube + Facebook
+
+on:
+  workflow_dispatch:
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tải ảnh bìa lên
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+        shell: python
+        run: |
+          import os, json, requests
+          # ---- YouTube
+          try:
+              t = requests.post("https://oauth2.googleapis.com/token", data={"client_id": os.environ["YT_CLIENT_ID"].strip(),
+                  "client_secret": os.environ["YT_CLIENT_SECRET"].strip(), "refresh_token": os.environ["YT_REFRESH_TOKEN"].strip(),
+                  "grant_type": "refresh_token"}).json()["access_token"]
+              H = {"Authorization": "Bearer " + t}
+              with open("branding/smart-penguin-youtube-banner.png", "rb") as f:
+                  b = requests.post("https://www.googleapis.com/upload/youtube/v3/channelBanners/insert?uploadType=media",
+                                    headers={**H, "Content-Type": "image/png"}, data=f).json()
+              url = b.get("url")
+              if not url:
+                  raise RuntimeError(json.dumps(b.get("error", b))[:300])
+              ch = requests.get("https://www.googleapis.com/youtube/v3/channels", params={"part": "brandingSettings", "mine": "true"}, headers=H).json()["items"][0]
+              bs = ch["brandingSettings"]
+              bs.setdefault("image", {})["bannerExternalUrl"] = url
+              r = requests.put("https://www.googleapis.com/youtube/v3/channels", params={"part": "brandingSettings"},
+                               headers={**H, "Content-Type": "application/json"}, data=json.dumps({"id": ch["id"], "brandingSettings": bs}))
+              print("YOUTUBE ẢNH BÌA:", "OK" if r.ok else "LỖI " + r.text[:300])
+          except Exception as ex:
+              print("YOUTUBE ẢNH BÌA LỖI:", str(ex)[:300])
+          # ---- Facebook
+          try:
+              pg, tok = os.environ["FB_PAGE_ID"].strip(), os.environ["FB_PAGE_TOKEN"].strip()
+              with open("branding/smart-penguin-facebook-banner.png", "rb") as f:
+                  ph = requests.post(f"https://graph.facebook.com/v25.0/{pg}/photos", data={"access_token": tok, "published": "false"},
+                                     files={"source": ("cover.png", f, "image/png")}).json()
+              if "id" not in ph:
+                  raise RuntimeError(json.dumps(ph.get("error", ph))[:300])
+              r = requests.post(f"https://graph.facebook.com/v25.0/{pg}", data={"access_token": tok, "cover": ph["id"],
+                                "offset_y": 0, "no_feed_story": "true"}).json()
+              print("FACEBOOK ẢNH BÌA:", "OK" if r.get("success") else "LỖI " + json.dumps(r.get("error", r))[:300])
+          except Exception as ex:
+              print("FACEBOOK ẢNH BÌA LỖI:", str(ex)[:300])
