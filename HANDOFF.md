@@ -41,7 +41,7 @@ tự xoá khoảng trắng). TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, PIXABAY_API_K
 
 ## 5. Quy tắc BẮT BUỘC của Trọng
 - KHÔNG BAO GIỜ có dấu gạch ngang dài (em dash, en dash) ở bất kỳ đâu: video, phụ đề, ảnh bìa, SEO, Telegram.
-  (Trọng đã nhắc >10 lần. Cần thêm "bot kiểm tra" chặn trước khi xuất bản.)
+  (Trọng đã nhắc >10 lần. Đã có bot tuân thủ compliance.py chặn trước khi xuất bản.)
 - Tiền tệ dạng tiếng Anh trên hình ($6B, $400M); thuật ngữ crypto giữ tiếng Anh; thuật ngữ khác (vd PTSD)
   phải dịch/giải thích tiếng Việt.
 - Nền video: TRẮNG (theme light). Màu sạch, không loè loẹt. Có logo + "SMART PENGUIN INSIGHTS" từ giây đầu,
@@ -52,22 +52,21 @@ tự xoá khoảng trắng). TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, PIXABAY_API_K
 - Không dùng nhiều tài khoản Gemini miễn phí để lách quota.
 
 ## 6. Việc ĐANG DỞ (Trọng giao lúc 14:23 ngày 20/11/2026), mục tiêu video 9/10
-1. Áp dụng toàn bộ góp ý bot review Claude (5,4/10) cho video nền trắng gần nhất (insight-20261120-1115-light):
-   hook hiện đủ chữ ngay giây 0 (không hiệu ứng gõ), MỘT con số cho hook; bỏ/rút mục lục còn 2-3s; thêm "vòng lặp
-   mở"; mỗi 5-8s đổi cảnh, bớt trích dẫn nối tiếp; stat_compare không vẽ thanh rỗng khi giá trị là chữ; CountUp
-   không chạy số với dạng "10/10" (bị hiện 9/10); short: hook gây sốc 1-2s đầu, tiêu đề không bị cắt, phụ đề cao
-   hơn vùng nút TikTok; kết bằng 3 tiêu chí hành động + câu hỏi kéo bình luận.
-   LƯU Ý: review khuyên phụ đề tiếng Việt, nhưng Trọng đã yêu cầu phụ đề TIẾNG ANH → hỏi lại Trọng.
-2. Biểu đồ phải khớp mạch kể: vd "ENA tăng 95% trong 14 ngày" (sự kiện trong quá khứ) nhưng lại vẽ giá 30 ngày
-   gần nhất (đang giảm). Sửa: lấy giá theo KHOẢNG THỜI GIAN của sự kiện (ngày đăng bài trừ N ngày, CoinGecko
-   market_chart/range), hoặc thay bằng thẻ số liệu nếu không xác định được.
-3. Ảnh bìa: hứa giá trị hành động được.
-4. Dịch/giải thích thuật ngữ không phải crypto (PTSD…) sang tiếng Việt trong lời đọc và trên hình.
-5. Tìm và chặn TẬN GỐC dấu gạch ngang dài còn sót (OCR khung hình bằng tesseract có sẵn; kiểm tra props, SEO,
-   Telegram) + build "bot tuân thủ" chạy trên GitHub trước khi xuất bản (quét mọi chữ, có vi phạm thì tự sửa/chặn).
-6. Khi lượt Gemini hồi (sau 15:00 VN): dựng lại video hoàn chỉnh bài
-   https://x.com/zeroxkyle/status/2106571278929010769 với giọng Gemini (ưu tiên Riko; Trọng từng dùng Ludo cho
-   "video 3"), theme light. Hỏi Trọng câu "video 1 và text của video 3" nghĩa là gì nếu chưa rõ.
+Quyết định Trọng đã chốt (20/11): phụ đề TIẾNG VIỆT theo câu đầy đủ (subtitle_lang: vi, hàm vi_subs);
+"video 1" = bản nền trắng insight-20261120-1115-light (lấy kiểu nền), "video 3" = bản slate (lấy cách viết câu chữ rõ ý);
+giọng gemini:Riko (dự phòng vieneu:Hải Đăng), theme light.
+1. ✅ (20/11 16:20) Áp dụng góp ý bot review 5,4/10: hook hiện đủ chữ giây 0, 1 con số (phải nằm trong câu hook,
+   hàm hook_stat); intro bỏ mục lục, có open_loop; "nhịp hình" đổi ở cuối câu mỗi 5-8s (BeatStage: data, số lớn,
+   ảnh Ken Burns, thuật ngữ, logo, tối đa 1 trích X); stat_compare chữ → thẻ chữ (text_cards); CountUp tĩnh với
+   "10/10"; short: hook 1,8s đầu, tiêu đề fitSize, phụ đề đáy 440px tránh cột phải 150px; outro actions + question.
+2. ✅ Biểu đồ khớp mạch kể: insight_lab.event_charts (period_days, end_days_before_post, claim_pct; CoinGecko
+   market_chart/range tính từ ngày đăng bài; lệch lời đọc thì bỏ biểu đồ). Bỏ việc tự ép biểu đồ 30 ngày cho dự án.
+3. ✅ Ảnh bìa: thumb_text hứa giá trị, chặn chữ tiêu cực (BAD_THUMB), checklist thumb_points bên phải, cùng số với hook.
+4. ✅ Thuật ngữ không thuộc crypto: prompt + lưới an toàn insight_lab.vi_terms (PTSD → sang chấn tâm lý...).
+5. ✅ compliance.py (bot tuân thủ) chạy trong publish() trước Release/Telegram: quét props/SEO/notes, OCR khung hình;
+   gạch ngang trên hình → Release NHÁP + báo Telegram. Mọi tin Telegram qua podcast._tg_safe_post (nodash).
+   Đã quét sạch gạch ngang dài trong mã nguồn. Tiến độ trên video đổi thành chấm tròn (vạch ngang bị OCR nhầm).
+6. ⏳ Dựng lại bài https://x.com/zeroxkyle/status/2106571278929010769: run 44711829987 (dispatch 16:34 VN 20/11).
 7. Sau mỗi lần dựng: tải Release, tự xem khung hình, đọc review mới nhất, báo Trọng ngắn gọn.
 
 ## 7. Bài học vận hành
@@ -77,3 +76,6 @@ tự xoá khoảng trắng). TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, PIXABAY_API_K
 - Trước khi dispatch: chạy kiểm tra khói (import + thuộc tính module) để tránh lỗi ngớ ngẩn.
 - Có thể dựng thử nhanh vài khung hình trên máy bằng `python insight_render.py --lab <thư mục lab> --frames "3,40"`
   (Chrome có sẵn ở /usr/bin/google-chrome; lab mẫu cũ ở nhánh lab-renders).
+- Session Claude: `gh auth status` báo token sai nhưng `gh api` REST vẫn chạy. CoinGecko bị chặn từ máy session
+  (chỉ test được trên GitHub). Dựng thử khung hình nhanh: harness gọi insight_render.render với run_remotion bị thay
+  bằng bản chỉ xuất ảnh (ONLY_FRAMES) cho cả video dài và short.
