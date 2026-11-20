@@ -92,6 +92,9 @@ def seo_pack(gem, cfg, res: dict) -> dict:
 # ---------------------------------------------------------------------------
 # ảnh bìa
 # ---------------------------------------------------------------------------
+BAD_THUMB = r"SẮP CHẾT|\bCHẾT\b|\bSẬP\b|TOANG|BAY MÀU|VỀ 0|VỀ MO|LỪA ĐẢO|\bSCAM\b"
+
+
 def thumbnail(res: dict, out: Path) -> Path | None:
     plan = res["plan"]
     hook = " ".join([plan.get("hook", ""), plan.get("hook_label", ""), plan.get("thumb_text", "")]).lower()
@@ -101,12 +104,21 @@ def thumbnail(res: dict, out: Path) -> Path | None:
     text = (plan.get("thumb_text") or plan.get("thumb") or "").strip()
     if not text or len(text.split()) > 6:
         text = " ".join((text or plan.get("title", "")).replace(":", "").split()[:5])
+    acts = [a for a in (plan.get("actions") or []) if a]
+    points = [p for p in (plan.get("thumb_points") or []) if p][:3] or [" ".join(a.split()[:3]) for a in acts[:3]]
+    # ảnh bìa hứa GIÁ TRỊ hành động được, không giật tít tiêu cực (vd "SẮP CHẾT")
+    if re.search(BAD_THUMB, text.upper()):
+        log(f"   Ảnh bìa: bỏ chữ tiêu cực '{text}'")
+        text = f"{len(acts)} TIÊU CHÍ CHỌN ALTCOIN" if len(acts) >= 2 else "CÁCH LỌC COIN RÁC"
     props = {"comp": "Thumb", "width": 1280, "height": 720, "text": R.nodash(V.en_money(text)),
-             "stat": (R.real_number(V.en_money(plan.get("thumb_stat", "")), plan.get("posts") or [])
-                      or R.real_number(V.en_money(plan.get("hook_stat", "")), plan.get("posts") or []))[:8], "accent": (proj or {}).get("color"),
+             # cùng MỘT con số với hook để nhất quán (không khớp hook thì mới dùng thumb_stat có thật trong bài)
+             "stat": (R.hook_stat(plan, plan.get("posts") or [])
+                      or R.real_number(V.en_money(plan.get("thumb_stat", "")), plan.get("posts") or []))[:8], "accent": (proj or {}).get("color"),
              "projectLogo": (proj or {}).get("logo"), "bg": None, "theme": os.getenv("INSIGHT_THEME") or (V.load_cfg().get("insight") or {}).get("theme", "dark"),
-             "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")}
+             "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights"),
+             "points": R.nodash([V.en_money(x) for x in points]) if not proj else []}
     try:
+        out.with_suffix(".props.json").write_text(json.dumps(props, ensure_ascii=False), encoding="utf-8")
         R.run_remotion(props, out, frames="0")
         return out
     except Exception as ex:
