@@ -350,4 +350,9 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None) -> di
             arr = json.loads(p.read_text(encoding="utf-8")) if p.exists() else []
             arr.append({"tag": tag, "at": datetime.now(P.VN_TZ).isoformat(timespec="minutes"), **rv})
             p.write_text(json.dumps(arr[-30:], ensure_ascii=False, indent=1), encoding="utf-8")
+            try:   # cập nhật file bài học cho video sau
+                import insight_lessons as LS
+                LS.build(data_dir)
+            except Exception as ex:
+                log(f"   ! cập nhật bài học lỗi: {ex}")
     return {"release": url, "seo": seo, "review": rv, "thumb": str(thumb) if thumb else None}

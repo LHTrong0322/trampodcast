@@ -16,6 +16,20 @@
   Mục "can_sua" về hình ảnh thì phiên Claude tự đánh giá rồi sửa code, dựng thử khung hình xem tận mắt trước khi đẩy.
   Review của 1915 (6,8/10) còn nêu: short chữ sát mép trên/dưới (safe zone TikTok/Reels), danh sách mở đầu nên hiện
   từng dòng theo lời đọc, biểu đồ giá giảm cần chú thích, ảnh bìa nên phóng to ô số và bớt chữ.
+- TỰ HỌC (cập nhật 05:10 21/11): TRƯỚC KHI VIẾT KỊCH BẢN NHÁP, phiên Claude PHẢI đọc file bài học:
+  gh api 'repos/LHTrong0322/trampodcast/contents/insight/lessons.md?ref=podcast-data' -H 'Accept: application/vnd.github.raw'
+  File gom: bot review (từ bản chuẩn 1915) + số liệu thật hằng tuần. Pipeline tự nạp file này khi AI viết kịch bản.
+  Bot review dùng CLAUDE (CLAUDE_CODE_OAUTH_TOKEN, gói Pro, đã kiểm tra chạy OK), Gemini chỉ dự phòng.
+  growth-report.yml chạy 19:41 tối Chủ nhật: số liệu YouTube/Facebook thật, Claude phân tích, gửi Telegram, ghi lessons.md.
+  Lỗi hình ảnh review 1915 đã sửa 21/11: short trong vùng an toàn TikTok/Reels, danh sách mở đầu hiện từng dòng,
+  biểu đồ giá giảm có chú thích trung tính. Ảnh bìa video: Trọng đã duyệt mẫu hiện tại, chưa đổi.
+- ĐĂNG LÊN MẠNG XÃ HỘI (21/11): luôn hỏi Trọng xác nhận trước khi đăng thật. Trọng muốn đăng CÔNG KHAI (không private).
+  Đăng theo lịch: file kế hoạch scripts/posts/<tag>.json (tiêu đề, mô tả, tags, giờ đăng, bình luận) rồi dispatch
+  social-schedule.yml với plan=<file>. YouTube dùng Lên lịch chính thức (publishAt), Facebook Reel video_state=SCHEDULED.
+  Bình luận tự đăng mỗi giờ phút 07 khi tới giờ, Trọng tự ghim (API không ghim được). Trạng thái ở <tag>.state.json.
+  Đăng ngay chọn lọc: social-post.yml (youtube/facebook = long, short1, short2). Mô tả luôn có Telegram https://t.me/SmartPanda0322
+  Kênh YouTube id UC2tX8_Z9beionA0HVu6q4Gw (đã xác minh, ảnh bìa tự gắn được). 3 playlist đã tạo.
+  Facebook token thiếu pages_manage_metadata nên không đổi ảnh bìa Trang được (Trọng tải tay).
 - TỪ NGỮ (Trọng 21/11): dùng "insider" thay "người trong cuộc", "retail" thay "nhỏ lẻ / nhà đầu tư nhỏ lẻ" trong lời đọc
   và chữ trên hình (đã thêm vào SYSTEM trong insight.py; nhớ áp dụng khi viết kịch bản nháp).
 - insight.yml đang TẮT (disabled_manually) để chặn lịch tự dựng 3 tiếng/lần khi chưa duyệt kịch bản.

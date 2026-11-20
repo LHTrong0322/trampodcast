@@ -431,18 +431,10 @@ def produce(out: Path, cfg: dict, st: dict, links: str = ""):
     else:
         log("Không có link nào đang chờ.")
         return
-    # Tự học từ bot review (Trọng 21/11: luôn tham khảo review để cải tiến). CHỈ học từ video làm theo chuẩn
-    # mới (từ 20261120-1915, bản Trọng khen ổn), bỏ qua review các bản cũ bị chê để không học nhầm.
-    rp = out / "insight" / "reviews.json"
-    tips = []
-    if rp.exists():
-        good = [r for r in json.loads(rp.read_text(encoding="utf-8")) if str(r.get("tag", "")) >= STANDARD_TAG]
-        for r in good[-3:]:
-            tips += r.get("script_tips") or []
-            if r.get("retention_risk"):
-                tips.append("Đoạn dễ mất người xem lần trước: " + str(r["retention_risk"]))
-        tips = list(dict.fromkeys(tips))[:8]
-        log(f"   Học từ {len(good[-3:])} review gần nhất: {len(tips)} mẹo")
+    # Tự học (Trọng 21/11): bài học gom từ bot review (từ bản chuẩn 1915) + số liệu thật hằng tuần, xem insight_lessons.py
+    import insight_lessons as LS
+    tips = LS.tips_for_script(out)
+    log(f"   Học từ review + số liệu thật: {len(tips)} bài học")
     lab = L.prepare(src, Path("lab"), notes=tips)
     res = R.render(lab, Path("render_out"))
     PB.publish(lab, res, Path("render_out"), data_dir=out)

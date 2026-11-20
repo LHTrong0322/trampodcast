@@ -141,7 +141,7 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
   const series: number[] = coin?.series || (sym === 'BTC' && data?.btc_90d?.length ? data.btc_90d : mk?.spark || []);
   const days = coin ? coin.days : sym === 'BTC' && data?.btc_90d ? 90 : 7;
   const p = useP(4, 50);
-  const W = w - 72, H = h - 200;
+  const W = w - 72, H = h - 250;
   if (!series.length) return <Frame w={w} h={h} title={sym}><div /></Frame>;
   const lo = Math.min(...series), hi = Math.max(...series);
   const pts = series.map((v, i) => [(i / (series.length - 1)) * W, H - ((v - lo) / (hi - lo || 1)) * (H - 20) - 10]);
@@ -162,8 +162,12 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
         <defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor={col} stopOpacity={0.45} /><stop offset="1" stopColor={col} stopOpacity={0} /></linearGradient></defs>
         <path d={`${path} L${last[0]},${H} L0,${H} Z`} fill="url(#g)" />
         <path d={path} stroke={col} strokeWidth={4} fill="none" />
-        <circle cx={last[0]} cy={last[1]} r={10} fill="#fff" />
+        <circle cx={last[0]} cy={last[1]} r={10} fill="#fff" stroke={col} strokeWidth={4} />
       </svg>
+      {/* review 1915: giá giảm mà không chú thích dễ gây tâm lý tiêu cực, nên luôn ghi rõ bối cảnh */}
+      <div style={{marginTop: 10, fontSize: Math.max(20, Math.round(w / 40)), fontWeight: 600, color: C.muted, lineHeight: 1.3}}>
+        {up ? `Dữ liệu thật CoinGecko, ${days} ngày gần nhất` : `Giá ${days} ngày đang điều chỉnh. Video bàn về giá trị dài hạn, không phải tín hiệu mua bán`}
+      </div>
     </Frame>
   );
 };

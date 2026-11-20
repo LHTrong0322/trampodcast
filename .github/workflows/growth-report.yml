@@ -1,0 +1,44 @@
+name: Báo cáo tăng trưởng hằng tuần (học từ số liệu thật)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 12 * * 0"   # 19:41 tối Chủ nhật giờ Việt Nam
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lấy dữ liệu (nhánh podcast-data)
+        run: git clone --depth 1 --branch podcast-data "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" public
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: |
+          pip install -q requests feedparser pyyaml beautifulsoup4 pillow numpy
+          npm i -g --silent @anthropic-ai/claude-code
+      - name: Lấy số liệu + Claude phân tích
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python growth_report.py public
+      - name: Lưu bài học (nhánh podcast-data)
+        run: |
+          cd public
+          git config user.name "tram-podcast-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add insight/performance.json insight/lessons.md
+          git diff --cached --quiet && exit 0
+          git commit -q -m "Báo cáo tăng trưởng $(date -u +%Y-%m-%d)"
+          for i in 1 2 3; do git pull -q --rebase origin podcast-data && git push -q origin HEAD:podcast-data && break; sleep 5; done

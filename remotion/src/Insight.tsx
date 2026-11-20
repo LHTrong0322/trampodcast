@@ -128,7 +128,9 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null}> = ({sc, post}) => {
               <div style={{position: 'absolute', top: 165, display: 'flex', flexDirection: 'column', gap: 24}}>
                 <div><Chip text={`${(sc.points || []).length} INSIGHT TRONG VIDEO`} /></div>
                 {(sc.points || []).map((p, i) => {
-                  const s = interpolate(f - Math.round(agendaAt * fps) - 8 - i * 9, [0, 12], [0, 1], clamp);
+                  // review 1915: hiện TỪNG DÒNG rải đều theo thời gian còn lại của phần mở đầu, không hiện cả bảng một lúc
+                  const step = Math.max(9, Math.floor(((sc.dur - agendaAt) * fps - 20) / Math.max(1, (sc.points || []).length)));
+                  const s = interpolate(f - Math.round(agendaAt * fps) - 8 - i * step, [0, 12], [0, 1], clamp);
                   return <div key={i} style={{display: 'flex', gap: 22, alignItems: 'baseline', opacity: s, transform: `translateX(${(1 - s) * -30}px)`,
                     fontFamily: FONT, fontWeight: 700, fontSize: 38, color: C.ink, maxWidth: 900, lineHeight: 1.25}}>
                     <span style={{fontWeight: 800, color: ac, fontSize: 34, width: 56, flexShrink: 0}}>{String(i + 1).padStart(2, '0')}</span>{p}</div>;
