@@ -1,0 +1,52 @@
+name: Đăng video theo yêu cầu (chọn nền tảng)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Mã video (vd 20261120-1915)"
+        required: true
+      youtube:
+        description: "Đăng lên YouTube: long, short1, short2 (cách nhau dấu phẩy, trống = không)"
+        required: false
+        default: ""
+      facebook:
+        description: "Đăng lên Facebook: long, short1, short2 (trống = không)"
+        required: false
+        default: ""
+      title:
+        description: "Tiêu đề YouTube (trống = lấy từ gói SEO)"
+        required: false
+        default: ""
+      privacy:
+        description: "YouTube: public / unlisted / private"
+        required: false
+        default: "public"
+      fb_publish:
+        description: "Facebook: 1 công khai, 0 bản nháp"
+        required: false
+        default: "1"
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests feedparser pyyaml beautifulsoup4 pillow numpy
+      - name: Đăng
+        env:
+          GH_TOKEN: ${{ github.token }}
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python social_post.py --tag "${{ github.event.inputs.tag }}" --youtube "${{ github.event.inputs.youtube }}" \
+            --facebook "${{ github.event.inputs.facebook }}" --title "${{ github.event.inputs.title }}" \
+            --privacy "${{ github.event.inputs.privacy }}" --fb-publish "${{ github.event.inputs.fb_publish }}"
