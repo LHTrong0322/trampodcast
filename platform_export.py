@@ -145,7 +145,7 @@ def _vcodec_args(spec: dict, fps: int) -> list[str]:
     return ["-c:v", "libx264", "-profile:v", "high", "-preset", str(spec["preset"]), "-crf", str(spec["crf"]),
             "-maxrate", str(spec["maxrate"]), "-bufsize", str(spec["bufsize"]), "-pix_fmt", "yuv420p",
             "-g", str(g), "-keyint_min", str(g), "-sc_threshold", "0", "-bf", "2", "-flags", "+cgop",
-            "-x264-params", "open-gop=0",
+            "-x264-params", "open-gop=0:colorprim=bt709:transfer=bt709:colormatrix=bt709",
             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv",
             "-r", str(fps)]
 
@@ -182,7 +182,7 @@ def process_video(path: Path, kind: str, cfg: dict | None = None) -> Path:
     has_audio = bool(_streams(info, "audio"))
     fps = int(spec["fps"])
     W, H = int(spec["width"]), int(spec["height"])
-    vf = f"scale={W}:{H}:flags=lanczos:{_color_filter(v)},setsar=1,format=yuv420p"
+    vf = f"scale={W}:{H}:flags=lanczos:{_color_filter(v)},setsar=1,format=yuv420p,setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709:range=tv"
     tmp = path.with_name(path.stem + ".platform.tmp.mp4")
     cmd = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", str(path)]
     if has_audio:
