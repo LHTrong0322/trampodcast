@@ -50,7 +50,8 @@ thumb_stat, short_hooks; không làm phần nào về Ethena; không dùng con s
 của bài (thị trường lemon/coin rác, FDV, PMF, token alignment, Hyperliquid, tâm lý nhà đầu tư, cách chọn tài sản...)."""
 
 # Nội dung chủ kênh cấm đưa vào video (Trọng chốt 20/11): đoạn ENA/Ethena tăng 95% trong 14 ngày
-BANNED = re.compile(r"\bENA\b|\$ENA|ethena|\b95\s*%|\b95\s*phần trăm|chín mươi lăm phần trăm|\b14\s*(ngày|days?)\b|mười bốn ngày", re.I)
+# 19:09 20/11: Trọng đã duyệt kịch bản có nhắc Ethena/ENA (4 việc tự sửa), chỉ cấm con số 95% và mốc 14 ngày
+BANNED = re.compile(r"\b95\s*%|\b95\s*phần trăm|chín mươi lăm phần trăm|\b14\s*(ngày|days?)\b|mười bốn ngày", re.I)
 
 
 def _banned(x) -> bool:

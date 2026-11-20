@@ -104,8 +104,12 @@ def seo_pack(gem, cfg, res: dict) -> dict:
 def thumbnail(res: dict, out: Path) -> Path | None:
     plan = res["plan"]
     proj = next((s.get("project") for s in res["scenes"] if s.get("project") and s["project"].get("logo")), None)
-    props = {"comp": "Thumb", "width": 1280, "height": 720, "text": P.nodash(V.en_money(plan.get("thumb") or plan.get("title", "")))[:48],
-             "stat": R.real_number(V.en_money(plan.get("hook_stat", "")), plan.get("posts") or [])[:8], "accent": (proj or {}).get("color") or "#7C6CFF",
+    approved = bool(os.getenv("INSIGHT_SCRIPT", "").strip())   # kịch bản Trọng duyệt: dùng đúng chữ ảnh bìa đã duyệt
+    stat = P.nodash(plan.get("thumb_stat", ""))[:12] if approved else R.real_number(V.en_money(plan.get("hook_stat", "")), plan.get("posts") or [])[:8]
+    props = {"comp": "Thumb", "width": 1280, "height": 720,
+             "text": P.nodash(V.en_money(plan.get("thumb_text") or plan.get("thumb") or plan.get("title", "")))[:48],
+             "stat": stat, "accent": (proj or {}).get("color") or "#4F5BD5",
+             "points": [P.nodash(x)[:28] for x in (plan.get("thumb_points") or [])][:3],
              "projectLogo": (proj or {}).get("logo"), "bg": None,
              "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")}
     try:

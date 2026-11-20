@@ -177,7 +177,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
         k = sc["key"]
         base = {"from": sc["from"], "dur": sc["dur"], "words": sc["words"]}
         if k == "hook":
-            scenes.append({**base, "type": "hook", "hook": V.en_money(plan.get("hook", "")),
+            scenes.append({**base, "type": "hook", "hook": V.en_money(plan.get("hook_screen") or plan.get("hook", "")),  # chữ trên hình đã duyệt
                            "stat": real_number(V.en_money(plan.get("hook_stat", "")), posts),
                            "label": V.en_money(plan.get("hook_label", "")) if real_number(V.en_money(plan.get("hook_stat", "")), posts) else "",
                            "images": [f"img/{x}" for x in imgs.get("intro", [])][:1]})

@@ -8,7 +8,7 @@ const Frame: React.FC<{w: number; h: number; title: string; sub?: string; childr
   const ac = useAccent();
   return (
   <div style={{width: w, height: h, borderRadius: 26, background: C.panel, border: `1px solid ${C.line}`, borderTop: `4px solid ${ac}`,
-    boxShadow: '0 30px 80px rgba(0,0,0,0.45)', padding: 36, boxSizing: 'border-box', fontFamily: FONT,
+    boxShadow: '0 18px 50px rgba(40,50,110,0.12)', padding: 36, boxSizing: 'border-box', fontFamily: FONT,
     display: 'flex', flexDirection: 'column', gap: 18, overflow: 'hidden'}}>
     <div style={{display: 'flex', alignItems: 'baseline', gap: 14}}>
       <div style={{color: C.ink, fontWeight: 800, fontSize: 32, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: sub === '' ? w - 80 : w - 300}}>{title}</div>
@@ -184,7 +184,7 @@ const StatCompare: React.FC<{spec: DataSpec; w: number; h: number}> = ({spec, w,
             <div style={{display: 'flex', justifyContent: 'space-between', color: C.ink, fontSize: 28, fontWeight: 700, marginBottom: 8}}>
               <span>{it.label}</span><span style={{color: cols[i], fontWeight: 800}}>{it.value}</span>
             </div>
-            <div style={{height: 26, borderRadius: 13, background: 'rgba(255,255,255,0.08)'}}>
+            <div style={{height: 26, borderRadius: 13, background: 'rgba(25,35,80,0.08)'}}>
               <div style={{height: 26, borderRadius: 13, width: `${(nums[i] / mx) * 100 * p}%`, background: cols[i]}} />
             </div>
           </div>
@@ -206,7 +206,7 @@ const Checklist: React.FC<{spec: DataSpec; w: number; h: number}> = ({spec, w, h
         {items.map((it, i) => {
           const s = spring({frame: f - 6 - i * 14, fps, config: {damping: 12}});
           return <div key={i} style={{display: 'flex', gap: 20, alignItems: 'center', opacity: s, transform: `translateX(${(1 - s) * 40}px)`}}>
-            <div style={{width: 48, height: 48, borderRadius: 12, background: ac, color: '#0A0C12', fontSize: 30, fontWeight: 800,
+            <div style={{width: 48, height: 48, borderRadius: 12, background: ac, color: '#FFFFFF', fontSize: 30, fontWeight: 800,
               display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${s})`}}>✓</div>
             <div style={{color: C.ink, fontSize: 34, fontWeight: 700}}>{it.label}</div>
           </div>;

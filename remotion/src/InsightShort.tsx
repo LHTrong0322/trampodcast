@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {AccentCtx, Backdrop, C, Captions, Chip, CountUp, FONT, RevealWords, useFonts} from './ui';
+import {AccentCtx, tone, Backdrop, C, Captions, Chip, CountUp, FONT, RevealWords, useFonts} from './ui';
 import {DataPanel} from './data';
 import {DEFAULT_ACCENT, InsightProps, QuoteCard} from './Insight';
 
@@ -14,7 +14,7 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
   const ac = sc.project?.color || DEFAULT_ACCENT;
   const hasData = !!(sc.data && sc.data.type && sc.data.type !== 'none');
   return (
-    <AccentCtx.Provider value={ac}>
+    <AccentCtx.Provider value={tone(ac)}>
       <AbsoluteFill style={{background: C.bg}}>
         {props.audio ? <Audio src={staticFile(props.audio)} /> : null}
         <Backdrop />
@@ -42,7 +42,7 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
           <Chip text="Xem full trên YouTube · Smart Penguin Insights" color={C.red} size={26} />
         </div>
         <div style={{position: 'absolute', left: 0, bottom: 0, height: 8, width: (f / durationInFrames) * width, background: ac}} />
-        <div style={{position: 'absolute', right: 40, top: 40, fontFamily: FONT, fontWeight: 700, fontSize: 24, color: 'rgba(255,255,255,0.45)'}}>@Trong0322</div>
+        <div style={{position: 'absolute', right: 40, top: 40, fontFamily: FONT, fontWeight: 700, fontSize: 24, color: 'rgba(19,24,54,0.55)'}}>@Trong0322</div>
       </AbsoluteFill>
     </AccentCtx.Provider>
   );

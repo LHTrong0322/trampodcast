@@ -5,20 +5,29 @@ import {
 } from 'remotion';
 
 // Bảng màu "sạch": nền xanh đen trung tính, 1 màu nhấn (đổi theo màu brand dự án), ít phát sáng
+// Nền TRẮNG SẠCH như video 1744-light (Trọng chốt 19:09 20/11), bố cục giữ nguyên kiểu 2125
 export const C = {
-  bg: '#0A0C12',
-  panel: '#121621',
-  line: 'rgba(255,255,255,0.08)',
-  ink: '#F4F6FA',
-  muted: '#8B94A7',
+  bg: '#F3F5FB',
+  panel: '#FFFFFF',
+  line: 'rgba(25,35,80,0.10)',
+  ink: '#131836',
+  muted: '#5D6688',
   violet: '#7C6CFF',
   cyan: '#4CC9F0',
   pink: '#F472B6',
-  gold: '#FFC94D',
-  green: '#22C55E',
-  red: '#F43F5E',
+  gold: '#131836',
+  green: '#16A673',
+  red: '#D9465F',
 };
-export const AccentCtx = React.createContext<string>('#7C6CFF');
+// màu nhấn quá nhạt (vd HYPE xanh bạc hà) thì đổi sang xanh tím đậm để đọc rõ trên nền trắng
+export const tone = (hex?: string) => {
+  const m = (hex || '').match(/^#([0-9a-f]{6})/i);
+  if (!m) return '#4F5BD5';
+  const n = parseInt(m[1], 16), r = (n >> 16) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+  const L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return L > 0.55 ? '#4F5BD5' : hex!.slice(0, 7);
+};
+export const AccentCtx = React.createContext<string>('#4F5BD5');
 export const useAccent = () => React.useContext(AccentCtx);
 export const FONT = "'BVP', system-ui, sans-serif";
 
@@ -71,9 +80,9 @@ export const Backdrop: React.FC<{accent?: string; img?: string; dim?: number}> =
           objectFit: 'cover', filter: 'blur(30px) saturate(0.9)', opacity: 1 - dim,
           transform: `scale(${1.05 + 0.02 * Math.sin(t * 0.15)})`}} />
       ) : null}
-      <AbsoluteFill style={{background: `radial-gradient(1100px 700px at ${x}% ${y}%, ${ac}26, transparent 70%),
-        radial-gradient(900px 600px at 88% 92%, ${ac}14, transparent 70%)`}} />
-      <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(10,12,18,0) 60%, rgba(10,12,18,0.85) 100%)'}} />
+      <AbsoluteFill style={{background: `radial-gradient(1100px 700px at ${x}% ${y}%, ${ac}14, transparent 70%),
+        radial-gradient(900px 600px at 88% 92%, ${ac}0C, transparent 70%), linear-gradient(150deg, #FFFFFF 0%, #F1F4FC 50%, #E7EDFB 100%)`}} />
+      <AbsoluteFill style={{background: 'transparent'}} />
     </AbsoluteFill>
   );
 };
@@ -95,8 +104,8 @@ export const ImageDeck: React.FC<{images: string[]; dur: number; w: number; h: n
     <div style={{width: w, height: h, perspective: 1600}}>
       <div style={{width: w, height: h, borderRadius: radius, overflow: 'hidden', position: 'relative',
         transform: `rotateY(${ry}deg) rotateX(${3 * Math.sin(t * 0.4)}deg) scale(${interpolate(enter, [0, 1], [0.85, 1])})`,
-        opacity: enter, boxShadow: `0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px ${C.line}`}}>
-        {images.length === 0 ? <div style={{width: '100%', height: '100%', background: '#15122a'}} /> : null}
+        opacity: enter, boxShadow: `0 18px 50px rgba(40,50,110,0.12), 0 0 0 1px ${C.line}`}}>
+        {images.length === 0 ? <div style={{width: '100%', height: '100%', background: '#E7EDFB'}} /> : null}
         {images.map((src, i) => {
           if (Math.abs(i - idx) > 1) return null;
           const lt = t - i * per;
@@ -134,7 +143,7 @@ export const RevealWords: React.FC<{text: string; size: number; weight?: number;
         return (
           <span key={i} style={{display: 'inline-block', overflow: 'hidden', paddingBottom: size * 0.08}}>
             <span style={{display: 'inline-block', transform: `translateY(${(1 - s) * 110}%) rotate(${(1 - s) * 6}deg)`,
-              opacity: s, color: hl ? accentColor : color, textShadow: '0 2px 12px rgba(0,0,0,0.35)'}}>{w}</span>
+              opacity: s, color: hl ? accentColor : color, textShadow: 'none'}}>{w}</span>
           </span>
         );
       })}
@@ -160,7 +169,7 @@ export const CountUp: React.FC<{value: string; delay?: number; size: number; col
   const s = useSpring(delay, 10, 0.6);
   return <div style={{fontFamily: FONT, fontWeight: 800, fontSize: size, color, lineHeight: 1,
     transform: `scale(${interpolate(s, [0, 1], [0.6, 1])})`, opacity: s,
-    textShadow: '0 4px 20px rgba(0,0,0,0.4)', letterSpacing: -1}}>{shown}</div>;
+    textShadow: 'none', letterSpacing: -1}}>{shown}</div>;
 };
 
 // ---------- phụ đề: hiện cả cụm câu (không chạy từng chữ), gọn & dễ đọc ----------
@@ -191,8 +200,8 @@ export const Captions: React.FC<{words: Word[]; bottom: number; size: number; ma
   return (
     <div style={{position: 'absolute', left: 0, right: 0, bottom, display: 'flex', justifyContent: 'center'}}>
       <div style={{maxWidth, textAlign: 'center', fontFamily: FONT, fontWeight: 600, fontSize: size, lineHeight: 1.3,
-        color: C.ink, opacity: op, padding: '10px 26px', borderRadius: 14, background: 'rgba(10,12,18,0.72)',
-        textShadow: '0 2px 8px rgba(0,0,0,0.6)'}}>
+        color: '#FFFFFF', opacity: op, padding: '10px 26px', borderRadius: 14, background: 'rgba(19,24,54,0.88)',
+        textShadow: 'none'}}>
         {c.map((w) => w.t).join(' ')}
       </div>
     </div>

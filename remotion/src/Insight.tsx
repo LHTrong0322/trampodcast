@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Img, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {AccentCtx, Backdrop, C, Captions, Chip, clamp, CountUp, FONT, Glitch, RevealWords, useAccent, useFonts, useSpring, Word} from './ui';
+import {AccentCtx, tone, Backdrop, C, Captions, Chip, clamp, CountUp, FONT, Glitch, RevealWords, useAccent, useFonts, useSpring, Word} from './ui';
 import {DataPanel, DataSpec} from './data';
 
 export type Post = {author: string; handle: string; avatar?: string; cover?: string; title?: string; text?: string;
@@ -17,7 +17,7 @@ export type Scene = {
 export type InsightProps = {fps: number; width: number; height: number; audio: string; music?: string; duration: number;
   scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string; mode?: string; shortTitle?: string};
 
-export const DEFAULT_ACCENT = '#7C6CFF';
+export const DEFAULT_ACCENT = '#4F5BD5';
 const fmt = (n?: number) => (n == null ? '' : n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'K' : String(n));
 
 // ---------- thanh trên: logo kênh + nguồn ----------
@@ -43,7 +43,7 @@ const TopBar: React.FC<{source?: string; idx?: number; total?: number; brand: st
       {total ? (
         <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
           {Array.from({length: total}, (_, i) => <div key={i} style={{width: i + 1 === idx ? 14 : 10, height: i + 1 === idx ? 14 : 10, borderRadius: 99,
-            background: i + 1 <= (idx || 0) ? ac : 'rgba(255,255,255,0.15)'}} />)}
+            background: i + 1 <= (idx || 0) ? ac : 'rgba(25,35,80,0.15)'}} />)}
           <div style={{color: C.ink, fontWeight: 800, fontSize: 24, marginLeft: 10}}>{String(idx).padStart(2, '0')}<span style={{color: C.muted}}>/{String(total).padStart(2, '0')}</span></div>
         </div>
       ) : null}
@@ -72,7 +72,7 @@ const PostCard: React.FC<{post: Post; delay: number}> = ({post, delay}) => {
   return (
     <div style={{perspective: 1800}}>
       <div style={{width: 740, borderRadius: 26, background: C.panel, border: `1px solid ${C.line}`,
-        boxShadow: '0 40px 100px rgba(0,0,0,0.55)', overflow: 'hidden', fontFamily: FONT,
+        boxShadow: '0 18px 50px rgba(40,50,110,0.12)', overflow: 'hidden', fontFamily: FONT,
         transform: `rotateY(${interpolate(s, [0, 1], [-25, -6]) + Math.sin(f / 50)}deg) translateX(${(1 - s) * 200}px)`, opacity: s}}>
         {post.cover ? <Img src={staticFile(post.cover)} style={{width: '100%', height: 280, objectFit: 'cover'}} /> : null}
         <div style={{padding: 32}}>
@@ -161,7 +161,7 @@ export const QuoteCard: React.FC<{post: Post | null; quote: string; w: number; h
   return (
     <div style={{width: w, height: h, borderRadius: 26, background: C.panel, border: `1px solid ${C.line}`, boxSizing: 'border-box',
       padding: 50, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 26, fontFamily: FONT, opacity: s,
-      transform: `scale(${0.96 + 0.04 * s})`, boxShadow: '0 30px 80px rgba(0,0,0,0.45)', borderLeft: `6px solid ${ac}`}}>
+      transform: `scale(${0.96 + 0.04 * s})`, boxShadow: '0 18px 50px rgba(40,50,110,0.12)', borderLeft: `6px solid ${ac}`}}>
       <div style={{fontSize: 44, lineHeight: 1.3, color: C.ink, fontWeight: 700}}>“{quote}”</div>
       {post ? <div style={{display: 'flex', alignItems: 'center', gap: 14}}>
         {post.avatar ? <Img src={staticFile(post.avatar)} style={{width: 52, height: 52, borderRadius: 99}} /> : null}
@@ -249,7 +249,7 @@ const Chrome: React.FC = () => {
     <>
       <div style={{position: 'absolute', left: 0, bottom: 0, height: 5, width: (f / durationInFrames) * width, background: ac}} />
       <div style={{position: 'absolute', right: 40, bottom: 24, fontFamily: FONT, fontWeight: 700, fontSize: 22,
-        color: 'rgba(255,255,255,0.45)'}}>@Trong0322</div>
+        color: 'rgba(19,24,54,0.55)'}}>@Trong0322</div>
     </>
   );
 };
@@ -265,7 +265,7 @@ export const Insight: React.FC<InsightProps> = (props) => {
       {props.audio ? <Audio src={staticFile(props.audio)} /> : null}
       {props.scenes.map((sc, i) => (
         <Sequence key={i} from={Math.round(sc.from * fps)} durationInFrames={Math.max(1, Math.round(sc.dur * fps))}>
-          <AccentCtx.Provider value={sc.project?.color || DEFAULT_ACCENT}>
+          <AccentCtx.Provider value={tone(sc.project?.color || DEFAULT_ACCENT)}>
             {sc.type === 'hook' ? <HookScene sc={sc} /> : null}
             {sc.type === 'intro' ? <IntroScene sc={sc} post={props.post} /> : null}
             {sc.type === 'section' ? <SectionScene sc={sc} data={props.data} brandName={brandName} post={props.post} /> : null}
@@ -275,7 +275,7 @@ export const Insight: React.FC<InsightProps> = (props) => {
           </AccentCtx.Provider>
         </Sequence>
       ))}
-      <AccentCtx.Provider value={cur?.project?.color || DEFAULT_ACCENT}><Chrome /></AccentCtx.Provider>
+      <AccentCtx.Provider value={tone(cur?.project?.color || DEFAULT_ACCENT)}><Chrome /></AccentCtx.Provider>
     </AbsoluteFill>
   );
 };
