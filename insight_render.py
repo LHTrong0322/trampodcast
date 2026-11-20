@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Dựng video Smart Penguin Insights từ "nguyên liệu" (insight_lab.py) bằng Remotion — kiểu "dữ liệu thật":
+Dựng video Smart Penguin Insights từ "nguyên liệu" (insight_lab.py) bằng Remotion, kiểu "dữ liệu thật":
 
   python insight_render.py --lab lab/<tag> --out out/            → video dài 16:9 + các video ngắn 9:16
 

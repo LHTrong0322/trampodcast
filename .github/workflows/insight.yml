@@ -3,7 +3,7 @@ name: Smart Penguin Insights (link X → video insight + shorts)
 on:
   schedule:
     # Mỗi 3 tiếng: đọc link mới bạn gửi vào bot Telegram (Telegram chỉ giữ tin nhắn 24h).
-    # Nếu đủ link và đang trong khung giờ cook (19h–23h VN) hoặc bạn gửi /cook → dựng video.
+    # Nếu đủ link và đang trong khung giờ cook (19h-23h VN) hoặc bạn gửi /cook → dựng video.
     - cron: "17 */3 * * *"
   workflow_dispatch:
     inputs:
@@ -12,15 +12,15 @@ on:
         required: false
         default: "false"
       links:
-        description: "Thêm link bài X trực tiếp (cách nhau bởi dấu cách) — không bắt buộc"
+        description: "Thêm link bài X trực tiếp (cách nhau bởi dấu cách), không bắt buộc"
         required: false
         default: ""
       themes:
-        description: "Dựng nhiều kiểu nền để so sánh (vd light,blue,slate) — để trống = theo sources.yaml"
+        description: "Dựng nhiều kiểu nền để so sánh (vd light,blue,slate), để trống = theo sources.yaml"
         required: false
         default: ""
       voice:
-        description: "Ép giọng (vd vieneu:Hải Đăng hoặc gemini:Riko) — để trống = Riko, hết lượt thì Hải Đăng"
+        description: "Ép giọng (vd vieneu:Hải Đăng hoặc gemini:Riko), để trống = Riko, hết lượt thì Hải Đăng"
         required: false
         default: ""
 
@@ -64,8 +64,14 @@ jobs:
       - name: Cài ffmpeg + giọng dự phòng
         if: steps.inbox.outputs.cook == 'true' || github.event.inputs.links != ''
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg tesseract-ocr tesseract-ocr-vie > /dev/null
           pip install -q vieneu
+
+      - name: Bot tuân thủ (tự kiểm tra bộ lọc gạch ngang dài + OCR)
+        if: steps.inbox.outputs.cook == 'true' || github.event.inputs.links != ''
+        run: |
+          python compliance.py selftest
+          tesseract --list-langs | tr '\n' ' '
 
       - uses: actions/setup-node@v4
         if: steps.inbox.outputs.cook == 'true' || github.event.inputs.links != ''

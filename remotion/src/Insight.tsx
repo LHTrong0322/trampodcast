@@ -43,7 +43,8 @@ const TopBar: React.FC<{source?: string; idx?: number; total?: number; brand: st
       ) : null}
       {total ? (
         <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
-          {Array.from({length: total}, (_, i) => <div key={i} style={{width: i + 1 === idx ? 40 : 12, height: 6, borderRadius: 9,
+          {/* tiến độ dạng chấm tròn (không dùng vạch ngang để không ai nhìn nhầm thành dấu gạch ngang dài) */}
+          {Array.from({length: total}, (_, i) => <div key={i} style={{width: i + 1 === idx ? 16 : 10, height: i + 1 === idx ? 16 : 10, borderRadius: 99,
             background: i + 1 <= (idx || 0) ? ac : T.dim}} />)}
           <div style={{color: C.ink, fontFamily: DISPLAY, fontWeight: 800, fontSize: 22, marginLeft: 10}}>{String(idx).padStart(2, '0')}<span style={{color: C.muted}}>/{String(total).padStart(2, '0')}</span></div>
         </div>
@@ -342,9 +343,8 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Po
       <Backdrop />
       <TopBar source={sc.source} idx={sc.idx} total={sc.total} brand={brandName} project={sc.project} />
       <div style={{position: 'absolute', left: 110, top: 170, display: 'flex', alignItems: 'center', gap: 16, opacity: numS}}>
-        <div style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: 28, color: ac}}>{String(sc.idx).padStart(2, '0')}</div>
-        <div style={{width: 60 * numS, height: 3, borderRadius: 3, background: ac}} />
         <div style={{fontFamily: HEAD, color: C.muted, fontWeight: 700, fontSize: 22, letterSpacing: 4}}>INSIGHT</div>
+        <div style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: 28, color: ac}}>{String(sc.idx).padStart(2, '0')}</div>
       </div>
       <div style={{position: 'absolute', left: 110, top: 230, width: 800, display: 'flex', flexDirection: 'column', gap: 36}}>
         <FadeText text={sc.heading || ''} size={fitSize(sc.heading || '', 800, 210, 58, 40)} maxWidth={800}

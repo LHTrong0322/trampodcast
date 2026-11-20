@@ -8,7 +8,7 @@ on:
         required: false
         default: ""
       gemini:
-        description: "Các giọng Gemini (tốn lượt Gemini, mỗi giọng 1 lượt) — để trống = không thử"
+        description: "Các giọng Gemini (tốn lượt Gemini, mỗi giọng 1 lượt), để trống = không thử"
         required: false
         default: ""
       no_send:

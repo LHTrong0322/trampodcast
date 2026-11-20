@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Trạm Podcast Crypto — dựng VIDEO tổng hợp tuần bằng lượt Gemini còn dư.
+Trạm Podcast Crypto, dựng VIDEO tổng hợp tuần bằng lượt Gemini còn dư.
 
   python video.py daily  --out public       # sau podcast mỗi ngày: làm sẵn "đoạn video của ngày"
                                              # (1 lượt đọc giọng + 1 lượt AI viết)
@@ -150,7 +150,7 @@ def tts_once(gem, cfg, text: str) -> bytes:
 
 
 def llm_json(gem, cfg, system: str, prompt: str) -> dict:
-    raw = gem.text(cfg["models"]["text"], system, prompt + "\nKhông dùng dấu gạch ngang dài (— –) ở bất kỳ đâu.", json_mode=True)
+    raw = gem.text(cfg["models"]["text"], system, prompt + "\nKhông dùng dấu gạch ngang dài (em dash, en dash) ở bất kỳ đâu.", json_mode=True)
     raw = re.sub(r"^```(?:json)?|```$", "", raw.strip(), flags=re.M)
     data = json.loads(raw)
     if isinstance(data, list):  # một số model bọc kết quả trong [ ... ]
@@ -189,7 +189,7 @@ def make_daily(out: Path, cfg: dict, gem, ep: dict) -> bool:
     vcfg = cfg.get("video") or {}
     seg_dir = out / "video" / "segments" / ep["id"]
     if (seg_dir / "seg.json").exists():
-        log(f"   Đoạn video {ep['id']} đã có — bỏ qua")
+        log(f"   Đoạn video {ep['id']} đã có, bỏ qua")
         return False
     top = sorted(ep.get("stories", []), key=lambda s: -int(s.get("importance") or 0))
     top = top[: int(vcfg.get("stories_per_day", 3))]
@@ -673,7 +673,7 @@ def balance_lines(lines: list[str]) -> list[str]:
 
 
 # ---------------------------------------------------------------------------
-# 4. CẢNH (scene) — mỗi cảnh trả về hàm vẽ theo thời gian
+# 4. CẢNH (scene), mỗi cảnh trả về hàm vẽ theo thời gian
 # ---------------------------------------------------------------------------
 def scene_title(title, week, host, dur, images=None):
     W, H = 1920, 1080
@@ -1062,7 +1062,7 @@ def make_weekly(out: Path, cfg: dict, gem, days: int = 7) -> dict:
     if not pool:
         raise RuntimeError("Chưa có đoạn video nào trong tuần (cần chạy daily hoặc --backfill)")
     d0 = min(datetime.fromisoformat(s["date"]) for s in segs)
-    week = f"{d0.day}/{d0.month} – {now.day}/{now.month}"
+    week = f"{d0.day}/{d0.month} đến {now.day}/{now.month}"
     listing = "\n".join(f"[{i}] ({date_label(datetime.fromisoformat(it['date']))}, {it['category']}, "
                         f"quan trọng {it['importance']}/5) {it['headline']}: {it['narration'][:260]}"
                         for i, it in enumerate(pool))
@@ -1238,15 +1238,15 @@ def publish_release(res: dict) -> str:
     notes = f"# {res['title']}\n\n{res['description']}"
     files = [str(res["h"])] + [str(v) for v, _ in res["shorts"]] + ([str(res["thumb"])] if res.get("thumb") else [])
     subprocess.run(["gh", "release", "delete", tag, "-y", "--cleanup-tag", "-R", repo], capture_output=True)
-    subprocess.run(["gh", "release", "create", tag, *files, "-R", repo, "--title", res["title"][:120],
-                    "--notes", notes], check=True)
+    subprocess.run(["gh", "release", "create", tag, *files, "-R", repo, "--title", P.nodash(res["title"][:120]),
+                    "--notes", P.nodash(notes)], check=True)
     return f"https://github.com/{repo}/releases/tag/{tag}"
 
 
 def send_telegram_videos(res: dict, release_url: str):
     token, chat = os.getenv("TELEGRAM_BOT_TOKEN"), os.getenv("TELEGRAM_CHAT_ID")
     if not token or not chat:
-        log("   ! Chưa cài TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID — không gửi Telegram")
+        log("   ! Chưa cài TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID, không gửi Telegram")
         return
     api = f"https://api.telegram.org/bot{token}"
     esc = P.html.escape
@@ -1260,7 +1260,7 @@ def send_telegram_videos(res: dict, release_url: str):
             subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(path), "-vf", "scale=-2:720",
                             "-c:v", "libx264", "-preset", "veryfast", "-b:v", f"{kbps}k", "-maxrate", f"{kbps}k",
                             "-bufsize", f"{kbps * 2}k", "-c:a", "aac", "-b:a", "96k", str(small)], check=True)
-            caption += "\n(bản xem trước 720p — bản gốc 1080p ở link Release)"
+            caption += "\n(bản xem trước 720p, bản gốc 1080p ở link Release)"
             path = small
         if path.stat().st_size > 49_000_000:
             requests.post(f"{api}/sendMessage", timeout=60, data={
@@ -1277,7 +1277,7 @@ def send_telegram_videos(res: dict, release_url: str):
 
     requests.post(f"{api}/sendMessage", timeout=60, data={
         "chat_id": chat, "parse_mode": "HTML", "disable_web_page_preview": "true",
-        "text": (f"🎬 <b>{esc(BRAND['tg_header'].format(week=res['week']))}</b> — bản xem trước\n"
+        "text": (f"🎬 <b>{esc(BRAND['tg_header'].format(week=res['week']))}</b>, bản xem trước\n"
                  f"1 video ngang 16:9 (YouTube) + {len(res['shorts'])} video dọc 9:16 (Reels/Shorts)\n"
                  + (f"📦 Tải file gốc: {esc(release_url)}" if release_url else ""))})
     if res.get("thumb"):

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TRẠM INSIGHT — biến các bài X (tweet/thread/research) bạn gửi vào bot Telegram thành
+TRẠM INSIGHT, biến các bài X (tweet/thread/research) bạn gửi vào bot Telegram thành
 video CHIA SẺ INSIGHT / KIẾN THỨC / KINH NGHIỆM: 1 video dài YouTube + video ngắn highlight.
 
   python insight.py inbox  --out public    # đọc tin nhắn Telegram mới, lưu link, báo đã nhận
@@ -95,7 +95,7 @@ def read_x(url: str) -> dict | None:
         if r.ok:
             j = r.json()
             text = P.clean_text(re.sub(r"<a [^>]*>pic\.twitter\.com[^<]*</a>", "", j.get("html", "")), 6000)
-            text = re.sub(r"— .*$", "", text).strip()
+            text = re.sub(r"\u2014 .*$", "", text).strip()  # bỏ phần đuôi "(em dash) Tên (@handle) ngày" của oEmbed
             if text:
                 return {"author": j.get("author_name", user), "handle": user, "text": text, "url": url}
     except Exception as ex:
@@ -189,7 +189,7 @@ def should_cook(st: dict, cfg: dict, force: bool) -> bool:
 # ---------------------------------------------------------------------------
 # 2. VIẾT KỊCH BẢN
 # ---------------------------------------------------------------------------
-SYSTEM = """Bạn là biên kịch cho kênh video tiếng Việt "{name}" — chuỗi CHIA SẺ INSIGHT, KIẾN THỨC,
+SYSTEM = """Bạn là biên kịch cho kênh video tiếng Việt "{name}", chuỗi CHIA SẺ INSIGHT, KIẾN THỨC,
 KINH NGHIỆM đầu tư crypto, giọng {host_desc}. Xưng "{self_word}", gọi người xem là "{audience}".
 Nguyên liệu là các bài viết/thread chất lượng trên X do chủ kênh chọn. Nhiệm vụ: rút ra bài học,
 khung tư duy, kinh nghiệm thực chiến có thể áp dụng; giải thích dễ hiểu (khái niệm khó thì giải
@@ -228,7 +228,7 @@ Số section: 3 đến {max_sections}."""
 def write_script(gem, cfg: dict, posts: list[dict]) -> dict:
     ic = cfg.get("insight") or {}
     listing = "\n\n".join(f"[{i}] @{p.get('handle', '')} ({p.get('author', '')})"
-                          + (f" — ghi chú của chủ kênh: {p['note']}" if p.get("note") else "")
+                          + (f", ghi chú của chủ kênh: {p['note']}" if p.get("note") else "")
                           + f":\n{p['text'][:3500]}" for i, p in enumerate(posts))
     system = SYSTEM.format(name=ic.get("name", "Smart Penguin Insights"), host_desc=ic.get("host_desc", "điềm đạm, sâu sắc, gần gũi"),
                            self_word=ic.get("self_word", "mình"), audience=ic.get("audience", "mọi người"))

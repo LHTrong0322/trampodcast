@@ -1,5 +1,5 @@
 # =====================================================================
-#  TẠO "CHÌA KHOÁ" TG_SESSION CHO USERBOT — chạy 1 lần duy nhất.
+#  TẠO "CHÌA KHOÁ" TG_SESSION CHO USERBOT, chạy 1 lần duy nhất.
 #  Cách dễ nhất: vào https://colab.research.google.com → New notebook
 #  → dán TOÀN BỘ file này vào 1 ô → bấm ▶ → làm theo hướng dẫn hiện ra.
 # =====================================================================
@@ -22,7 +22,7 @@ with TelegramClient(StringSession(), api_id, api_hash) as client:
             uname = getattr(d.entity, "username", None)
             print(f"   {uname or d.id:<28} {d.name}")
     print("\n" + "=" * 70)
-    print("TG_SESSION — copy NGUYÊN dòng dưới, dán vào GitHub Secret tên TG_SESSION:")
+    print("TG_SESSION, copy NGUYÊN dòng dưới, dán vào GitHub Secret tên TG_SESSION:")
     print("=" * 70)
     print(client.session.save())
     print("=" * 70)

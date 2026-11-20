@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Trạm Podcast Crypto — tự động gom tin crypto, lọc tin có giá trị cho investor,
+Trạm Podcast Crypto, tự động gom tin crypto, lọc tin có giá trị cho investor,
 dịch sang tiếng Việt, viết kịch bản podcast và đọc thành audio (Gemini TTS).
 
 Chạy:  python scripts/podcast.py --out public
@@ -141,7 +141,7 @@ def userbot_fetch_all(channels: list, since: datetime) -> dict:
         from telethon.sync import TelegramClient
         from telethon.sessions import StringSession
     except ImportError:
-        log("   ! Chưa cài telethon — dùng chế độ đọc web preview")
+        log("   ! Chưa cài telethon, dùng chế độ đọc web preview")
         return {}
     result = {}
     try:
@@ -173,7 +173,7 @@ def userbot_fetch_all(channels: list, since: datetime) -> dict:
                 except Exception as ex:
                     log(f"   ! userbot không đọc được {key}: {ex}")
     except Exception as ex:
-        log(f"   ! Đăng nhập userbot lỗi ({ex}) — dùng chế độ đọc web preview")
+        log(f"   ! Đăng nhập userbot lỗi ({ex}), dùng chế độ đọc web preview")
     return result
 
 
@@ -367,7 +367,7 @@ có GIÁ TRỊ THỰC cho investor, gộp các tin trùng nhau, rồi tóm tắt
 - Dòng tiền tổ chức: ETF flows, quỹ/doanh nghiệp mua bán BTC/ETH, treasury companies.
 - Dự án: mainnet/upgrade, TGE, airdrop, token unlock lớn, listing/delisting sàn lớn,
   gọi vốn, M&A, buyback, thay đổi tokenomics, partnership THỰC CHẤT.
-- Bảo mật: hack, exploit, depeg, sự cố sàn — kèm số tiền thiệt hại.
+- Bảo mật: hack, exploit, depeg, sự cố sàn, kèm số tiền thiệt hại.
 - On-chain/thị trường: biến động giá lớn KÈM nguyên nhân, liquidation lớn, cá voi.
 
 LOẠI BỎ: quảng cáo, giveaway, shill, kêu gọi mua bán, tin giá thuần tuý không có nguyên nhân,
@@ -435,7 +435,7 @@ Nếu không có tin nào đáng giá, trả về "stories": []."""
 
 SCRIPT_SYSTEM = """Bạn là biên kịch cho podcast tin tức crypto tiếng Việt "{name}".
 MC là {host}: cô gái trẻ {region}, dễ thương, nhí nhảnh, hay cười, nói chuyện như kể chuyện
-cho bạn thân nghe — nhưng thông tin phải chính xác và rõ ràng. {host} xưng "{host_short}",
+cho bạn thân nghe, nhưng thông tin phải chính xác và rõ ràng. {host} xưng "{host_short}",
 gọi người nghe là "cả nhà".
 
 YÊU CẦU KỊCH BẢN (văn NÓI, sẽ được đọc bằng máy):
@@ -525,11 +525,11 @@ def build_episode_content(gem: Gemini, cfg: dict, items: list[dict], now_vn: dat
     return ed, stories, script
 
 
-DASHES = "\u2014\u2013\u2015\u2012\u2E3A\u2E3B\uFE58\uFE63\uFF0D"  # — – ― ‒ ⸺ ⸻ ﹘ ﹣ －
+DASHES = "\u2014\u2013\u2015\u2012\u2E3A\u2E3B\uFE58\uFE63\uFF0D"  # các loại gạch ngang dài (em dash, en dash, horizontal bar...)
 
 
 def nodash(x):
-    """KHÔNG BAO GIỜ dùng gạch ngang dài (— – ― …) hay gạch nối đứng giữa câu ( - ): thay bằng dấu phẩy.
+    """KHÔNG BAO GIỜ dùng gạch ngang dài (em dash, en dash...) hay gạch nối đứng giữa câu ( - ): thay bằng dấu phẩy.
     Dùng cho mọi chữ: kịch bản, chữ trên video, phụ đề, SEO, tin Telegram. Áp dụng đệ quy cho list/dict."""
     if isinstance(x, str):
         x = re.sub(rf"\s*[{DASHES}]+\s*(?=\S)", ", ", x)
@@ -544,6 +544,21 @@ def nodash(x):
     if isinstance(x, dict):
         return {k: nodash(v) for k, v in x.items()}
     return x
+
+
+# LỚP CHẶN CUỐI cho Telegram: MỌI tin nhắn / chú thích gửi qua api.telegram.org (từ bất kỳ file nào đã import podcast)
+# đều đi qua nodash, nên không thể lọt gạch ngang dài vào Telegram dù code ở đâu quên lọc.
+_raw_post = requests.post
+
+
+def _tg_safe_post(url, *a, **kw):
+    if "api.telegram.org" in str(url) and isinstance(kw.get("data"), dict):
+        kw["data"] = {k: (nodash(v) if k in ("text", "caption") and isinstance(v, str) else v) for k, v in kw["data"].items()}
+    return _raw_post(url, *a, **kw)
+
+
+if getattr(requests.post, "__name__", "") != "_tg_safe_post":
+    requests.post = _tg_safe_post
 
 
 def sanitize_script(s: str) -> str:
@@ -846,7 +861,7 @@ def main():
     if os.getenv("RUN_EVENT") == "schedule" and episodes:
         last_ep = datetime.fromisoformat(episodes[0]["date"])
         if now - last_ep < timedelta(hours=16):
-            log(f"Đã có tập lúc {last_ep:%H:%M %d/%m} — mốc dự phòng này bỏ qua.")
+            log(f"Đã có tập lúc {last_ep:%H:%M %d/%m}, mốc dự phòng này bỏ qua.")
             return
     if args.hours:
         since = now - timedelta(hours=args.hours)
@@ -859,7 +874,7 @@ def main():
     items = collect(cfg, since, seen)
     log(f"   Tổng: {len(items)} tin mới")
     if len(items) < 3:
-        log("Quá ít tin mới — bỏ qua tập này.")
+        log("Quá ít tin mới, bỏ qua tập này.")
         return
 
     gem = Gemini(key)
@@ -867,7 +882,7 @@ def main():
     log("② AI lọc tin, dịch và viết kịch bản")
     ed, stories, script = build_episode_content(gem, cfg, items, now_vn, episodes)
     if not stories:
-        log("Không có tin đủ giá trị — bỏ qua tập này.")
+        log("Không có tin đủ giá trị, bỏ qua tập này.")
         state.update(seen=(seen_list + [i["id"] for i in items])[-4000:], last_run=now.isoformat())
         state_path.write_text(json.dumps(state))
         return

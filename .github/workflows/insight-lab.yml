@@ -11,7 +11,7 @@ on:
         required: false
         default: "vieneu:Hải Đăng,gemini:Ludo"
       allow_main_key:
-        description: "Cho dùng key Gemini chính nếu chưa có INSIGHT key (tốn lượt podcast) — 1/0"
+        description: "Cho dùng key Gemini chính nếu chưa có INSIGHT key (tốn lượt podcast), 1/0"
         required: false
         default: "0"
 

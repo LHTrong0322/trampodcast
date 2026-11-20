@@ -1,4 +1,4 @@
-# 🎙️ Trạm Podcast Crypto — Podcast tin crypto tự động
+# 🎙️ Trạm Podcast Crypto, Podcast tin crypto tự động
 
 Mỗi ngày 2 lần (khoảng 6:47 sáng và 6:47 tối giờ VN), hệ thống sẽ tự động:
 
@@ -14,12 +14,12 @@ Chi phí: **0đ** nếu nằm trong gói miễn phí của Gemini, GitHub và Cl
 
 ## Cài đặt (khoảng 20 phút, làm 1 lần)
 
-### Bước 1 — Lấy Gemini API key (miễn phí)
+### Bước 1, Lấy Gemini API key (miễn phí)
 1. Vào **https://aistudio.google.com** → đăng nhập Gmail.
 2. Bấm **Get API key** → **Create API key**.
 3. Copy đoạn key (dạng `AIza...`) → dán tạm vào Notes. **Không chia sẻ key này cho ai.**
 
-### Bước 2 — Tạo repo GitHub
+### Bước 2, Tạo repo GitHub
 1. Vào **https://github.com/new**.
 2. Repository name: `tram-podcast-crypto` · chọn **Private** · bấm **Create repository**.
 3. Bấm link **uploading an existing file** → kéo thả các file/thư mục sau từ file zip đã giải nén:
@@ -32,7 +32,7 @@ Chi phí: **0đ** nếu nằm trong gói miễn phí của Gemini, GitHub và Cl
    - Ô tên file gõ chính xác: `.github/workflows/podcast.yml`
    - Mở file `podcast.yml` trong zip bằng Notepad/TextEdit → copy toàn bộ → dán vào → **Commit changes**.
 
-### Bước 3 — Cất key vào "két sắt" của GitHub
+### Bước 3, Cất key vào "két sắt" của GitHub
 Trong repo: **Settings → Secrets and variables → Actions → tab Secrets → New repository secret**. Tạo lần lượt:
 
 | Name | Value |
@@ -44,16 +44,16 @@ Trong repo: **Settings → Secrets and variables → Actions → tab Secrets →
 > Không cần Telegram thì bỏ qua 2 dòng cuối, podcast vẫn lên web bình thường.
 > Muốn gửi vào **kênh** Telegram: thêm bot làm admin của kênh, Chat ID dạng `-100xxxxxxxxxx`.
 
-### Bước 4 — Chạy thử tập đầu tiên
+### Bước 4, Chạy thử tập đầu tiên
 1. Vào tab **Actions** của repo → nếu có nút xanh "I understand my workflows…" thì bấm.
-2. Chọn **Trạm Podcast Crypto — tạo tập podcast** bên trái → **Run workflow**.
+2. Chọn **Trạm Podcast Crypto, tạo tập podcast** bên trái → **Run workflow**.
 3. Ô "Lấy tin trong bao nhiêu giờ" gõ `24` → **Run workflow**.
-4. Đợi 5–10 phút. Dấu ✅ xanh là xong, Telegram sẽ nhận được file audio.
+4. Đợi 5-10 phút. Dấu ✅ xanh là xong, Telegram sẽ nhận được file audio.
    Bấm vào lần chạy để xem log: nguồn nào ✓ lấy được bao nhiêu tin, nguồn nào ✗ lỗi.
 
 > Nếu bước "Lưu & xuất bản" báo lỗi quyền (403): **Settings → Actions → General → Workflow permissions → Read and write permissions → Save**, rồi chạy lại.
 
-### Bước 5 — Đưa lên web bằng Cloudflare Pages
+### Bước 5, Đưa lên web bằng Cloudflare Pages
 1. Vào **dash.cloudflare.com → Workers & Pages → Create → tab Pages → Connect to Git**.
 2. Chọn repo `tram-podcast-crypto`.
 3. Cấu hình:
@@ -68,22 +68,22 @@ Trong repo: **Settings → Secrets and variables → Actions → tab Secrets →
 
 Xong! Từ giờ mọi thứ chạy tự động 2 lần/ngày.
 
-### Bước 6 (nên làm) — Bật USERBOT để đọc mọi kênh Telegram
+### Bước 6 (nên làm), Bật USERBOT để đọc mọi kênh Telegram
 Mặc định hệ thống đọc trang xem trước `t.me/s/tênkênh`, nhưng có kênh tắt tính năng này hoặc là kênh private.
 Bật userbot thì hệ thống đọc bằng **chính tài khoản Telegram của bạn** → đọc được **mọi kênh bạn đã tham gia**.
 
-**6.1 — Lấy api_id và api_hash**
+**6.1, Lấy api_id và api_hash**
 1. Vào **https://my.telegram.org** → nhập số điện thoại (+84…) → nhập mã Telegram gửi vào app.
 2. Bấm **API development tools** → điền App title: `tram podcast`, Short name: `trampodcast`, Platform: Desktop → **Create application**.
 3. Copy **App api_id** (số) và **App api_hash** (chuỗi dài).
 
-**6.2 — Tạo chìa khoá TG_SESSION (dùng Google Colab, không cần cài gì)**
+**6.2, Tạo chìa khoá TG_SESSION (dùng Google Colab, không cần cài gì)**
 1. Vào **https://colab.research.google.com** → **New notebook**.
 2. Mở file `tao_session_telegram.py` → copy toàn bộ → dán vào ô code → bấm nút ▶.
 3. Nhập lần lượt: api_id → api_hash → số điện thoại (+84…) → mã Telegram gửi vào app (có bật xác minh 2 bước thì nhập thêm mật khẩu).
 4. Màn hình in ra **danh sách kênh bạn đang tham gia** (tên/ID dùng cho `sources.yaml`) và một **chuỗi rất dài** → copy nguyên chuỗi đó.
 
-**6.3 — Thêm 3 secret vào GitHub** (Settings → Secrets and variables → Actions → New repository secret):
+**6.3, Thêm 3 secret vào GitHub** (Settings → Secrets and variables → Actions → New repository secret):
 
 | Name | Value |
 |---|---|
@@ -91,7 +91,7 @@ Bật userbot thì hệ thống đọc bằng **chính tài khoản Telegram c�
 | `TG_API_HASH` | api_hash |
 | `TG_SESSION` | chuỗi dài ở 6.2 |
 
-**6.4 — Tham gia kênh**: tài khoản của bạn phải **đã join** kênh muốn đọc. Kênh private không có username thì ghi ID dạng `-100xxxxxxxxxx` (lấy từ danh sách in ra ở 6.2) vào `sources.yaml`.
+**6.4, Tham gia kênh**: tài khoản của bạn phải **đã join** kênh muốn đọc. Kênh private không có username thì ghi ID dạng `-100xxxxxxxxxx` (lấy từ danh sách in ra ở 6.2) vào `sources.yaml`.
 
 Chạy thử như Bước 4 → log sẽ hiện dòng `Đọc Telegram bằng tài khoản userbot: x/y kênh`.
 Kênh nào userbot đọc không được thì hệ thống tự quay về cách đọc web preview.
@@ -115,9 +115,9 @@ Kênh nào userbot đọc không được thì hệ thống tự quay về cách
 
 | Muốn… | Sửa chỗ nào |
 |---|---|
-| Thêm/bớt kênh Telegram | mục `telegram:` — chỉ ghi username, kênh phải **public** |
-| Thêm trang tin | mục `rss:` — thêm 1 dòng `{ name: "...", url: "link RSS" }` |
-| Đổi giọng | `voice:` — thử `Laomedeia`, `Zephyr`, `Autonoe`, `Aoede` |
+| Thêm/bớt kênh Telegram | mục `telegram:`, chỉ ghi username, kênh phải **public** |
+| Thêm trang tin | mục `rss:`, thêm 1 dòng `{ name: "...", url: "link RSS" }` |
+| Đổi giọng | `voice:`, thử `Laomedeia`, `Zephyr`, `Autonoe`, `Aoede` |
 | Giọng "cute" hơn/nghiêm túc hơn | sửa đoạn `voice_style:` |
 | Tập dài/ngắn hơn | `target_minutes:` |
 | Đổi tên MC / tên show | `host_name:` / `name:` |
@@ -127,15 +127,15 @@ Kênh nào userbot đọc không được thì hệ thống tự quay về cách
 X không cho đọc dữ liệu miễn phí, nên cần một dịch vụ chuyển tài khoản X thành link RSS:
 1. Vào **rss.app** (hoặc dịch vụ tương tự) → tạo feed từ link `https://x.com/CryptoWendyO`.
 2. Copy link RSS (đuôi `.xml`) → dán vào mục `x_rss:` trong `sources.yaml` (bỏ dấu `#` đầu dòng).
-Lưu ý các dịch vụ này thường giới hạn tần suất cập nhật ở gói miễn phí — kiểm tra gói trước khi dùng.
+Lưu ý các dịch vụ này thường giới hạn tần suất cập nhật ở gói miễn phí, kiểm tra gói trước khi dùng.
 
 ---
 
 ## Gặp lỗi?
 - **Một nguồn bị ✗**: không sao, các nguồn khác vẫn chạy. Với kênh Telegram: bật userbot (Bước 6) và kiểm tra tài khoản đã join kênh đó chưa.
-- **"bận (429)" / hết lượt**: gói free của Gemini TTS có giới hạn số lần đọc mỗi ngày. Hệ thống tự đợi và tự chuyển model dự phòng. Nếu vẫn hết, có thể gắn thanh toán ở Google AI Studio — ước tính khoảng 0,2–0,3 USD/tập 7 phút.
+- **"bận (429)" / hết lượt**: gói free của Gemini TTS có giới hạn số lần đọc mỗi ngày. Hệ thống tự đợi và tự chuyển model dự phòng. Nếu vẫn hết, có thể gắn thanh toán ở Google AI Studio, ước tính khoảng 0,2-0,3 USD/tập 7 phút.
 - **Model không tồn tại (404)**: Google đổi tên model thường xuyên. Sửa danh sách `models:` trong `sources.yaml` theo tên mới ở trang https://ai.google.dev/gemini-api/docs/models.
 - **Giọng đọc lỡ đọc cả chỉ dẫn**: hiếm gặp; chạy lại hoặc đổi model TTS.
-- **Repo public lâu không có commit mới**: GitHub có thể tạm dừng lịch chạy sau 60 ngày — vào tab Actions bấm Enable lại.
+- **Repo public lâu không có commit mới**: GitHub có thể tạm dừng lịch chạy sau 60 ngày, vào tab Actions bấm Enable lại.
 
 ⚠️ Nội dung do AI tổng hợp, có thể sai sót. Không phải lời khuyên đầu tư.

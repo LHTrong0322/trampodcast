@@ -24,7 +24,7 @@ GEMINI_STYLE = "Đọc bằng giọng nam miền Bắc, giọng Hà Nội, trầ
 
 
 def stats(pcm: bytes, words: int) -> str:
-    """Tốc độ đọc (từ/phút) và cao độ giọng trung bình (Hz) — để so sánh khách quan."""
+    """Tốc độ đọc (từ/phút) và cao độ giọng trung bình (Hz), để so sánh khách quan."""
     import numpy as np
     sr = P.SAMPLE_RATE
     x = np.frombuffer(pcm, dtype="<i2").astype(np.float32) / 32768

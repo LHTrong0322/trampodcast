@@ -40,7 +40,7 @@ reset 15:00 VN. 1 video ≈ 8 lượt TTS. CLAUDE_CODE_OAUTH_TOKEN (gói Claude 
 tự xoá khoảng trắng). TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, PIXABAY_API_KEY, PEXELS_API_KEY.
 
 ## 5. Quy tắc BẮT BUỘC của Trọng
-- KHÔNG BAO GIỜ có dấu gạch ngang dài (— – ―) ở bất kỳ đâu: video, phụ đề, ảnh bìa, SEO, Telegram.
+- KHÔNG BAO GIỜ có dấu gạch ngang dài (em dash, en dash) ở bất kỳ đâu: video, phụ đề, ảnh bìa, SEO, Telegram.
   (Trọng đã nhắc >10 lần. Cần thêm "bot kiểm tra" chặn trước khi xuất bản.)
 - Tiền tệ dạng tiếng Anh trên hình ($6B, $400M); thuật ngữ crypto giữ tiếng Anh; thuật ngữ khác (vd PTSD)
   phải dịch/giải thích tiếng Việt.

@@ -1,4 +1,4 @@
-"""Bộ dựng 'classic' (Python, motion.py) cho video Insight từ nguyên liệu LAB — bản Claude nâng cấp:
+"""Bộ dựng 'classic' (Python, motion.py) cho video Insight từ nguyên liệu LAB, bản Claude nâng cấp:
 thẻ bài X ở phần mở đầu, ý chính hiện dần theo lời đọc, biểu đồ giá thật của coin được nhắc, ảnh theo từng ý."""
 from __future__ import annotations
 

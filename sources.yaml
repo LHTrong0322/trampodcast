@@ -1,5 +1,5 @@
 # =====================================================================
-#  CẤU HÌNH PODCAST — sửa file này là đủ, không cần đụng vào code.
+#  CẤU HÌNH PODCAST, sửa file này là đủ, không cần đụng vào code.
 #  Thêm/bớt nguồn: thêm/xoá 1 dòng. Dòng bắt đầu bằng # là ghi chú.
 # =====================================================================
 
@@ -26,7 +26,7 @@ podcast:
   keep_episodes: 40            # giữ bao nhiêu tập gần nhất (tập cũ tự xoá)
 
 # Giọng VieNeu-TTS (mã nguồn mở, miễn phí, chạy trên GitHub): dùng khi tts_provider: "vieneu"
-# Giọng có sẵn — Bắc: Minh Đức, Phạm Tuyên, Xuân Vĩnh, Thanh Bình, Ngọc Linh, Đoan Trang, Quỳnh Anh,
+# Giọng có sẵn, Bắc: Minh Đức, Phạm Tuyên, Xuân Vĩnh, Thanh Bình, Ngọc Linh, Đoan Trang, Quỳnh Anh,
 # Quốc Tuấn · Trung: Quang Sơn, Ngọc Trân · Nam: Adam, Thái Sơn, Thục Đoan, Minh Triết, Mỹ Duyên,
 # Đức Trí, Kim Thanh · Nổi bật: Trúc Ly, Thiện Minh, Mai Anh, Hải Đăng, Thùy Dung, Ngọc Huyền...
 vieneu:
@@ -39,7 +39,7 @@ elevenlabs:
   stability: 0.45                      # thấp = nhiều cảm xúc hơn, cao = đều giọng hơn
   similarity_boost: 0.8
   style: 0.35                          # cao = "diễn" nhiều hơn
-  speed: 1.0                           # 0.7 – 1.2
+  speed: 1.0                           # 0.7-1.2
 
 # Model AI (tự thử lần lượt, model đầu lỗi/không tồn tại thì dùng model sau)
 models:
@@ -47,7 +47,7 @@ models:
   tts:  ["gemini-3.8-flash-tts"]   # giọng Fola chỉ có trên model này
 
 # ---------------------------------------------------------------------
-#  Kênh Telegram — ghi username (phần sau t.me/).
+#  Kênh Telegram, ghi username (phần sau t.me/).
 #  Nếu đã bật USERBOT (xem README): đọc được cả kênh private / tắt preview,
 #  với kênh private không có username thì ghi ID dạng -100xxxxxxxxxx
 # ---------------------------------------------------------------------
@@ -94,7 +94,7 @@ video:
   shorts_max_seconds: 30      # video dọc tối đa bao nhiêu giây
 
 # ---------------------------------------------------------------------
-#  TRẠM INSIGHT — gửi link bài X chất lượng vào bot Telegram → video chia sẻ insight
+#  TRẠM INSIGHT, gửi link bài X chất lượng vào bot Telegram → video chia sẻ insight
 #  Lệnh trong Telegram: gửi link (nhiều link 1 lúc cũng được) · /list xem link đang chờ · /cook làm ngay
 # ---------------------------------------------------------------------
 insight:
@@ -105,7 +105,7 @@ insight:
   outro_line: "Đăng ký Smart Penguin Insights để nhận insight crypto mỗi tuần"
   cta_v: "Xem full trên YouTube · @Trong0322"
   voice_primary: "gemini:Riko"       # giọng chính (Storyteller, dùng key INSIGHT_GEMINI_API_KEY)
-  voice_fallback: "vieneu:Hải Đăng"  # chỉ dùng khi Gemini hết lượt — cả video đổi sang giọng này
+  voice_fallback: "vieneu:Hải Đăng"  # chỉ dùng khi Gemini hết lượt, cả video đổi sang giọng này
   voice_speed: {gemini: auto, vieneu: auto}   # auto = tự chỉnh về ~target_wpm từ/phút; hoặc số, vd 1.05
   target_wpm: 228            # nhịp nhanh vừa, giữ chân người xem
   tts_provider: "gemini"      # (bộ dựng cũ) "gemini" hoặc "vieneu"

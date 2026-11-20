@@ -1,4 +1,4 @@
-"""Smart Penguin Insights — xuất bản: ảnh bìa, gói SEO (YouTube + TikTok), GitHub Release, gửi Telegram,
+"""Smart Penguin Insights, xuất bản: ảnh bìa, gói SEO (YouTube + TikTok), GitHub Release, gửi Telegram,
 và BOT REVIEW (AI xem khung hình, chấm điểm, gợi ý cải tiến cho video sau)."""
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ def ts(sec: float) -> str:
 SEO_SYSTEM = """Bạn là chuyên gia SEO YouTube & TikTok mảng crypto/đầu tư tại Việt Nam (khán giả Việt, tìm kiếm bằng
 tiếng Việt lẫn từ khoá tiếng Anh như crypto, altcoin, DCA, tokenomics...). Viết chuẩn thuật toán: từ khoá chính nằm
 đầu tiêu đề và 2 câu đầu mô tả; tiêu đề gây tò mò nhưng KHÔNG câu view sai sự thật; không hứa lợi nhuận;
-không nhắc AI/bot; không dùng dấu gạch ngang dài (— –). Tên kênh: {brand}."""
+không nhắc AI/bot; không dùng dấu gạch ngang dài (em dash, en dash). Tên kênh: {brand}."""
 
 SEO_PROMPT = """Video dài ({minutes:.1f} phút): "{title}"
 Chủ đề: {theme}
@@ -140,7 +140,7 @@ Trả JSON:
               "du_lieu_lien_quan": 1-10, "thumbnail": 1-10, "short_9x16": 1-10}},
   "tot": ["2-3 điểm đang làm tốt"],
   "can_sua": ["3-6 việc cần sửa, mỗi việc nêu rõ ở đâu (giây/khung) và sửa thế nào"],
-  "script_tips": ["2-3 mẹo cho LỜI ĐỌC lần sau (hook, độ dài, cách kể) — sẽ được đưa thẳng vào hướng dẫn viết kịch bản"],
+  "script_tips": ["2-3 mẹo cho LỜI ĐỌC lần sau (hook, độ dài, cách kể), sẽ được đưa thẳng vào hướng dẫn viết kịch bản"],
   "retention_risk": "đoạn nào dễ làm người xem bỏ đi và vì sao"
 }}"""
 
@@ -249,13 +249,13 @@ def review_text(rv: dict) -> str:
     lines = [f"🧐 BOT REVIEW ({rv.get('by', 'AI')}) · điểm tổng {rv.get('score', '?')}/10", ""]
     lines += [f"• {names.get(k, k)}: {v}/10" for k, v in sc.items()]
     if rv.get("tot"):
-        lines += ["", "👍 Đang tốt:"] + [f"– {x}" for x in rv["tot"]]
+        lines += ["", "👍 Đang tốt:"] + [f"• {x}" for x in rv["tot"]]
     if rv.get("can_sua"):
         lines += ["", "🔧 Nên sửa:"] + [f"{i + 1}. {x}" for i, x in enumerate(rv["can_sua"])]
     if rv.get("retention_risk"):
         lines += ["", "⚠️ Dễ mất người xem: " + rv["retention_risk"]]
     if rv.get("script_tips"):
-        lines += ["", "✍️ Mẹo kịch bản (bot tự áp dụng cho video sau):"] + [f"– {x}" for x in rv["script_tips"]]
+        lines += ["", "✍️ Mẹo kịch bản (bot tự áp dụng cho video sau):"] + [f"• {x}" for x in rv["script_tips"]]
     return "\n".join(lines)
 
 
@@ -296,6 +296,7 @@ def tg_video(path: Path, caption: str):
 
 
 def tg_photo(path: Path, caption: str):
+    caption = R.nodash(caption)
     api, chat = _tg()
     if api and path and path.exists():
         with open(path, "rb") as f:
@@ -350,37 +351,57 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, do_re
     log("⑥ Gói SEO")
     seo = seo or seo_pack(gem, cfg, res)
     (out / f"seo-{tag}.json").write_text(json.dumps(seo, ensure_ascii=False, indent=1), encoding="utf-8")
+    # ---- BOT TUÂN THỦ: quét mọi chữ + OCR khung hình TRƯỚC khi tạo Release / gửi Telegram ----
+    import compliance as CP
+    log("⑥b Bot tuân thủ (gạch ngang dài, watermark, Source, số liệu)")
+    try:
+        rep = CP.check_publish(res, seo, out, thumb)
+    except Exception as ex:
+        log(f"   ! bot tuân thủ lỗi: {ex}")
+        rep = {"ok": True, "blocked": False, "fixed": [], "warnings": [f"bot tuân thủ lỗi: {str(ex)[:150]}"], "ocr_dash": []}
+    (out / f"seo-{tag}.json").write_text(json.dumps(seo, ensure_ascii=False, indent=1), encoding="utf-8")
+    (out / f"compliance-{tag}.json").write_text(json.dumps(rep, ensure_ascii=False, indent=1), encoding="utf-8")
+    log("   " + CP.report_text(rep).replace("\n", "\n   "))
     files = [res["long"]] + [s["path"] for s in res["shorts"]] + ([thumb] if thumb else []) + [out / f"seo-{tag}.json"]
     url = ""
     repo = os.getenv("GITHUB_REPOSITORY")
     if repo and os.getenv("GH_TOKEN"):
         rt = f"insight-{tag}"
         subprocess.run(["gh", "release", "delete", rt, "-y", "--cleanup-tag", "-R", repo], capture_output=True)
-        subprocess.run(["gh", "release", "create", rt, *map(str, files), "-R", repo, "--title",
-                        (seo.get("yt_titles") or [res["plan"].get("title", "")])[0], "--notes", seo["yt_description"]], check=True)
+        # bị chặn → chỉ lưu bản NHÁP (ẩn, chưa xuất bản) để kiểm tra, không gửi video
+        subprocess.run(["gh", "release", "create", rt, *map(str, files), "-R", repo, *(["--draft"] if rep["blocked"] else []),
+                        "--title", R.nodash((seo.get("yt_titles") or [res["plan"].get("title", "")])[0]),
+                        "--notes", R.nodash(seo["yt_description"])], check=True)
         url = f"https://github.com/{repo}/releases/tag/{rt}"
+    if rep["blocked"]:
+        tg_text("⛔ Video Insight bị CHẶN XUẤT BẢN (bản nháp, chưa gửi video)\n\n" + CP.report_text(rep))
+        for d in rep["ocr_dash"][:2]:
+            tg_photo(Path(d["frame"]), f"Khung hình có gạch ngang dài: {d['file']} giây {d['t']}")
+        return {"release": url, "seo": seo, "review": None, "thumb": str(thumb) if thumb else None, "blocked": True,
+                "compliance": rep}
     log("⑦ Gửi Telegram")
     plan = res["plan"]
     tg_text((f"🎨 BẢN {THEME_NAMES.get(th, th).upper()}\n" if th else "") + f"🐧 SMART PENGUIN INSIGHTS · video mới ({res['duration'] / 60:.1f} phút · giọng {res['voice'].split(':')[1]})\n"
-            f"1 video YouTube 16:9 + {len(res['shorts'])} video ngắn 9:16 (TikTok/Shorts/Reels)\n" + (f"📦 File gốc: {url}" if url else ""))
+            f"1 video YouTube 16:9 + {len(res['shorts'])} video ngắn 9:16 (TikTok/Shorts/Reels)\n" + (f"📦 File gốc: {url}\n" if url else "")
+            + "\n" + CP.report_text(rep))
     tg_photo(thumb, "🖼 Ảnh bìa YouTube")
     tg_video(res["long"], "🎬 " + (seo.get("yt_titles") or [plan.get("title", "")])[0])
     for i, s in enumerate(res["shorts"]):
         sh = (seo.get("shorts") or [{}] * 9)[i] if i < len(seo.get("shorts") or []) else {}
         tg_video(s["path"], f"📱 Short {i + 1}: {sh.get('yt_title') or s['title']}")
-    yt = ("📺 YOUTUBE — copy dán khi đăng\n\nTIÊU ĐỀ (chọn 1):\n" + "\n".join(f"{i + 1}. {t}" for i, t in enumerate(seo.get("yt_titles", [])))
+    yt = ("📺 YOUTUBE, copy dán khi đăng\n\nTIÊU ĐỀ (chọn 1):\n" + "\n".join(f"{i + 1}. {t}" for i, t in enumerate(seo.get("yt_titles", [])))
           + "\n\nMÔ TẢ:\n" + seo["yt_description"] + "\n\nTAGS:\n" + ", ".join(seo.get("yt_tags", []))
           + ("\n\nBÌNH LUẬN GHIM:\n" + seo["pinned_comment"] if seo.get("pinned_comment") else ""))
     if do_review:
         tg_text(yt)
     if seo.get("shorts") and res["shorts"]:
-        tk = ["🎵 TIKTOK / SHORTS — caption từng video ngắn"]
+        tk = ["🎵 TIKTOK / SHORTS, caption từng video ngắn"]
         for i, sh in enumerate(seo["shorts"][: len(res["shorts"])]):
             tk += ["", f"Short {i + 1}", f"Shorts title: {sh.get('yt_title', '')}",
                    f"TikTok: {sh.get('tiktok_caption', '')} {' '.join(sh.get('tiktok_hashtags', []))}"]
         tg_text("\n".join(tk))
     if not do_review:
-        return {"release": url, "seo": seo, "review": None, "thumb": str(thumb) if thumb else None}
+        return {"release": url, "seo": seo, "review": None, "thumb": str(thumb) if thumb else None, "compliance": rep}
     log("⑧ Bot review")
     rv = review(gem, cfg, res, thumb)
     if rv:
@@ -389,6 +410,6 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, do_re
             p = data_dir / "insight" / "reviews.json"
             p.parent.mkdir(parents=True, exist_ok=True)
             arr = json.loads(p.read_text(encoding="utf-8")) if p.exists() else []
-            arr.append({"tag": tag, "at": datetime.now(P.VN_TZ).isoformat(timespec="minutes"), **rv})
+            arr.append({"tag": tag, "at": datetime.now(P.VN_TZ).isoformat(timespec="minutes"), **R.nodash(rv)})
             p.write_text(json.dumps(arr[-30:], ensure_ascii=False, indent=1), encoding="utf-8")
-    return {"release": url, "seo": seo, "review": rv, "thumb": str(thumb) if thumb else None}
+    return {"release": url, "seo": seo, "review": rv, "thumb": str(thumb) if thumb else None, "compliance": rep}

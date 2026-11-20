@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TRẠM INSIGHT LAB — chuẩn bị "nguyên liệu" để thử nhiều kiểu dựng video từ cùng 1 kịch bản.
+TRẠM INSIGHT LAB, chuẩn bị "nguyên liệu" để thử nhiều kiểu dựng video từ cùng 1 kịch bản.
 
   python insight_lab.py prepare --links "<link X>" --voices "vieneu:Hải Đăng,gemini:Ludo"
 
@@ -493,7 +493,7 @@ def _pg(p, note):
 def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release: bool = False,
             notes: list[str] | None = None) -> Path:
     """Viết kịch bản + lấy dữ liệu/ảnh + đọc giọng. Giọng: thử lần lượt theo danh sách (Gemini Ludo trước,
-    hết lượt thì VieNeu Hải Đăng) — cả video luôn dùng MỘT giọng."""
+    hết lượt thì VieNeu Hải Đăng), cả video luôn dùng MỘT giọng."""
     cfg = V.load_cfg()
     ic = cfg.get("insight") or {}
     voices = voices or [ic.get("voice_primary", "gemini:Ludo"), ic.get("voice_fallback", "vieneu:Hải Đăng")]
@@ -511,7 +511,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
                          {"author": p.get("author", ""), "handle": p.get("handle", ""), "url": p.get("url", ""),
                           "text": p.get("text", ""), "title": p.get("title", "")})
     gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))
-    listing = "\n\n".join(f"[{i}] @{p['handle']} ({p['author']}) — {p.get('title', '')}:\n{p['text'][:9000]}"
+    listing = "\n\n".join(f"[{i}] @{p['handle']} ({p['author']}), {p.get('title', '')}:\n{p['text'][:9000]}"
                           for i, p in enumerate(posts))
     system = I.SYSTEM.format(name=ic.get("name", "Smart Penguin Insights"), host_desc=ic.get("host_desc", "điềm đạm, sâu sắc"),
                              self_word=ic.get("self_word", "mình"), audience=ic.get("audience", "mọi người"))
@@ -564,7 +564,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     if release and os.getenv("GITHUB_REPOSITORY") and os.getenv("GH_TOKEN"):
         zp = shutil.make_archive(str(out / f"lab-{tag}"), "zip", lab)
         subprocess.run(["gh", "release", "create", f"lab-{tag}", zp, "-R", os.environ["GITHUB_REPOSITORY"], "--prerelease",
-                        "--title", f"Lab nguyên liệu {tag}", "--notes", plan.get("title", "")], check=True)
+                        "--title", f"Lab nguyên liệu {tag}", "--notes", P.nodash(plan.get("title", ""))], check=True)
     log(f"✓ Nguyên liệu xong: {lab} · giọng {plan['voice']}")
     return lab
 

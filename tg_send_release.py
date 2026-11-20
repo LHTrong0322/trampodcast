@@ -1,5 +1,5 @@
 """Gửi các file video/ảnh của 1 GitHub Release vào Telegram (để xem trước).
-python tg_send_release.py <tag>   — chú thích lấy từ captions.json trong release (nếu có)."""
+python tg_send_release.py <tag>, chú thích lấy từ captions.json trong release (nếu có)."""
 import json
 import os
 import subprocess
@@ -7,6 +7,8 @@ import sys
 from pathlib import Path
 
 import requests
+
+from podcast import nodash  # chặn gạch ngang dài (cũng tự lọc mọi tin Telegram)
 
 tag = sys.argv[1]
 src = sys.argv[2] if len(sys.argv) > 2 else ""
@@ -16,8 +18,8 @@ if src:  # thư mục file dựng sẵn (từ nhánh lab-renders) → tạo Rele
     caps0 = json.loads((d / "captions.json").read_text(encoding="utf-8")) if (d / "captions.json").exists() else {}
     files = [str(p) for p in sorted(d.iterdir()) if p.is_file()]
     subprocess.run(["gh", "release", "delete", tag, "-y", "--cleanup-tag", "-R", repo], capture_output=True)
-    subprocess.run(["gh", "release", "create", tag, *files, "-R", repo, "--title", caps0.get("_title", tag),
-                    "--notes", caps0.get("_notes", "")], check=True)
+    subprocess.run(["gh", "release", "create", tag, *files, "-R", repo, "--title", nodash(caps0.get("_title", tag)),
+                    "--notes", nodash(caps0.get("_notes", ""))], check=True)
 else:
     d = Path("rel")
     d.mkdir(exist_ok=True)
@@ -30,7 +32,7 @@ for name in order:
     p = d / name
     if not p.exists() or p.suffix not in (".mp4", ".png", ".jpg"):
         continue
-    cap = caps.get(name, name)[:1000]
+    cap = nodash(caps.get(name, name))[:1000]
     if p.suffix == ".mp4":
         if p.stat().st_size > 48e6:
             small = p.with_name(p.stem + "-720p.mp4")

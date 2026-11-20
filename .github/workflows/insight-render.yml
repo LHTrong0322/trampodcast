@@ -1,4 +1,4 @@
-name: Trạm Insight LAB — dựng 3 kiểu video song song
+name: Trạm Insight LAB, dựng 3 kiểu video song song
 
 on:
   workflow_dispatch:
