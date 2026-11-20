@@ -404,6 +404,13 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     post = posts[0]
     brand = {"name": ic.get("brand", "Smart Penguin Insights")}
     scenes, chapters = [], []
+    hook_num = hook_stat(plan, posts)
+    try:
+        import insight_lab as L
+        pd = L.post_date(plan)
+        src_date = pd.strftime("%d/%m/%Y") if pd else ""
+    except Exception:
+        src_date = ""
     for sc in tl:
         k = sc["key"]
         base = {"from": sc["from"], "dur": sc["dur"], "words": sc["words"], "subs": sc.get("subs")}
@@ -413,6 +420,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                 log(f"   Hook: bỏ con số '{plan.get('hook_stat')}' vì không nằm trong câu hook / không có trong bài")
             scenes.append({**base, "type": "hook", "hook": V.en_money(plan.get("hook", "")),
                            "stat": hs, "label": V.en_money(plan.get("hook_label", "")) if hs else "",
+                           "actions": [V.en_money(a) for a in (plan.get("actions") or [])][:3],
                            "images": [f"img/{x}" for x in imgs.get("intro", [])][:1]})
         elif k == "intro":
             chapters.append((sc["from"], "Mở đầu"))
@@ -442,10 +450,14 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                     dspec["items"] = [{**it, "num": n} for it, n in zip(dspec["items"], nums)]
                 else:
                     dspec["type"] = "text_cards"  # giá trị là chữ / khác đơn vị → thẻ chữ, không vẽ thanh rỗng
+            ks = real_number(V.en_money(s.get("key_stat", "")), posts)
+            if ks and hook_num and ks.strip() == hook_num.strip():
+                ks = ""  # không lặp lại đúng con số của hook (người xem cần bằng chứng mới)
             scenes.append({**base, "type": "section", "idx": i + 1, "total": len(secs), "heading": V.en_money(s["heading"]),
+                           "srcDate": src_date,
                            "cuts": beat_cuts(text[k], pcm[k]),
                            "images": section_images(plan, k),
-                           "keyStat": real_number(V.en_money(s.get("key_stat", "")), posts), "keyLabel": V.en_money(s.get("key_label", "")),
+                           "keyStat": ks, "keyLabel": V.en_money(s.get("key_label", "")) if ks else "",
                            "bullets": [V.en_money(b) for b in (s.get("bullets") or [])][:3],
                            "quote": V.en_money(s.get("quote", "")), "source": ("@" + src[0]) if src[0] else "",
                            "data": dspec or None, "project": proj, "xquotes": verified_quotes(s, posts),

@@ -13,7 +13,7 @@ export type Scene = {
   title?: string; theme?: string;
   idx?: number; total?: number; heading?: string; keyStat?: string; keyLabel?: string; bullets?: string[];
   quote?: string; source?: string; data?: DataSpec | null; points?: string[]; project?: Project | null;
-  endAt?: number; emph?: string[]; openLoop?: string; actions?: string[]; question?: string; cuts?: number[]; subs?: {t: string; s: number; e: number}[] | null; xquotes?: {text: string; vi?: string}[]; terms?: {term: string; explain: string; at: number}[];
+  endAt?: number; emph?: string[]; openLoop?: string; actions?: string[]; question?: string; cuts?: number[]; srcDate?: string; subs?: {t: string; s: number; e: number}[] | null; xquotes?: {text: string; vi?: string}[]; terms?: {term: string; explain: string; at: number}[];
 };
 export type InsightProps = {fps: number; width: number; height: number; audio: string; music?: string; duration: number;
   scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string; mode?: string; shortTitle?: string;
@@ -83,19 +83,35 @@ const HookScene: React.FC<{sc: Scene; brand: string; source?: string}> = ({sc, b
   const {main, rest} = splitHook(sc.hook || '');
   const size = fitSize(main, 1560, rest ? 400 : 560, 124, 72);
   const ring = (k: number) => ((f + k * 18) % 54) / 54;
+  const ac = useAccent();
+  const {fps} = useVideoConfig();
+  // con số "đập" nhẹ ở 0,5 giây đầu (chữ vẫn hiện đủ ngay khung đầu tiên)
+  const pop = 1 + 0.06 * Math.max(0, 1 - f / 14) * Math.sin(f / 2.2);
+  // câu 2 (lời hứa) được đọc → hiện lần lượt 3 tiêu chí dạng teaser 1-2-3
+  const restAt = sc.dur * (main.length / Math.max(1, (main + ' ' + rest).length));
+  const acts = (sc.actions || []).slice(0, 3);
   return (
   <AbsoluteFill>
     <Backdrop img={sc.images?.[0]} dim={0.75} />
     <TopBar brand={brand} source={source} />
-    {[0, 1, 2].map((k) => <div key={k} style={{position: 'absolute', left: '50%', top: '52%', width: 1100, height: 1100,
-      marginLeft: -550, marginTop: -550, borderRadius: '50%', border: `2px solid ${C.line}`,
-      transform: `scale(${0.3 + ring(k) * 1.2})`, opacity: (1 - ring(k)) * 0.14}} />)}
+    {[0, 1, 2].map((k) => <div key={k} style={{position: 'absolute', left: '50%', top: '50%', width: 1100, height: 1100,
+      marginLeft: -550, marginTop: -550, borderRadius: '50%', border: `3px solid ${ac}`,
+      transform: `scale(${0.3 + ring(k) * 1.2})`, opacity: (1 - ring(k)) * 0.22}} />)}
     <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 34, padding: '150px 160px 60px'}}>
       {sc.stat && sc.label ? <Chip text={`${sc.stat} · ${sc.label}`.toUpperCase()} size={30} /> : null}
-      <div style={{maxWidth: 1600, transform: `scale(${1 + 0.015 * Math.min(1, f / 90)})`}}>
+      <div style={{maxWidth: 1600, transform: `scale(${pop * (1 + 0.015 * Math.min(1, f / 90))})`}}>
         <StatText text={main} stat={sc.stat} size={size} />
       </div>
       {rest ? <div style={{maxWidth: 1400}}><StatText text={rest} size={Math.min(58, Math.round(size * 0.55))} color={C.muted} weight={500} /></div> : null}
+      {acts.length ? <div style={{display: 'flex', gap: 22, marginTop: 6}}>
+        {acts.map((a, i) => {
+          const o = interpolate(f / fps - restAt - i * 0.35, [0, 0.25], [0, 1], clamp);
+          return <div key={i} style={{display: 'flex', alignItems: 'center', gap: 12, padding: '12px 22px', borderRadius: 16, ...glass,
+            opacity: o, transform: `translateY(${(1 - o) * 18}px)`, fontFamily: HEAD, fontWeight: 700, fontSize: 30, color: C.ink}}>
+            <span style={{width: 40, height: 40, borderRadius: 99, background: ac, color: '#fff', display: 'flex', alignItems: 'center',
+              justifyContent: 'center', fontFamily: DISPLAY, fontSize: 22}}>{i + 1}</span>{a}</div>;
+        })}
+      </div> : null}
     </AbsoluteFill>
   </AbsoluteFill>
   );
@@ -221,7 +237,7 @@ const XQuoteCard: React.FC<{post: Post | null; text: string; vi?: string; w: num
 };
 
 // chú thích nhanh thuật ngữ (FDV, Low Float…) hiện đúng lúc được nhắc
-const TermCallout: React.FC<{terms: {term: string; explain: string; at: number}[]}> = ({terms}) => {
+const TermCallout: React.FC<{terms: {term: string; explain: string; at: number}[]; left?: number}> = ({terms, left = 110}) => {
   const f = useCurrentFrame();
   const ac = useAccent();
   const {fps} = useVideoConfig();
@@ -231,7 +247,7 @@ const TermCallout: React.FC<{terms: {term: string; explain: string; at: number}[
   const lt = t - cur.at;
   const o = interpolate(lt, [0, 0.25, 5.1, 5.5], [0, 1, 1, 0], clamp);
   return (
-    <div style={{position: 'absolute', left: 110, top: 770, display: 'flex', alignItems: 'center', gap: 16, opacity: o,
+    <div style={{position: 'absolute', left, top: 770, display: 'flex', alignItems: 'center', gap: 16, opacity: o,
       transform: `translateY(${(1 - o) * 16}px)`, padding: '14px 22px', borderRadius: 16, background: C.panel,
       border: `1px solid ${C.line}`, maxWidth: 820, fontFamily: FONT}}>
       <div style={{fontSize: 30}}>💡</div>
@@ -266,8 +282,28 @@ const BigStat: React.FC<{sc: Scene; w: number; h: number}> = ({sc, w, h}) => {
     <div style={{fontFamily: HEAD, color: C.muted, fontWeight: 700, fontSize: 24, letterSpacing: 3}}>CON SỐ ĐÁNG CHÚ Ý</div>
     <CountUp value={sc.keyStat || ''} size={Math.min(190, Math.round((w - 100) / Math.max(3, (sc.keyStat || '').length) * 1.5))} delay={4} color={ac} />
     <div style={{fontFamily: HEAD, color: C.ink, fontWeight: 700, fontSize: fitSize(sc.keyLabel || '', w - 100, 130, 44, 28), lineHeight: 1.2}}>{sc.keyLabel}</div>
-    {sc.source ? <div style={{color: C.muted, fontSize: 22, fontFamily: FONT}}>Source: <b style={{color: C.ink}}>{sc.source}</b></div> : null}
+    {sc.source ? <div style={{color: C.muted, fontSize: 22, fontFamily: FONT}}>Source: <b style={{color: C.ink}}>{sc.source}</b>{sc.srcDate ? ` · bài đăng ${sc.srcDate}` : ''}</div> : null}
   </div>;
+};
+
+// cảnh "số liệu toàn màn hình": đổi bố cục hẳn để mắt có cái mới (không lặp kiểu tiêu đề trái, thẻ phải)
+const FullStat: React.FC<{sc: Scene}> = ({sc}) => {
+  const ac = useAccent();
+  return <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 26, padding: '160px 140px 180px'}}>
+    <Chip text={(sc.heading || 'CON SỐ ĐÁNG CHÚ Ý').toUpperCase()} size={26} />
+    <CountUp value={sc.keyStat || ''} size={Math.min(300, Math.round(1500 / Math.max(3, (sc.keyStat || '').length) * 1.4))} delay={2} color={ac} />
+    <div style={{fontFamily: HEAD, color: C.ink, fontWeight: 700, fontSize: fitSize(sc.keyLabel || '', 1400, 140, 64, 36), textAlign: 'center', lineHeight: 1.2}}>{sc.keyLabel}</div>
+    {sc.source ? <div style={{color: C.muted, fontSize: 26, fontFamily: FONT}}>Source: <b style={{color: C.ink}}>{sc.source}</b>{sc.srcDate ? ` · bài đăng ${sc.srcDate}` : ''}</div> : null}
+  </AbsoluteFill>;
+};
+
+// cảnh hiện tại trong 1 phần (cùng cách chia với BeatStage)
+export const beatAt = (sc: Scene, data: any, t: number) => {
+  const beats = buildBeats(sc, data);
+  const cuts = sc.cuts && sc.cuts.length ? sc.cuts : [0];
+  let j = 0;
+  for (let k = 0; k < cuts.length; k++) if (t >= cuts[k]) j = k;
+  return {kind: beats[j % beats.length].kind, at: cuts[j], end: cuts[j + 1] ?? sc.dur};
 };
 
 const KenBurns: React.FC<{img: string; w: number; h: number; t: number; per: number; dir: number}> = ({img, w, h, t, per, dir}) => {
@@ -336,25 +372,37 @@ export const BeatStage: React.FC<{sc: Scene; data: any; post: Post | null; w: nu
 
 const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Post | null}> = ({sc, data, brandName, post}) => {
   const {fps} = useVideoConfig();
+  const f = useCurrentFrame();
   const ac = useAccent();
-  const numS = useSpring(0, 20);
+  const t = f / fps;
+  // phần chẵn đảo bố cục (thẻ trái, chữ phải); cảnh "số lớn" chiếm toàn màn hình
+  const mirror = (sc.idx || 1) % 2 === 0;
+  const b = beatAt(sc, data, t);
+  const full = b.kind === 'stat' && b.at > 0;   // cảnh đầu của phần vẫn giữ bố cục tiêu đề
+  const fo = full ? Math.min(interpolate(t - b.at, [0, 0.2], [0, 1], clamp), interpolate(b.end - t, [0, 0.2], [0, 1], clamp)) : 0;
+  const TX = mirror ? 1010 : 110;
   return (
     <AbsoluteFill>
       <Backdrop />
       <TopBar source={sc.source} idx={sc.idx} total={sc.total} brand={brandName} project={sc.project} />
-      <div style={{position: 'absolute', left: 110, top: 170, display: 'flex', alignItems: 'center', gap: 16, opacity: numS}}>
+      <AbsoluteFill style={{opacity: fo < 1 ? 1 : 0}}>
+      <div style={{position: 'absolute', left: TX, top: 170, display: 'flex', alignItems: 'center', gap: 16}}>
         <div style={{fontFamily: HEAD, color: C.muted, fontWeight: 700, fontSize: 22, letterSpacing: 4}}>INSIGHT</div>
         <div style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: 28, color: ac}}>{String(sc.idx).padStart(2, '0')}</div>
       </div>
-      <div style={{position: 'absolute', left: 110, top: 230, width: 800, display: 'flex', flexDirection: 'column', gap: 36}}>
+      <div style={{position: 'absolute', left: TX, top: 230, width: 800, display: 'flex', flexDirection: 'column', gap: 36}}>
         <FadeText text={sc.heading || ''} size={fitSize(sc.heading || '', 800, 210, 58, 40)} maxWidth={800}
           highlight={[sc.project?.name || ''].filter(Boolean)} />
         {sc.bullets?.length ? <Bullets items={sc.bullets} dur={sc.dur} fps={fps} emph={sc.emph} /> : null}
       </div>
-      {sc.terms?.length ? <TermCallout terms={sc.terms} /> : null}
-      <div style={{position: 'absolute', right: 100, top: 190}}>
+      {sc.terms?.length ? <TermCallout terms={sc.terms} left={TX} /> : null}
+      <div style={{position: 'absolute', left: mirror ? 100 : 980, top: 190}}>
         <BeatStage sc={sc} data={data} post={post || null} w={840} h={560} />
       </div>
+      </AbsoluteFill>
+      {fo > 0 ? <AbsoluteFill style={{opacity: fo, transform: `scale(${0.97 + 0.03 * fo})`}}>
+        <Backdrop /><TopBar source={sc.source} idx={sc.idx} total={sc.total} brand={brandName} project={sc.project} /><FullStat sc={sc} />
+      </AbsoluteFill> : null}
     </AbsoluteFill>
   );
 };
@@ -448,7 +496,7 @@ export const Insight: React.FC<InsightProps> = (raw) => {
             {sc.type === 'intro' ? <IntroScene sc={sc} post={props.post} brand={brandName} /> : null}
             {sc.type === 'section' ? <SectionScene sc={sc} data={props.data} brandName={brandName} post={props.post} /> : null}
             {sc.type === 'outro' ? <OutroScene sc={sc} brandName={brandName} /> : null}
-            {sc.type !== 'hook' ? <Captions words={sc.words} bottom={64} size={40} maxWidth={1500} emph={sc.emph || props.emph} subs={sc.subs} /> : null}
+            {sc.type !== 'hook' ? <Captions words={sc.words} bottom={56} size={50} maxWidth={1560} emph={sc.emph || props.emph} subs={sc.subs} /> : null}
             {i > 0 ? <Glitch /> : null}
           </AccentCtx.Provider>
         </Sequence>

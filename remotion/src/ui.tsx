@@ -28,6 +28,7 @@ export const T = {
   fade: 'rgba(8,6,40,0.7)', capBg: 'rgba(10,12,30,0.7)', capShadow: '0 2px 8px rgba(0,0,0,0.6)', solid: '#12142E',
   track: 'rgba(255,255,255,0.08)', tileInk: '#FFFFFF', handle: 'rgba(255,255,255,0.55)', dim: 'rgba(255,255,255,0.15)',
   textShadow: '0 2px 12px rgba(0,0,0,0.3)', shadow: '0 30px 80px rgba(0,0,0,0.45)',
+  capInk: '#FFFFFF', capHi: '#C9D2FF',
 };
 type Theme = {C: Partial<typeof C>; T: Partial<typeof T>; glass: React.CSSProperties; accent: string; sky: string};
 const DARK: Theme = {C: {...C}, T: {...T}, glass: {...glass}, accent: '#8E9BFF', sky: '#A9B8FF'};
@@ -38,7 +39,7 @@ export const THEMES: Record<string, Theme> = {
     C: {bg: '#F3F5FB', panel: 'rgba(255,255,255,0.8)', line: 'rgba(25,35,80,0.10)', ink: '#131836', muted: '#5D6688',
       green: '#16A673', red: '#D9465F', gold: '#131836'},
     T: {grad: 'linear-gradient(150deg, #FFFFFF 0%, #F1F4FC 50%, #E7EDFB 100%)', blobA: 0.55, dots: 'rgba(25,35,80,0.07)',
-      fade: 'rgba(240,243,251,0)', capBg: 'rgba(255,255,255,0.88)', capShadow: 'none', solid: '#FFFFFF', track: 'rgba(25,35,80,0.08)',
+      fade: 'rgba(240,243,251,0)', capBg: 'rgba(19,24,54,0.88)', capShadow: 'none', capInk: '#FFFFFF', capHi: '#B8C4FF', solid: '#FFFFFF', track: 'rgba(25,35,80,0.08)',
       tileInk: '#131836', handle: 'rgba(19,24,54,0.5)', dim: 'rgba(25,35,80,0.15)', textShadow: 'none', shadow: '0 18px 50px rgba(40,50,110,0.12)'},
     glass: {background: 'rgba(255,255,255,0.82)', border: '1px solid rgba(25,35,80,0.08)', backdropFilter: 'blur(14px)',
       boxShadow: '0 18px 50px rgba(40,50,110,0.12)'}},
@@ -309,8 +310,8 @@ export const Captions: React.FC<{words: Word[]; bottom: number; size: number; ma
     return (
       <div style={{position: 'absolute', left, right, bottom, display: 'flex', justifyContent: 'center'}}>
         <div style={{maxWidth, textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: size, lineHeight: 1.35,
-          color: C.ink, opacity: op, padding: '10px 26px', borderRadius: 14, background: T.capBg, backdropFilter: 'blur(8px)',
-          textShadow: T.capShadow}}><BoldMd text={c.t} color={ac} /></div>
+          color: T.capInk, opacity: op, padding: '12px 30px', borderRadius: 16, background: T.capBg, backdropFilter: 'blur(8px)',
+          textShadow: T.capShadow, textWrap: 'balance'} as React.CSSProperties}><BoldMd text={c.t} color={T.capHi} /></div>
       </div>
     );
   }
@@ -338,9 +339,9 @@ export const Captions: React.FC<{words: Word[]; bottom: number; size: number; ma
   return (
     <div style={{position: 'absolute', left, right, bottom, display: 'flex', justifyContent: 'center'}}>
       <div style={{maxWidth, textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: size, lineHeight: 1.35,
-        color: C.ink, opacity: op, padding: '10px 26px', borderRadius: 14, background: T.capBg, backdropFilter: 'blur(8px)',
-        textShadow: T.capShadow}}>
-        <EmphText text={c.map((w) => w.t).join(' ')} emph={emph} color={ac} />
+        color: T.capInk, opacity: op, padding: '12px 30px', borderRadius: 16, background: T.capBg, backdropFilter: 'blur(8px)',
+        textShadow: T.capShadow, textWrap: 'balance'} as React.CSSProperties}>
+        <EmphText text={c.map((w) => w.t).join(' ')} emph={emph} color={T.capHi} />
       </div>
     </div>
   );

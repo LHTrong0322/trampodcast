@@ -19,6 +19,10 @@ on:
         description: "Dựng nhiều kiểu nền để so sánh (vd light,blue,slate), để trống = theo sources.yaml"
         required: false
         default: ""
+      lab_tag:
+        description: "Dựng lại từ nguyên liệu cũ (tag Release có file lab-*.zip, vd insight-20261120-1800-light), không tốn lượt TTS"
+        required: false
+        default: ""
       voice:
         description: "Ép giọng (vd vieneu:Hải Đăng hoặc gemini:Ludo), để trống = Ludo, hết lượt thì Hải Đăng"
         required: false
@@ -91,6 +95,12 @@ jobs:
         # khỏi mất 60-90 phút dựng. Lúc dựng thật, insight_publish gọi platform_export.prepare() trước khi tạo Release.
         run: python platform_export.py selftest
 
+      - name: Lấy nguyên liệu cũ (nếu dựng lại)
+        if: github.event.inputs.lab_tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download "${{ github.event.inputs.lab_tag }}" -p 'lab-*.zip' -D labzip -R "${{ github.repository }}"
+
       - name: Cook video Insight + gửi Telegram
         if: steps.inbox.outputs.cook == 'true' || github.event.inputs.links != ''
         env:
@@ -104,6 +114,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           INSIGHT_VOICE: ${{ github.event.inputs.voice }}
           INSIGHT_THEMES: ${{ github.event.inputs.themes }}
+          INSIGHT_LAB_ZIP: ${{ github.event.inputs.lab_tag != '' && 'labzip/lab-*.zip' || '' }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |

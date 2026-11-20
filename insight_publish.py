@@ -342,7 +342,7 @@ THEME_NAMES = {"light": "Nền sáng", "blue": "Nền xanh đại dương", "sla
 
 
 def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, do_review: bool = True,
-            seo: dict | None = None) -> dict:
+            seo: dict | None = None, extra_files: list | None = None) -> dict:
     cfg = V.load_cfg()
     gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))
     th = os.getenv("INSIGHT_THEME", "")
@@ -363,7 +363,7 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, do_re
     (out / f"compliance-{tag}.json").write_text(json.dumps(rep, ensure_ascii=False, indent=1), encoding="utf-8")
     log("   " + CP.report_text(rep).replace("\n", "\n   "))
     import platform_export as PE; res, thumb, pe_extra = PE.prepare(res, thumb, log=log)  # chuẩn thông số nền tảng
-    files = [res["long"]] + [s["path"] for s in res["shorts"]] + ([thumb] if thumb else []) + pe_extra + [out / f"seo-{tag}.json"]
+    files = [res["long"]] + [s["path"] for s in res["shorts"]] + ([thumb] if thumb else []) + pe_extra + [out / f"seo-{tag}.json"] + [f for f in (extra_files or []) if Path(f).exists()]
     url = ""
     repo = os.getenv("GITHUB_REPOSITORY")
     if repo and os.getenv("GH_TOKEN"):

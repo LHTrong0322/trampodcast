@@ -440,8 +440,20 @@ def produce(out: Path, cfg: dict, st: dict, links: str = ""):
     for th in themes:
         pg.set(names.get(th, th), 0, "chờ")
     L.PROGRESS = lambda p_, n_: pg.set("Kịch bản + giọng đọc", p_, n_)
-    lab = L.prepare(src, Path("lab"), voices=forced or None, notes=tips[-6:])
+    import glob
+    import shutil
+    zips = glob.glob(os.getenv("INSIGHT_LAB_ZIP", "") or "__none__")
+    if zips:  # dựng lại từ "nguyên liệu" cũ (kịch bản + giọng đã đọc) → không tốn lượt TTS
+        # tên mới (thêm -r<giờ phút>) để KHÔNG ghi đè/xoá Release cũ
+        lab = Path("lab") / (Path(zips[0]).stem.replace("lab-", "") + datetime.now(P.VN_TZ).strftime("-r%H%M"))
+        shutil.unpack_archive(zips[0], lab)
+        log(f"♻️ Dùng lại nguyên liệu cũ {zips[0]} (không đọc giọng lại)")
+    else:
+        lab = L.prepare(src, Path("lab"), voices=forced or None, notes=tips[-6:])
     L.PROGRESS = None
+    # lưu nguyên liệu (kịch bản, ảnh, giọng) vào Release để lần sau dựng lại không tốn lượt TTS
+    Path("render_out").mkdir(exist_ok=True)
+    lab_zip = Path(shutil.make_archive(f"render_out/lab-{lab.name}", "zip", lab))
     pg.set("Kịch bản + giọng đọc", 100, "xong")
     seo = None
     for i, th in enumerate(themes):
@@ -469,7 +481,8 @@ def produce(out: Path, cfg: dict, st: dict, links: str = ""):
         R.run_remotion = orig
         R.PROGRESS = None
         pg.set(nm, 93, "đang gửi Telegram + SEO" + (" + review" if i == 0 else ""))
-        pub = PB.publish(lab, res, Path("render_out") / (th or "default"), data_dir=out, do_review=(i == 0), seo=seo)
+        pub = PB.publish(lab, res, Path("render_out") / (th or "default"), data_dir=out, do_review=(i == 0), seo=seo,
+                         extra_files=[lab_zip] if i == 0 else None)
         seo = pub["seo"]
         pg.set(nm, 100, "✅ đã gửi")
     os.environ.pop("INSIGHT_THEME", None)

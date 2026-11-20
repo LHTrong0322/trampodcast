@@ -83,7 +83,8 @@ PROMPT = _P.replace(
 PROMPT += """
 Độ dài: nếu bài nguồn đủ ý, viết đủ {max_sections} phần, mỗi phần 120-170 từ.
 Không nhắc đến AI, máy, bot hay "nội dung tổng hợp" ở bất kỳ đâu trong lời đọc.
-Gợi ý chọn data.type: nói về tâm lý thị trường → fear_greed; về altcoin vs bitcoin, dòng tiền → dominance;
+key_stat mỗi phần phải là con số/bằng chứng MỚI, KHÔNG lặp lại hook_stat.
+Gợi ý chọn data.type: lời đọc phần đó nói trực tiếp về tâm lý thị trường HIỆN TẠI → fear_greed (không dùng làm hình minh hoạ chung chung); về altcoin vs bitcoin, dòng tiền → dominance;
 về giá 1 coin cụ thể → coin_chart; so sánh 2-4 thứ có số → stat_compare (điền items); danh sách việc cần làm,
 tiêu chí đánh giá → checklist (điền items, value để trống); bức tranh toàn thị trường → market_heatmap.
 stat_compare CHỈ dùng khi MỌI value là con số cùng đơn vị, so sánh được (vd doanh thu dự án A vs B); không trộn % với ngày;
@@ -382,15 +383,19 @@ def event_charts(plan: dict, data: dict):
             continue
         end = pd - timedelta(days=endb or 0)
         start = end - timedelta(days=days)
-        try:
-            time.sleep(1.5)
-            r = requests.get(f"https://api.coingecko.com/api/v3/coins/{info['id']}/market_chart/range", timeout=30,
-                             params={"vs_currency": "usd", "from": int(start.timestamp()), "to": int(end.timestamp())},
-                             headers={"User-Agent": P.UA})
-            pts = [p[1] for p in r.json().get("prices", [])] if r.ok else []
-        except Exception as ex:
-            log(f"   ! giá {t} theo khoảng lỗi: {ex}")
-            pts = []
+        pts = []
+        for attempt in range(3):  # CoinGecko miễn phí hay báo 429 (gọi quá nhanh) → chờ rồi thử lại
+            try:
+                time.sleep(2 + 8 * attempt)
+                r = requests.get(f"https://api.coingecko.com/api/v3/coins/{info['id']}/market_chart/range", timeout=30,
+                                 params={"vs_currency": "usd", "from": int(start.timestamp()), "to": int(end.timestamp())},
+                                 headers={"User-Agent": P.UA})
+                if r.ok:
+                    pts = [p[1] for p in r.json().get("prices", [])]
+                    break
+                log(f"   ! giá {t} theo khoảng: HTTP {r.status_code} {r.text[:120]}")
+            except Exception as ex:
+                log(f"   ! giá {t} theo khoảng lỗi: {ex}")
         if len(pts) < 5:
             log(f"   Biểu đồ {key} ({t}): không có giá {start:%d/%m/%Y}→{end:%d/%m/%Y} → thẻ số liệu")
             continue

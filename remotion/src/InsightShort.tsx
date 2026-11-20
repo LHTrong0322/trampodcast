@@ -44,11 +44,12 @@ export const InsightShort: React.FC<InsightProps> = (raw) => {
               fontSize: fitSize(title, 940, sc.project?.name ? 250 : 320, 66, 40)}}>{title}</div>
           </div>
           <div style={{position: 'absolute', top: sc.project?.name ? 600 : 540, left: 70}}>
-            <BeatStage sc={sc} data={props.data} post={props.post} w={940} h={640} />
+            <BeatStage sc={sc} data={props.data} post={props.post} w={940} h={660} />
           </div>
-          <div style={{position: 'absolute', top: sc.project?.name ? 1272 : 1212, left: 0, right: 0, display: 'flex', justifyContent: 'center', opacity: tail ? 1 : 0.85}}>
-            <Chip text="Xem full trên YouTube · Smart Penguin Insights" color={C.red} size={tail ? 28 : 24} />
-          </div>
+          {/* nút "Xem full" chỉ hiện 3 giây cuối, không chen vào phụ đề */}
+          {tail ? <div style={{position: 'absolute', top: sc.project?.name ? 1272 : 1212, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
+            <Chip text="Xem full trên YouTube · Smart Penguin Insights" color={C.red} size={30} />
+          </div> : null}
         </AbsoluteFill>
         {hookO > 0 ? (
           <AbsoluteFill style={{opacity: hookO, alignItems: 'center', justifyContent: 'center', padding: '260px 70px 520px'}}>
@@ -58,7 +59,8 @@ export const InsightShort: React.FC<InsightProps> = (raw) => {
             </div>
           </AbsoluteFill>
         ) : null}
-        <Captions words={sc.words} bottom={SAFE_BOTTOM} left={40} right={SAFE_RIGHT} size={46} maxWidth={860} perChunk={8} emph={sc.emph} subs={sc.subs} />
+        {/* trong lúc hiện hook to thì ẩn phụ đề (tránh 2 dòng chữ trùng nhau) */}
+        {hookO < 0.5 ? <Captions words={sc.words} bottom={SAFE_BOTTOM} left={40} right={SAFE_RIGHT} size={50} maxWidth={880} perChunk={8} emph={sc.emph} subs={sc.subs} /> : null}
         <div style={{position: 'absolute', left: 0, bottom: 0, height: 8, width: (f / durationInFrames) * width, background: ac}} />
         <Handle size={30} style={{position: 'absolute', right: 40, top: 36}} />
       </AbsoluteFill>
