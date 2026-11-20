@@ -23,7 +23,7 @@ nhánh podcast-data = dữ liệu + web Cloudflare Pages "trampodcast").
   đỉnh/đáy, checklist…), ui.tsx (font, THEMES light/blue/slate/dark, Captions, CountUp, nodash JS `clean`).
 - Font: Space Grotesk (tiêu đề), Unbounded (số lớn), Lexend (phụ đề) trong fonts/web + remotion/src/fonts.json.
 - podcast.py `nodash()`: hàm lọc gạch ngang dài dùng chung.
-- sources.yaml mục `insight:`: brand, theme (light), voice_primary gemini:Riko, voice_fallback vieneu:Hải Đăng,
+- sources.yaml mục `insight:`: brand, theme (light), voice_primary gemini:Ludo (MẶC ĐỊNH từ 20/11, Trọng chốt; Riko bị chê dở), voice_fallback vieneu:Hải Đăng,
   voice_speed auto + target_wpm 228, subtitle_lang en, shorts_max_seconds 45, end_screen_seconds 12…
 
 ## 3. Workflow GitHub
@@ -54,7 +54,7 @@ tự xoá khoảng trắng). TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, PIXABAY_API_K
 ## 6. Việc ĐANG DỞ (Trọng giao lúc 14:23 ngày 20/11/2026), mục tiêu video 9/10
 Quyết định Trọng đã chốt (20/11): phụ đề TIẾNG VIỆT theo câu đầy đủ (subtitle_lang: vi, hàm vi_subs);
 "video 1" = bản nền trắng insight-20261120-1115-light (lấy kiểu nền), "video 3" = bản slate (lấy cách viết câu chữ rõ ý);
-giọng gemini:Riko (dự phòng vieneu:Hải Đăng), theme light.
+giọng gemini:Ludo (dự phòng vieneu:Hải Đăng), theme light.
 1. ✅ (20/11 16:20) Áp dụng góp ý bot review 5,4/10: hook hiện đủ chữ giây 0, 1 con số (phải nằm trong câu hook,
    hàm hook_stat); intro bỏ mục lục, có open_loop; "nhịp hình" đổi ở cuối câu mỗi 5-8s (BeatStage: data, số lớn,
    ảnh Ken Burns, thuật ngữ, logo, tối đa 1 trích X); stat_compare chữ → thẻ chữ (text_cards); CountUp tĩnh với

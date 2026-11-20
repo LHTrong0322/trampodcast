@@ -20,7 +20,7 @@ on:
         required: false
         default: ""
       voice:
-        description: "Ép giọng (vd vieneu:Hải Đăng hoặc gemini:Riko), để trống = Riko, hết lượt thì Hải Đăng"
+        description: "Ép giọng (vd vieneu:Hải Đăng hoặc gemini:Ludo), để trống = Ludo, hết lượt thì Hải Đăng"
         required: false
         default: ""
 

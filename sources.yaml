@@ -104,13 +104,13 @@ insight:
   title_tag: "INSIGHT CRYPTO"
   outro_line: "Đăng ký Smart Penguin Insights để nhận insight crypto mỗi tuần"
   cta_v: "Xem full trên YouTube · @Trong0322"
-  voice_primary: "gemini:Riko"       # giọng chính (Storyteller, dùng key INSIGHT_GEMINI_API_KEY)
+  voice_primary: "gemini:Ludo"       # giọng chính, mặc định từ 20/11 (Trọng chốt; Storyteller, dùng key INSIGHT_GEMINI_API_KEY)
   voice_fallback: "vieneu:Hải Đăng"  # chỉ dùng khi Gemini hết lượt, cả video đổi sang giọng này
   voice_speed: {gemini: auto, vieneu: auto}   # auto = tự chỉnh về ~target_wpm từ/phút; hoặc số, vd 1.05
   target_wpm: 228            # nhịp nhanh vừa, giữ chân người xem
   tts_provider: "gemini"      # (bộ dựng cũ) "gemini" hoặc "vieneu"
   vieneu_voice: "Hải Đăng"
-  voice: "Riko"
+  voice: "Ludo"
   voice_style: ""             # để trống = đọc tự nhiên
   host_name: ""               # tên người dẫn (để trống = không xưng tên)
   host_desc: "điềm đạm, sâu sắc, gần gũi như một người anh đi trước chia sẻ kinh nghiệm"
