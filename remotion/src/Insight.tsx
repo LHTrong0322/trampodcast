@@ -110,13 +110,22 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null}> = ({sc, post}) => {
       <Backdrop img={sc.images?.[0]} dim={0.88} />
       <AbsoluteFill style={{flexDirection: 'row', alignItems: 'center', padding: '0 110px', gap: 70}}>
         <div style={{flex: 1, position: 'relative', height: 700}}>
-          <div style={{position: 'absolute', top: 60, display: 'flex', flexDirection: 'column', gap: 28, opacity: out}}>
+          {/* Trọng 21/11: câu chào mở đầu phải có logo kênh */}
+          <div style={{position: 'absolute', top: 0, display: 'flex', alignItems: 'center', gap: 22,
+            opacity: interpolate(t, [0.1, 0.6], [0, 1], clamp), transform: `scale(${interpolate(t, [0.1, 0.6], [0.85, 1], clamp)})`, transformOrigin: 'left center'}}>
+            <Img src={staticFile('logo.png')} style={{width: 112, height: 112, borderRadius: 999, boxShadow: `0 0 0 6px ${ac}33, 0 14px 40px rgba(40,50,110,0.18)`}} />
+            <div style={{display: 'flex', flexDirection: 'column', gap: 4}}>
+              <div style={{fontFamily: FONT, fontWeight: 800, fontSize: 40, letterSpacing: 2, color: C.ink}}>SMART PENGUIN INSIGHTS</div>
+              <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 26, color: C.muted}}>@Trong0322</div>
+            </div>
+          </div>
+          <div style={{position: 'absolute', top: 175, display: 'flex', flexDirection: 'column', gap: 28, opacity: out}}>
             <div><Chip text={(sc.theme || 'INSIGHT').toUpperCase()} /></div>
             <RevealWords text={sc.title || ''} size={70} delay={6} stagger={3} maxWidth={900} />
           </div>
           {t >= agendaAt ? (
             <Sequence from={Math.round(agendaAt * fps)} layout="none">
-              <div style={{position: 'absolute', top: 60, display: 'flex', flexDirection: 'column', gap: 24}}>
+              <div style={{position: 'absolute', top: 165, display: 'flex', flexDirection: 'column', gap: 24}}>
                 <div><Chip text={`${(sc.points || []).length} INSIGHT TRONG VIDEO`} /></div>
                 {(sc.points || []).map((p, i) => {
                   const s = interpolate(f - Math.round(agendaAt * fps) - 8 - i * 9, [0, 12], [0, 1], clamp);
