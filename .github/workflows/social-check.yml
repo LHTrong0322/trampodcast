@@ -34,6 +34,15 @@ jobs:
                                     headers={"Authorization": "Bearer " + r["access_token"]}).json()
                   for c in ch.get("items", []):
                       print("YOUTUBE OK, kênh:", c["snippet"]["title"], "| id:", c["id"], "| đã xác minh dài:", c.get("status", {}).get("longUploadsStatus"))
+                  ti = requests.get("https://oauth2.googleapis.com/tokeninfo", params={"access_token": r["access_token"]}).json()
+                  sc = ti.get("scope", "")
+                  for q in ["youtube.upload", "auth/youtube ", "youtube.force-ssl", "yt-analytics.readonly"]:
+                      print("YOUTUBE QUYỀN", q.strip(), ":", "CÓ" if q in sc + " " else "THIẾU")
+                  from datetime import date, timedelta
+                  an = requests.get("https://youtubeanalytics.googleapis.com/v2/reports", headers={"Authorization": "Bearer " + r["access_token"]},
+                                    params={"ids": "channel==MINE", "startDate": str(date.today() - timedelta(days=28)), "endDate": str(date.today()),
+                                            "metrics": "views,averageViewDuration"})
+                  print("YOUTUBE ANALYTICS:", "OK" if an.ok else f"LỖI {an.status_code} {an.text[:150]}")
                   st = requests.get("https://www.googleapis.com/youtube/v3/channels", params={"part": "statistics,contentDetails", "mine": "true"},
                                     headers={"Authorization": "Bearer " + r["access_token"]}).json()["items"][0]
                   print("YOUTUBE SỐ VIDEO:", st["statistics"].get("videoCount"))
