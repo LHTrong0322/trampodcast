@@ -1,6 +1,6 @@
 import React from 'react';
 import {Img, interpolate, staticFile, useCurrentFrame, useVideoConfig, spring} from 'remotion';
-import {BRAND, T, C, clamp, DISPLAY, ease, FONT, glass, HEAD, useAccent} from './ui';
+import {BRAND, T, C, clamp, DISPLAY, ease, fitSize, FONT, glass, HEAD, useAccent} from './ui';
 
 export type Chart = {ticker: string; series: number[]; days: number; start?: string; end?: string; recent?: boolean};
 export type DataSpec = {type: string; tickers?: string[]; items?: {label: string; value?: string; num?: number}[]; title?: string; chart?: Chart | null};
@@ -12,7 +12,9 @@ const Frame: React.FC<{w: number; h: number; title: string; sub?: string; childr
     boxShadow: T.shadow, padding: 36, boxSizing: 'border-box', fontFamily: FONT,
     display: 'flex', flexDirection: 'column', gap: 18, overflow: 'hidden'}}>
     <div style={{display: 'flex', alignItems: 'baseline', gap: 14}}>
-      <div style={{color: C.ink, fontFamily: HEAD, fontWeight: 700, fontSize: 32, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: sub === '' ? w - 80 : w - 300}}>{title}</div>
+      {/* tiêu đề tự co cỡ chữ cho vừa, không bao giờ cắt bằng dấu … */}
+      <div style={{color: C.ink, fontFamily: HEAD, fontWeight: 700, lineHeight: 1.15, maxWidth: sub === '' ? w - 80 : w - 300,
+        fontSize: fitSize(title, sub === '' ? w - 80 : w - 300, 76, 32, 20)}}>{title}</div>
       <div style={{flex: 1}} />
       {sub === '' ? null : <div style={{color: C.muted, fontWeight: 600, fontSize: 18, whiteSpace: 'nowrap'}}>{sub || 'Dữ liệu thật · CoinGecko'}</div>}
     </div>
@@ -143,7 +145,7 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
   const series: number[] = ch?.series || coin?.series || (sym === 'BTC' && data?.btc_90d?.length ? data.btc_90d : mk?.spark || []);
   const m = {sym, name: coin?.name || mk?.name || sym, price: series[series.length - 1]};
   const days = ch ? ch.days : coin ? coin.days : sym === 'BTC' && data?.btc_90d ? 90 : 7;
-  const period = ch?.start ? `${days} ngày (${ch.start} → ${ch.end})` : ch?.end ? `${days} ngày gần nhất, đến ${ch.end}` : `${days} ngày`;
+  const period = ch?.start ? `${days} ngày, từ ${ch.start} đến ${ch.end}` : ch?.end ? `${days} ngày gần nhất, đến ${ch.end}` : `${days} ngày`;
   const p = useP(4, 50);
   const W = w - 72, H = h - 200;
   if (!series.length) return <Frame w={w} h={h} title={sym}><div /></Frame>;
