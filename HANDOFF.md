@@ -13,6 +13,12 @@ Chủ dự án: Trọng (@Trong0322), KOL crypto Việt Nam, KHÔNG biết code.
 giải thích thuật ngữ ngay bên cạnh. Repo: github.com/LHTrong0322/trampodcast (nhánh main = code,
 nhánh podcast-data = dữ liệu + web Cloudflare Pages "trampodcast").
 
+## ⛔ TRỌNG CHỐT 18:58 20/11: DUYỆT KỊCH BẢN TRƯỚC, CHƯA ĐƯỢC DỰNG VIDEO
+- Mọi phiên Claude: KHÔNG dispatch insight.yml dựng video bài zeroxkyle cho tới khi Trọng nhắn "ok kịch bản".
+- Việc cần làm trước: viết kịch bản (theo kiểu video chuẩn insight-20261119-2125, giọng Ludo, BỎ đoạn ENA tăng 95% trong 14 ngày),
+  lưu vào scripts/zeroxkyle-draft.md (lời đọc từng phần, hook, tiêu đề, ý chính trên hình, ảnh bìa), push main, gửi Trọng đọc và sửa.
+- Trọng duyệt xong mới dựng, và phải dựng ĐÚNG lời đọc đã duyệt (không để AI viết lại).
+
 ## 1. Hai sản phẩm
 1. **Trạm Podcast Crypto** (podcast.py, video.py, workflow podcast.yml + video-weekly.yml): tin crypto hằng ngày
    ~5:00 VN, giọng Gemini "Fola", MC Mai Hương; video tổng hợp tuần (Chủ nhật). Đang chạy ổn, ít đụng tới.
