@@ -1,0 +1,35 @@
+name: Tạo playlist YouTube (bỏ qua nếu đã có)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  make:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tạo 3 playlist
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        shell: python
+        run: |
+          import os, json, requests
+          t = requests.post("https://oauth2.googleapis.com/token", data={"client_id": os.environ["YT_CLIENT_ID"].strip(),
+              "client_secret": os.environ["YT_CLIENT_SECRET"].strip(), "refresh_token": os.environ["YT_REFRESH_TOKEN"].strip(),
+              "grant_type": "refresh_token"}).json()["access_token"]
+          H = {"Authorization": "Bearer " + t, "Content-Type": "application/json"}
+          have = {p["snippet"]["title"] for p in requests.get("https://www.googleapis.com/youtube/v3/playlists",
+                  params={"part": "snippet", "mine": "true", "maxResults": 50}, headers=H).json().get("items", [])}
+          want = [
+            ("Tư duy đầu tư crypto", "Tư duy và khung đầu tư crypto dài hạn: cách chọn altcoin, quản trị rủi ro, đọc dòng tiền, tâm lý thị trường. Insight chất lượng nhất trên X, phân tích bằng ngôn ngữ dễ hiểu. Không phải lời khuyên đầu tư."),
+            ("Phân tích dự án và case study", "Phân tích dự án crypto và case study thực tế: tokenomics, doanh thu, buyback, mở khoá token, bài học từ các dự án lớn. Data real-time, nguồn rõ ràng. Không phải lời khuyên đầu tư."),
+            ("Shorts insight", "Insight crypto ngắn dưới 1 phút: một ý đắt giá mỗi video, dễ hiểu, xem nhanh. Smart Penguin Insights. Không phải lời khuyên đầu tư."),
+          ]
+          for title, desc in want:
+              if title in have:
+                  print("PLAYLIST ĐÃ CÓ:", title); continue
+              r = requests.post("https://www.googleapis.com/youtube/v3/playlists", params={"part": "snippet,status"}, headers=H,
+                  data=json.dumps({"snippet": {"title": title, "description": desc, "defaultLanguage": "vi"},
+                                   "status": {"privacyStatus": "public"}}))
+              print("PLAYLIST", "OK:" if r.ok else "LỖI:", title, "" if r.ok else r.text[:200])
