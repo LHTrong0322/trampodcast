@@ -1,5 +1,14 @@
 # HANDOFF: Smart Penguin Insights + Trạm Podcast Crypto (bàn giao cho đoạn chat mới)
 
+## ⚠️ TRỌNG CHỐT 18:55 NGÀY 20/11 (GHI ĐÈ MỌI CHỈ ĐẠO TRƯỚC, ĐỌC TRƯỚC TIÊN)
+- Các video dựng hôm nay 20/11 (Riko 16:36, Ludo 17:43, các "vòng sửa theo review") Trọng chê QUÁ TỆ.
+  DỪNG hướng "sửa theo review 6,3/10" (vòng sửa 2...). Không dispatch thêm từ main theo hướng đó.
+- KIỂU CHUẨN = video Trọng ưng ý: release insight-20261119-2125 (smart-penguin-20261119-2125-16x9.mp4, 4 phút 17 giây),
+  run 44543373102, commit d7702c0 (19/11), giọng gemini:Ludo. Giọng đọc, cách trình bày, nhịp độ phải GIỐNG video này.
+- Việc: cook lại bài https://x.com/zeroxkyle/status/2106571278929010769 giống hệt kiểu 2125, BỎ HẲN đoạn
+  "ENA/Ethena tăng 95% trong 14 ngày" (không lời đọc, không thẻ +95%, không biểu đồ ENA, không hook/short/ảnh bìa).
+- Cách làm: nhánh style-2125 (tạo từ d7702c0 + chỉ các bản sửa an toàn: lọc gạch ngang dài, số có thật, key Gemini dự phòng).
+
 Chủ dự án: Trọng (@Trong0322), KOL crypto Việt Nam, KHÔNG biết code. Luôn trả lời tiếng Việt dễ hiểu,
 giải thích thuật ngữ ngay bên cạnh. Repo: github.com/LHTrong0322/trampodcast (nhánh main = code,
 nhánh podcast-data = dữ liệu + web Cloudflare Pages "trampodcast").
