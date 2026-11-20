@@ -19,6 +19,24 @@ nhánh podcast-data = dữ liệu + web Cloudflare Pages "trampodcast").
   lưu vào scripts/zeroxkyle-draft.md (lời đọc từng phần, hook, tiêu đề, ý chính trên hình, ảnh bìa), push main, gửi Trọng đọc và sửa.
 - Trọng duyệt xong mới dựng, và phải dựng ĐÚNG lời đọc đã duyệt (không để AI viết lại).
 
+## 🛠 NHÁNH style-2125 ĐÃ SẴN SÀNG (phiên lịch tự động 19:05 20/11), CHƯA DỰNG vì chờ Trọng duyệt kịch bản
+- Nhánh `style-2125` = code đúng lúc dựng video 2125 (d7702c0) + chỉ các sửa an toàn: lọc gạch ngang dài (kịch bản, SEO,
+  Telegram, chữ trên hình; vạch cạnh "01 INSIGHT" và thanh tiến độ trên cùng đổi thành chấm tròn), chỉ hiện số có thật,
+  key dự phòng GEMINI_API_KEY2, model text mới, CHỈ giọng Ludo (hết lượt cả 2 key thì DỪNG, không tự đổi giọng),
+  không nạp mẹo từ review hôm nay, báo lỗi Telegram. Cấm ENA/Ethena/95%/14 ngày: trong PROMPT + lọc bằng code
+  (insight_lab.scrub_plan, insight_render._guard dừng dựng nếu chữ trên hình còn nhắc, SEO cũng lọc; heatmap bỏ ENA).
+- Dựng ĐÚNG kịch bản đã duyệt: chuyển bản Trọng duyệt (scripts/zeroxkyle-draft.md) sang JSON theo mẫu
+  `scripts/TEMPLATE-approved.json` (trên nhánh style-2125), commit file JSON vào NHÁNH style-2125, rồi dispatch thêm
+  `-f 'inputs[script]=scripts/<tên>.json'` → bỏ qua bước AI viết kịch bản, đọc đúng từng chữ.
+- Lệnh dựng (chỉ chạy SAU KHI Trọng nhắn "ok kịch bản"):
+  `gh api -X PUT repos/LHTrong0322/trampodcast/actions/workflows/insight.yml/enable` (workflow đang bị tắt lúc 19:02)
+  `gh api -X POST repos/LHTrong0322/trampodcast/actions/workflows/insight.yml/dispatches -f ref=style-2125 -f 'inputs[force]=true' -f 'inputs[links]=https://x.com/zeroxkyle/status/2106571278929010769' -f 'inputs[voice]=gemini:Ludo' -f 'inputs[script]=scripts/<tên>.json'`
+  Lưu ý: bật lại workflow thì lịch cron "17 */3" của bản main cũng chạy lại (có thể tự dựng kiểu main nếu hộp thư
+  Telegram có link chờ trong 19h-23h VN). Muốn an toàn: dispatch xong thì tắt lại (PUT .../disable) khi run đã chạy.
+- Kiểu chuẩn video 2125 (đã xem khung hình): nền TỐI xanh tím than, hook số to giữa màn hình, intro thẻ bài X +
+  danh sách "5 INSIGHT TRONG VIDEO", mỗi phần: tiêu đề trái + bullets, thẻ dữ liệu phải (Fear&Greed, checklist,
+  biểu đồ coin, câu trích), thẻ số nhỏ góc dưới phải, phụ đề 1 dòng đáy màn hình, outro "TÓM LẠI". Dài ~4 phút.
+
 ## 1. Hai sản phẩm
 1. **Trạm Podcast Crypto** (podcast.py, video.py, workflow podcast.yml + video-weekly.yml): tin crypto hằng ngày
    ~5:00 VN, giọng Gemini "Fola", MC Mai Hương; video tổng hợp tuần (Chủ nhật). Đang chạy ổn, ít đụng tới.
