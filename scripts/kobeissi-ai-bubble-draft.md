@@ -75,7 +75,7 @@ Chữ trên hình: checklist 5 tín hiệu để lưu lại (Tin xấu đã vào
 
 ## Short 9:16 (Trọng 02:17 22/11: mỗi short lấy TRỌN một phần, 5 short)
 Mỗi short = trọn lời đọc của 1 phần (không cắt câu), hook đọc trước + số to chiếm nửa trên khung ngay giây 0.
-Khi dựng: sources.yaml insight.shorts = 5, shorts_max_seconds = 59 (dưới 60 giây để đăng được cả YouTube, Facebook, TikTok).
+Đã cài trong sources.yaml: shorts tối đa 5, shorts_max_seconds 59. Cuối mỗi short: đọc + chữ lớn "Xem full video trên kênh Smart Penguin Insights nhé!"
 - Short 1 (trọn Phần 1). Hook: "Mỗi ngày bốc hơi 225 tỷ đô, suốt 31 phiên liền." Số to: -$225B/NGÀY
 - Short 2 (trọn Phần 2). Hook: "Big Tech đốt 200 tỷ đô một quý. Điên hay thiên tài?" Số to: $201.9B
 - Short 3 (trọn Phần 3). Hook: "Lưới đỡ của ông Trump vừa biến mất." Số to: TRUMP PUT: HẾT

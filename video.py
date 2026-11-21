@@ -955,14 +955,18 @@ def scene_story_v(item, dur, week_label, images, every):
     return draw
 
 
-def scene_outro(vertical=False):
+def scene_outro(vertical=False, cta=""):
     W, H = (1080, 1920) if vertical else (1920, 1080)
     s = 300 if vertical else 240
     L = [Layer(logo(s), (W - s) // 2, int(H * 0.2), "pop", 0.05, 0.7)]
     y = int(H * 0.2) + s + 50
-    for k, (text, f, c) in enumerate([
+    lines = [(cta.upper(), font("ExtraBold", 72), CHEESE)] if cta else []
+    if cta:
+        y = int(H * 0.2) + s + 40
+    brand = [] if cta else [  # có câu mời xem full (đã nêu tên kênh) thì bỏ dòng tên kênh để khỏi lặp
             (BRAND["name"], font("ExtraBold", 64 if vertical else 58), CHEESE),
-            (BRAND["outro_line"], font("SemiBold", 40 if vertical else 36), CREAM),
+            (BRAND["outro_line"], font("SemiBold", 40 if vertical else 36), CREAM)]
+    for k, (text, f, c) in enumerate(lines + brand + [
             ("Agent build by @Trong0322", font("Bold", 36 if vertical else 32), MUTED),
             ("Nội dung do AI tổng hợp · không phải lời khuyên đầu tư", font("Regular", 30 if vertical else 26), MUTED)]):
         for ln in wrap(_measure, text, f, W - 160):

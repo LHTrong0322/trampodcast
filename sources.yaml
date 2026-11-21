@@ -120,8 +120,9 @@ insight:
   max_posts: 8                # mỗi video dùng tối đa bao nhiêu bài
   max_sections: 6             # số insight tối đa trong 1 video
   target_minutes: 7
-  shorts: 3                   # số video ngắn highlight
-  shorts_max_seconds: 45
+  shorts: 5                   # số video ngắn tối đa (kịch bản đã duyệt chọn phần nào làm short, Trọng 22/11: mỗi short lấy trọn 1 phần)
+  shorts_max_seconds: 59      # dưới 60s để 1 file đăng được YouTube, Facebook, TikTok
+  short_cta: "Xem full video trên kênh Smart Penguin Insights nhé!"   # câu đọc + chữ lớn cuối MỌI short (Trọng 22/11)
   subtitle_lang: "vi"         # phụ đề: vi = tiếng Việt theo câu đầy đủ, khớp lời đọc (Trọng chốt 20/11) · en = tiếng Anh
   theme: "light"               # nền video: dark | light (sáng) | blue (xanh đại dương) | slate (xám xanh)
   review_model: "claude-sonnet-5-5"   # bot review dùng Claude (secret ANTHROPIC_API_KEY); chưa có key thì tạm dùng Gemini
