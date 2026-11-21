@@ -1,0 +1,30 @@
+name: So sánh giọng A/B (Ludo hiện tại, Ludo có chỉ dẫn, Ludo Pro)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Cài thư viện
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+          pip install -q requests feedparser pyyaml beautifulsoup4 numpy
+      - name: Đọc 3 bản + gửi Telegram
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY2: ${{ secrets.GEMINI_API_KEY2 }}
+          INSIGHT_GEMINI_API_KEY: ${{ secrets.INSIGHT_GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python voice_ab.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: voice-ab
+          path: samples/*.mp3
