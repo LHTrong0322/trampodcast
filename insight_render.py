@@ -260,6 +260,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                            "quote": V.en_money(s.get("quote", "")),
                            "source": "@Trong0322" if plan.get("own_source") else (("@" + src[0]) if src[0] else ""),
                            "data": dspec or None, "project": proj,
+                           "emphasis": P.nodash(str(s.get("emphasis") or "")).upper()[:32],
                            "beats": beats_for(s.get("beats") or [], sc["words"], sc["dur"], data)})
     chapters[0] = (0.0, chapters[0][1])
     pinfo = {"author": post.get("author", ""), "handle": post.get("handle", ""), "avatar": post.get("avatar"),
@@ -296,6 +297,12 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                   "scenes": [{**sc, "from": 0, "dur": round(len(a) / SR / 2, 3), "words": [x for x in w if x["s"] < end]}],
                   "data": data, "brand": brand, "post": pinfo,
                   "shortTitle": V.en_money(str(shr.get(str(i)) or shr.get(i) or sc["heading"]))}
+        try:   # Trọng 22/11: giây đầu của short chính là ảnh bìa (TikTok/Reels lấy khung đầu làm bìa, người lướt thấy ngay số liệu)
+            import short_covers as SC
+            lg = {kk: v.get("logo") for kk, v in (data.get("coins") or {}).items()}
+            sprops["cover"] = {kk: v for kk, v in SC.props_for(plan, i, sprops["shortTitle"], lg).items() if kk not in ("comp", "width", "height")}
+        except Exception as ex:
+            log(f"   ! khung bìa đầu short lỗi: {ex}")
         sp = out_dir / f"smart-penguin-{tag}-short{n + 1}-9x16.mp4"
         log(f"Dựng video ngắn {n + 1} · {len(a) / SR / 2:.0f}s")
         run_remotion(_guard(sprops), sp)

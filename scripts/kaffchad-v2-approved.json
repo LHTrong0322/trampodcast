@@ -80,6 +80,23 @@
      "text": "Dự án kiếm tiền, token có được hưởng không?"
     },
     {
+     "at": "nhìn aave và hype",
+     "type": "logos",
+     "label": "Hai dự án DeFi top đầu",
+     "items": [
+      {
+       "label": "AAVE",
+       "value": "",
+       "logo": "AAVE"
+      },
+      {
+       "label": "HYPE",
+       "value": "",
+       "logo": "HYPE"
+      }
+     ]
+    },
+    {
      "at": "nhưng hyperliquid dùng",
      "type": "bignum",
      "value": "97-99%",
@@ -97,23 +114,22 @@
     },
     {
      "at": "và giá phản ánh",
-     "type": "versus",
-     "left": {
-      "label": "AAVE",
-      "value": "-25%",
-      "logo": "AAVE",
-      "tone": "down"
-     },
-     "right": {
-      "label": "HYPE",
-      "value": "+170%",
-      "logo": "HYPE",
-      "tone": "up"
-     },
-     "sub": "Từ đầu năm 2026"
+     "type": "race",
+     "tickers": [
+      "AAVE",
+      "HYPE"
+     ],
+     "days": "ytd",
+     "label": "Giá AAVE và HYPE từ đầu năm",
+     "sub": "Giá thật từ 1/1 tới hôm nay (CoinGecko)"
     },
     {
      "at": "dwf labs",
+     "type": "statement",
+     "text": "DWF Labs: market maker có tiếng"
+    },
+    {
+     "at": "còn thống kê 13",
      "type": "dots",
      "total": 15,
      "hit": 13,
@@ -123,6 +139,11 @@
      "at": "vậy bạn làm gì",
      "type": "question",
      "text": "Bao nhiêu % revenue quay về token?"
+    },
+    {
+     "at": "nhưng có buyback rồi",
+     "type": "statement",
+     "text": "Có buyback, giá vẫn có thể đứng yên"
     }
    ],
    "quote": "",
@@ -153,6 +174,11 @@
    ],
    "beats": [
     {
+     "at": "câu hỏi thứ hai là",
+     "type": "question",
+     "text": "Ai sẽ mua token tiếp theo?"
+    },
+    {
      "at": "họ dành hàng tuần",
      "type": "flow",
      "label": "Bẫy của dân đầu tư cơ bản",
@@ -178,6 +204,13 @@
      "tone": "down"
     },
     {
+     "at": "rẻ có thể rẻ",
+     "type": "chart",
+     "ticker": "AAVE",
+     "days": "ytd",
+     "label": "AAVE từ đầu năm: rẻ vẫn có thể rẻ lâu"
+    },
+    {
      "at": "ngược lại",
      "type": "statement",
      "text": "Cơ bản bằng một nửa, vẫn chạy hơn vì có dòng tiền"
@@ -191,6 +224,11 @@
      "at": "vậy bạn làm gì",
      "type": "question",
      "text": "Dòng tiền mới sẽ đến từ đâu?"
+    },
+    {
+     "at": "câu hỏi tiếp theo sẽ",
+     "type": "statement",
+     "text": "Câu 3: chỗ tìm dòng tiền mới"
     }
    ],
    "quote": "",
@@ -226,12 +264,34 @@
      "text": "Thị trường đang bỏ sót điều gì?"
     },
     {
+     "at": "đây là thesis",
+     "type": "statement",
+     "text": "Thesis: luận điểm thị trường chưa định giá"
+    },
+    {
      "at": "ví dụ thật",
+     "type": "logos",
+     "label": "Uniswap đề xuất bật fee switch (11/2025)",
+     "items": [
+      {
+       "label": "UNI",
+       "value": "Fee switch",
+       "logo": "UNI"
+      }
+     ]
+    },
+    {
+     "at": "chỉ sau tin đề xuất",
      "type": "bignum",
      "value": "+30%",
      "label": "UNI chỉ sau tin đề xuất bật fee switch (11/2025)",
      "logo": "UNI",
      "tone": "up"
+    },
+    {
+     "at": "token vẫn là token đó",
+     "type": "statement",
+     "text": "Token không đổi, cách nhìn đã đổi"
     },
     {
      "at": "thesis chưa được định giá",
@@ -259,6 +319,16 @@
      "at": "chốt lại",
      "type": "statement",
      "text": "Mua lúc ít người tin, không phải lúc ai cũng biết"
+    },
+    {
+     "at": "tìm một sự kiện",
+     "type": "question",
+     "text": "Sự kiện nào sắp đổi cách nhìn?"
+    },
+    {
+     "at": "nhưng thesis đúng",
+     "type": "statement",
+     "text": "Thesis đúng vẫn có thể lỗ"
     }
    ],
    "quote": "",
@@ -289,7 +359,7 @@
    ],
    "beats": [
     {
-     "at": "và đây là câu hỏi số 4",
+     "at": "câu nhiều người bỏ qua",
      "type": "question",
      "text": "Thesis này đã quá đông chưa?"
     },
@@ -302,12 +372,34 @@
      "tone": "flat"
     },
     {
+     "at": "tin tốt đã đến",
+     "type": "statement",
+     "text": "Tin tốt đến, người cần mua đã mua rồi"
+    },
+    {
+     "at": "một luận điểm có thể đúng",
+     "type": "statement",
+     "text": "Đúng nhưng quá đông = trade tệ"
+    },
+    {
      "at": "virtual coin đầu ngành",
      "type": "bignum",
      "value": "-88%",
      "label": "VIRTUAL so với đỉnh 5,07 đô khi narrative hạ nhiệt",
      "logo": "VIRTUAL",
      "tone": "down"
+    },
+    {
+     "at": "khi sự chú ý chuyển",
+     "type": "chart",
+     "ticker": "VIRTUAL",
+     "days": 365,
+     "label": "VIRTUAL 1 năm qua: sự chú ý rời đi"
+    },
+    {
+     "at": "theo quan điểm cá nhân",
+     "type": "statement",
+     "text": "Đừng mua mọi narrative đang hot"
     },
     {
      "at": "chốt lại",
@@ -317,6 +409,11 @@
     {
      "at": "vậy bạn làm gì",
      "type": "question",
+     "text": "Ai cũng nói về nó? Cẩn thận gấp đôi"
+    },
+    {
+     "at": "hãy cẩn thận gấp đôi",
+     "type": "statement",
      "text": "Ai cũng nói về nó? Cẩn thận gấp đôi"
     }
    ],
@@ -334,7 +431,8 @@
    "visual_queries": [],
    "source_ids": [
     0
-   ]
+   ],
+   "emphasis": "CÂU NGƯỜI TA BỎ QUA"
   },
   {
    "heading": "Công thức: điểm giao nhau",
@@ -347,6 +445,11 @@
     "Hiểu trước thị trường"
    ],
    "beats": [
+    {
+     "at": "vậy cơ hội lớn",
+     "type": "question",
+     "text": "Cơ hội lớn nằm ở đâu?"
+    },
     {
      "at": "một thesis ít người",
      "type": "flow",
@@ -384,6 +487,11 @@
      ]
     },
     {
+     "at": "còn aave mạnh fundamentals",
+     "type": "statement",
+     "text": "AAVE: fundamentals mạnh, ít giá trị về token"
+    },
+    {
      "at": "fundamentals là hôm nay",
      "type": "statement",
      "text": "Fundamentals là hôm nay. Thesis là ngày mai"
@@ -405,5 +513,6 @@
     0
    ]
   }
- ]
+ ],
+ "thumb_tag": "4 câu hỏi trước khi mua"
 }

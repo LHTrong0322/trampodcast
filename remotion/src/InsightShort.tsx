@@ -1,6 +1,7 @@
 import React from 'react';
-import {AbsoluteFill, Audio, Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {AccentCtx, tone, Backdrop, C, Captions, Chip, CountUp, FONT, RevealWords, useFonts} from './ui';
+import {AbsoluteFill, Audio, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {ShortThumb} from './ShortThumb';
+import {AccentCtx, tone, Backdrop, C, Captions, Chip, clamp, CountUp, FONT, RevealWords, useFonts} from './ui';
 import {DataPanel} from './data';
 import {BeatPanel} from './beats';
 import {DEFAULT_ACCENT, InsightProps, QuoteCard} from './Insight';
@@ -15,6 +16,7 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
   if (!sc) return null;
   const ac = sc.project?.color || DEFAULT_ACCENT;
   const hasData = !!(sc.data && sc.data.type && sc.data.type !== 'none');
+  const cover = (props as any).cover;
   return (
     <AccentCtx.Provider value={tone(ac)}>
       <AbsoluteFill style={{background: C.bg}}>
@@ -32,15 +34,16 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
           <RevealWords text={props.shortTitle || sc.heading || ''} size={(props.shortTitle || sc.heading || '').length > 45 ? 54 : 62} delay={4} stagger={3} maxWidth={860}
             highlight={[sc.project?.name || ''].filter(Boolean)} />
         </div>
-        <div style={{position: 'absolute', top: 700, left: 70}}>
-          {sc.beats?.length ? <BeatPanel beats={sc.beats} t={f / 30} sceneDur={sc.dur} data={props.data} w={860} h={520} />
+        <div style={{position: 'absolute', top: 640, left: 60}}>
+          {sc.beats?.length ? <BeatPanel beats={sc.beats} t={f / 30} sceneDur={sc.dur} data={props.data} w={960} h={560} />
             : hasData ? <DataPanel spec={sc.data!} data={props.data} w={860} h={500} />
             : <QuoteCard post={props.post} quote={sc.quote || sc.heading || ''} w={860} h={500} />}
         </div>
         {sc.keyStat && !sc.beats?.length ? <div style={{position: 'absolute', top: 1215, left: 70, display: 'flex', alignItems: 'center', gap: 24}}>
           <CountUp value={sc.keyStat} size={72} delay={20} /><div style={{fontFamily: FONT, color: C.muted, fontSize: 30, fontWeight: 600, maxWidth: 480}}>{sc.keyLabel}</div>
         </div> : null}
-        <Captions words={sc.words} bottom={440} size={44} maxWidth={860} perChunk={6} />
+        <Captions words={sc.words} bottom={600} size={50} maxWidth={920} perChunk={5} />
+        {cover && f < 40 ? <AbsoluteFill style={{opacity: interpolate(f, [26, 40], [1, 0], clamp)}}><ShortThumb {...cover} /></AbsoluteFill> : null}
         <div style={{position: 'absolute', left: 0, bottom: 0, height: 8, width: (f / durationInFrames) * width, background: ac}} />
       </AbsoluteFill>
     </AccentCtx.Provider>

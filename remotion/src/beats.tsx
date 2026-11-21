@@ -8,22 +8,22 @@ import {DataPanel} from './data';
 export type Side = {label: string; value: string; logo?: string | null; tone?: 'up' | 'down' | 'flat'};
 export type Beat = {
   s: number;
-  type: 'bignum' | 'versus' | 'dots' | 'flow' | 'statement' | 'chart' | 'logos' | 'question';
+  type: 'bignum' | 'versus' | 'dots' | 'flow' | 'statement' | 'chart' | 'logos' | 'question' | 'race';
   value?: string; label?: string; logo?: string | null; tone?: 'up' | 'down' | 'flat';
   left?: Side; right?: Side;
   total?: number; hit?: number;
   steps?: string[]; step_s?: (number | null)[];
   text?: string; sub?: string;
-  ticker?: string;
+  ticker?: string; tickers?: string[]; days?: number;
   items?: Side[];
 };
 
 const toneColor = (t?: string) => (t === 'down' ? C.red : t === 'up' ? C.green : C.ink);
 
-const Card: React.FC<{w: number; h: number; children: React.ReactNode; pad?: number}> = ({w, h, children, pad = 40}) => {
+const Card: React.FC<{w: number; h: number; children: React.ReactNode; pad?: number; solid?: boolean}> = ({w, h, children, pad = 40, solid}) => {
   const ac = useAccent();
   return (
-    <div style={{width: w, height: h, borderRadius: 28, background: C.panel, border: `1px solid ${C.line}`, borderTop: `5px solid ${ac}`,
+    <div className={solid ? 'beat-solid' : undefined} style={{width: w, height: h, borderRadius: 28, background: solid ? `linear-gradient(135deg, ${ac}, #131836)` : C.panel, border: `1px solid ${C.line}`, borderTop: `5px solid ${ac}`,
       boxShadow: '0 20px 56px rgba(40,50,110,0.14)', padding: pad, boxSizing: 'border-box', fontFamily: FONT, position: 'relative',
       overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>{children}</div>
   );
@@ -133,10 +133,10 @@ const Statement: React.FC<{b: Beat; w: number; h: number; question?: boolean}> =
   const ac = useAccent();
   const s = spring({frame: f - 2, fps, config: {damping: 13}});
   return (
-    <Card w={w} h={h} pad={56}>
+    <Card w={w} h={h} pad={56} solid={!question && (b.text || '').length % 2 === 0}>
       {question ? <div style={{fontSize: 120, fontWeight: 900, color: ac, lineHeight: 0.8, marginBottom: 10}}>?</div>
         : <div style={{fontSize: 120, fontWeight: 900, color: `${ac}55`, lineHeight: 0.6, marginBottom: 10}}>“</div>}
-      <div style={{fontSize: (b.text || '').length > 40 ? 52 : 64, fontWeight: 800, color: C.ink, lineHeight: 1.18,
+      <div style={{fontSize: (b.text || '').length > 40 ? 52 : 64, fontWeight: 800, color: !question && (b.text || '').length % 2 === 0 ? '#FFFFFF' : C.ink, lineHeight: 1.18,
         transform: `scale(${interpolate(s, [0, 1], [0.92, 1])})`, opacity: s, transformOrigin: 'left center'}}>{b.text}</div>
       {b.sub ? <div style={{fontSize: 28, fontWeight: 600, color: C.muted, marginTop: 22}}>{b.sub}</div> : null}
     </Card>
@@ -184,6 +184,7 @@ export const BeatPanel: React.FC<{beats: Beat[]; t: number; sceneDur: number; da
       case 'flow': return <Flow b={b} w={w} h={h} t={Math.max(0, local)} dur={end - b.s} />;
       case 'logos': return <Logos b={b} w={w} h={h} />;
       case 'question': return <Statement b={b} w={w} h={h} question />;
+      case 'race': return <Race b={b} w={w} h={h} data={data} />;
       case 'chart': return <DataPanel spec={{type: 'coin_chart', tickers: [b.ticker || ''], title: b.label}} data={data} w={w} h={h} />;
       default: return <Statement b={b} w={w} h={h} />;
     }
@@ -193,6 +194,46 @@ export const BeatPanel: React.FC<{beats: Beat[]; t: number; sceneDur: number; da
     <div key={i} style={{opacity: inP, transform: `translateY(${(1 - inP) * 24}px) scale(${1 + Math.max(0, local) * 0.004})`}}>
       <FrameShift from={Math.round(b.s * fps)}>{body}</FrameShift>
     </div>
+  );
+};
+
+// Trọng 22/11 (review: "chủ đề là giá mà chưa có biểu đồ"): 2-3 coin cùng xuất phát 0%, đường % chạy dần, số cuối to
+const Race: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, data}) => {
+  const f = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const coins = (b.tickers || []).map((t) => ({t, c: (data?.coins || {})[t.replace('$', '').toUpperCase()]})).filter((x) => x.c?.series?.length > 5);
+  const pad = {l: 40, r: 230, t: 96, b: 56};
+  const W = w - pad.l - pad.r, H = h - pad.t - pad.b;
+  const lines = coins.map(({t, c}) => {
+    const n = c.series.length, k = Math.max(2, Math.round(n * Math.min(1, (b.days || c.days || n) / Math.max(1, c.days || n))));
+    const ser: number[] = c.series.slice(-k);
+    return {t, logo: c.logo, color: c.color || C.ink, pct: ser.map((v) => (v / ser[0] - 1) * 100)};
+  });
+  const all = lines.flatMap((l) => l.pct).concat([0]);
+  const lo = Math.min(...all), hi = Math.max(...all);
+  const y = (v: number) => pad.t + H - ((v - lo) / Math.max(1e-6, hi - lo)) * H;
+  const prog = interpolate(f, [4, Math.round(fps * 1.8)], [0, 1], clamp);
+  return (
+    <Card w={w} h={h} pad={0}>
+      <div style={{position: 'absolute', left: 40, top: 30, fontSize: 32, fontWeight: 800, color: C.ink}}>{b.label}</div>
+      <svg width={w} height={h} style={{position: 'absolute', inset: 0}}>
+        <line x1={pad.l} x2={pad.l + W} y1={y(0)} y2={y(0)} stroke={C.line} strokeWidth={2} strokeDasharray="8 8" />
+        {lines.map((l) => {
+          const m = Math.max(2, Math.round(l.pct.length * prog));
+          const pts = l.pct.slice(0, m).map((v, i) => `${pad.l + (i / (l.pct.length - 1)) * W},${y(v)}`).join(' ');
+          return <polyline key={l.t} points={pts} fill="none" stroke={l.color} strokeWidth={7} strokeLinejoin="round" strokeLinecap="round" />;
+        })}
+      </svg>
+      {lines.map((l) => {
+        const m = Math.max(2, Math.round(l.pct.length * prog));
+        const v = l.pct[m - 1];
+        return <div key={l.t} style={{position: 'absolute', left: pad.l + W + 18, top: y(v) - 34, display: 'flex', alignItems: 'center', gap: 10}}>
+          <Logo src={l.logo} size={48} label={l.t} />
+          <div style={{fontWeight: 800, fontSize: 44, color: v < 0 ? C.red : C.green, whiteSpace: 'nowrap'}}>{v >= 0 ? '+' : ''}{Math.round(v)}%</div>
+        </div>;
+      })}
+      {b.sub ? <div style={{position: 'absolute', left: 40, bottom: 16, fontSize: 24, fontWeight: 600, color: C.muted}}>{b.sub}</div> : null}
+    </Card>
   );
 };
 

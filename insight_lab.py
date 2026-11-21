@@ -36,10 +36,25 @@ PROMPT = I.PROMPT.replace(
                 "tickers": ["ticker coin nếu type=coin_chart, vd 'BTC'"],
                 "items": [{{"label": "≤ 5 từ", "value": "con số/kiểu tiếng Anh ngắn hoặc trống"}}],
                 "title": "tiêu đề ngắn cho hình, ≤ 6 từ"}},
-      "project": {{"name": "tên dự án/coin CHÍNH được bàn trong phần này (vd Hyperliquid), trống nếu không có", "ticker": "vd HYPE"}}}}''')
+      "project": {{"name": "tên dự án/coin CHÍNH được bàn trong phần này (vd Hyperliquid), trống nếu không có", "ticker": "vd HYPE"}},
+      "emphasis": "nhãn ≤ 4 từ nếu đây là phần hook đã hứa riêng (vd CÂU NGƯỜI TA BỎ QUA), không thì trống",
+      "beats": [{{"at": "3-5 chữ CHÉP NGUYÊN từ lời đọc, hình hiện đúng lúc giọng nói cụm này",
+                 "type": "bignum | versus | dots | flow | logos | race | chart | statement | question",
+                 "value": "số to (bignum)", "label": "chú thích ngắn", "logo": "TICKER", "tone": "up | down | flat",
+                 "left": {{"label": "AAVE", "value": "-25%", "logo": "AAVE", "tone": "down"}}, "right": {{"...": "(versus)"}},
+                 "steps": ["(flow) đúng số ý lời đọc nhắc"], "step_at": ["cụm chữ lời đọc cho từng bước"],
+                 "tickers": ["(race) 2-3 coin so % cùng kỳ"], "days": "ytd hoặc số ngày (race/chart)", "ticker": "(chart)",
+                 "text": "(statement/question) ≤ 10 từ"}}]}}''')
 PROMPT += """
 Độ dài: nếu bài nguồn đủ ý, viết đủ {max_sections} phần, mỗi phần 130-180 từ; hook ≤ 2 câu thật cuốn.
 Không nhắc đến AI, máy, bot hay "nội dung tổng hợp" ở bất kỳ đâu trong lời đọc.
+KHUNG HÌNH (Trọng 22/11, để bot review chấm ≥ 7 mọi mục): mỗi phần 4-6 beats, cứ tối đa 8 giây lời đọc (khoảng 26 chữ) phải có 1 beat mới;
+beat đầu gắn vào câu đầu của phần; thẻ question chỉ đứng ≤ 5 giây rồi tới số liệu/ví dụ; không 2 beat liền nhau cùng kiểu;
+cả video có ít nhất 1 beat race hoặc chart khi nói về giá (race cho so sánh 2 coin cùng kỳ, days "ytd" nếu nói "từ đầu năm");
+lời đọc nói "N thứ/điều/bước" thì flow phải đủ đúng N steps; outro_points đúng bằng số câu đã hứa ở hook;
+mỗi phần theo khuôn: câu hỏi 1 câu → 1 con số → 1 ví dụ coin thật → kết luận 1 dòng; nói thẳng "Câu 3: ..." thay vì câu đệm "Câu hỏi thứ ba là".
+Ảnh bìa: thumb_text ≤ 24 ký tự, thêm "thumb_tag" (vd "4 CÂU HỎI TRƯỚC KHI MUA"), so sánh thì điền "thumb_vs".
+Tiêu đề short (short_hooks) phải có con số hoặc dấu hỏi, ≤ 60 ký tự, tự đứng được một mình.
 Gợi ý chọn data.type: nói về tâm lý thị trường → fear_greed; về altcoin vs bitcoin, dòng tiền → dominance;
 về coin cụ thể → coin_chart; so sánh 2-4 thứ có số → stat_compare (điền items); danh sách việc cần làm /
 tiêu chí đánh giá → checklist (điền items, value để trống); bức tranh toàn thị trường → market_heatmap.
@@ -252,6 +267,17 @@ def market_data(lab: Path) -> dict:
     return d
 
 
+def _days(v) -> int:
+    """Số ngày lấy giá: số nguyên, hoặc "ytd" = từ 1/1 năm nay."""
+    if str(v).lower() == "ytd":
+        now = datetime.now()
+        return max(30, (now - datetime(now.year, 1, 1)).days)
+    try:
+        return max(7, min(365, int(v)))
+    except Exception:
+        return 30
+
+
 def coin_data(lab: Path, plan: dict, data: dict):
     """Giá 30 ngày + logo cho các coin AI nhắc trong phần biểu đồ (vd ENA)."""
     import time
@@ -263,12 +289,19 @@ def coin_data(lab: Path, plan: dict, data: dict):
         pj = (s.get("project") or {}).get("ticker")
         if pj:
             tick.append(str(pj).lstrip("$").upper())
+    want: dict = {}
     for b in [b for s in plan.get("sections", []) for b in (s.get("beats") or [])] + (plan.get("hook_beats") or []):
+        if b.get("type") == "chart" and b.get("ticker") and b.get("days"):
+            want[str(b["ticker"]).lstrip("$").upper()] = _days(b.get("days"))
         for x in [b, b.get("left") or {}, b.get("right") or {}] + list(b.get("items") or []):   # logo coin trong nhịp hình
             if x.get("logo"):
                 tick.append(str(x["logo"]).lstrip("$").upper())
         if b.get("type") == "chart" and b.get("ticker"):
             tick.append(str(b["ticker"]).lstrip("$").upper())
+        for t in (b.get("tickers") or []) if b.get("type") == "race" else []:   # biểu đồ đua % (Trọng 22/11)
+            t = str(t).lstrip("$").upper()
+            tick.append(t)
+            want[t] = max(want.get(t, 30), _days(b.get("days")))
     data.setdefault("coins", {})
     for t in dict.fromkeys(x for x in tick if re.fullmatch(r"[A-Z0-9]{2,10}", x) and (x != "ENA" or plan.get("allow_ena"))):
         info = V.coin_info(t)
@@ -278,7 +311,7 @@ def coin_data(lab: Path, plan: dict, data: dict):
         try:
             time.sleep(1.5)
             ch = requests.get(f"https://api.coingecko.com/api/v3/coins/{info['id']}/market_chart",
-                              params={"vs_currency": "usd", "days": 30}, timeout=30).json()
+                              params={"vs_currency": "usd", "days": want.get(t, 30)}, timeout=30).json()
             pts = [p[1] for p in ch.get("prices", [])]
             if len(pts) < 10:
                 continue
@@ -286,7 +319,7 @@ def coin_data(lab: Path, plan: dict, data: dict):
             if info.get("large"):
                 (lab / "logos" / f"{t}.png").write_bytes(requests.get(info["large"], timeout=20).content)
             data["coins"][t] = {"name": info.get("name", t), "price": pts[-1], "series": pts[::max(1, len(pts) // 120)],
-                                "days": 30, "logo": f"logos/{t}.png" if (lab / "logos" / f"{t}.png").exists() else None,
+                                "days": want.get(t, 30), "logo": f"logos/{t}.png" if (lab / "logos" / f"{t}.png").exists() else None,
                                 "color": BRAND_OVERRIDE.get(t) or brand_color(lab / "logos" / f"{t}.png")}
             log(f"   Coin {t}: {len(pts)} điểm giá")
         except Exception as ex:
@@ -497,7 +530,10 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
         rv = {}
         for rnd in range(3):
             try:
-                rv = SR.review(json.dumps(plan, ensure_ascii=False, indent=1), src)
+                import video_lint as VL
+                lint = VL.lint(plan)
+                rv = SR.review(json.dumps(plan, ensure_ascii=False, indent=1) +
+                               ("\n\nLỖI KHUNG MÁY TỰ PHÁT HIỆN (mỗi lỗi trừ hinh_anh và giu_chan, phải sửa hết):\n" + "\n".join(f"- {x}" for x in lint) if lint else ""), src)
             except Exception as ex:
                 log(f"   ! chấm kịch bản lỗi: {str(ex)[:150]}")
                 break
@@ -510,6 +546,12 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
         plan["script_score"] = rv.get("score")
     plan = scrub_plan(plan)
     plan = fix_terms(plan)   # Trọng chốt 21/11: tự đổi từ Việt sang từ chuyên ngành tiếng Anh
+    try:   # Trọng 22/11: soát khung (nhịp đổi hình, biểu đồ, đếm ý, ảnh bìa, short) trước khi tốn lượt giọng đọc
+        import video_lint as VL
+        plan["lint"] = VL.lint(plan)
+        log(f"   Soát khung: {len(plan['lint'])} chỗ cần sửa" + "".join(f"\n     - {x}" for x in plan["lint"][:12]))
+    except Exception as ex:
+        log(f"   ! soát khung lỗi: {ex}")
     if len([s for s in plan.get("sections", []) if s.get("narration")]) < 2 or not plan.get("hook"):
         raise RuntimeError("Kịch bản không đủ nội dung sau khi bỏ đoạn ENA")
     plan["sections"] = [s for s in plan.get("sections", []) if s.get("narration")][: int(ic.get("max_sections", 6))]

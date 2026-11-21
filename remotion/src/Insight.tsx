@@ -13,7 +13,7 @@ export type Scene = {
   hook?: string; stat?: string; label?: string; images?: string[];
   title?: string; theme?: string;
   idx?: number; total?: number; heading?: string; keyStat?: string; keyLabel?: string; bullets?: string[];
-  quote?: string; source?: string; data?: DataSpec | null; beats?: Beat[]; points?: string[]; agendaLabel?: string; cta?: string; hidePost?: boolean; project?: Project | null;
+  quote?: string; source?: string; data?: DataSpec | null; beats?: Beat[]; points?: string[]; agendaLabel?: string; cta?: string; hidePost?: boolean; emphasis?: string; project?: Project | null;
 };
 export type InsightProps = {fps: number; width: number; height: number; audio: string; music?: string; duration: number;
   scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string; mode?: string; shortTitle?: string};
@@ -192,7 +192,12 @@ export const QuoteCard: React.FC<{post: Post | null; quote: string; w: number; h
   );
 };
 
-const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Post | null}> = ({sc, data, brandName, post}) => {
+const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Post | null}> = (p) => (
+  // Trọng 22/11 (review: "câu số 4 đã hứa mà trình bày y hệt câu 1-3"): phần được nhấn đổi màu cam + nhãn riêng
+  p.sc.emphasis ? <AccentCtx.Provider value="#E8590C"><AbsoluteFill style={{background: 'linear-gradient(180deg, #FFF4E6, #FFFFFF 60%)'}} />
+    <SectionInner {...p} /></AccentCtx.Provider> : <SectionInner {...p} />
+);
+const SectionInner: React.FC<{sc: Scene; data: any; brandName: string; post?: Post | null}> = ({sc, data, brandName, post}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const ac = useAccent();
@@ -203,7 +208,7 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Po
   const toQuote = hasData && !!sc.quote;
   return (
     <AbsoluteFill>
-      <Backdrop />
+      {sc.emphasis ? null : <Backdrop />}
       <TopBar source={sc.source} idx={sc.idx} total={sc.total} brand={brandName} project={sc.project} />
       <div style={{position: 'absolute', left: 110, top: 170, display: 'flex', alignItems: 'center', gap: 16, opacity: numS, fontFamily: FONT}}>
         <div style={{fontWeight: 800, fontSize: 30, color: ac}}>{String(sc.idx).padStart(2, '0')}</div>
@@ -211,7 +216,8 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Po
         <div style={{color: C.muted, fontWeight: 700, fontSize: 22, letterSpacing: 4}}>INSIGHT</div>
       </div>
       <div style={{position: 'absolute', left: 110, top: 230, width: 800, display: 'flex', flexDirection: 'column', gap: 40}}>
-        <RevealWords text={sc.heading || ''} size={58} delay={6} stagger={3} maxWidth={800}
+        {sc.emphasis ? <div><Chip text={sc.emphasis} /></div> : null}
+        <RevealWords text={sc.heading || ''} size={58} delay={1} stagger={1} maxWidth={800}
           highlight={[sc.project?.name || '', sc.keyStat || ''].filter(Boolean)} />
         {sc.bullets?.length ? <Bullets items={sc.bullets} dur={sc.dur} fps={fps} /> : null}
       </div>

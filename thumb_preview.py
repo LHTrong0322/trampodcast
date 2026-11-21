@@ -10,6 +10,7 @@ import requests
 import insight_publish as IP
 import insight_render as R
 import video as V
+import podcast as P
 
 
 def main(script: str, fonts: str):
@@ -28,7 +29,7 @@ def main(script: str, fonts: str):
         props = {"comp": "Thumb", "width": 1280, "height": 720, "text": plan.get("thumb_text") or plan.get("title", ""),
                  "stat": plan.get("thumb_stat", ""), "accent": "#4F5BD5", "points": plan.get("thumb_points") or [],
                  "warn": False, "projectLogo": None, "bg": None, "brand": "Smart Penguin Insights", "font": f,
-                 "vs": [{**x, "logo": logos.get(str(x.get("logo", "")).upper())} for x in (plan.get("thumb_vs") or [])]}
+                 "tag": P.nodash(str((plan.get("thumb_tag") or ""))), "vs": [{**x, "logo": logos.get(str(x.get("logo", "")).upper())} for x in (plan.get("thumb_vs") or [])]}
         p = out / f"thumb-{f}.png"
         R.run_remotion(props, p, frames="0")
         IP.tg_photo(p, f"🖼 Ảnh bìa thử phông: {f}")

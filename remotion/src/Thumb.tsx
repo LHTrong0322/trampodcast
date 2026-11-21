@@ -4,8 +4,8 @@ import {AccentCtx, tone, C, FONT, DISPLAY_FONT, useFonts} from './ui';
 
 // Ảnh bìa YouTube 1280×720: chữ to, 1 con số, logo dự án + logo kênh
 export type ThumbProps = {text: string; stat?: string; accent?: string; projectLogo?: string | null; bg?: string | null; brand: string; points?: string[]; warn?: boolean;
-  vs?: {label: string; value: string; logo?: string | null; tone?: string}[]; font?: string};
-export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5', projectLogo, bg, brand, points = [], warn = false, vs = [], font = 'bvp'}) => {
+  vs?: {label: string; value: string; logo?: string | null; tone?: string}[]; font?: string; tag?: string};
+export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5', projectLogo, bg, brand, points = [], warn = false, vs = [], font = 'bvp', tag = ''}) => {
   const HF = DISPLAY_FONT[font] || FONT;
   const cond = font === 'anton' || font === 'barlow' || font === 'archivo';
   const accent = tone(acIn);
@@ -30,13 +30,13 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5
         {vs.length ? <div style={{position: 'absolute', left: 64, right: 64, top: 400, display: 'flex', alignItems: 'center', gap: 18}}>
           {vs.map((x, i) => <React.Fragment key={i}>
             {i ? <div style={{fontWeight: 800, fontSize: 40, color: C.muted, flexShrink: 0}}>VS</div> : null}
-            <div style={{flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 16, padding: '24px 24px', borderRadius: 26,
+            <div style={{flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 14, padding: '20px 22px', borderRadius: 26,
             background: '#FFFFFF', border: `1px solid ${C.line}`, boxShadow: '0 14px 40px rgba(40,50,110,0.14)'}}>
-            {x.logo ? <Img src={staticFile(x.logo)} style={{width: 72, height: 72, borderRadius: 99, flexShrink: 0}} /> : null}
-            <div style={{fontWeight: 800, fontSize: 36, color: C.ink}}>{x.label}</div>
+            {x.logo ? <Img src={staticFile(x.logo)} style={{width: 64, height: 64, borderRadius: 99, flexShrink: 0}} /> : null}
+            <div style={{fontWeight: 800, fontSize: 32, color: C.ink}}>{x.label}</div>
             <div style={{flex: 1}} />
             <div style={{fontFamily: HF, fontStretch: font === 'archivo' ? '62%' : undefined, fontWeight: font === 'anton' ? 400 : 900,
-              fontSize: cond ? 84 : 68, color: x.tone === 'down' ? C.red : x.tone === 'up' ? C.green : C.ink, whiteSpace: 'nowrap'}}>{x.value}</div>
+              fontSize: cond ? 100 : 82, color: x.tone === 'down' ? C.red : x.tone === 'up' ? C.green : C.ink, whiteSpace: 'nowrap'}}>{x.value}</div>
           </div></React.Fragment>)}
         </div> : null}
         {stat && !vs.length ? <div style={{position: 'absolute', left: 64, bottom: 60, padding: '10px 30px', borderRadius: 20, background: accent,
@@ -55,6 +55,8 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5
         {warn ? <div style={{position: 'absolute', right: points.length ? 420 : 60, top: points.length ? 120 : 60, width: 104, height: 104, borderRadius: 99,
           background: '#E5383B', color: '#FFFFFF', fontSize: 72, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 0 0 8px rgba(229,56,59,0.22), 0 14px 34px rgba(229,56,59,0.35)', transform: 'rotate(-8deg)'}}>!</div> : null}
+        {tag ? <div style={{position: 'absolute', left: 64, top: vs.length ? 574 : 600, padding: '12px 26px', borderRadius: 16, background: accent,
+          color: '#FFFFFF', fontWeight: 800, fontSize: 38, letterSpacing: 1}}>{tag.toUpperCase()}</div> : null}
         <div style={{position: 'absolute', right: 40, bottom: 30, color: 'rgba(19,24,54,0.7)', fontWeight: 700, fontSize: 28}}>@Trong0322</div>
       </AbsoluteFill>
     </AccentCtx.Provider>

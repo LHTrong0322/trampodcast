@@ -112,7 +112,7 @@ def thumbnail(res: dict, out: Path) -> Path | None:
              "stat": stat, "accent": (proj or {}).get("color") or "#4F5BD5",
              "points": [P.nodash(x)[:28] for x in (plan.get("thumb_points") or [])][:3],
              "warn": bool(plan.get("thumb_warn", False)),
-             "vs": [{**x, "logo": ((res.get("data") or {}).get("coins") or {}).get(str(x.get("logo", "")).upper(), {}).get("logo")}
+             "tag": P.nodash(str((plan.get("thumb_tag") or ""))), "vs": [{**x, "logo": ((res.get("data") or {}).get("coins") or {}).get(str(x.get("logo", "")).upper(), {}).get("logo")}
                     for x in (plan.get("thumb_vs") or [])][:2],   # review 1615: dấu chấm than đỏ rối mắt, chỉ bật khi kịch bản yêu cầu
              "projectLogo": (proj or {}).get("logo"), "bg": None,
              "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")}

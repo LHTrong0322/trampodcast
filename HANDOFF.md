@@ -238,3 +238,11 @@ Nguồn: support.google.com/youtube/answer/1722171 (mã hoá + bitrate: 1440p30 
 /answer/15424877 (Shorts tối đa 3 phút; > 1 phút có claim bản quyền có thể bị chặn), /answer/72431 (ảnh bìa),
 postfa.st/sizes/tiktok/video, manypixels.co (vùng an toàn TikTok), postfa.st/sizes/facebook/reels (Meta 14%/35%/6%),
 postfa.st/sizes/youtube/shorts.
+
+## Khung chất lượng video (Trọng 22/11: mọi mục bot review ít nhất 7/10)
+- `video_lint.py` soát kịch bản trước khi dựng: cứ tối đa 8 giây lời đọc phải đổi hình, thẻ câu hỏi không đứng trơ, có ít nhất 1 biểu đồ giá (race/chart), lời đọc nói "N thứ" thì hình đủ N ý, outro đúng số câu đã hứa, phần hook hứa riêng phải có `emphasis`, ảnh bìa có `thumb_tag`, tiêu đề short có số hoặc dấu hỏi. Chạy: `python video_lint.py scripts/<ten>-approved.json`. Build tự in lỗi vào log; vòng 1 chấm kịch bản AI bị trừ điểm theo lỗi này.
+- Kiểu hình mới: `race` (2-3 coin cùng xuất phát 0%, `days: "ytd"` hoặc số ngày, giá thật CoinGecko), `chart` có `days`. Thẻ statement xen kẽ nền đậm để đỡ đơn điệu.
+- Phần nhấn (`"emphasis": "CÂU NGƯỜI TA BỎ QUA"`): nền cam nhạt, màu nhấn cam, nhãn riêng.
+- Tiêu đề phần hiện gần như ngay (không còn khung chữ bị cắt dở).
+- Short: 1,3 giây đầu chính là ảnh bìa (số liệu + logo), thẻ hình to hơn (960x560), phụ đề nâng lên khỏi vùng giao diện app che.
+- Ảnh bìa YouTube: số to hơn khoảng 20%, nhãn phụ `thumb_tag` màu nhấn.
