@@ -276,7 +276,7 @@ const OutroScene: React.FC<{sc: Scene; brandName: string}> = ({sc, brandName}) =
               alignItems: 'center', justifyContent: 'center', transform: `scale(${s})`}}>✓</div>{p}</div>;
         })}
         {sc.cta ? <div style={{marginTop: 20, fontFamily: FONT, fontWeight: 800, fontSize: 44, color: ac,
-          opacity: interpolate(f - Math.round(fps * Math.max(2, sc.dur * 0.6)), [0, 14], [0, 1], clamp)}}>{sc.cta}</div> : null}
+          opacity: interpolate(f - Math.round(fps * Math.max(2, sc.dur * 0.35)), [0, 14], [0, 1], clamp)}}>{sc.cta}</div> : null}
       </AbsoluteFill>
       <div style={{position: 'absolute', right: 140, bottom: 300, opacity: btn, transform: `scale(${btn * pulse})`, fontFamily: FONT,
         padding: '24px 50px', borderRadius: 99, background: C.red, color: '#fff', fontWeight: 800, fontSize: 40}}>ĐĂNG KÝ · {brandName}</div>

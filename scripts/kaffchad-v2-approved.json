@@ -63,8 +63,20 @@
   },
   {
    "at": "4 câu hỏi",
-   "type": "statement",
-   "text": "4 câu hỏi trước khi mua. Câu 4: retail hay bỏ qua"
+   "type": "flow",
+   "label": "4 câu hỏi trước khi mua",
+   "steps": [
+    "Token có hưởng lợi?",
+    "Ai mua tiếp?",
+    "Thị trường bỏ sót gì?",
+    "Đã quá đông chưa? (retail hay bỏ qua)"
+   ],
+   "step_at": [
+    "4 câu hỏi",
+    "4 câu hỏi",
+    "4 câu hỏi",
+    "câu số 4"
+   ]
   }
  ],
  "sections": [

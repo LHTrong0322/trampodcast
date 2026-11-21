@@ -54,13 +54,13 @@ const Versus: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
   const {fps} = useVideoConfig();
   const side = (x: Side | undefined, i: number) => {
     if (!x) return null;
-    const s = spring({frame: f - 4 - i * 10, fps, config: {damping: 14}});
+    const s = spring({frame: f - 2 - i * 3, fps, config: {damping: 14}});   // review 22/11: hai bên hiện gần như cùng lúc
     return (
       <div style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, opacity: s,
         transform: `translateY(${(1 - s) * 40}px)`}}>
         <Logo src={x.logo} size={130} label={x.label} />
         <div style={{fontSize: 40, fontWeight: 800, color: C.ink}}>{x.label}</div>
-        <CountUp value={x.value} size={96} delay={8 + i * 10} color={toneColor(x.tone)} />
+        <CountUp value={x.value} size={96} delay={4 + i * 3} color={toneColor(x.tone)} />
       </div>
     );
   };
@@ -218,6 +218,11 @@ const Race: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, da
   return (
     <Card w={w} h={h} pad={0}>
       <div style={{position: 'absolute', left: 40, top: 30, fontSize: 32, fontWeight: 800, color: C.ink}}>{b.label}</div>
+      <div style={{position: 'absolute', right: 40, top: 26, display: 'flex', gap: 26}}>
+        {lines.map((l) => <div key={l.t} style={{display: 'flex', alignItems: 'center', gap: 10}}>
+          <div style={{width: 30, height: 7, borderRadius: 4, background: l.color}} /><Logo src={l.logo} size={40} label={l.t} />
+          <div style={{fontSize: 30, fontWeight: 800, color: C.ink}}>{l.t}</div></div>)}
+      </div>
       <svg width={w} height={h} style={{position: 'absolute', inset: 0}}>
         <line x1={pad.l} x2={pad.l + W} y1={y(0)} y2={y(0)} stroke={C.line} strokeWidth={2} strokeDasharray="8 8" />
         {lines.map((l) => {
@@ -229,7 +234,7 @@ const Race: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, da
       {lines.map((l) => {
         const v = l.pct[l.pct.length - 1];   // review 22/11: chỉ hiện SỐ CUỐI (số đang chạy trông như số liệu khác)
         return <div key={l.t} style={{position: 'absolute', left: pad.l + W + 18, top: y(v) - 34, display: 'flex', alignItems: 'center', gap: 10,
-          opacity: interpolate(prog, [0.75, 1], [0, 1], clamp)}}>
+          opacity: interpolate(prog, [0.45, 0.7], [0, 1], clamp)}}>
           <Logo src={l.logo} size={48} label={l.t} />
           <div style={{fontWeight: 800, fontSize: 44, color: v < 0 ? C.red : C.green, whiteSpace: 'nowrap'}}>{v >= 0 ? '+' : '-'}{Math.abs(v) >= 10 ? 5 * Math.round(Math.abs(v) / 5) : Math.round(Math.abs(v))}%</div>
         </div>;
