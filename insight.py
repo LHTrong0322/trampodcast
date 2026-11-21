@@ -199,9 +199,10 @@ Không hô hào mua bán, không hứa lợi nhuận. Lời văn NÓI, đọc b�
 emoji, không link; số đọc tự nhiên.
 Từ ngữ Trọng chốt (21/11): nói "insider", KHÔNG nói "người trong cuộc"; nói "retail", KHÔNG nói "nhỏ lẻ"
 (vd "insider biết lịch mở khoá, còn retail thì không").
-Từ chuyên ngành (Trọng chốt 21/11): ƯU TIÊN giữ tiếng Anh (buyback, unlock, revenue, tokenomics, holder, VC,
-overhang, alignment, DCA, low float...), KHÔNG dịch sang tiếng Việt. CHỈ từ VIẾT TẮT mới giải thích tiếng Việt ngay
-lần đầu xuất hiện (vd "FDV, tức định giá khi toàn bộ token đã phát hành"; "PMF, tức sản phẩm có người dùng thật cần").
+Từ chuyên ngành (Trọng chốt 21/11): ƯU TIÊN giữ tiếng Anh (buyback, unlock, revenue, tokenomics, holder,
+overhang, alignment, low float...), không dịch. Từ viết tắt PHỔ THÔNG trong giới crypto (FDV, DCA, TVL, VC, ETF, ATH,
+APY, TGE, DEX, CEX, KOL, PMF...) dùng nguyên, KHÔNG giải thích, cho chuyên nghiệp. CHỈ từ viết tắt DÀI hoặc ÍT GẶP
+mới kèm giải thích tiếng Việt ngắn ở lần đầu.
 """ + V.TERMS
 
 PROMPT = """Các bài viết nguồn (mỗi bài có số [id]):
