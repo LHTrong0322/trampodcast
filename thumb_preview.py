@@ -33,6 +33,11 @@ def main(script: str, fonts: str):
         R.run_remotion(props, p, frames="0")
         IP.tg_photo(p, f"🖼 Ảnh bìa thử phông: {f}")
         print("đã vẽ", p)
+    import os, subprocess
+    repo = os.getenv("GITHUB_REPOSITORY")
+    if repo:   # để kiểm tra từ xa (artifact bị chặn): đưa lên Release "thumb-preview"
+        subprocess.run(["gh", "release", "create", "thumb-preview", "-R", repo, "--title", "Ảnh bìa thử", "--notes", "Ảnh bìa vẽ thử"], capture_output=True)
+        subprocess.run(["gh", "release", "upload", "thumb-preview", *map(str, out.glob("*.png")), "--clobber", "-R", repo], check=True)
 
 
 if __name__ == "__main__":
