@@ -41,7 +41,8 @@ STYLE = {
            "steady intonation. English crypto terms pronounced naturally in English."),
     "kol": ("Ludo, a successful young Vietnamese crypto KOL talking to his community. Confident, charismatic, "
             "energetic but controlled, a hint of a smile. Polished urban Saigon accent, never rural, never salesy. "
-            "About 170 words per minute. English crypto terms pronounced naturally in English."),
+            "About 170 words per minute. English crypto terms pronounced naturally in English. Project and token names "
+            "(Aave, Hype, Uni, Virtual, Ena...) are read smoothly as ONE word, never spelled out letter by letter."),
 }
 
 

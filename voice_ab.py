@@ -45,7 +45,20 @@ def speakable(t: str) -> str:
     t = re.sub(r"\$(\d[\d.,]*)", r"\1 đô", t)
     t = re.sub(r"(\d+(?:[.,]\d+)?)\s*%", r"\1 phần trăm", t)
     t = t.replace("&", " and ").replace("→", ", ").replace("/", " trên ")
+    t = re.sub(r"\$?\b[A-Z][A-Z0-9]{2,}\b", _name, t)
     return re.sub(r"\s{2,}", " ", t).strip()
+
+
+# Trọng chốt 21/11: TÊN DỰ ÁN đọc liền một từ (AAVE đọc "Aave", không đánh vần A A V E).
+# Chỉ các viết tắt dưới đây mới đánh vần từng chữ cái.
+SPELL = {"FDV", "DCA", "TVL", "VC", "ETF", "ATH", "ATL", "APY", "APR", "TGE", "DEX", "CEX", "KOL", "PMF", "BTC", "ETH",
+         "DAO", "NFT", "USD", "USDT", "USDC", "SEC", "DWF", "YTD", "CEO", "AI", "API", "OTC", "MEV", "RWA", "LST", "LRT",
+         "AMM", "CPI", "FED", "FOMC", "GDP", "IPO", "ICO", "IDO", "KYC", "OI", "PNL", "ROI", "SOL", "BNB", "XRP", "DYOR"}
+
+
+def _name(m) -> str:
+    w = m.group(0).lstrip("$")
+    return w if w in SPELL else w.capitalize()
 
 
 def styled(kind: str) -> str:
