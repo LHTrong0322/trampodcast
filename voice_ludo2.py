@@ -74,7 +74,6 @@ def lines(t: str) -> str:
 def tagged(t: str) -> str:
     t = re.sub(r":\s*", ": [short pause] ", t, count=1)
     t = t.replace("Có bốn nguyên nhân.", "Có bốn nguyên nhân. [medium pause]")
-    t = re.sub(r"(Thứ (?:nhất|hai|ba|tư),)", r"[short pause] \1", t)
     return t.replace(", còn retail", ", [short pause] còn retail")
 
 

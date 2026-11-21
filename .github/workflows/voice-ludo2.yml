@@ -1,4 +1,4 @@
-name: Ludo bản 2: ngắt nghỉ tự nhiên, tiếng Anh chuẩn
+name: "Ludo bản 2, ngắt nghỉ tự nhiên, tiếng Anh chuẩn"
 
 on:
   workflow_dispatch:
