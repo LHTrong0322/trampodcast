@@ -263,8 +263,14 @@ def coin_data(lab: Path, plan: dict, data: dict):
         pj = (s.get("project") or {}).get("ticker")
         if pj:
             tick.append(str(pj).lstrip("$").upper())
+    for b in [b for s in plan.get("sections", []) for b in (s.get("beats") or [])] + (plan.get("hook_beats") or []):
+        for x in [b, b.get("left") or {}, b.get("right") or {}] + list(b.get("items") or []):   # logo coin trong nhịp hình
+            if x.get("logo"):
+                tick.append(str(x["logo"]).lstrip("$").upper())
+        if b.get("type") == "chart" and b.get("ticker"):
+            tick.append(str(b["ticker"]).lstrip("$").upper())
     data.setdefault("coins", {})
-    for t in dict.fromkeys(x for x in tick if re.fullmatch(r"[A-Z0-9]{2,10}", x) and x != "ENA"):
+    for t in dict.fromkeys(x for x in tick if re.fullmatch(r"[A-Z0-9]{2,10}", x) and (x != "ENA" or plan.get("allow_ena"))):
         info = V.coin_info(t)
         if not info:
             log(f"   ! không tìm thấy coin {t}")

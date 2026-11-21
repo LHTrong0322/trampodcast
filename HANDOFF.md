@@ -3,6 +3,17 @@
 
 
 
+
+## NHỊP HÌNH KHỚP LỜI ĐỌC (TRỌNG CHỐT 19:15 NGÀY 21/11: "ảnh và nội dung chẳng liên quan, sáng tạo đi")
+- KHÔNG gắn hình dữ liệu chung chung (Fear & Greed, heatmap) nếu lời đọc không nói tới nó.
+- Mỗi phần trong kịch bản đã duyệt có "beats": danh sách nhịp hình, mỗi nhịp có "at" = cụm từ NGUYÊN VĂN trong lời đọc,
+  hình bật lên đúng lúc giọng đọc nói cụm đó (insight_render.beats_for, remotion/src/beats.tsx), khoảng 5 đến 8 giây đổi một kiểu.
+  Kiểu: question (câu hỏi lớn), statement (câu chốt), versus (2 coin + logo + số), bignum (số lớn + logo), dots (13/15),
+  flow (các bước sáng dần theo lời đọc), logos (hàng logo), chart (giá coin thật, chỉ dùng khi xu hướng khớp lời).
+  Logo coin: ghi ticker vào "logo" (vd "AAVE"), máy tự tải từ CoinGecko. "hook_beats" cho phần mở màn.
+- Mẫu: scripts/kaffchad-approved.json. Viết nháp phải kèm cột "Hình" theo từng câu.
+- "own_source": true = hình ghi nguồn @Trong0322 thay tác giả bài gốc (khi Trọng trình bày như quan điểm của mình).
+
 ## CHẤM 2 VÒNG (TRỌNG CHỐT 17:44 NGÀY 21/11)
 - VÒNG 1, kịch bản: viết nháp xong phải cho Claude chấm (workflow `script-review.yml`, inputs draft + url bài X, file script_review.py).
   Dưới 8 điểm thì sửa đúng các góp ý "fixes" rồi chấm lại. CHỈ khi đạt từ 8 điểm mới gửi Trọng duyệt, kèm điểm từng tiêu chí.

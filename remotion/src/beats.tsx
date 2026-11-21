@@ -1,0 +1,198 @@
+import React from 'react';
+import {Img, interpolate, Sequence, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {C, clamp, CountUp, FONT, useAccent} from './ui';
+import {DataPanel} from './data';
+
+// Trọng 21/11: "hình phải ăn khớp lời đọc, sáng tạo hơn". Mỗi phần chia thành nhiều "beat" (nhịp hình),
+// mỗi beat bật lên ĐÚNG lúc giọng đọc nói tới cụm từ đó (s = giây trong cảnh), đổi kiểu hình liên tục.
+export type Side = {label: string; value: string; logo?: string | null; tone?: 'up' | 'down' | 'flat'};
+export type Beat = {
+  s: number;
+  type: 'bignum' | 'versus' | 'dots' | 'flow' | 'statement' | 'chart' | 'logos' | 'question';
+  value?: string; label?: string; logo?: string | null; tone?: 'up' | 'down' | 'flat';
+  left?: Side; right?: Side;
+  total?: number; hit?: number;
+  steps?: string[];
+  text?: string; sub?: string;
+  ticker?: string;
+  items?: Side[];
+};
+
+const toneColor = (t?: string) => (t === 'down' ? C.red : t === 'up' ? C.green : C.ink);
+
+const Card: React.FC<{w: number; h: number; children: React.ReactNode; pad?: number}> = ({w, h, children, pad = 40}) => {
+  const ac = useAccent();
+  return (
+    <div style={{width: w, height: h, borderRadius: 28, background: C.panel, border: `1px solid ${C.line}`, borderTop: `5px solid ${ac}`,
+      boxShadow: '0 20px 56px rgba(40,50,110,0.14)', padding: pad, boxSizing: 'border-box', fontFamily: FONT, position: 'relative',
+      overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>{children}</div>
+  );
+};
+
+const Logo: React.FC<{src?: string | null; size: number; label?: string}> = ({src, size, label}) => {
+  const ac = useAccent();
+  return src ? <Img src={staticFile(src)} style={{width: size, height: size, borderRadius: 999, boxShadow: '0 8px 22px rgba(40,50,110,0.18)'}} />
+    : <div style={{width: size, height: size, borderRadius: 999, background: `${ac}22`, color: ac, fontWeight: 800, fontSize: size * 0.34,
+      display: 'flex', alignItems: 'center', justifyContent: 'center'}}>{(label || '?').slice(0, 4)}</div>;
+};
+
+const BigNum: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => (
+  <Card w={w} h={h}>
+    <div style={{display: 'flex', alignItems: 'center', gap: 34}}>
+      {b.logo !== undefined ? <Logo src={b.logo} size={150} label={b.label} /> : null}
+      <div style={{display: 'flex', flexDirection: 'column', gap: 12}}>
+        <CountUp value={b.value || ''} size={150} delay={2} color={toneColor(b.tone)} />
+        <div style={{fontSize: 34, fontWeight: 700, color: C.muted, maxWidth: w - 300, lineHeight: 1.2}}>{b.label}</div>
+      </div>
+    </div>
+  </Card>
+);
+
+const Versus: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
+  const f = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const side = (x: Side | undefined, i: number) => {
+    if (!x) return null;
+    const s = spring({frame: f - 4 - i * 10, fps, config: {damping: 14}});
+    return (
+      <div style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, opacity: s,
+        transform: `translateY(${(1 - s) * 40}px)`}}>
+        <Logo src={x.logo} size={130} label={x.label} />
+        <div style={{fontSize: 40, fontWeight: 800, color: C.ink}}>{x.label}</div>
+        <CountUp value={x.value} size={96} delay={8 + i * 10} color={toneColor(x.tone)} />
+      </div>
+    );
+  };
+  return (
+    <Card w={w} h={h}>
+      <div style={{display: 'flex', alignItems: 'center'}}>
+        {side(b.left, 0)}
+        <div style={{fontSize: 46, fontWeight: 800, color: C.muted}}>VS</div>
+        {side(b.right, 1)}
+      </div>
+      {b.sub ? <div style={{textAlign: 'center', marginTop: 22, fontSize: 26, fontWeight: 600, color: C.muted}}>{b.sub}</div> : null}
+    </Card>
+  );
+};
+
+const Dots: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
+  const f = useCurrentFrame();
+  const total = b.total || 10, hit = b.hit || 0;
+  const ac = useAccent();
+  const cols = Math.min(total, 8);
+  const size = Math.min(70, (w - 120) / cols - 14);
+  return (
+    <Card w={w} h={h}>
+      <div style={{display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center', maxWidth: cols * (size + 14)}}>
+        {Array.from({length: total}).map((_, i) => {
+          const on = i < hit && f > 6 + i * 3;
+          return <div key={i} style={{width: size, height: size, borderRadius: 999, background: on ? C.green : `${C.ink}14`,
+            transform: `scale(${on ? 1 : 0.85})`, transition: 'none', boxShadow: on ? `0 0 0 5px ${C.green}22` : 'none'}} />;
+        })}
+      </div>
+      <div style={{display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 18, marginTop: 30}}>
+        <div style={{fontSize: 92, fontWeight: 800, color: ac}}>{hit}/{total}</div>
+        <div style={{fontSize: 30, fontWeight: 700, color: C.muted, maxWidth: w - 330, lineHeight: 1.2}}>{b.label}</div>
+      </div>
+    </Card>
+  );
+};
+
+const Flow: React.FC<{b: Beat; w: number; h: number; t: number; dur: number}> = ({b, w, h, t, dur}) => {
+  const ac = useAccent();
+  const steps = b.steps || [];
+  const each = Math.max(1.2, dur / Math.max(1, steps.length));
+  const cur = Math.min(steps.length - 1, Math.floor(t / each));
+  return (
+    <Card w={w} h={h} pad={34}>
+      {b.label ? <div style={{fontSize: 28, fontWeight: 800, color: C.muted, marginBottom: 18, letterSpacing: 1}}>{b.label}</div> : null}
+      <div style={{display: 'flex', flexDirection: 'column', gap: 14}}>
+        {steps.map((s, i) => {
+          const on = i <= cur;
+          return (
+            <div key={i} style={{display: 'flex', alignItems: 'center', gap: 18, opacity: on ? 1 : 0.3,
+              transform: `translateX(${i === cur ? 10 : 0}px)`}}>
+              <div style={{width: 54, height: 54, borderRadius: 16, background: i === cur ? ac : `${ac}22`, color: i === cur ? '#fff' : ac,
+                fontWeight: 800, fontSize: 26, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>{i + 1}</div>
+              <div style={{fontSize: i === cur ? 40 : 34, fontWeight: i === cur ? 800 : 600, color: C.ink}}>{s}</div>
+            </div>
+          );
+        })}
+      </div>
+    </Card>
+  );
+};
+
+const Statement: React.FC<{b: Beat; w: number; h: number; question?: boolean}> = ({b, w, h, question}) => {
+  const f = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const ac = useAccent();
+  const s = spring({frame: f - 2, fps, config: {damping: 13}});
+  return (
+    <Card w={w} h={h} pad={56}>
+      {question ? <div style={{fontSize: 120, fontWeight: 900, color: ac, lineHeight: 0.8, marginBottom: 10}}>?</div>
+        : <div style={{fontSize: 120, fontWeight: 900, color: `${ac}55`, lineHeight: 0.6, marginBottom: 10}}>“</div>}
+      <div style={{fontSize: (b.text || '').length > 40 ? 52 : 64, fontWeight: 800, color: C.ink, lineHeight: 1.18,
+        transform: `scale(${interpolate(s, [0, 1], [0.92, 1])})`, opacity: s, transformOrigin: 'left center'}}>{b.text}</div>
+      {b.sub ? <div style={{fontSize: 28, fontWeight: 600, color: C.muted, marginTop: 22}}>{b.sub}</div> : null}
+    </Card>
+  );
+};
+
+const Logos: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
+  const f = useCurrentFrame();
+  const items = (b.items || []).slice(0, 4);
+  return (
+    <Card w={w} h={h}>
+      {b.label ? <div style={{fontSize: 30, fontWeight: 800, color: C.muted, marginBottom: 26, textAlign: 'center'}}>{b.label}</div> : null}
+      <div style={{display: 'flex', justifyContent: 'space-around'}}>
+        {items.map((x, i) => {
+          const s = interpolate(f - 4 - i * 8, [0, 12], [0, 1], clamp);
+          return (
+            <div key={i} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, opacity: s, transform: `scale(${0.8 + s * 0.2})`}}>
+              <Logo src={x.logo} size={110} label={x.label} />
+              <div style={{fontSize: 30, fontWeight: 800, color: C.ink}}>{x.label}</div>
+              {x.value ? <div style={{fontSize: 40, fontWeight: 800, color: toneColor(x.tone)}}>{x.value}</div> : null}
+            </div>
+          );
+        })}
+      </div>
+    </Card>
+  );
+};
+
+// Chọn beat đang chạy theo thời gian t (giây trong cảnh)
+export const BeatPanel: React.FC<{beats: Beat[]; t: number; sceneDur: number; data: any; w: number; h: number}> = ({beats, t, sceneDur, data, w, h}) => {
+  const {fps} = useVideoConfig();
+  const list = [...beats].sort((a, b) => a.s - b.s);
+  let i = -1;
+  list.forEach((b, k) => { if (t >= b.s - 0.15) i = k; });
+  if (i < 0) i = 0;
+  const b = list[i];
+  const end = list[i + 1]?.s ?? sceneDur;
+  const local = t - b.s;
+  const inP = interpolate(local, [-0.15, 0.25], [0, 1], clamp);
+  const body = (() => {
+    switch (b.type) {
+      case 'bignum': return <BigNum b={b} w={w} h={h} />;
+      case 'versus': return <Versus b={b} w={w} h={h} />;
+      case 'dots': return <Dots b={b} w={w} h={h} />;
+      case 'flow': return <Flow b={b} w={w} h={h} t={Math.max(0, local)} dur={end - b.s} />;
+      case 'logos': return <Logos b={b} w={w} h={h} />;
+      case 'question': return <Statement b={b} w={w} h={h} question />;
+      case 'chart': return <DataPanel spec={{type: 'coin_chart', tickers: [b.ticker || ''], title: b.label}} data={data} w={w} h={h} />;
+      default: return <Statement b={b} w={w} h={h} />;
+    }
+  })();
+  // mỗi beat là một "cảnh con": Sequence-like bằng cách reset frame qua key
+  return (
+    <div key={i} style={{opacity: inP, transform: `translateY(${(1 - inP) * 24}px) scale(${1 + Math.max(0, local) * 0.004})`}}>
+      <FrameShift from={Math.round(b.s * fps)}>{body}</FrameShift>
+    </div>
+  );
+};
+
+// cho con dùng useCurrentFrame() tính từ lúc beat bắt đầu
+const FrameShift: React.FC<{from: number; children: React.ReactNode}> = ({from, children}) => (
+  <Sequence from={from} layout="none">{children}</Sequence>
+);

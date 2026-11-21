@@ -2,6 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Audio, Img, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {AccentCtx, tone, Backdrop, C, Captions, Chip, clamp, CountUp, FONT, Glitch, RevealWords, useAccent, useFonts, useSpring, Word} from './ui';
 import {DataPanel, DataSpec} from './data';
+import {Beat, BeatPanel} from './beats';
 
 export type Post = {author: string; handle: string; avatar?: string; cover?: string; title?: string; text?: string;
   likes?: number; views?: number; retweets?: number};
@@ -12,7 +13,7 @@ export type Scene = {
   hook?: string; stat?: string; label?: string; images?: string[];
   title?: string; theme?: string;
   idx?: number; total?: number; heading?: string; keyStat?: string; keyLabel?: string; bullets?: string[];
-  quote?: string; source?: string; data?: DataSpec | null; points?: string[]; project?: Project | null;
+  quote?: string; source?: string; data?: DataSpec | null; beats?: Beat[]; points?: string[]; project?: Project | null;
 };
 export type InsightProps = {fps: number; width: number; height: number; audio: string; music?: string; duration: number;
   scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string; mode?: string; shortTitle?: string};
@@ -59,10 +60,11 @@ const HookScene: React.FC<{sc: Scene}> = ({sc}) => {
   <AbsoluteFill>
     <Backdrop img={sc.images?.[0]} dim={0.7} />
     <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 26, transform: `scale(${zoom})`}}>
-      {sc.stat ? <CountUp value={sc.stat} size={220} delay={4} /> : null}
-      {sc.label ? <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 36, color: C.muted, letterSpacing: 4, textTransform: 'uppercase'}}>{sc.label}</div> : null}
+      {sc.beats?.length ? <div style={{order: 2}}><BeatPanel beats={sc.beats} t={f / 30} sceneDur={sc.dur} data={null} w={1100} h={470} /></div>
+        : sc.stat ? <CountUp value={sc.stat} size={220} delay={4} /> : null}
+      {sc.label && !sc.beats?.length ? <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 36, color: C.muted, letterSpacing: 4, textTransform: 'uppercase'}}>{sc.label}</div> : null}
       <div style={{maxWidth: 1500, textAlign: 'center', display: 'flex', justifyContent: 'center'}}>
-        <RevealWords text={sc.hook || ''} size={sc.stat ? 66 : 96} delay={sc.stat ? 16 : 2} stagger={2} maxWidth={1560} />
+        <RevealWords text={sc.hook || ''} size={sc.beats?.length ? 64 : sc.stat ? 66 : 96} delay={sc.stat ? 16 : 2} stagger={2} maxWidth={1560} />
       </div>
     </AbsoluteFill>
   </AbsoluteFill>
@@ -215,6 +217,8 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Po
       </div>
       <div style={{position: 'absolute', right: 100, top: 190, width: 840, height: 560,
         transform: `scale(${1 + Math.min(t, 40) * 0.0015}) translateY(${-Math.min(t, 40) * 0.4}px)`, transformOrigin: 'center'}}>
+        {sc.beats?.length ? <BeatPanel beats={sc.beats} t={t} sceneDur={sc.dur} data={data} w={840} h={560} /> : null}
+        {sc.beats?.length ? null : <>
         <div style={{position: 'absolute', inset: 0, opacity: toQuote ? interpolate(t - quoteAt, [0, 0.5], [1, 0], clamp) : 1}}>
           {hasData ? <DataPanel spec={sc.data!} data={data} w={840} h={560} />
             : <QuoteCard post={post || null} quote={sc.quote || sc.heading || ''} w={840} h={560} />}
@@ -224,7 +228,8 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Po
             <Sequence from={Math.round(quoteAt * fps)} layout="none"><QuoteCard post={post || null} quote={sc.quote!} w={840} h={560} /></Sequence>
           </div>
         ) : null}
-        {sc.keyStat ? (
+        </>}
+        {sc.keyStat && !sc.beats?.length ? (
           <div style={{position: 'absolute', right: 0, top: 590, padding: '14px 28px', display: 'flex', alignItems: 'center', gap: 20,
             borderRadius: 18, background: C.panel, border: `1px solid ${C.line}`}}>
             <div style={{whiteSpace: 'nowrap'}}><CountUp value={sc.keyStat} size={sc.keyStat.length > 6 ? 44 : 58} delay={20} /></div>

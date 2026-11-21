@@ -97,6 +97,44 @@ def mix_music(voice_wav: Path, out_wav: Path, seconds: float, seed: int):
     tmp.unlink()
 
 
+
+def _norm(w: str) -> str:
+    return re.sub(r"[^\w%$/]", "", w.lower())
+
+
+def beats_for(beats: list, words: list, dur: float, data: dict) -> list:
+    """Gắn mỗi nhịp hình vào ĐÚNG lúc giọng đọc nói cụm từ "at" (Trọng 21/11: hình phải khớp lời)."""
+    ws = [_norm(w["t"]) for w in words]
+    coins = data.get("coins") or {}
+
+    def logo(x):
+        if isinstance(x, dict) and x.get("logo"):
+            t = str(x["logo"]).lstrip("$").upper()
+            x = {**x, "logo": (coins.get(t) or {}).get("logo")}
+        return x
+    out, last = [], -1
+    for k, b in enumerate(beats):
+        ph = [_norm(x) for x in str(b.get("at", "")).split() if _norm(x)]
+        s = None
+        for i in range(last + 1, len(ws) - len(ph) + 1):
+            if ph and ws[i:i + len(ph)] == ph:
+                s, last = words[i]["s"], i
+                break
+        if s is None:   # không khớp: rải đều
+            s = dur * k / max(1, len(beats))
+            log(f"   ! nhịp hình '{b.get('at')}' không khớp lời đọc, đặt ở {s:.1f}s")
+        nb = {kk: v for kk, v in b.items() if kk != "at"}
+        nb = logo(nb)
+        for side in ("left", "right"):
+            if side in nb:
+                nb[side] = logo(nb[side])
+        if "items" in nb:
+            nb["items"] = [logo(x) for x in nb["items"]]
+        if "logo" in b and nb.get("logo") is None:
+            nb["logo"] = None
+        out.append({**nb, "s": round(max(0.0, s), 2)})
+    return out
+
 def project_of(s: dict, data: dict) -> dict | None:
     pj = s.get("project") or {}
     t = str(pj.get("ticker") or "").lstrip("$").upper()
@@ -183,7 +221,8 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
             scenes.append({**base, "type": "hook", "hook": V.en_money(plan.get("hook_screen") or plan.get("hook", "")),  # chữ trên hình đã duyệt
                            "stat": real_number(V.en_money(plan.get("hook_stat", "")), posts),
                            "label": V.en_money(plan.get("hook_label", "")) if real_number(V.en_money(plan.get("hook_stat", "")), posts) else "",
-                           "images": [f"img/{x}" for x in imgs.get("intro", [])][:1]})
+                           "images": [f"img/{x}" for x in imgs.get("intro", [])][:1],
+                           "beats": beats_for(plan.get("hook_beats") or [], sc["words"], sc["dur"], data)})
         elif k == "intro":
             chapters.append((sc["from"], "Mở đầu"))
             scenes.append({**base, "type": "intro", "title": V.en_money(plan.get("title", "")), "theme": plan.get("theme", ""),
@@ -207,7 +246,8 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                            "bullets": [V.en_money(b) for b in (s.get("bullets") or [])][:3],
                            "quote": V.en_money(s.get("quote", "")),
                            "source": "@Trong0322" if plan.get("own_source") else (("@" + src[0]) if src[0] else ""),
-                           "data": dspec or None, "project": proj})
+                           "data": dspec or None, "project": proj,
+                           "beats": beats_for(s.get("beats") or [], sc["words"], sc["dur"], data)})
     chapters[0] = (0.0, chapters[0][1])
     pinfo = {"author": post.get("author", ""), "handle": post.get("handle", ""), "avatar": post.get("avatar"),
              "cover": post.get("cover"), "title": post.get("title", ""), "likes": post.get("likes"),

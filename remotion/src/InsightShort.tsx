@@ -2,6 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Audio, Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {AccentCtx, tone, Backdrop, C, Captions, Chip, CountUp, FONT, RevealWords, useFonts} from './ui';
 import {DataPanel} from './data';
+import {BeatPanel} from './beats';
 import {DEFAULT_ACCENT, InsightProps, QuoteCard} from './Insight';
 
 // Video dọc 9:16 (TikTok / Shorts / Reels): 1 insight, kiểu "dữ liệu thật"
@@ -32,10 +33,11 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
             highlight={[sc.project?.name || ''].filter(Boolean)} />
         </div>
         <div style={{position: 'absolute', top: 700, left: 70}}>
-          {hasData ? <DataPanel spec={sc.data!} data={props.data} w={860} h={500} />
+          {sc.beats?.length ? <BeatPanel beats={sc.beats} t={f / 30} sceneDur={sc.dur} data={props.data} w={860} h={520} />
+            : hasData ? <DataPanel spec={sc.data!} data={props.data} w={860} h={500} />
             : <QuoteCard post={props.post} quote={sc.quote || sc.heading || ''} w={860} h={500} />}
         </div>
-        {sc.keyStat ? <div style={{position: 'absolute', top: 1215, left: 70, display: 'flex', alignItems: 'center', gap: 24}}>
+        {sc.keyStat && !sc.beats?.length ? <div style={{position: 'absolute', top: 1215, left: 70, display: 'flex', alignItems: 'center', gap: 24}}>
           <CountUp value={sc.keyStat} size={72} delay={20} /><div style={{fontFamily: FONT, color: C.muted, fontSize: 30, fontWeight: 600, maxWidth: 480}}>{sc.keyLabel}</div>
         </div> : null}
         <Captions words={sc.words} bottom={440} size={44} maxWidth={860} perChunk={6} />
