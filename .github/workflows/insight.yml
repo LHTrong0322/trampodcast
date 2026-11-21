@@ -15,6 +15,10 @@ on:
         description: "Giọng đọc (vd gemini:Ludo)"
         required: false
         default: "gemini:Ludo"
+      autopost:
+        description: "Tự đăng lên YouTube/Facebook sau khi dựng (true/false). Mặc định false: chỉ dựng để Trọng xem trước"
+        required: false
+        default: "false"
       script:
         description: "Kịch bản đã duyệt (file JSON trong repo, vd scripts/zeroxkyle-approved.json); trống = AI tự viết"
         required: false
@@ -99,7 +103,8 @@ jobs:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           # đăng tự động (docs/social-setup.md): bật bằng Variable SOCIAL_AUTOPOST=1
-          SOCIAL_AUTOPOST: ${{ vars.SOCIAL_AUTOPOST }}
+          # bấm tay (workflow_dispatch) thì KHÔNG tự đăng, trừ khi chọn autopost=true (Trọng duyệt trước khi đăng)
+          SOCIAL_AUTOPOST: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.autopost != 'true') && '0' || vars.SOCIAL_AUTOPOST }}
           SOCIAL_PRIVACY: ${{ vars.SOCIAL_PRIVACY }}
           FB_PUBLISH: ${{ vars.FB_PUBLISH }}
           TIKTOK_PRIVACY: ${{ vars.TIKTOK_PRIVACY }}

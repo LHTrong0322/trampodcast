@@ -156,7 +156,10 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     ic = cfg.get("insight") or {}
     plan, pcm, text, data, voice = load_lab(lab, voice)
     sp_cfg = ic.get("voice_speed") or {}
-    f = float(sp_cfg.get(voice.split(":")[0], 1.0)) if isinstance(sp_cfg, dict) else 1.0
+    try:   # số = hệ số tốc độ; chữ khác (vd "auto") = giữ nguyên tốc độ đọc
+        f = float(sp_cfg.get(voice.split(":")[0], 1.0)) if isinstance(sp_cfg, dict) else 1.0
+    except (TypeError, ValueError):
+        f = 1.0
     pcm = {k: speed(v, f) for k, v in pcm.items()}
     audio, tl, total = build_timeline(plan, pcm, text)
     prep_public(lab)
