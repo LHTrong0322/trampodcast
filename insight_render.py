@@ -226,7 +226,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
         elif k == "intro":
             chapters.append((sc["from"], "Mở đầu"))
             scenes.append({**base, "type": "intro", "title": V.en_money(plan.get("title", "")), "theme": plan.get("theme", ""),
-                           "points": [V.en_money(s["heading"]) for s in secs][:6],
+                           "points": [V.en_money(s["heading"]) for s in secs][:6], "agendaLabel": P.nodash(plan.get("agenda_label", "")),
                            "images": [f"img/{x}" for x in imgs.get("intro", [])][:1]})
         elif k == "outro":
             chapters.append((sc["from"], "Tóm lại"))

@@ -13,7 +13,7 @@ export type Scene = {
   hook?: string; stat?: string; label?: string; images?: string[];
   title?: string; theme?: string;
   idx?: number; total?: number; heading?: string; keyStat?: string; keyLabel?: string; bullets?: string[];
-  quote?: string; source?: string; data?: DataSpec | null; beats?: Beat[]; points?: string[]; project?: Project | null;
+  quote?: string; source?: string; data?: DataSpec | null; beats?: Beat[]; points?: string[]; agendaLabel?: string; project?: Project | null;
 };
 export type InsightProps = {fps: number; width: number; height: number; audio: string; music?: string; duration: number;
   scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string; mode?: string; shortTitle?: string};
@@ -125,14 +125,14 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null}> = ({sc, post}) => {
               <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 26, color: C.muted}}>@Trong0322</div>
             </div>
           </div>
-          <div style={{position: 'absolute', top: 175, display: 'flex', flexDirection: 'column', gap: 28, opacity: out}}>
+          <div style={{position: 'absolute', top: 175, display: t >= agendaAt ? 'none' : 'flex', flexDirection: 'column', gap: 28, opacity: out}}>
             <div><Chip text={(sc.theme || 'INSIGHT').toUpperCase()} /></div>
             <RevealWords text={sc.title || ''} size={70} delay={6} stagger={3} maxWidth={900} />
           </div>
           {t >= agendaAt ? (
             <Sequence from={Math.round(agendaAt * fps)} layout="none">
               <div style={{position: 'absolute', top: 165, display: 'flex', flexDirection: 'column', gap: 24}}>
-                <div><Chip text={`${(sc.points || []).length} INSIGHT TRONG VIDEO`} /></div>
+                <div><Chip text={sc.agendaLabel || `${(sc.points || []).length} INSIGHT TRONG VIDEO`} /></div>
                 {(sc.points || []).map((p, i) => {
                   // review 1915: hiện TỪNG DÒNG rải đều theo thời gian còn lại của phần mở đầu, không hiện cả bảng một lúc
                   const step = Math.max(9, Math.floor(((sc.dur - agendaAt) * fps - 20) / Math.max(1, (sc.points || []).length)));
