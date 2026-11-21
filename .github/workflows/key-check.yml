@@ -2,6 +2,11 @@ name: "Kiểm tra key Gemini còn lượt"
 
 on:
   workflow_dispatch:
+    inputs:
+      only:
+        description: "Chỉ thử các key này (cách nhau dấu phẩy), để trống = tất cả"
+        required: false
+        default: ""
 
 jobs:
   check:
@@ -20,4 +25,4 @@ jobs:
           GEMINI_API_KEY3: ${{ secrets.GEMINI_API_KEY3 }}
           GEMINI_API_KEY4: ${{ secrets.GEMINI_API_KEY4 }}
           GEMINI_API_KEY5: ${{ secrets.GEMINI_API_KEY5 }}
-        run: python key_check.py
+        run: python key_check.py "${{ github.event.inputs.only }}"

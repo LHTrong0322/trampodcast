@@ -3,12 +3,14 @@ import os
 
 import requests
 
-NAMES = ["INSIGHT_GEMINI_API_KEY", "GEMINI_API_KEY", "GEMINI_API_KEY2"] + [f"GEMINI_API_KEY{i}" for i in range(3, 10)]
+import sys
+NAMES = [n for n in (["INSIGHT_GEMINI_API_KEY", "GEMINI_API_KEY", "GEMINI_API_KEY2"] + [f"GEMINI_API_KEY{i}" for i in range(3, 10)])
+         if len(sys.argv) < 2 or n in sys.argv[1].split(",")]
 URL = "https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent"
 
 
 def probe(key: str, model: str, tts: bool) -> str:
-    body = {"contents": [{"parts": [{"text": "Xin chào." if tts else "Trả lời đúng 1 chữ: ok"}]}]}
+    body = {"contents": [{"parts": [{"text": ("Đọc tự nhiên: Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. ""Hôm nay mình phân tích một thesis về altcoin, revenue và buyback.") if tts else "Trả lời đúng 1 chữ: ok"}]}]}
     if tts:
         body["generationConfig"] = {"responseModalities": ["AUDIO"],
                                     "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": "Ludo"}}}}
@@ -32,4 +34,4 @@ for n in NAMES:
         print(f"{n}: trùng với một key khác")
         continue
     print(f"{n}: giọng đọc (gemini-3.8-flash-tts) = {probe(k, 'gemini-3.8-flash-tts', True)} | "
-          f"viết chữ (gemini-2.5-flash) = {probe(k, 'gemini-2.5-flash', False)}")
+          f"viết chữ (gemini-3.8-flash) = {probe(k, 'gemini-3.8-flash', False)}")
