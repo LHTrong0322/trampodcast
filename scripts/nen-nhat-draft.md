@@ -18,7 +18,7 @@ Dạng: own_source (nguồn là Trọng), khoảng 4 phút: 1 phần nền + 4 b
 > Hình: 1 cây nến to, hai bên là chữ "MUA" và "BÁN" kéo về hai phía.
 
 ## Mở đầu
-Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Trước khi vào bài, Trọng muốn nói một điều: phân tích kỹ thuật không phải bói toán, nó là cách đọc hành vi của đám đông. Nhưng trước 4 bước, cần hiểu nó dùng để làm gì.
+Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Có một điều Trọng muốn nói trước: phân tích kỹ thuật không phải bói toán, nó là cách đọc hành vi của đám đông. Và để đọc đúng, cần hiểu nó dùng để làm gì.
 
 ## Phần nền: Phân tích kỹ thuật dùng để làm gì?
 Phân tích cơ bản, hay fundamentals, trả lời câu hỏi mua cái gì. Phân tích kỹ thuật trả lời câu hỏi mua lúc nào. Ở video trước, mình thấy AAVE là dự án tốt mà vẫn giảm 25 phần trăm từ đầu năm. Dự án tốt mà mua sai điểm thì vẫn lỗ. Phân tích kỹ thuật dựa trên ba giả định. Một, giá đã phản ánh mọi tin tức. Hai, giá chạy theo xu hướng, đang tăng thì thường tăng tiếp cho tới khi có dấu hiệu gãy. Ba, lịch sử hay lặp lại, vì tâm lý tham và sợ của con người không đổi. Vậy bạn làm gì? Dùng fundamentals để chọn coin, dùng chart để chọn điểm vào. Giờ vào bước thứ nhất.
