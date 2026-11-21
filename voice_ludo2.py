@@ -17,6 +17,8 @@ from pathlib import Path
 import podcast as P
 import voice_samples as VS
 import voice_ab as AB
+import voice_master as VM
+import subprocess
 
 TERMS = {
     "low float": "low float (English: 'low flow-t')",
@@ -28,21 +30,29 @@ TERMS = {
     "retail": "retail (English: 'REE-tail')",
 }
 
-PROMPT = """Ludo: Host of "Smart Penguin Insights", a Vietnamese crypto explainer channel on YouTube.
-A sharp, calm analyst explaining to a smart friend over coffee. Warm, confident, never a news anchor, never robotic.
+ACCENT = {
+    "hn": "Standard Northern Vietnamese (Hanoi) accent, the polished diction of a VTV finance presenter. "
+          "Crisp consonants, clean tones, no regional or rural coloring at all.",
+    "sg": "Educated urban Saigon accent, polished and modern like a top Vietnamese business podcast host. "
+          "Clear diction, no countryside or rural coloring at all.",
+}
 
-Scene: Recording a YouTube video in a quiet studio. He has read this script many times, so he speaks it naturally,
-like he is thinking it through, not reading.
+PROMPT = """Ludo: Host of "Smart Penguin Insights", a premium Vietnamese crypto and finance channel on YouTube.
+Sounds like a senior market analyst who also presents on a national finance show: deep, warm, composed, authoritative,
+quietly confident. Polished and professional, like Bloomberg or a VTV finance segment, never folksy, never
+salesy, never a hyped TikTok voice, never robotic.
 
-Notes: Language: native Southern-neutral Vietnamese with correct tones.
-Pacing: brisk and engaging like a good YouTuber, about 180 words per minute, but never rushed or swallowing words.
-Breathing: take a natural breath at every line break. Pause briefly at commas,
-a little longer at full stops and after a colon. Slow down slightly on the key idea of each sentence.
-Emphasis: lean on numbers, on list markers ("Thứ nhất", "Thứ hai") and on the contrast words ("còn", "nhưng").
-English terms: these words are English and must sound like a fluent bilingual speaker saying them in English,
-with English stress, NOT Vietnamese tones, then flow straight back into Vietnamese:
+Scene: Recording in a treated professional studio with a broadcast microphone, close and intimate, low and resonant.
+
+Notes: Accent: {accent}
+Pacing: measured and calm, about 160 words per minute. Unhurried, every syllable clear. Never rush.
+Breathing: a natural breath at every line break. Brief pause at commas, a fuller pause at full stops and after a colon.
+Intonation: steady and controlled; sentences end firmly, not rising, not sing-song. Avoid exaggerated or dramatic swings.
+Emphasis: subtle stress on numbers, list markers ("Thứ nhất", "Thứ hai") and contrast words ("còn", "nhưng").
+English terms: these are English words; say them like a Vietnamese professional educated abroad, with natural
+English pronunciation and stress, NOT with Vietnamese tones, then flow smoothly back into Vietnamese:
 {terms}
-Opening line: a little more energy to hook the listener, then settle into the calm analytical tone.
+Opening line: slightly more presence to draw the listener in, still calm and premium.
 Words in square brackets like [short pause] are silent pause cues, never read them aloud."""
 
 
@@ -78,23 +88,30 @@ def main():
     VS.WORDS[0] = len(text.split())
     used = [v for k, v in TERMS.items() if k.lower() in text.lower()]
     terms = "\n".join("- " + v for v in used)
-    for code, label, body in (
-        ("F", "Ludo bản 2: ngắt nghỉ tự nhiên + phát âm tiếng Anh", lines(text)),
-        ("G", "Ludo bản 2 + thẻ nghỉ ở chỗ nhấn", tagged(lines(text))),
-    ):
+    plain = lines(text)
+    variants = [
+        ("J", "Ludo", "hn", "Ludo giọng chuẩn Hà Nội, dẫn chương trình tài chính"),
+        ("K", "Ludo", "sg", "Ludo giọng Sài Gòn thành thị, podcast kinh doanh"),
+        ("L", "Charon", "hn", "Charon (giọng trầm, rõ) chuẩn Hà Nội"),
+        ("M", "Sadaltager", "hn", "Sadaltager (giọng chuyên gia) chuẩn Hà Nội"),
+    ]
+    for code, voice, acc, label in variants:
         print(code, label)
-        print(body)
         try:
-            pcm = gem.tts(["gemini-3.8-flash-tts"], "Ludo", PROMPT.format(terms=terms), body)
+            pcm = gem.tts(["gemini-3.8-flash-tts"], voice, PROMPT.format(accent=ACCENT[acc], terms=terms), plain)
             sec = len(pcm) / (P.SAMPLE_RATE * 2)
-            if sec > len(body.split()) / 150 * 60 * 1.4:   # dài bất thường = máy đọc cả lời dặn, bỏ
+            if sec > len(plain.split()) / 150 * 60 * 1.4:   # dài bất thường = máy đọc cả lời dặn, bỏ
                 raise RuntimeError(f"audio dài bất thường {sec:.0f}s, có thể đọc nhầm lời dặn")
-            p = out / f"{code}-ludo.mp3"
-            VS.to_mp3(pcm, p)
-            VS.send(p, f"{code}. {label}")
+            raw = out / f"{code}-raw.mp3"
+            VS.to_mp3(pcm, raw)
+            p = out / f"{code}-{voice.lower()}.mp3"
+            subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(raw), "-af", VM.CHAIN.format(tempo=1.0),
+                            "-ar", "48000", "-b:a", "160k", str(p)], check=True)
+            raw.unlink()
+            VS.send(p, f"{code}. {label} (đã làm đẹp giọng)")
         except Exception as ex:
             print(f"   ! {code} lỗi: {str(ex)[:300]}")
-        time.sleep(15)
+        time.sleep(12)
 
 
 def raw_tts(gem, prompt: str) -> bytes:
