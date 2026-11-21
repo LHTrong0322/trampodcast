@@ -27,7 +27,7 @@ Chấm THẲNG TAY từng tiêu chí trên thang 10 (số thập phân được)
 - loi_hua: hứa rõ số lượng (vd "4 câu hỏi") ngay đầu và đếm to đúng như hứa
 - giu_chan: cứ 40 đến 60 giây có câu móc hoặc câu hỏi chuyển phần; không có đoạn lý thuyết khô kéo dài
 - gia_tri: mỗi phần có ví dụ thật + "vậy bạn làm gì" dùng được ngay; đúng với tiêu đề
-- de_hieu: câu ngắn (đa số dưới 20 từ), thuật ngữ khó có giải thích ngắn lần đầu, đọc to nghe tự nhiên
+- de_hieu: câu ngắn (đa số dưới 20 từ), đọc to nghe tự nhiên; thuật ngữ thường có giải thích ngắn, nhưng KHÔNG bắt buộc giải thích hết (Trọng chốt 21/11: có đoạn được viết chuyên nghiệp như pro researcher), không trừ điểm vì thế
 - chinh_xac: số liệu khớp bài gốc, không bịa, không hô hào mua bán, có câu "không phải lời khuyên đầu tư"
 - quy_tac: đúng quy tắc từ ngữ của Trọng (xem bên dưới)
 - ket: kết bằng nhắc lại ý chính trong 1 câu + kêu gọi bình luận cụ thể
