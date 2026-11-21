@@ -34,6 +34,12 @@
   YouTube handle đang đổi sang @smartpenguininsights cho giống Facebook (Trọng làm tay, API không đổi được).
   Facebook token thiếu pages_manage_engagement nên máy không bình luận được trên Reel (gửi Telegram để dán tay).
   Facebook token thiếu pages_manage_metadata nên không đổi ảnh bìa Trang được (Trọng tải tay).
+- TỪ CHUYÊN NGÀNH (Trọng 13:03 21/11): ưu tiên giữ TIẾNG ANH (buyback, unlock, revenue, tokenomics, holder, VC,
+  overhang, DCA...), không dịch. CHỈ từ VIẾT TẮT mới giải thích tiếng Việt lần đầu (vd "FDV, tức định giá khi toàn bộ
+  token đã phát hành"). Đã thêm vào SYSTEM trong insight.py; áp dụng cả khi viết kịch bản nháp trong chat.
+- FACEBOOK KHÔNG GẮN LINK TRONG BÀI (Trọng 13:03 21/11): Facebook bóp tiếp cận bài có link. Caption Reel và mô tả
+  video Facebook phải sạch link (social_upload.strip_links làm tự động ở mọi đường đăng). Link YouTube + Telegram chỉ
+  đặt ở BÌNH LUẬN đầu. Không bình luận được thì BỎ QUA, không gắn link ở đâu cả.
 - TỪ NGỮ (Trọng 21/11): dùng "insider" thay "người trong cuộc", "retail" thay "nhỏ lẻ / nhà đầu tư nhỏ lẻ" trong lời đọc
   và chữ trên hình (đã thêm vào SYSTEM trong insight.py; nhớ áp dụng khi viết kịch bản nháp).
 - insight.yml đang TẮT (disabled_manually) để chặn lịch tự dựng 3 tiếng/lần khi chưa duyệt kịch bản.
