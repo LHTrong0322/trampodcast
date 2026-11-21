@@ -1,0 +1,31 @@
+name: "Xoá video cũ (chỉ khi Trọng ra lệnh)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      youtube:
+        description: "ID video YouTube cần xoá (cách nhau dấu phẩy)"
+        required: false
+        default: ""
+      facebook:
+        description: "ID video/Reel Facebook cần xoá (cách nhau dấu phẩy)"
+        required: false
+        default: ""
+
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests feedparser pyyaml beautifulsoup4 pillow numpy
+      - name: Xoá
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+        run: python social_delete.py "${{ github.event.inputs.youtube }}" "${{ github.event.inputs.facebook }}"
