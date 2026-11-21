@@ -369,18 +369,25 @@ def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
             continue
         import voice_ab as VA
         import voice_master as VM
+        import tts_qa
         txt = VL.lines(VA.speakable(t))
-        for attempt in range(3):
+        raw = outdir / f"{i:02d}.raw.wav"
+        # Trọng chốt 21/11: nghe lại từng đoạn trước khi dựng, lặp/thiếu/thừa thì đọc lại (tối đa 4 lần)
+        for attempt in range(4):
             pcm = V.tts_once(gem, cfg, txt)
             sec = len(pcm) / (P.SAMPLE_RATE * 2)
-            if sec <= len(txt.split()) / 150 * 60 * 1.35:
-                break
-            log(f"   ! đoạn {i} dài bất thường ({sec:.0f}s), có thể máy đọc cả lời dặn, đọc lại")
+            if sec > len(txt.split()) / 150 * 60 * 1.35:
+                why = f"dài bất thường {sec:.0f}s"
+            else:
+                V.pcm_to_wav(pcm, raw)
+                ok, why = tts_qa.check(str(raw), t)
+                if ok:
+                    log(f"   ✓ đoạn {i}: {why}")
+                    break
+            log(f"   ! đoạn {i} lỗi ({why}), đọc lại lần {attempt + 2}")
             time.sleep(10)
         else:
-            raise RuntimeError(f"đoạn {i} đọc lỗi 3 lần (dài bất thường)")
-        raw = outdir / f"{i:02d}.raw.wav"
-        V.pcm_to_wav(pcm, raw)
+            raise RuntimeError(f"đoạn {i} đọc lỗi 4 lần ({why}), dừng dựng để không gửi video lỗi")
         # làm đẹp giọng kiểu studio, giữ nguyên tốc độ
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(raw), "-af", VM.CHAIN.format(tempo=1.0),
                         "-ar", str(P.SAMPLE_RATE), "-ac", "1", "-c:a", "pcm_s16le", str(outdir / f"{i:02d}.wav")],
