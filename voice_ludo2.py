@@ -28,17 +28,14 @@ TERMS = {
     "retail": "retail (English: 'REE-tail')",
 }
 
-PROMPT = """# AUDIO PROFILE: Ludo
-Host of "Smart Penguin Insights", a Vietnamese crypto explainer channel on YouTube.
+PROMPT = """Ludo: Host of "Smart Penguin Insights", a Vietnamese crypto explainer channel on YouTube.
 A sharp, calm analyst explaining to a smart friend over coffee. Warm, confident, never a news anchor, never robotic.
 
-# THE SCENE
-Recording a YouTube video in a quiet studio. He has read this script many times, so he speaks it naturally,
+Scene: Recording a YouTube video in a quiet studio. He has read this script many times, so he speaks it naturally,
 like he is thinking it through, not reading.
 
-# DIRECTOR'S NOTES
-Language: native Southern-neutral Vietnamese with correct tones.
-Pacing: relaxed and unhurried, about 160 words per minute. Never rush.
+Notes: Language: native Southern-neutral Vietnamese with correct tones.
+Pacing: brisk and engaging like a good YouTuber, about 180 words per minute, but never rushed or swallowing words.
 Breathing: take a natural breath at every line break. Pause briefly at commas,
 a little longer at full stops and after a colon. Slow down slightly on the key idea of each sentence.
 Emphasis: lean on numbers, on list markers ("Thứ nhất", "Thứ hai") and on the contrast words ("còn", "nhưng").
@@ -46,10 +43,7 @@ English terms: these words are English and must sound like a fluent bilingual sp
 with English stress, NOT Vietnamese tones, then flow straight back into Vietnamese:
 {terms}
 Opening line: a little more energy to hook the listener, then settle into the calm analytical tone.
-Read ONLY the transcript, word for word. Never read these notes or any headings or tags in brackets aloud.
-
-# TRANSCRIPT
-{text}"""
+Words in square brackets like [short pause] are silent pause cues, never read them aloud."""
 
 
 def lines(t: str) -> str:
@@ -91,8 +85,10 @@ def main():
         print(code, label)
         print(body)
         try:
-            prompt = PROMPT.format(terms=terms, text=body)
-            pcm = raw_tts(gem, prompt)
+            pcm = gem.tts(["gemini-3.8-flash-tts"], "Ludo", PROMPT.format(terms=terms), body)
+            sec = len(pcm) / (P.SAMPLE_RATE * 2)
+            if sec > len(body.split()) / 150 * 60 * 1.4:   # dài bất thường = máy đọc cả lời dặn, bỏ
+                raise RuntimeError(f"audio dài bất thường {sec:.0f}s, có thể đọc nhầm lời dặn")
             p = out / f"{code}-ludo.mp3"
             VS.to_mp3(pcm, p)
             VS.send(p, f"{code}. {label}")
