@@ -295,6 +295,11 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     except (TypeError, ValueError):
         f = 1.0
     pcm = {k: speed(v, f) for k, v in pcm.items()}
+    # Trọng 22/11: đoạn giáo dục quan trọng ("edu": true trong phần) đọc chậm hơn 5% cho người xem kịp hiểu, còn lại giữ nguyên
+    for i, sec in enumerate(plan.get("sections") or []):
+        if sec.get("edu") and f"s{i}" in pcm:
+            pcm[f"s{i}"] = speed(pcm[f"s{i}"], float(ic.get("edu_speed", 0.95)))
+            log(f"   Phần {i + 1} là đoạn giáo dục: đọc chậm 5%")
     orig = dict(pcm)   # video ngắn dùng giọng gốc (không có nhạc nền nên không chèn khoảng nghỉ)
     pcm, pre, brk = music_breaks(plan, pcm, text)
     audio, tl, total = build_timeline(plan, pcm, text, pre=pre)

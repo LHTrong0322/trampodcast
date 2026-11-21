@@ -265,3 +265,7 @@ postfa.st/sizes/youtube/shorts.
 7. Không dùng thẻ "question" (chỉ có chữ câu hỏi, review trừ điểm): thay bằng số liệu, biểu đồ, logo kèm số. video_lint báo lỗi nếu còn.
 8. Biểu đồ/so sánh (race, versus, chart) chiếm trọn khung, cột chữ lùi đi: khung hình đổi bố cục, không lúc nào cũng "chữ trái thẻ phải".
 9. Sau mỗi bản dựng: đọc reviews.json, mục nào dưới 7 thì sửa khung rồi dựng lại cho tới khi đạt. Bot review nay xem 18 khung kèm giây, lời đang đọc và số lần đổi hình đo bằng máy.
+
+## Nhịp đọc đoạn giáo dục (Trọng 22/11)
+- Phần có `"edu": true` (giảng kiến thức/khái niệm quan trọng) đọc chậm hơn 5% (config insight.edu_speed = 0.95). Các phần khác giữ nguyên tốc độ như video 2.
+- Danh sách video đã đánh số: scripts/posts/VIDEOS.md (video 1 = Kyle, video 2 = Kaffchad).

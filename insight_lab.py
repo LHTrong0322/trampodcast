@@ -37,6 +37,7 @@ PROMPT = I.PROMPT.replace(
                 "items": [{{"label": "≤ 5 từ", "value": "con số/kiểu tiếng Anh ngắn hoặc trống"}}],
                 "title": "tiêu đề ngắn cho hình, ≤ 6 từ"}},
       "project": {{"name": "tên dự án/coin CHÍNH được bàn trong phần này (vd Hyperliquid), trống nếu không có", "ticker": "vd HYPE"}},
+      "edu": "true nếu phần này giảng một kiến thức/khái niệm quan trọng (giọng tự đọc chậm 5%), không thì false",
       "emphasis": "nhãn ≤ 4 từ nếu đây là phần hook đã hứa riêng (vd CÂU NGƯỜI TA BỎ QUA), không thì trống",
       "beats": [{{"at": "3-5 chữ CHÉP NGUYÊN từ lời đọc, hình hiện đúng lúc giọng nói cụm này",
                  "type": "bignum | versus | dots | flow | logos | race | chart | statement | question",
