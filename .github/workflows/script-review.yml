@@ -1,0 +1,48 @@
+name: "Vòng 1: Claude chấm kịch bản nháp (từ 8 điểm mới gửi Trọng)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      draft:
+        description: "File kịch bản nháp, vd scripts/kaffchad-draft.md"
+        required: true
+      url:
+        description: "Link bài X gốc (để kiểm tra số liệu)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Cài thư viện
+        run: |
+          pip install -q requests feedparser pyyaml beautifulsoup4 pillow numpy
+          npm i -g --silent @anthropic-ai/claude-code
+      - name: Lấy bài gốc + bài học
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api 'repos/${{ github.repository }}/contents/insight/lessons.md?ref=podcast-data' -H 'Accept: application/vnd.github.raw' > lessons.md || true
+          mkdir -p lab
+          if [ -n "${{ github.event.inputs.url }}" ]; then
+            python -c "
+          import sys; from pathlib import Path; import insight_lab as L
+          p = L.read_post(sys.argv[1], Path('lab')); Path('source.txt').write_text(p.get('text',''))
+          " "${{ github.event.inputs.url }}" || true
+          fi
+      - name: Claude chấm kịch bản
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: python script_review.py "${{ github.event.inputs.draft }}" source.txt
