@@ -3,8 +3,8 @@ import {AbsoluteFill, Img, staticFile} from 'remotion';
 import {AccentCtx, tone, C, FONT, useFonts} from './ui';
 
 // Ảnh bìa YouTube 1280×720: chữ to, 1 con số, logo dự án + logo kênh
-export type ThumbProps = {text: string; stat?: string; accent?: string; projectLogo?: string | null; bg?: string | null; brand: string; points?: string[]};
-export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5', projectLogo, bg, brand, points = []}) => {
+export type ThumbProps = {text: string; stat?: string; accent?: string; projectLogo?: string | null; bg?: string | null; brand: string; points?: string[]; warn?: boolean};
+export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5', projectLogo, bg, brand, points = [], warn = false}) => {
   const accent = tone(acIn);
   useFonts();
   const words = (text || '').toUpperCase().split(/\s+/);
@@ -34,9 +34,9 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5
         {projectLogo && !points.length ? <Img src={staticFile(projectLogo)} style={{position: 'absolute', right: 110, top: 200, width: 300, height: 300, borderRadius: '50%',
           boxShadow: `0 0 0 10px ${accent}55, 0 18px 50px rgba(40,50,110,0.15)`}} /> : null}
         {/* review 1518: thêm điểm nhìn gây tò mò, biểu tượng cảnh báo đỏ */}
-        <div style={{position: 'absolute', right: points.length ? 420 : 60, top: points.length ? 120 : 60, width: 104, height: 104, borderRadius: 99,
+        {warn ? <div style={{position: 'absolute', right: points.length ? 420 : 60, top: points.length ? 120 : 60, width: 104, height: 104, borderRadius: 99,
           background: '#E5383B', color: '#FFFFFF', fontSize: 72, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 0 0 8px rgba(229,56,59,0.22), 0 14px 34px rgba(229,56,59,0.35)', transform: 'rotate(-8deg)'}}>!</div>
+          boxShadow: '0 0 0 8px rgba(229,56,59,0.22), 0 14px 34px rgba(229,56,59,0.35)', transform: 'rotate(-8deg)'}}>!</div> : null}
         <div style={{position: 'absolute', right: 40, bottom: 30, color: 'rgba(19,24,54,0.7)', fontWeight: 700, fontSize: 28}}>@Trong0322</div>
       </AbsoluteFill>
     </AccentCtx.Provider>

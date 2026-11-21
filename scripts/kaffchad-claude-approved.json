@@ -1,0 +1,199 @@
+{
+ "title": "Coin tốt vẫn lỗ? 4 câu hỏi trước khi mua altcoins",
+ "description": "Vì sao AAVE giảm 25% còn HYPE tăng khoảng 170% từ đầu năm? 4 câu hỏi để lọc altcoin trước khi xuống tiền: value accrual, người mua tiếp theo, thesis thị trường bỏ sót và độ đông của kèo.",
+ "theme": "Tư duy đầu tư crypto",
+ "hook_screen": "COIN TỐT CHƯA CHẮC TĂNG GIÁ",
+ "hook_stat": "+170%",
+ "hook_label": "HYPE từ đầu năm",
+ "outro_points": [],
+ "thumb_text": "COIN TỐT VẪN LỖ? 4 CÂU HỎI",
+ "thumb_stat": "+170%",
+ "thumb_points": [],
+ "thumb_warn": false,
+ "shorts": [
+  0,
+  3
+ ],
+ "hook": "AAVE giảm 25 phần trăm từ đầu năm. HYPE tăng khoảng 170 phần trăm. Cả hai đều là DeFi top đầu. Coin tốt chưa chắc là coin tăng giá. Video này cho bạn 4 câu hỏi để lọc coin trước khi xuống tiền.",
+ "intro": "Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Hôm nay mình phân tích bài viết của Kaff trên X. Ý chính: thị trường không trả tiền cho dự án chỉ vì nó tốt. Thị trường trả tiền cho khoảng cách giữa điều mọi người tin hôm nay và điều họ sẽ tin ngày mai. Mình có 4 câu hỏi, và cuối video gộp lại thành một công thức. Nhớ đợi câu số 4, câu nhiều người bỏ qua nhất.",
+ "outro": "Tóm lại, trước khi mua một altcoin, hãy hỏi đủ 4 câu: token có hưởng lợi không, ai sẽ mua tiếp theo, thị trường đang bỏ sót gì, và thesis đã quá đông chưa. Đây là góc nhìn của Kaff, không phải lời khuyên đầu tư, mọi người hãy luôn tự nghiên cứu kỹ trước khi xuống tiền. Bạn muốn mình chạy thử 4 câu hỏi này cho coin nào? Bình luận tên coin cho mình nhé.",
+ "sections": [
+  {
+   "heading": "Token có hưởng lợi khi dự án thắng?",
+   "key_stat": "13/15",
+   "key_label": "Token có value accrual thắng BTC (DWF Labs)",
+   "narration": "Vì sao dự án tốt mà token vẫn giảm? Aave là một trong những mảng kinh doanh mạnh nhất DeFi, nhưng token AAVE giảm 25 phần trăm từ đầu năm. HYPE thì tăng khoảng 170 phần trăm, dù thị trường chung đang khó. Khác biệt nằm ở value accrual, tức là cơ chế đưa thành công của dự án về token. Ví dụ: dùng revenue để buyback. Đó là câu hỏi đầu tiên: khi dự án kiếm được tiền, token có được hưởng không? DWF Labs còn thấy 13 trên 15 token có cơ chế như vậy đã thắng BTC từ đầu năm. Vậy bạn làm gì? Trước khi mua, hãy tìm xem revenue của dự án đi đâu. Nhưng kể cả token có hưởng lợi, giá vẫn có thể đứng yên rất lâu. Lý do nằm ở câu hỏi thứ hai.",
+   "bullets": [
+    "AAVE -25% từ đầu năm",
+    "HYPE +170% từ đầu năm",
+    "Revenue có quay về token?"
+   ],
+   "quote": "Một bên có giao thức thành công. Bên kia có cơ chế khiến thành công đó có ý nghĩa với token",
+   "data": {
+    "type": "stat_compare",
+    "title": "Từ đầu năm (theo bài của Kaff)",
+    "tickers": [],
+    "items": [
+     {
+      "label": "AAVE",
+      "value": "-25%"
+     },
+     {
+      "label": "HYPE",
+      "value": "+170%"
+     }
+    ]
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [
+    "defi dashboard chart",
+    "token buyback concept"
+   ],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Ai sẽ mua token tiếp theo?",
+   "key_stat": "-25%",
+   "key_label": "AAVE từ đầu năm",
+   "narration": "Câu hỏi thứ hai là cái bẫy của dân đầu tư theo cơ bản. Họ dành hàng tuần chứng minh một dự án đang rẻ, nhờ revenue, TVL hay người dùng. Nhưng quên hỏi: ai sẽ mua token tiếp theo? AAVE là ví dụ rõ nhất. Sản phẩm tốt hơn đối thủ, TVL hàng tỷ đô, nhưng token vẫn giảm nhiều tháng. Rẻ có thể rẻ rất lâu. Vậy bạn làm gì? Mở công cụ on-chain, xem tuần gần nhất ví lớn đang gom hay đang xả token đó. Còn dòng tiền mới đến từ đâu, câu hỏi thứ ba sẽ chỉ bạn chỗ tìm.",
+   "bullets": [
+    "Rẻ có thể rẻ rất lâu",
+    "Tốt chưa đủ, cần người mua mới",
+    "Dòng tiền mới từ đâu?"
+   ],
+   "quote": "Rẻ có thể rẻ rất lâu",
+   "data": {
+    "type": "coin_chart",
+    "title": "AAVE",
+    "tickers": [
+     "AAVE"
+    ],
+    "items": []
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [
+    "investor analyzing charts",
+    "waiting crowd empty market"
+   ],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Thị trường đang bỏ sót điều gì?",
+   "key_stat": "",
+   "key_label": "",
+   "narration": "Câu hỏi thứ ba: thị trường đang bỏ sót điều gì? Đây là thesis, tức là luận điểm đầu tư mà phần đông chưa định giá vào. Có thể là sản phẩm bắt đầu có người dùng. Có thể là một nguồn cầu mới cho token. Hoặc là fee switch, tức là bật cơ chế chia phí cho người giữ token. Ví dụ thật: khi Uniswap đề xuất bật fee switch tháng 11 năm 2025, UNI tăng khoảng 30 phần trăm chỉ sau tin đề xuất. Token vẫn vậy, nhưng cách thị trường nhìn nó đã đổi. Vì sao giá chạy nhanh vậy? Vì trong crypto, sự chú ý cũng là thanh khoản. Một thesis bắt đầu với vài người tin. Rồi dữ liệu ủng hộ, người mua mới vào, và điều nghe vô lý bỗng thành hiển nhiên. Vậy bạn làm gì? Mở roadmap hoặc trang quản trị của dự án bạn đang theo, tìm sự kiện gần nhất có thể làm thị trường đổi cách nhìn. Không tìm ra, nghĩa là bạn chưa có thesis. Nhưng có thesis đúng vẫn có thể thua. Vì sao, câu hỏi số 4 sẽ trả lời.",
+   "bullets": [
+    "Sản phẩm có người dùng",
+    "Nguồn cầu token mới",
+    "Fee switch: UNI +30% sau tin"
+   ],
+   "quote": "Sự chú ý tự nó có thể trở thành thanh khoản",
+   "data": {
+    "type": "market_heatmap",
+    "title": "Dòng tiền đang xoay vào đâu",
+    "tickers": [],
+    "items": []
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [
+    "crowd attention spotlight",
+    "rotation money flow"
+   ],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Thesis này đã quá đông chưa?",
+   "key_stat": "",
+   "key_label": "",
+   "narration": "Một kèo có thể đúng mà bạn vẫn thua. Uniswap thật sự bật fee switch vào cuối năm 2025. Nhưng hôm cộng đồng holder bỏ phiếu thông qua, giá UNI gần như đứng yên, vì phần tăng đã xảy ra từ lúc đề xuất. Đây là câu hỏi số 4, câu nhiều người bỏ qua nhất: thesis này đã quá đông chưa? Khi ai cũng đặt cược cho cùng một kết quả, lúc tin tốt đến, còn ai để mua? Narrative hot còn nguy hiểm hơn. VIRTUAL, coin đầu ngành AI agent, từng xuống thấp hơn đỉnh 5,07 đô khoảng 88 phần trăm khi sự chú ý chuyển đi. Vậy bạn làm gì? Nếu ai quanh bạn cũng đang nói về một coin, hãy cẩn thận gấp đôi. Vậy coin nào mới đáng để ý? Câu trả lời ở phần tiếp theo.",
+   "bullets": [
+    "UNI: tin tốt ra, giá đứng yên",
+    "Ai cũng nói về nó thì đã muộn",
+    "VIRTUAL -88% từ đỉnh"
+   ],
+   "quote": "Một thesis có thể đúng mà vẫn là một lệnh tệ nếu nó đã quá đông",
+   "data": {
+    "type": "fear_greed",
+    "title": "Chỉ số Sợ hãi & Tham lam",
+    "tickers": [],
+    "items": []
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [
+    "crowded stadium",
+    "bubble crowd trading floor"
+   ],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Công thức điểm giao nhau",
+   "key_stat": "4",
+   "key_label": "Điều kiện cùng lúc",
+   "narration": "Đây là công thức mình hứa. Theo Kaff, cơ hội lớn nằm ở điểm giao của bốn thứ. Một thesis ít người để ý. Fundamentals đang tốt lên. Nhu cầu thật cho token. Và một catalyst, tức là sự kiện làm thị trường đổi suy nghĩ. Fundamentals cho bạn biết dự án tốt tới đâu hôm nay. Thesis cho bạn biết vì sao thị trường có thể định giá nó khác đi ngày mai. Vậy bạn làm gì? Lấy coin bạn đang giữ, đối chiếu với 4 điều kiện này. Thiếu từ hai điều kiện trở lên thì đáng để xem lại.",
+   "bullets": [
+    "Fundamentals là hôm nay",
+    "Thesis là ngày mai",
+    "Hiểu trước thị trường"
+   ],
+   "quote": "Fundamentals là hôm nay. Thesis là ngày mai",
+   "data": {
+    "type": "checklist",
+    "title": "Điểm giao nhau của cơ hội lớn",
+    "tickers": [],
+    "items": [
+     {
+      "label": "Thesis ít người để ý",
+      "value": ""
+     },
+     {
+      "label": "Fundamentals tốt lên",
+      "value": ""
+     },
+     {
+      "label": "Nhu cầu token thật",
+      "value": ""
+     },
+     {
+      "label": "Có catalyst",
+      "value": ""
+     }
+    ]
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [
+    "venn diagram strategy",
+    "compass direction decision"
+   ],
+   "source_ids": [
+    0
+   ]
+  }
+ ],
+ "short_hooks": {
+  "0": "AAVE -25%, HYPE +170%: vì sao?",
+  "3": "Kèo đúng vẫn thua nếu quá đông"
+ }
+}

@@ -110,6 +110,7 @@ def thumbnail(res: dict, out: Path) -> Path | None:
              "text": P.nodash(V.en_money(plan.get("thumb_text") or plan.get("thumb") or plan.get("title", "")))[:48],
              "stat": stat, "accent": (proj or {}).get("color") or "#4F5BD5",
              "points": [P.nodash(x)[:28] for x in (plan.get("thumb_points") or [])][:3],
+             "warn": bool(plan.get("thumb_warn", False)),   # review 1615: dấu chấm than đỏ rối mắt, chỉ bật khi kịch bản yêu cầu
              "projectLogo": (proj or {}).get("logo"), "bg": None,
              "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")}
     try:
