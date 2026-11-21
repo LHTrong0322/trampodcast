@@ -269,3 +269,4 @@ postfa.st/sizes/youtube/shorts.
 ## Nhịp đọc đoạn giáo dục (Trọng 22/11)
 - Phần có `"edu": true` (giảng kiến thức/khái niệm quan trọng) đọc chậm hơn 5% (config insight.edu_speed = 0.95). Các phần khác giữ nguyên tốc độ như video 2.
 - Danh sách video đã đánh số: scripts/posts/VIDEOS.md (video 1 = Kyle, video 2 = Kaffchad).
+- Số giá trong kịch bản dùng ô điền tự động: {YTD:HYPE} (trị tuyệt đối % từ 1/1, làm tròn 5), {YTDS:HYPE} (có dấu), {DATE} (ngày dựng). insight_lab.live_numbers điền bằng giá thật lúc dựng, nên lời đọc, biểu đồ, ảnh bìa, short luôn cùng một bộ số (review 22/11 trừ điểm vì 3 bộ số khác nhau). Biểu đồ ghi rõ "tới dd/mm".

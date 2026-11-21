@@ -284,6 +284,48 @@ def _days(v) -> int:
         return 30
 
 
+def live_numbers(plan: dict, data: dict):
+    """Thay số giá trong kịch bản bằng số thật lúc dựng, để lời đọc, biểu đồ, ảnh bìa và short khớp nhau.
+    {YTD:HYPE} = % thay đổi từ 1/1 (trị tuyệt đối, làm tròn 5, chữ "tăng/giảm" do kịch bản viết sẵn),
+    {YTDS:HYPE} = có dấu (+135 / -40), {DATE} = ngày dựng dd/mm. Đổi dấu so với kịch bản thì báo trong log."""
+    coins = data.get("coins") or {}
+    now = datetime.now()
+    jan1 = (now - datetime(now.year, 1, 1)).days
+
+    def ytd(t):
+        c = coins.get(t.upper()) or {}
+        ser, days = c.get("series") or [], c.get("days") or 30
+        if len(ser) < 5 or days < jan1 - 3:
+            return None
+        k = max(2, round(len(ser) * jan1 / days))
+        pct = (ser[-1] / ser[-k] - 1) * 100
+        return pct
+
+    def fill(x):
+        if isinstance(x, dict):
+            return {k: fill(v) for k, v in x.items()}
+        if isinstance(x, list):
+            return [fill(v) for v in x]
+        if not isinstance(x, str) or "{" not in x:
+            return x
+        x = x.replace("{DATE}", now.strftime("%d/%m"))
+
+        def rep(m):
+            v = ytd(m.group(2))
+            if v is None:
+                log(f"   ! không có giá {m.group(2)} để điền {m.group(0)}")
+                return m.group(3) or "?"
+            r = int(5 * round(abs(v) / 5)) if abs(v) >= 10 else round(abs(v))
+            return (("+" if v >= 0 else "-") + str(r)) if m.group(1) == "YTDS" else str(r)
+        return re.sub(r"\{(YTDS?):([A-Z0-9]+)(?:\|([^}]*))?\}", rep, x)
+    plan = fill(plan)
+    for t, c in coins.items():
+        v = ytd(t)
+        if v is not None:
+            log(f"   Giá thật {t} từ 1/1: {v:+.0f}%")
+    return plan
+
+
 def coin_data(lab: Path, plan: dict, data: dict):
     """Giá 30 ngày + logo cho các coin AI nhắc trong phần biểu đồ (vd ENA)."""
     import time
@@ -572,6 +614,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     log("③ Dữ liệu thị trường + ảnh (AI lọc ảnh lạc đề)")
     md = market_data(lab)
     coin_data(lab, plan, md)
+    plan = live_numbers(plan, md)   # Trọng 22/11: hook, biểu đồ, ảnh bìa, short dùng CÙNG một bộ số giá thật
     (lab / "data.json").write_text(json.dumps(md, ensure_ascii=False), encoding="utf-8")
     save_images(lab, plan, gem, cfg)
     parts = [("hook", plan.get("hook", "")), ("intro", plan.get("intro", ""))]

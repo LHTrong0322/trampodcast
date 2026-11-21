@@ -1,6 +1,6 @@
 {
  "title": "Coin tốt vẫn lỗ? 4 câu hỏi trước khi mua altcoins",
- "description": "Vì sao AAVE giảm 25% còn HYPE tăng khoảng 170% từ đầu năm? 4 câu hỏi để lọc altcoin trước khi xuống tiền: value accrual, người mua tiếp theo, thesis thị trường bỏ sót và độ đông của kèo.",
+ "description": "Vì sao AAVE giảm {YTD:AAVE}% còn HYPE tăng khoảng {YTD:HYPE}% từ đầu năm? 4 câu hỏi để lọc altcoin trước khi xuống tiền: value accrual, người mua tiếp theo, thesis thị trường bỏ sót và độ đông của kèo.",
  "theme": "Tư duy đầu tư crypto",
  "hook_screen": "COIN TỐT CHƯA CHẮC TĂNG GIÁ",
  "hook_stat": "",
@@ -19,11 +19,11 @@
   0,
   3
  ],
- "hook": "Cùng là dự án DeFi top đầu. Nhưng AAVE giảm 25 phần trăm từ đầu năm, còn HYPE tăng khoảng 170 phần trăm. Vì sao coin tốt vẫn lỗ? 4 câu hỏi, và câu số 4 là câu phần lớn retail bỏ qua.",
+ "hook": "Cùng là dự án DeFi top đầu. Nhưng AAVE giảm {YTD:AAVE} phần trăm từ đầu năm, còn HYPE tăng khoảng {YTD:HYPE} phần trăm. Vì sao coin tốt vẫn lỗ? 4 câu hỏi, và câu số 4 là câu phần lớn retail bỏ qua.",
  "intro": "Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Có một thesis mà Trọng rất tâm đắc: mua một dự án tốt và kiếm tiền từ token của nó là hai chuyện khác nhau. Vào luôn câu hỏi thứ nhất.",
  "outro": "Tóm lại, trước khi mua một altcoin, hãy hỏi 4 câu. Token có hưởng lợi không? Ai sẽ mua tiếp? Thị trường bỏ sót gì? Đã quá đông chưa? Đây là kinh nghiệm của Trọng, không phải lời khuyên đầu tư, mọi người hãy luôn tự nghiên cứu kỹ trước khi xuống tiền nhé. Lưu video này lại làm checklist, và bình luận tên coin bạn đang giữ, mình sẽ chạy thử 4 câu hỏi cho bạn.",
  "short_hooks": {
-  "0": "Vì sao HYPE tăng 170% còn AAVE giảm 25%?",
+  "0": "Vì sao HYPE tăng {YTD:HYPE}% còn AAVE giảm {YTD:AAVE}%?",
   "3": "Tin tốt ra mà giá không tăng?"
  },
  "own_source": true,
@@ -32,13 +32,13 @@
  "thumb_vs": [
   {
    "label": "AAVE",
-   "value": "-25%",
+   "value": "{YTDS:AAVE}%",
    "logo": "AAVE",
    "tone": "down"
   },
   {
    "label": "HYPE",
-   "value": "+170%",
+   "value": "{YTDS:HYPE}%",
    "logo": "HYPE",
    "tone": "up"
   }
@@ -49,24 +49,24 @@
    "type": "versus",
    "left": {
     "label": "AAVE",
-    "value": "-25%",
+    "value": "{YTDS:AAVE}%",
     "logo": "AAVE",
     "tone": "down"
    },
    "right": {
     "label": "HYPE",
-    "value": "+170%",
+    "value": "{YTDS:HYPE}%",
     "logo": "HYPE",
     "tone": "up"
    },
-   "sub": "Từ đầu năm 2026"
+   "sub": "Từ 1/1 tới {DATE}"
   }
  ],
  "sections": [
   {
    "heading": "Token có hưởng lợi khi dự án thắng?",
-   "key_stat": "+170%",
-   "key_label": "HYPE từ đầu năm, AAVE -25%",
+   "key_stat": "{YTDS:HYPE}%",
+   "key_label": "HYPE từ đầu năm, AAVE {YTDS:AAVE}%",
    "narration": "Khi dự án kiếm được tiền, token có được hưởng không? Nhìn AAVE và HYPE. Cả hai đều dùng revenue để buyback, nhưng Hyperliquid dùng gần như toàn bộ phí để mua HYPE, còn Aave chỉ dùng khoảng một phần ba revenue. Và giá phản ánh đúng sự khác biệt đó. DWF Labs, một market maker có tiếng trong thị trường, còn thống kê 13 trên 15 token có cơ chế như vậy đã outperform BTC từ đầu năm. Vậy bạn làm gì? Trước khi mua, hãy hỏi: bao nhiêu phần trăm revenue quay về token? Nhưng có buyback rồi, giá vẫn có thể đứng yên. Câu hỏi thứ hai sẽ cho thấy vì sao.",
    "bullets": [
     "HYPE: gần như toàn bộ phí buyback",
@@ -116,7 +116,7 @@
      ],
      "days": "ytd",
      "label": "Giá AAVE và HYPE từ đầu năm",
-     "sub": "Giá thật từ 1/1 tới hôm nay (CoinGecko)",
+     "sub": "Giá thật từ 1/1 tới {DATE} (CoinGecko)",
      "hold": 5,
      "music": 2.5
     },
@@ -168,7 +168,7 @@
   },
   {
    "heading": "Ai sẽ mua token tiếp theo?",
-   "key_stat": "-25%",
+   "key_stat": "{YTDS:AAVE}%",
    "key_label": "AAVE từ đầu năm",
    "narration": "Câu hỏi thứ hai là cái bẫy của dân đầu tư theo cơ bản. Họ dành hàng tuần để chứng minh một dự án đang bị định giá thấp, nhờ revenue, TVL hay người dùng. Nhưng lại quên hỏi: ai sẽ là người mua token tiếp theo? Ví dụ chính là AAVE: buyback 50 triệu đô một năm mà giá token vẫn đi xuống. Rẻ có thể rẻ rất lâu. Ngược lại, có những coin cơ bản chỉ bằng một nửa nhưng lại outperform tất cả, vì dòng tiền đang đổ vào đó. Chốt lại: tốt chưa đủ, phải có người mua mới. Vậy bạn làm gì? Hãy hỏi thêm: dòng tiền mới sẽ đến từ đâu? Câu hỏi tiếp theo sẽ chỉ bạn chỗ tìm.",
    "bullets": [

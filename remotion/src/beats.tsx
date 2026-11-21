@@ -231,7 +231,7 @@ const Race: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, da
         const v = l.pct[m - 1];
         return <div key={l.t} style={{position: 'absolute', left: pad.l + W + 18, top: y(v) - 34, display: 'flex', alignItems: 'center', gap: 10}}>
           <Logo src={l.logo} size={48} label={l.t} />
-          <div style={{fontWeight: 800, fontSize: 44, color: v < 0 ? C.red : C.green, whiteSpace: 'nowrap'}}>{v >= 0 ? '+' : ''}{Math.round(v)}%</div>
+          <div style={{fontWeight: 800, fontSize: 44, color: v < 0 ? C.red : C.green, whiteSpace: 'nowrap'}}>{v >= 0 ? '+' : '-'}{Math.abs(v) >= 10 ? 5 * Math.round(Math.abs(v) / 5) : Math.round(Math.abs(v))}%</div>
         </div>;
       })}
       {b.sub ? <div style={{position: 'absolute', left: 40, bottom: 16, fontSize: 24, fontWeight: 600, color: C.muted}}>{b.sub}</div> : null}
