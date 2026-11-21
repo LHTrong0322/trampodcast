@@ -46,6 +46,14 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_API_KEY2: ${{ secrets.GEMINI_API_KEY2 }}
+          GEMINI_API_KEY3: ${{ secrets.GEMINI_API_KEY3 }}
+          GEMINI_API_KEY4: ${{ secrets.GEMINI_API_KEY4 }}
+          GEMINI_API_KEY5: ${{ secrets.GEMINI_API_KEY5 }}
+          GEMINI_API_KEY6: ${{ secrets.GEMINI_API_KEY6 }}
+          GEMINI_API_KEY7: ${{ secrets.GEMINI_API_KEY7 }}
+          GEMINI_API_KEY8: ${{ secrets.GEMINI_API_KEY8 }}
+          GEMINI_API_KEY9: ${{ secrets.GEMINI_API_KEY9 }}
+          GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TG_API_ID: ${{ secrets.TG_API_ID }}
@@ -67,6 +75,14 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_API_KEY2: ${{ secrets.GEMINI_API_KEY2 }}
+          GEMINI_API_KEY3: ${{ secrets.GEMINI_API_KEY3 }}
+          GEMINI_API_KEY4: ${{ secrets.GEMINI_API_KEY4 }}
+          GEMINI_API_KEY5: ${{ secrets.GEMINI_API_KEY5 }}
+          GEMINI_API_KEY6: ${{ secrets.GEMINI_API_KEY6 }}
+          GEMINI_API_KEY7: ${{ secrets.GEMINI_API_KEY7 }}
+          GEMINI_API_KEY8: ${{ secrets.GEMINI_API_KEY8 }}
+          GEMINI_API_KEY9: ${{ secrets.GEMINI_API_KEY9 }}
+          GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
         run: python video.py daily --out public
 
       - name: Lưu & xuất bản lên nhánh podcast-data

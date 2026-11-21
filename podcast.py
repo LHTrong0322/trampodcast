@@ -270,9 +270,14 @@ def transition_sound() -> bytes:
 
 class Gemini:
     def __init__(self, key: str):
-        # key dự phòng GEMINI_API_KEY2: chỉ dùng khi key chính hết lượt trong ngày hoặc hết credit
-        self.keys = [k for k in [key, os.getenv("GEMINI_API_KEY2", "").strip()] if k]
-        self.keys = list(dict.fromkeys(self.keys)) or [key]
+        # Kho key: key truyền vào trước, rồi lần lượt các key dự phòng. Key nào hết lượt hoặc lỗi credit
+        # thì tự chuyển sang key kế tiếp. Thêm key mới: tạo secret GEMINI_API_KEY3, 4, 5... (tối đa 9)
+        # hoặc GEMINI_API_KEYS (nhiều key cách nhau dấu phẩy).
+        pool = [key, os.getenv("INSIGHT_GEMINI_API_KEY", ""), os.getenv("GEMINI_API_KEY", ""),
+                os.getenv("GEMINI_API_KEY2", "")]
+        pool += [os.getenv(f"GEMINI_API_KEY{i}", "") for i in range(3, 10)]
+        pool += os.getenv("GEMINI_API_KEYS", "").split(",")
+        self.keys = list(dict.fromkeys(k.strip() for k in pool if k and k.strip())) or [key]
         self.ki = 0
         self.key = self.keys[0]
         self.dead: set[str] = set()  # model đã lỗi trong lần chạy này → bỏ qua luôn
@@ -302,13 +307,13 @@ class Gemini:
         raise RuntimeError(f"{model}: hết lượt thử (rate limit)")
 
     def _next_key(self, why: str) -> bool:
-        """Chuyển sang key dự phòng (GEMINI_API_KEY2). Trả False nếu không còn key nào."""
+        """Chuyển sang key dự phòng kế tiếp trong kho. Trả False nếu đã dùng hết key."""
         if self.ki + 1 >= len(self.keys):
             return False
         self.ki += 1
         self.key = self.keys[self.ki]
         self.dead.clear()
-        log(f"   ↪ Key Gemini chính {why}, chuyển sang key dự phòng GEMINI_API_KEY2")
+        log(f"   ↪ Key Gemini số {self.ki} {why}, chuyển sang key dự phòng số {self.ki + 1}/{len(self.keys)}")
         return True
 
     def _try_models(self, models: list[str], fn):
