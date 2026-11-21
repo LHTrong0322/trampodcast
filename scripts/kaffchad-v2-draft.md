@@ -7,7 +7,7 @@ Tóm lại chỉ 4 câu hỏi (không phải 5) + tick + lời kêu gọi cụ t
 Số liệu bổ sung (đã đối chiếu nguồn): Hyperliquid dùng khoảng 97 đến 99% phí giao dịch mua HYPE qua Assistance Fund, đã chi hơn 1,16 tỷ đô (CoinStats, KuCoin/Forbes 5/2026);
 Aave có chương trình buyback 50 triệu đô/năm, mua 250 nghìn đến 1,75 triệu đô mỗi tuần, cần quản trị thông qua (The Block, The Defiant), so với revenue khoảng 169 triệu đô/năm lúc đề xuất (DefiLlama) là khoảng 30%;
 DWF Labs là market maker kiêm quỹ đầu tư Web3; UNI +30% khi đề xuất fee switch (The Block 11/2025), đi ngang khi DAO thông qua 25/12/2025 (DL News); VIRTUAL thấp hơn đỉnh 5,07 đô khoảng 88% (Decrypt).
-Trạng thái: VÒNG 1 lần 1: 7.2 (sửa: rút gọn, thêm 'vậy bạn làm gì' câu 3, đổi tên mục 5, short đứng một mình). Câu chào mừng kênh GIỮ vì là quy tắc của Trọng.
+Trạng thái: VÒNG 1 ĐẠT 8.2 (lần 1: 7.2). Đã sửa thêm câu dài và câu móc. 4 số liệu bổ sung đã đối chiếu nguồn ở trên. Lần 1: 7.2 (sửa: rút gọn, thêm 'vậy bạn làm gì' câu 3, đổi tên mục 5, short đứng một mình). Câu chào mừng kênh GIỮ vì là quy tắc của Trọng.
 
 ## Tiêu đề
 Coin tốt vẫn lỗ? 4 câu hỏi trước khi mua altcoins
@@ -21,12 +21,12 @@ Lời đọc: Chào mừng mọi người đã quay trở lại với Smart Peng
 Hình: logo kênh, rồi thẻ AAVE đối đầu HYPE tiếp tục chuyển động (không có slide mục lục đứng yên, không có thẻ bài viết nhỏ).
 
 ## Câu hỏi 1: Token có hưởng lợi khi dự án thắng?
-Lời đọc: Khi dự án kiếm được tiền, token có được hưởng không? Nhìn AAVE và HYPE. Cả hai đều dùng revenue để buyback, tức là lấy tiền dự án kiếm được đi mua lại token. Nhưng mức độ khác hẳn. Hyperliquid đưa khoảng 97 đến 99 phần trăm phí giao dịch vào một quỹ tự động tên là Assistance Fund, quỹ này mua HYPE liên tục và đã chi hơn 1 tỷ đô. Aave buyback khoảng 50 triệu đô một năm, chỉ khoảng một phần ba revenue, và phải qua bỏ phiếu. Cứ 100 đô phí, Hyperliquid dùng gần hết để mua HYPE, Aave dùng khoảng 30 đô. Đó là câu hỏi thứ nhất. DWF Labs là quỹ đầu tư kiêm market maker lớn trong crypto. Họ thống kê 13 trên 15 token có cơ chế như vậy đã outperform BTC từ đầu năm. Vậy bạn làm gì? Trước khi mua, hãy hỏi: bao nhiêu phần trăm revenue quay về token?
+Lời đọc: Khi dự án kiếm được tiền, token có được hưởng không? Nhìn AAVE và HYPE. Cả hai đều dùng revenue để buyback, tức là lấy tiền dự án kiếm được đi mua lại token. Nhưng mức độ khác hẳn. Hyperliquid đưa khoảng 97 đến 99 phần trăm phí giao dịch vào quỹ tự động Assistance Fund. Quỹ này mua HYPE liên tục, đã chi hơn 1 tỷ đô. Aave buyback khoảng 50 triệu đô một năm, chỉ khoảng một phần ba revenue, và phải qua bỏ phiếu. Cứ 100 đô phí, Hyperliquid dùng gần hết để mua HYPE, Aave dùng khoảng 30 đô. Đó là câu hỏi thứ nhất. DWF Labs là quỹ đầu tư kiêm market maker lớn trong crypto. Họ thống kê 13 trên 15 token có cơ chế như vậy đã outperform BTC từ đầu năm. Vậy bạn làm gì? Trước khi mua, hãy hỏi: bao nhiêu phần trăm revenue quay về token? Nhưng có buyback rồi, giá vẫn có thể đứng yên. Câu hỏi thứ hai sẽ cho thấy vì sao.
 Hình (nhịp theo lời):
 - "nhìn aave và hype": thẻ đối đầu AAVE -25% / HYPE +170%
 - "cả hai đều dùng revenue": sơ đồ 3 bước: Dự án kiếm revenue / Mua lại token trên thị trường / Holder được hưởng
 - "hyperliquid đưa khoảng": số lớn "97 đến 99%" logo HYPE, nhãn "phí giao dịch dùng mua HYPE"
-- "aave cũng có buyback": số lớn "~30%" logo AAVE, nhãn "50 triệu đô/năm trên ~169 triệu đô revenue"
+- "aave cũng có buyback": số lớn "~30%" logo AAVE, nhãn "50tr / 169tr đô revenue ≈ 30%"
 - "nói dễ hình dung": thẻ so sánh "Cứ 100 đô phí": HYPE ~97 đô / AAVE ~30 đô
 - "dwf labs": 15 chấm, 13 chấm sáng, nhãn "DWF Labs: quỹ đầu tư kiêm market maker"
 
@@ -38,7 +38,7 @@ Hình:
 - "chốt lại": câu chốt "Tốt chưa đủ, phải có người mua mới"
 
 ## Câu hỏi 3: Thị trường đang bỏ sót điều gì?
-Lời đọc: Câu hỏi thứ ba: thị trường đang bỏ sót điều gì? Đây là thesis, tức là luận điểm đầu tư mà phần đông chưa định giá vào. Ví dụ thật: tháng 11 năm 2025, Uniswap đề xuất bật fee switch, tức là bắt đầu chia phí cho người giữ token UNI. Chỉ sau tin đề xuất, UNI tăng khoảng 30 phần trăm. Token vẫn là token đó, nhưng thị trường đã nhìn nó khác đi. Thesis chưa được định giá thường đến từ bốn chỗ: một sản phẩm bắt đầu có người dùng, một cơ chế chia phí, một nguồn cầu mới cho token, hoặc dòng tiền xoay vào một mảng chưa ai để ý. Trong crypto, sự chú ý cũng là thanh khoản. Chốt lại: mua lúc thesis còn ít người tin, không phải lúc ai cũng biết. Vậy bạn làm gì? Với dự án bạn đang theo, tìm một sự kiện sắp tới có thể làm thị trường đổi cách nhìn.
+Lời đọc: Câu hỏi thứ ba: thị trường đang bỏ sót điều gì? Đây là thesis, tức là luận điểm đầu tư mà phần đông chưa định giá vào. Ví dụ thật: tháng 11 năm 2025, Uniswap đề xuất bật fee switch, tức là bắt đầu chia phí cho người giữ token UNI. Chỉ sau tin đề xuất, UNI tăng khoảng 30 phần trăm. Token vẫn là token đó, nhưng thị trường đã nhìn nó khác đi. Thesis chưa được định giá thường đến từ bốn chỗ. Sản phẩm bắt đầu có người dùng. Cơ chế chia phí. Nguồn cầu mới cho token. Hoặc dòng tiền xoay vào mảng chưa ai để ý. Trong crypto, sự chú ý cũng là thanh khoản. Chốt lại: mua lúc thesis còn ít người tin, không phải lúc ai cũng biết. Vậy bạn làm gì? Với dự án bạn đang theo, tìm một sự kiện sắp tới có thể làm thị trường đổi cách nhìn. Nhưng thesis đúng vẫn có thể khiến bạn lỗ. Câu hỏi số 4 sẽ trả lời.
 Hình:
 - "ví dụ thật": số lớn +30% logo UNI, nhãn "UNI sau tin đề xuất fee switch, 11/2025"
 - "thesis chưa được định giá": sơ đồ 4 nguồn thesis (mỗi bước sáng đúng chữ)
