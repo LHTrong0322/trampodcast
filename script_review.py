@@ -33,6 +33,10 @@ Chấm THẲNG TAY từng tiêu chí trên thang 10 (số thập phân được)
 - ket: kết bằng nhắc lại ý chính trong 1 câu + kêu gọi bình luận cụ thể
 - hinh_anh: chữ trên hình ngắn gọn, đổi kiểu hình thường xuyên, ảnh bìa đọc được khi thu nhỏ (tối đa 2 dòng chữ lớn)
 - short: 2 video ngắn có câu mở gây tò mò, tự đứng được một mình
+- giao_duc (BỘ LỌC GIÁO DỤC, Trọng chốt 21/11): tên riêng lạ (quỹ, tổ chức, cơ chế như DWF Labs, Assistance Fund) được giải thích 1 câu lần đầu;
+  mọi so sánh phải có con số cụ thể của CẢ HAI bên (vd % revenue dùng buyback của từng dự án);
+  SAU mỗi kiến thức phức tạp hoặc insight phải có ví dụ cụ thể, dễ hình dung (số thật, coin thật, hoặc phép so sánh đời thường như "cứ 100 đô phí...").
+  Thiếu một trong ba điều này thì giao_duc tối đa 6.
 
 QUY TẮC TỪ NGỮ CỦA TRỌNG (vi phạm thì quy_tac tối đa 5):
 - Không dùng dấu gạch ngang dài (em dash, en dash).

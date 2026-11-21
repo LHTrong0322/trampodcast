@@ -4,6 +4,14 @@
 
 
 
+
+## BỘ LỌC GIÁO DỤC (TRỌNG CHỐT 23:22 NGÀY 21/11)
+- Nội dung video phải mang tính giáo dục nhiều hơn. Tên riêng lạ (vd DWF Labs, Assistance Fund) giải thích 1 câu lần đầu.
+- So sánh 2 dự án phải có con số của CẢ HAI (vd Hyperliquid dùng khoảng 97 đến 99% phí để buyback HYPE, Aave 50 triệu đô một năm, khoảng 1/3 revenue).
+- Sau mỗi kiến thức phức tạp hoặc insight: luôn có ví dụ cụ thể (số thật, coin thật, hoặc "cứ 100 đô phí thì...").
+- Đã đưa vào: lời dặn AI viết kịch bản (insight.py), tiêu chí "giao_duc" của vòng 1 chấm kịch bản (script_review.py).
+- Tốc độ giọng KOL hiện tại (khoảng 226 tiếng/phút): Trọng xem lại thấy bình thường, GIỮ NGUYÊN.
+
 ## NHỊP HÌNH KHỚP LỜI ĐỌC (TRỌNG CHỐT 19:15 NGÀY 21/11: "ảnh và nội dung chẳng liên quan, sáng tạo đi")
 - KHÔNG gắn hình dữ liệu chung chung (Fear & Greed, heatmap) nếu lời đọc không nói tới nó.
 - Mỗi phần trong kịch bản đã duyệt có "beats": danh sách nhịp hình, mỗi nhịp có "at" = cụm từ NGUYÊN VĂN trong lời đọc,

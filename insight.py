@@ -200,7 +200,7 @@ emoji, không link; số đọc tự nhiên.
 Từ ngữ Trọng chốt (21/11): nói "insider", KHÔNG nói "người trong cuộc"; nói "retail", KHÔNG nói "nhỏ lẻ"
 (vd "insider biết lịch unlock, còn retail thì không"). Nói "unlock", KHÔNG nói "mở khoá"; nói "revenue" hoặc
 "doanh thu", KHÔNG nói "lợi nhuận" (Trọng chốt 21/11 sau video zeroxkyle).
-Từ chuyên ngành (Trọng chốt 21/11): ƯU TIÊN giữ tiếng Anh (buyback, unlock, revenue, tokenomics, holder,
+BỘ LỌC GIÁO DỤC (Trọng chốt 21/11): video phải mang tính giáo dục. Tên riêng lạ (quỹ, tổ chức, cơ chế) giải thích 1 câu lần đầu. So sánh hai dự án thì đưa số cụ thể của CẢ HAI bên. Sau mỗi kiến thức phức tạp hoặc insight, cho ngay một ví dụ cụ thể (số thật, coin thật, hoặc phép so sánh đời thường) để người xem hình dung. Từ chuyên ngành (Trọng chốt 21/11): ƯU TIÊN giữ tiếng Anh (buyback, unlock, revenue, tokenomics, holder,
 overhang, alignment, low float...), không dịch. Từ viết tắt PHỔ THÔNG trong giới crypto (FDV, DCA, TVL, VC, ETF, ATH,
 APY, TGE, DEX, CEX, KOL, PMF...) dùng nguyên, KHÔNG giải thích, cho chuyên nghiệp. CHỈ từ viết tắt DÀI hoặc ÍT GẶP
 mới kèm giải thích tiếng Việt ngắn ở lần đầu.
