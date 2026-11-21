@@ -397,6 +397,32 @@ def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
     return True
 
 
+# Trọng chốt 21/11 (sau video zeroxkyle): luôn dùng từ tiếng Anh cho các khái niệm này, kể cả kịch bản đã duyệt
+TERM_FIX = [
+    (r"(?i)(các |những )?nhà đầu tư nhỏ lẻ", "retail"),
+    (r"(?i)người chơi nhỏ lẻ", "retail"),
+    (r"(?i)\bnhỏ lẻ\b", "retail"),
+    (r"(?i)những người trong cuộc|người trong cuộc", "insider"),
+    (r"(?i)mở kho[áa]", "unlock"),
+    (r"(?i)(?<!hứa )(?<!cam kết )lợi nhuận", "revenue"),
+]
+
+
+def fix_terms(obj, key: str = ""):
+    """Đổi từ ở mọi chữ trong kịch bản (lời đọc + chữ trên hình), trừ bài gốc và link."""
+    if key in ("posts", "url", "urls", "source_ids", "visual_queries"):
+        return obj
+    if isinstance(obj, dict):
+        return {k: fix_terms(v, k) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [fix_terms(v, key) for v in obj]
+    if isinstance(obj, str):
+        for pat, rep in TERM_FIX:
+            obj = re.sub(pat, rep, obj)
+        return re.sub(r"(^|[.!?]\s+)(insider|retail|unlock|revenue)\b", lambda m: m.group(1) + m.group(2).capitalize(), obj)
+    return obj
+
+
 def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release: bool = False,
             notes: list[str] | None = None) -> Path:
     """Viết kịch bản + lấy dữ liệu/ảnh + đọc giọng. Giọng: thử lần lượt theo danh sách (Gemini Ludo trước,
@@ -441,6 +467,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
             break
         log(f"   ! kịch bản còn nhắc ENA/95%/14 ngày (lần {attempt + 1}), viết lại")
     plan = scrub_plan(plan)
+    plan = fix_terms(plan)   # Trọng chốt 21/11: tự đổi từ Việt sang từ chuyên ngành tiếng Anh
     if len([s for s in plan.get("sections", []) if s.get("narration")]) < 2 or not plan.get("hook"):
         raise RuntimeError("Kịch bản không đủ nội dung sau khi bỏ đoạn ENA")
     plan["sections"] = [s for s in plan.get("sections", []) if s.get("narration")][: int(ic.get("max_sections", 6))]

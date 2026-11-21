@@ -198,7 +198,8 @@ bằng lời của mình; luôn ghi nhận ý tưởng thuộc về ai (vd "theo
 Không hô hào mua bán, không hứa lợi nhuận. Lời văn NÓI, đọc bằng máy: không markdown, không
 emoji, không link; số đọc tự nhiên.
 Từ ngữ Trọng chốt (21/11): nói "insider", KHÔNG nói "người trong cuộc"; nói "retail", KHÔNG nói "nhỏ lẻ"
-(vd "insider biết lịch mở khoá, còn retail thì không").
+(vd "insider biết lịch unlock, còn retail thì không"). Nói "unlock", KHÔNG nói "mở khoá"; nói "revenue" hoặc
+"doanh thu", KHÔNG nói "lợi nhuận" (Trọng chốt 21/11 sau video zeroxkyle).
 Từ chuyên ngành (Trọng chốt 21/11): ƯU TIÊN giữ tiếng Anh (buyback, unlock, revenue, tokenomics, holder,
 overhang, alignment, low float...), không dịch. Từ viết tắt PHỔ THÔNG trong giới crypto (FDV, DCA, TVL, VC, ETF, ATH,
 APY, TGE, DEX, CEX, KOL, PMF...) dùng nguyên, KHÔNG giải thích, cho chuyên nghiệp. CHỈ từ viết tắt DÀI hoặc ÍT GẶP

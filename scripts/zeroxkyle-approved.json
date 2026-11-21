@@ -37,11 +37,11 @@
    "heading": "Tại sao altcoin lại thành những quả chanh chua",
    "key_stat": "FDV",
    "key_label": "Áp lực bán từ định giá ảo",
-   "narration": "Kyle gọi crypto là một thị trường chanh, tức là thị trường mà người mua không phân biệt được hàng tốt hay hàng xấu, nên mặc định coi tất cả là xấu. Có bốn nguyên nhân. Thứ nhất, token có lượng lưu hành thấp nhưng định giá pha loãng FDV rất cao, rồi được mở khoá dần trong nhiều năm, tạo ra một bức tường người bán. Thứ hai, dự án không có lãi, không có người dùng thật, chỉ sống nhờ câu chuyện thời thượng. Thứ ba là thiếu gắn kết giữa token và cổ phần: tiền dự án kiếm được chảy về công ty, còn token chỉ là công cụ marketing. Thứ tư là không minh bạch. Người trong cuộc biết lịch mở khoá và số liệu thật, còn nhà đầu tư nhỏ lẻ thì không.",
+   "narration": "Kyle gọi crypto là một thị trường chanh, tức là thị trường mà người mua không phân biệt được hàng tốt hay hàng xấu, nên mặc định coi tất cả là xấu. Có bốn nguyên nhân. Thứ nhất, token có lượng lưu hành thấp nhưng định giá pha loãng FDV rất cao, rồi được unlock dần trong nhiều năm, tạo ra một bức tường người bán. Thứ hai, dự án không có lãi, không có người dùng thật, chỉ sống nhờ câu chuyện thời thượng. Thứ ba là thiếu gắn kết giữa token và cổ phần: tiền dự án kiếm được chảy về công ty, còn token chỉ là công cụ marketing. Thứ tư là không minh bạch. Insider biết lịch unlock và số liệu thật, còn retail thì không.",
    "bullets": [
-    "Định giá ảo, mở khoá kéo dài",
-    "Token không gắn với lợi nhuận",
-    "Người trong cuộc giấu số liệu"
+    "Định giá ảo, unlock kéo dài",
+    "Token không gắn với revenue",
+    "Insider giấu số liệu"
    ],
    "quote": "Khi người mua không thể phân biệt tốt xấu, họ sẽ coi tất cả là rác",
    "data": {
@@ -110,7 +110,7 @@
    "heading": "Bài học từ cách Ethena tự sửa mình",
    "key_stat": "Buyback",
    "key_label": "Dùng doanh thu mua lại token",
-   "narration": "Tin tốt là căn bệnh chanh chua đã có cách chữa, và Ethena là ví dụ Kyle đưa ra. Đội ngũ Ethena làm bốn việc. Một, mua lại phần của các nhà đầu tư sớm, những người hay xả hàng. Hai, giao toàn bộ tài sản trí tuệ và giá trị giao thức tạo ra cho Quỹ, do người giữ token quản trị. Ba, đề xuất dùng doanh thu để tự động mua lại token ENA. Bốn, bỏ hẳn các đợt mở khoá hàng tháng cho quỹ đầu tư. Điểm đáng học không nằm ở giá, mà ở thái độ: đội ngũ chứng minh họ quan tâm tới người giữ token. Và khi nhà đầu tư khắt khe hơn, các nhà sáng lập cũng biết rõ mình cần sửa gì.",
+   "narration": "Tin tốt là căn bệnh chanh chua đã có cách chữa, và Ethena là ví dụ Kyle đưa ra. Đội ngũ Ethena làm bốn việc. Một, mua lại phần của các nhà đầu tư sớm, những người hay xả hàng. Hai, giao toàn bộ tài sản trí tuệ và giá trị giao thức tạo ra cho Quỹ, do người giữ token quản trị. Ba, đề xuất dùng doanh thu để tự động mua lại token ENA. Bốn, bỏ hẳn các đợt unlock hàng tháng cho quỹ đầu tư. Điểm đáng học không nằm ở giá, mà ở thái độ: đội ngũ chứng minh họ quan tâm tới người giữ token. Và khi nhà đầu tư khắt khe hơn, các nhà sáng lập cũng biết rõ mình cần sửa gì.",
    "bullets": [
     "Loại bỏ áp lực bán từ VC",
     "Token gắn với giá trị giao thức",
@@ -135,7 +135,7 @@
       "value": ""
      },
      {
-      "label": "Bỏ mở khoá hàng tháng cho VC",
+      "label": "Bỏ unlock hàng tháng cho VC",
       "value": ""
      }
     ]
@@ -152,7 +152,7 @@
    "heading": "Cẩm nang chọn tài sản cho chu kỳ mới",
    "key_stat": "$1B",
    "key_label": "Ngưỡng lọc altcoin dễ hơn",
-   "narration": "Vậy chọn coin thế nào? Kyle có ba điều bắt buộc. Một, token phải gắn với lợi ích dự án, đội ngũ không được rút giá trị sang một công ty khác. Hai, có sản phẩm người dùng thật sự cần và có lãi, vì lợi nhuận tăng mới là phần tích luỹ lâu dài, còn câu chuyện thì xoay vòng rất nhanh. Ba, lượng token chờ bán không quá lớn. Thêm hai điểm cộng: mua lại token ở mức vừa phải, và minh bạch như công ty niêm yết. Kyle cũng cảnh báo: nhờ AI, coin vốn hoá dưới mười triệu đô nào nhìn cũng chỉn chu, rất khó phân biệt đội ngũ thật với kẻ lừa đảo. Lọc một trăm altcoin trên một tỷ đô dễ hơn nhiều so với mười nghìn coin nhỏ.",
+   "narration": "Vậy chọn coin thế nào? Kyle có ba điều bắt buộc. Một, token phải gắn với lợi ích dự án, đội ngũ không được rút giá trị sang một công ty khác. Hai, có sản phẩm người dùng thật sự cần và có lãi, vì revenue tăng mới là phần tích luỹ lâu dài, còn câu chuyện thì xoay vòng rất nhanh. Ba, lượng token chờ bán không quá lớn. Thêm hai điểm cộng: mua lại token ở mức vừa phải, và minh bạch như công ty niêm yết. Kyle cũng cảnh báo: nhờ AI, coin vốn hoá dưới mười triệu đô nào nhìn cũng chỉn chu, rất khó phân biệt đội ngũ thật với kẻ lừa đảo. Lọc một trăm altcoin trên một tỷ đô dễ hơn nhiều so với mười nghìn coin nhỏ.",
    "bullets": [
     "3 điều bắt buộc, 2 điểm cộng",
     "Coin nhỏ nhờ AI nhìn đều chỉn chu",

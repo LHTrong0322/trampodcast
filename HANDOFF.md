@@ -1,6 +1,21 @@
 # HANDOFF: Smart Penguin Insights + Trạm Podcast Crypto (bàn giao cho đoạn chat mới)
 
 
+
+## KINH NGHIỆM TỪ VIDEO ZEROXKYLE BẢN GIỌNG KOL (insight-20261121-1615, TRỌNG DUYỆT "ổn rồi" 16:58 NGÀY 21/11)
+- Giọng chuẩn: `gemini:Ludo@kol` (mẫu N), giữ nguyên tốc độ, làm đẹp giọng studio. Lời dặn style phải NGẮN (dài là máy đọc to cả lời dặn).
+- Từ ngữ BẮT BUỘC (code tự đổi ở insight_lab.fix_terms, áp cả kịch bản đã duyệt): "mở khoá" → unlock, "lợi nhuận" → revenue
+  (hoặc doanh thu), "người trong cuộc" → insider, "nhỏ lẻ"/"nhà đầu tư nhỏ lẻ" → retail.
+- CHỐNG LẶP: Gemini hay đọc lặp câu mở đầu. Mỗi đoạn được nghe lại bằng Whisper (tts_qa.check), lặp/thiếu/thừa thì đọc lại,
+  4 lần vẫn lỗi thì DỪNG, không gửi. Dựng xong chạy video-qa.yml (tag + kịch bản) xác nhận "Không thấy chỗ lặp" TRƯỚC khi báo Trọng.
+  Đoạn ngắn (dưới 60 từ) không tách dòng; lời dặn TTS có "đọc đúng 1 lần".
+- Câu mở đầu: nói lợi ích cho người xem trước, rồi mới nhắc tên tác giả (vd "Phần lớn altcoin chu kỳ này sẽ về 0...").
+- Ảnh bìa: câu hỏi gây tò mò + số bộ lọc ("ALTCOIN NÀO ĐÁNG HOLD? 3 BỘ LỌC") + biểu tượng cảnh báo đỏ.
+- Hình (theo review): phụ đề to, tô vàng từ khoá/số, không ngắt cụt; dòng đang nói nổi bật; zoom chậm; giới thiệu kênh khoảng 6 giây.
+  Review vẫn 5.8: lần sau cần 3 giây đầu có hình mạnh (biểu đồ/con số chạy), mục lục ngắn hơn, đổi kiểu hình mỗi 15 đến 20 giây.
+- AN TOÀN ĐĂNG: biến SOCIAL_AUTOPOST trên GitHub đang = 1. Bấm dựng tay luôn để autopost=false (mặc định), chỉ đăng khi Trọng duyệt.
+- Lượt Gemini miễn phí reset 15:00 giờ VN; một lần dựng tốn khoảng 8 đến 12 lượt đọc giọng.
+
 ## GIỌNG ĐỌC (TRỌNG CHỌN 14:35 NGÀY 21/11)
 - Trọng chọn mẫu N: giọng Ludo "vibe KOL crypto", tự tin, cuốn, giọng Sài Gòn thành thị, KHÔNG làm chậm.
 - Dựng video với voice = `gemini:Ludo@kol` (insight_lab.speak: lời dặn STYLE["kol"] trong voice_ludo2.py,
