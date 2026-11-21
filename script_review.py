@@ -38,6 +38,8 @@ Chấm THẲNG TAY từng tiêu chí trên thang 10 (số thập phân được)
   SAU mỗi kiến thức phức tạp hoặc insight phải có ví dụ cụ thể, dễ hình dung (số thật, coin thật, hoặc phép so sánh đời thường như "cứ 100 đô phí...").
   Thiếu một trong ba điều này thì giao_duc tối đa 6.
 
+LƯU Ý: câu mở "Chào mừng mọi người đã quay trở lại với Smart Penguin Insights" là BẮT BUỘC theo Trọng (kèm logo kênh), không trừ điểm vì câu này; chỉ trừ nếu phần mở đầu dài quá 3 câu.
+
 QUY TẮC TỪ NGỮ CỦA TRỌNG (vi phạm thì quy_tac tối đa 5):
 - Không dùng dấu gạch ngang dài (em dash, en dash).
 - Nói insider (không "người trong cuộc"), retail (không "nhỏ lẻ"), unlock (không "mở khoá"),
