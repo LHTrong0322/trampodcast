@@ -212,7 +212,7 @@ const Race: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, da
   const all = lines.flatMap((l) => l.pct).concat([0]);
   const lo = Math.min(...all), hi = Math.max(...all);
   const y = (v: number) => pad.t + H - ((v - lo) / Math.max(1e-6, hi - lo)) * H;
-  const prog = interpolate(f, [4, Math.round(fps * 1.8)], [0, 1], clamp);
+  const prog = interpolate(f, [6, Math.round(fps * 3.2)], [0, 1], clamp);   // Trọng 22/11: chạy chậm để người xem kịp theo
   return (
     <Card w={w} h={h} pad={0}>
       <div style={{position: 'absolute', left: 40, top: 30, fontSize: 32, fontWeight: 800, color: C.ink}}>{b.label}</div>

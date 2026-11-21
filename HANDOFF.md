@@ -246,3 +246,4 @@ postfa.st/sizes/youtube/shorts.
 - Tiêu đề phần hiện gần như ngay (không còn khung chữ bị cắt dở).
 - Short: 1,3 giây đầu chính là ảnh bìa (số liệu + logo), thẻ hình to hơn (960x560), phụ đề nâng lên khỏi vùng giao diện app che.
 - Ảnh bìa YouTube: số to hơn khoảng 20%, nhãn phụ `thumb_tag` màu nhấn.
+- Hình kết quả quan trọng (so sánh HYPE/AAVE...) thêm `"hold": 3`: giọng đọc tự lặng 3 giây sau câu đó để người xem kịp nhìn; biểu đồ race vẽ chậm trong khoảng 3 giây.

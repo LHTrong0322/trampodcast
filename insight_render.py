@@ -69,6 +69,34 @@ def word_times(text: str, pcm: bytes) -> list[dict]:
     return out
 
 
+def hold_pauses(plan: dict, pcm: dict, text: dict) -> dict:
+    """Trọng 22/11: hình so sánh quan trọng (beat có "hold": giây) được đứng yên thêm cho người xem kịp nhìn.
+    Chèn khoảng lặng vào giọng đọc ngay cuối câu chứa cụm "at" của beat đó; hình kế tiếp tự lùi theo."""
+    for i, sec in enumerate(plan.get("sections") or []):
+        k = f"s{i}"
+        holds = [b for b in (sec.get("beats") or []) if b.get("hold") and b.get("at")]
+        if k not in pcm or not holds:
+            continue
+        cuts = []
+        wt = word_times(text[k], pcm[k])
+        toks = [_norm(w["t"]) for w in wt]
+        for b in holds:
+            ph = [_norm(x) for x in str(b["at"]).split() if _norm(x)]
+            j = next((x for x in range(len(toks) - len(ph) + 1) if toks[x:x + len(ph)] == ph), -1)
+            if j < 0:
+                log(f"   ! giữ hình '{b['at']}': không thấy trong lời đọc")
+                continue
+            e = next((x for x in range(j, len(wt)) if re.search(r"[.!?…]$", wt[x]["t"])), len(wt) - 1)
+            cuts.append((wt[e]["e"] + 0.15, min(4.0, float(b["hold"]))))
+        a = pcm[k]
+        for at, sec_ in sorted(cuts, reverse=True):
+            pos = min(len(a), int(at * SR) * 2)
+            a = a[:pos] + V.gap(sec_) + a[pos:]
+            log(f"   Giữ hình {sec_:.1f}s ở phần {i + 1} (giây {at:.1f})")
+        pcm[k] = a
+    return pcm
+
+
 def build_timeline(plan, pcm, text, gap=0.35):
     """Ghép audio các đoạn (nghỉ ngắn giữa đoạn để giữ nhịp) + lập danh sách cảnh (giây)."""
     secs = plan["sections"]
@@ -210,6 +238,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     except (TypeError, ValueError):
         f = 1.0
     pcm = {k: speed(v, f) for k, v in pcm.items()}
+    pcm = hold_pauses(plan, pcm, text)
     audio, tl, total = build_timeline(plan, pcm, text)
     prep_public(lab)
     V.pcm_to_wav(audio, RD / "voice.wav")
