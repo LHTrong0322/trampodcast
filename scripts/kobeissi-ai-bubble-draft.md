@@ -48,7 +48,7 @@ Chữ trên hình:
 - Thuật ngữ: Trump Put = niềm tin ông Trump sẽ cứu thị trường khi giá giảm sâu
 
 ## Phần 4: Nvidia rẻ nhất trong S&P 500
-Lời đọc: Và đây là tín hiệu số bốn, con số đắt giá nhất. Hai tuần qua, Nvidia mất Jensen Huang, cổ phiếu giảm bốn mươi phần trăm chỉ trong vài tuần. AMD thì bị một bên bán khống cáo buộc buôn lậu chip sang Trung Quốc, một cáo buộc còn xa mới được chứng minh. Kết quả: Forward P/E của Nvidia, tức giá cổ phiếu chia cho lợi nhuận dự kiến, chỉ còn chín lần. Đó là một trong những cổ phiếu rẻ nhất S&P 500. Cả nhóm công nghệ cũng rẻ nhất kể từ tháng ba năm 2020. Nvidia vẫn dự báo khoảng bảy trăm năm mươi tỷ đô revenue cho năm tài chính 2028. Nhưng thị trường không tin. Theo Kobeissi, chính sự hoài nghi đó tạo ra rất nhiều dư địa cho bất ngờ tích cực.
+Lời đọc: Nvidia rơi bốn mươi phần trăm chỉ trong vài tuần, P/E chỉ còn chín lần. Hai tuần qua, Nvidia mất Jensen Huang, người dẫn dắt cuộc cách mạng AI. AMD thì bị một bên bán khống cáo buộc buôn lậu chip sang Trung Quốc, một cáo buộc còn xa mới được chứng minh. Forward P/E chín lần, tức giá cổ phiếu chỉ bằng chín lần lợi nhuận dự kiến. Đó là một trong những cổ phiếu rẻ nhất S&P 500. Cả nhóm công nghệ cũng rẻ nhất kể từ tháng ba năm 2020. Nvidia vẫn dự báo khoảng bảy trăm năm mươi tỷ đô revenue cho năm tài chính 2028. Nhưng thị trường không tin. Theo Kobeissi, chính sự hoài nghi đó tạo ra rất nhiều dư địa cho bất ngờ tích cực.
 Chữ trên hình:
 - Tiêu đề: Nvidia rẻ nhất trong S&P 500
 - Thẻ số lớn (hiệu ứng zoom, nền đổi màu nhấn): Forward P/E 9x
@@ -79,7 +79,7 @@ Khi dựng: sources.yaml insight.shorts = 5, shorts_max_seconds = 59 (dưới 60
 - Short 1 (trọn Phần 1). Hook: "Mỗi ngày bốc hơi 225 tỷ đô, suốt 31 phiên liền." Số to: -$225B/NGÀY
 - Short 2 (trọn Phần 2). Hook: "Big Tech đốt 200 tỷ đô một quý. Điên hay thiên tài?" Số to: $201.9B
 - Short 3 (trọn Phần 3). Hook: "Lưới đỡ của ông Trump vừa biến mất." Số to: TRUMP PUT: HẾT
-- Short 4 (trọn Phần 4). Hook: "Nvidia rơi 40%, P/E chỉ còn 9 lần." Số to: P/E 9X
+- Short 4 (trọn Phần 4). Hook: "Cổ phiếu AI hot nhất giờ rẻ nhất S&P 500?" Số to: P/E 9X
 - Short 5 (trọn Phần 5). Hook: "Một thương vụ IPO hút cạn tiền khỏi cả crypto." Số to: $100B IPO
 
 ## Ảnh bìa
