@@ -349,7 +349,8 @@ class Gemini:
         if style.strip():
             prompt = (
                 "# AUDIO PROFILE\n" + style.strip() + "\n\n"
-                "# DIRECTOR'S NOTES\nRead ONLY the transcript below, in Vietnamese, word for word. "
+                "# DIRECTOR'S NOTES\nRead ONLY the transcript below, in Vietnamese, word for word, exactly ONCE. "
+                "Never repeat any sentence or phrase. Stop right after the last word. "
                 "Do not read these notes or any headings aloud.\n\n"
                 "# TRANSCRIPT\n" + text.strip()
             )

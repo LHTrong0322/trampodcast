@@ -370,7 +370,8 @@ def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
         import voice_ab as VA
         import voice_master as VM
         import tts_qa
-        txt = VL.lines(VA.speakable(t))
+        # đoạn ngắn để nguyên 1 dòng (tách dòng làm máy dễ đọc lặp câu mở đầu, log 21/11)
+        txt = VA.speakable(t) if len(t.split()) < 60 else VL.lines(VA.speakable(t))
         raw = outdir / f"{i:02d}.raw.wav"
         # Trọng chốt 21/11: nghe lại từng đoạn trước khi dựng, lặp/thiếu/thừa thì đọc lại (tối đa 4 lần)
         for attempt in range(4):
