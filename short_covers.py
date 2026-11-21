@@ -24,7 +24,8 @@ def props_for(plan: dict, sec_idx: int, title: str) -> dict:
             "text": P.nodash(V.en_money(title))[:60],
             "stat": P.nodash(V.en_money(s.get("key_stat", "")))[:10],
             "label": P.nodash(V.en_money(s.get("key_label", "")))[:40],
-            "points": [P.nodash(V.en_money(b))[:34] for b in (s.get("bullets") or [])][:3],
+            # chỉ hiện ý liệt kê khi kịch bản ghi riêng cho ảnh bìa (bullet của phần thường không khớp tiêu đề short)
+            "points": [P.nodash(V.en_money(b))[:34] for b in ((plan.get("short_cover_points") or {}).get(str(sec_idx)) or [])][:3],
             "accent": "#4F5BD5", "projectLogo": None,
             "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")}
 

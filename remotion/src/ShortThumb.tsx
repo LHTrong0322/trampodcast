@@ -11,7 +11,7 @@ export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat, label, points
   useFonts();
   const words = (text || '').toUpperCase().split(/\s+/).filter(Boolean);
   const long = words.join(' ').length;
-  const size = long > 40 ? 104 : long > 26 ? 120 : 140;
+  const size = long > 44 ? 112 : long > 26 ? 128 : 150;
   return (
     <AccentCtx.Provider value={accent}>
       <AbsoluteFill style={{background: C.bg, fontFamily: FONT}}>
@@ -45,7 +45,8 @@ export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat, label, points
         ) : null}
         {projectLogo ? <Img src={staticFile(projectLogo)} style={{position: 'absolute', right: 80, top: 230, width: 150, height: 150,
           borderRadius: '50%', boxShadow: `0 0 0 8px ${accent}44`}} /> : null}
-        <div style={{position: 'absolute', right: 70, bottom: 470, color: 'rgba(19,24,54,0.7)', fontWeight: 700, fontSize: 34}}>@Trong0322</div>
+        <div style={{position: 'absolute', left: 70, bottom: 470, display: 'flex', alignItems: 'center', gap: 14, color: 'rgba(19,24,54,0.75)',
+          fontWeight: 700, fontSize: 36}}>Xem bản đầy đủ trên YouTube · @Trong0322</div>
       </AbsoluteFill>
     </AccentCtx.Provider>
   );
