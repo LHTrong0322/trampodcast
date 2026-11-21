@@ -12,7 +12,7 @@ export type Beat = {
   value?: string; label?: string; logo?: string | null; tone?: 'up' | 'down' | 'flat';
   left?: Side; right?: Side;
   total?: number; hit?: number;
-  steps?: string[];
+  steps?: string[]; step_s?: (number | null)[];
   text?: string; sub?: string;
   ticker?: string;
   items?: Side[];
@@ -102,7 +102,11 @@ const Flow: React.FC<{b: Beat; w: number; h: number; t: number; dur: number}> = 
   const ac = useAccent();
   const steps = b.steps || [];
   const each = Math.max(1.2, dur / Math.max(1, steps.length));
-  const cur = Math.min(steps.length - 1, Math.floor(t / each));
+  let cur = Math.min(steps.length - 1, Math.floor(t / each));
+  if (b.step_s?.some((x) => x !== null && x !== undefined)) {   // có mốc theo lời đọc thì bám mốc
+    cur = 0;
+    b.step_s.forEach((x, i) => { if (x !== null && x !== undefined && t >= x - 0.1) cur = i; });
+  }
   return (
     <Card w={w} h={h} pad={34}>
       {b.label ? <div style={{fontSize: 28, fontWeight: 800, color: C.muted, marginBottom: 18, letterSpacing: 1}}>{b.label}</div> : null}

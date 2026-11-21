@@ -77,6 +77,11 @@
       "Dự án kiếm revenue",
       "Dùng revenue để buyback",
       "Token được hưởng"
+     ],
+     "step_at": [
+      "khác biệt nằm ở value",
+      "ví dụ dùng revenue",
+      "đó là câu hỏi đầu tiên"
      ]
     },
     {
@@ -141,6 +146,12 @@
       "TVL hàng tỷ đô",
       "Có người dùng thật",
       "Nhưng không ai mua token"
+     ],
+     "step_at": [
+      "họ dành hàng tuần",
+      "tvl",
+      "người dùng",
+      "nhưng quên hỏi"
      ]
     },
     {
@@ -163,6 +174,10 @@
      "steps": [
       "Ví lớn đang gom?",
       "Hay đang xả?"
+     ],
+     "step_at": [
+      "ví lớn đang gom",
+      "hay đang xả"
      ]
     }
    ]
@@ -209,6 +224,11 @@
       "Sản phẩm bắt đầu có người dùng",
       "Nguồn cầu mới cho token",
       "Fee switch: chia phí cho holder"
+     ],
+     "step_at": [
+      "có thể là sản phẩm",
+      "có thể là một nguồn cầu",
+      "hoặc là fee switch"
      ]
     },
     {
@@ -233,6 +253,12 @@
       "Dữ liệu ủng hộ",
       "Người mua mới vào",
       "Ai cũng đồng ý"
+     ],
+     "step_at": [
+      "một thesis bắt đầu",
+      "rồi dữ liệu ủng hộ",
+      "người mua mới vào",
+      "bỗng thành hiển nhiên"
      ]
     },
     {
@@ -352,6 +378,12 @@
       "Fundamentals tốt lên",
       "Nhu cầu thật cho token",
       "Có catalyst"
+     ],
+     "step_at": [
+      "một thesis ít người",
+      "fundamentals đang tốt lên",
+      "nhu cầu thật cho token",
+      "và một catalyst"
      ]
     },
     {

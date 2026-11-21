@@ -77,6 +77,11 @@
       "Dự án kiếm revenue",
       "Dùng revenue để buyback",
       "Token được hưởng"
+     ],
+     "step_at": [
+      "một bên có giao thức",
+      "chảy thẳng vào token",
+      "ví dụ dùng revenue"
      ]
     },
     {
@@ -137,6 +142,12 @@
       "TVL hàng tỷ đô",
       "Có người dùng thật",
       "Nhưng không ai mua token"
+     ],
+     "step_at": [
+      "họ dành hàng tuần",
+      "tvl",
+      "người dùng",
+      "nhưng lại quên hỏi"
      ]
     },
     {
@@ -199,6 +210,12 @@
       "Fee switch: chia phí cho holder",
       "Nguồn cầu mới cho token",
       "Dòng tiền xoay vào mảng mới"
+     ],
+     "step_at": [
+      "có thể là một sản phẩm",
+      "có thể là fee switch",
+      "có thể là một nguồn cầu",
+      "dòng tiền bắt đầu xoay"
      ]
     },
     {
@@ -215,6 +232,12 @@
       "Dữ liệu ủng hộ",
       "Người mua mới vào",
       "Ai cũng đồng ý"
+     ],
+     "step_at": [
+      "một thesis bắt đầu",
+      "rồi dữ liệu ủng hộ",
+      "người mua mới vào",
+      "bỗng trở thành"
      ]
     },
     {
@@ -342,6 +365,12 @@
       "Fundamentals tốt lên",
       "Nhu cầu thật cho token",
       "Có chất xúc tác"
+     ],
+     "step_at": [
+      "một thesis ít người",
+      "fundamentals đang tốt lên",
+      "nhu cầu thật cho token",
+      "và một chất xúc tác"
      ]
     },
     {

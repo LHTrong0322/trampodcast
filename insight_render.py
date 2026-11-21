@@ -123,7 +123,18 @@ def beats_for(beats: list, words: list, dur: float, data: dict) -> list:
         if s is None:   # không khớp: rải đều
             s = dur * k / max(1, len(beats))
             log(f"   ! nhịp hình '{b.get('at')}' không khớp lời đọc, đặt ở {s:.1f}s")
-        nb = {kk: v for kk, v in b.items() if kk != "at"}
+        nb = {kk: v for kk, v in b.items() if kk not in ("at", "step_at")}
+        if b.get("step_at"):   # mỗi bước sơ đồ sáng đúng lúc giọng đọc nói tới bước đó (Trọng 21/11)
+            st, pos = [], (last if last >= 0 else 0)
+            for phrase in b["step_at"]:
+                q = [_norm(x) for x in str(phrase).split() if _norm(x)]
+                hit = next((j for j in range(pos, len(ws) - len(q) + 1) if q and ws[j:j + len(q)] == q), None)
+                if hit is None:
+                    st.append(None)
+                    continue
+                pos = hit
+                st.append(round(words[hit]["s"] - (s or 0), 2))
+            nb["step_s"] = st
         nb = logo(nb)
         for side in ("left", "right"):
             if side in nb:

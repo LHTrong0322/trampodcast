@@ -9,7 +9,7 @@
 - Mỗi phần trong kịch bản đã duyệt có "beats": danh sách nhịp hình, mỗi nhịp có "at" = cụm từ NGUYÊN VĂN trong lời đọc,
   hình bật lên đúng lúc giọng đọc nói cụm đó (insight_render.beats_for, remotion/src/beats.tsx), khoảng 5 đến 8 giây đổi một kiểu.
   Kiểu: question (câu hỏi lớn), statement (câu chốt), versus (2 coin + logo + số), bignum (số lớn + logo), dots (13/15),
-  flow (các bước sáng dần theo lời đọc), logos (hàng logo), chart (giá coin thật, chỉ dùng khi xu hướng khớp lời).
+  flow (các bước sáng dần; BẮT BUỘC ghi "step_at" = cụm từ nguyên văn cho từng bước để bước sáng đúng lúc đọc), logos (hàng logo), chart (giá coin thật, chỉ dùng khi xu hướng khớp lời).
   Logo coin: ghi ticker vào "logo" (vd "AAVE"), máy tự tải từ CoinGecko. "hook_beats" cho phần mở màn.
 - Mẫu: scripts/kaffchad-approved.json. Viết nháp phải kèm cột "Hình" theo từng câu.
 - "own_source": true = hình ghi nguồn @Trong0322 thay tác giả bài gốc (khi Trọng trình bày như quan điểm của mình).
