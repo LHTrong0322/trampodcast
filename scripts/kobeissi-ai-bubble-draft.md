@@ -3,11 +3,10 @@
 Nguồn: https://x.com/KobeissiLetter/status/2123789428862660980
 Kiểu: giống video chuẩn insight-20261121-1615 (giọng gemini:Ludo@kol, nền trắng sạch, logo mở đầu, Hook + Mở đầu + 5 phần + Tóm lại, khoảng 4 phút).
 Mọi con số dưới đây đều có trong bài gốc của Kobeissi. Không thêm số ngoài bài.
-Trạng thái: CHỜ "ok kịch bản". Chỉ dựng khi Trọng nhắn "ok kịch bản", và dựng đúng lời đọc dưới đây.
+Trạng thái: Trọng duyệt tạm 02:17 22/11, CHỜ Trọng confirm (hẹn ngày 22/11) mới dựng. Chỉ dựng khi Trọng nhắn "ok kịch bản", và dựng đúng lời đọc dưới đây.
 
-## Tiêu đề YouTube (2 lựa chọn)
-1. AI bubble đã vỡ? Thị trường mất 6 nghìn tỷ đô trong 45 ngày
-2. Bong bóng AI vỡ hay cơ hội? 5 lý do Kobeissi nói KHÔNG
+## Tiêu đề YouTube (Trọng chốt 02:17 22/11)
+Cơ hội hay rủi ro từ AI bubble?
 
 ## Hook (giây 0, chữ hiện đủ trên hình)
 Lời đọc: Sáu nghìn tỷ đô bốc hơi trong bốn mươi lăm ngày, cổ phiếu, vàng, crypto cùng đỏ. Bong bóng AI đã vỡ, hay đây là cú rũ trước một cơ hội lớn?
@@ -74,9 +73,14 @@ Chữ trên hình:
 Lời đọc: Vậy bong bóng AI đã vỡ chưa? Câu trả lời của Kobeissi là không. Đây là một đợt điều chỉnh bình thường. Kể cả S&P 500 giảm thêm mười phần trăm, vẫn nằm trong vùng điều chỉnh lành mạnh. Thị trường đang định giá kịch bản xấu nhất: lãi suất cao kéo dài, AI bị siết mạnh, và Nvidia mất phương hướng. Kobeissi cũng nói rõ: chưa chắc đã chạm đáy, biến động còn cao và có thể giảm thêm. Nhưng tỷ lệ rủi ro so với lợi nhuận đang ngày càng hấp dẫn. Ghi nhớ năm tín hiệu này: tin xấu đã vào giá, lợi nhuận vẫn tăng, Fed có thể nới tay, cổ phiếu tốt đang rẻ, và thanh khoản sẽ quay lại. Đây là góc nhìn của Kobeissi, không phải lời khuyên đầu tư, mọi người hãy luôn tự nghiên cứu kỹ trước khi xuống tiền. Bạn nghĩ đây là bong bóng vỡ hay cơ hội mua? Bình luận cho mình biết nhé.
 Chữ trên hình: checklist 5 tín hiệu để lưu lại (Tin xấu đã vào giá / Lợi nhuận vẫn tăng / Fed có thể nới tay / Cổ phiếu tốt đang rẻ / Thanh khoản sẽ quay lại); câu chốt "Không phải bong bóng vỡ, mà là điều chỉnh".
 
-## Short 9:16
-- Short 1 (từ Phần 4). Hook (số to ngay giây đầu): NVIDIA P/E CHỈ 9X. Lời: Nvidia vừa thành một trong những cổ phiếu rẻ nhất S&P 500. Vì sao?
-- Short 2 (từ Phần 5). Hook (số to ngay giây đầu): -$6T TRONG 45 NGÀY. Lời: Vì sao vàng và crypto cũng đỏ theo cổ phiếu? Câu trả lời là thanh khoản.
+## Short 9:16 (Trọng 02:17 22/11: mỗi short lấy TRỌN một phần, 5 short)
+Mỗi short = trọn lời đọc của 1 phần (không cắt câu), hook đọc trước + số to chiếm nửa trên khung ngay giây 0.
+Khi dựng: sources.yaml insight.shorts = 5, shorts_max_seconds = 59 (dưới 60 giây để đăng được cả YouTube, Facebook, TikTok).
+- Short 1 (trọn Phần 1). Hook: "Mỗi ngày bốc hơi 225 tỷ đô, suốt 31 phiên liền." Số to: -$225B/NGÀY
+- Short 2 (trọn Phần 2). Hook: "Big Tech đốt 200 tỷ đô một quý. Điên hay thiên tài?" Số to: $201.9B
+- Short 3 (trọn Phần 3). Hook: "Lưới đỡ của ông Trump vừa biến mất." Số to: TRUMP PUT: HẾT
+- Short 4 (trọn Phần 4). Hook: "Nvidia rơi 40%, P/E chỉ còn 9 lần." Số to: P/E 9X
+- Short 5 (trọn Phần 5). Hook: "Một thương vụ IPO hút cạn tiền khỏi cả crypto." Số to: $100B IPO
 
 ## Ảnh bìa
 - Chữ lớn: AI BUBBLE ĐÃ VỠ?
