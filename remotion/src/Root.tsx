@@ -1,5 +1,6 @@
 import React from 'react';
 import {Composition} from 'remotion';
+import {ShortThumb} from './ShortThumb';
 import {Insight, InsightProps} from './Insight';
 import {InsightShort} from './InsightShort';
 import {Thumb} from './Thumb';
@@ -39,6 +40,8 @@ export const Root: React.FC = () => (
       })}
     />
     <Composition id="Thumb" component={Thumb} width={1280} height={720} fps={30} durationInFrames={1}
+      defaultProps={{text: '', stat: '', brand: 'Smart Penguin Insights'}} />
+    <Composition id="ShortThumb" component={ShortThumb} width={1080} height={1920} fps={30} durationInFrames={1}
       defaultProps={{text: '', stat: '', brand: 'Smart Penguin Insights'}} />
   </>
 );

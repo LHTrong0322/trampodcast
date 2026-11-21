@@ -1,0 +1,47 @@
+name: "Ảnh bìa video ngắn (cho video đã dựng)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag video, vd 20261121-1615"
+        required: true
+      script:
+        description: "Kịch bản đã duyệt, vd scripts/zeroxkyle-approved.json"
+        required: true
+      fb_reels:
+        description: "ID Reel Facebook đã đăng để gắn ảnh bìa (theo thứ tự short1,short2), để trống nếu không"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  covers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests feedparser pyyaml beautifulsoup4 pillow numpy
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Cài Remotion
+        working-directory: remotion
+        run: npm ci --silent
+      - name: Vẽ ảnh bìa + gắn Release + Telegram + Reel Facebook
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+        run: python short_covers.py "${{ github.event.inputs.tag }}" "${{ github.event.inputs.script }}" "${{ github.event.inputs.fb_reels }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: short-covers
+          path: covers/*.png

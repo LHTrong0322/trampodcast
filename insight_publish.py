@@ -306,7 +306,11 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None) -> di
     if os.getenv("INSIGHT_SCRIPT", "").strip() and res["plan"].get("title"):   # tiêu đề Trọng duyệt luôn đứng đầu
         seo["yt_titles"] = [res["plan"]["title"]] + [t for t in seo.get("yt_titles", []) if t != res["plan"]["title"]][:2]
     (out / f"seo-{tag}.json").write_text(json.dumps(seo, ensure_ascii=False, indent=1), encoding="utf-8")
-    files = [res["long"]] + [s["path"] for s in res["shorts"]] + ([thumb] if thumb else []) + [out / f"seo-{tag}.json"]
+    import short_covers as SC   # Trọng 21/11: mỗi short có ảnh bìa riêng
+    covers = [SC.make(res["plan"], s["section"], s["title"], out / f"short{j + 1}-cover-{tag}.png") for j, s in enumerate(res["shorts"])]
+    for s, c in zip(res["shorts"], covers):
+        s["cover"] = str(c) if c else None
+    files = [res["long"]] + [s["path"] for s in res["shorts"]] + ([thumb] if thumb else []) + [c for c in covers if c] + [out / f"seo-{tag}.json"]
     url = ""
     repo = os.getenv("GITHUB_REPOSITORY")
     if repo and os.getenv("GH_TOKEN"):
@@ -320,6 +324,9 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None) -> di
     tg_text(f"🐧 SMART PENGUIN INSIGHTS · video mới ({res['duration'] / 60:.1f} phút · giọng {res['voice'].split(':')[1]})\n"
             f"1 video YouTube 16:9 + {len(res['shorts'])} video ngắn 9:16 (TikTok/Shorts/Reels)\n" + (f"📦 File gốc: {url}" if url else ""))
     tg_photo(thumb, "🖼 Ảnh bìa YouTube")
+    for j, c in enumerate(covers):
+        if c:
+            tg_photo(c, f"🖼 Ảnh bìa Short {j + 1}")
     tg_video(res["long"], "🎬 " + (seo.get("yt_titles") or [plan.get("title", "")])[0])
     for i, s in enumerate(res["shorts"]):
         sh = (seo.get("shorts") or [{}] * 9)[i] if i < len(seo.get("shorts") or []) else {}
