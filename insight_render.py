@@ -205,12 +205,16 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
             scenes.append({**base, "type": "section", "idx": i + 1, "total": len(secs), "heading": V.en_money(s["heading"]),
                            "keyStat": real_number(V.en_money(s.get("key_stat", "")), posts), "keyLabel": V.en_money(s.get("key_label", "")),
                            "bullets": [V.en_money(b) for b in (s.get("bullets") or [])][:3],
-                           "quote": V.en_money(s.get("quote", "")), "source": ("@" + src[0]) if src[0] else "",
+                           "quote": V.en_money(s.get("quote", "")),
+                           "source": "@Trong0322" if plan.get("own_source") else (("@" + src[0]) if src[0] else ""),
                            "data": dspec or None, "project": proj})
     chapters[0] = (0.0, chapters[0][1])
     pinfo = {"author": post.get("author", ""), "handle": post.get("handle", ""), "avatar": post.get("avatar"),
              "cover": post.get("cover"), "title": post.get("title", ""), "likes": post.get("likes"),
              "views": post.get("views"), "retweets": post.get("retweets")} if post else None
+    if plan.get("own_source"):   # Trọng 21/11: bài trình bày như quan điểm của Trọng, hình không hiện tác giả bài gốc
+        pinfo = {"author": "Trọng", "handle": "Trong0322", "avatar": "logo.png", "cover": None,
+                 "title": V.en_money(plan.get("title", "")), "likes": None, "views": None, "retweets": None}
     props = {"fps": 30, "width": 1920, "height": 1080, "audio": audio_file, "duration": round(total, 3),
              "scenes": scenes, "data": data, "brand": brand, "post": pinfo}
     out_dir.mkdir(parents=True, exist_ok=True)

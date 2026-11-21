@@ -31,7 +31,7 @@
    "quote": "Một bên có giao thức thành công. Bên kia có cơ chế khiến thành công đó có ý nghĩa với token",
    "data": {
     "type": "stat_compare",
-    "title": "Từ đầu năm (theo bài của Kaff)",
+    "title": "Từ đầu năm",
     "tickers": [],
     "items": [
      {
@@ -195,5 +195,6 @@
  "short_hooks": {
   "0": "AAVE giảm 25%, HYPE tăng 170%: vì sao?",
   "3": "Kèo đúng vẫn thua nếu đám đông đã vào"
- }
+ },
+ "own_source": true
 }
