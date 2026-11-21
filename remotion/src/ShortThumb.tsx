@@ -11,7 +11,7 @@ export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat, label, points
   useFonts();
   const words = (text || '').toUpperCase().split(/\s+/).filter(Boolean);
   const long = words.join(' ').length;
-  const size = long > 44 ? 112 : long > 26 ? 128 : 150;
+  const size = long > 44 ? 92 : long > 26 ? 104 : 120;   // Trọng 22/11: nhỏ lại cho khỏi mất dấu
   return (
     <AccentCtx.Provider value={accent}>
       <AbsoluteFill style={{background: C.bg, fontFamily: FONT}}>
@@ -22,7 +22,7 @@ export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat, label, points
           <div style={{color: C.ink, fontWeight: 800, fontSize: 34, letterSpacing: 2}}>{brand.toUpperCase()}</div>
         </div>
         <div style={{position: 'absolute', left: 70, right: 70, top: 420, display: 'flex', flexWrap: 'wrap', columnGap: 26,
-          fontWeight: 800, fontSize: size, lineHeight: 1.02, color: C.ink, letterSpacing: -1}}>
+          fontWeight: 800, fontSize: size, lineHeight: 1.32, color: C.ink, letterSpacing: 0}}>
           {words.map((w, i) => <span key={i} style={{color: i % 3 === 1 ? accent : C.ink}}>{w}</span>)}
         </div>
         {stat ? (

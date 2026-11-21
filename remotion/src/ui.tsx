@@ -153,7 +153,8 @@ export const RevealWords: React.FC<{text: string; size: number; weight?: number;
         const s = spring({frame: f - delay - i * stagger, fps, config: {damping: 15, mass: 0.7}});
         const hl = highlight.some((h) => h && w.toLowerCase().includes(h.toLowerCase()));
         return (
-          <span key={i} style={{display: 'inline-block', overflow: 'hidden', paddingBottom: size * 0.08}}>
+          // chừa chỗ phía trên cho dấu tiếng Việt (Ố, Ẫ, Ỗ), trước đây bị cắt mất dấu
+          <span key={i} style={{display: 'inline-block', overflow: 'hidden', paddingTop: size * 0.3, marginTop: -size * 0.3, paddingBottom: size * 0.1}}>
             <span style={{display: 'inline-block', transform: `translateY(${(1 - s) * 110}%) rotate(${(1 - s) * 6}deg)`,
               opacity: s, color: hl ? accentColor : color, textShadow: 'none'}}>{w}</span>
           </span>

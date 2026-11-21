@@ -20,10 +20,11 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5
           <Img src={staticFile('logo.png')} style={{width: 64, height: 64, borderRadius: 99}} />
           <div style={{color: C.ink, fontWeight: 800, fontSize: 26, letterSpacing: 2}}>{brand.toUpperCase()}</div>
         </div>
-        <div style={{position: 'absolute', left: 64, top: 150, width: points.length ? 740 : 820, display: 'flex', flexWrap: 'wrap', columnGap: 22,
+        <div style={{position: 'absolute', left: 64, top: 160, width: points.length ? 740 : 1080, display: 'flex', flexWrap: 'wrap', columnGap: 22,
           fontFamily: HF, fontStretch: font === 'archivo' ? '62%' : undefined, fontWeight: font === 'anton' ? 400 : 900,
-          fontSize: (points.length ? 80 : words.join(' ').length > 28 ? 92 : 112) * (cond ? 1.35 : 1), lineHeight: cond ? 0.98 : 1.02,
-          color: C.ink, letterSpacing: cond ? 0 : -1}}>
+          // Trọng 22/11: chữ to quá bị mất dấu (dấu mũ + ngã chồng lên dòng trên). Cỡ vừa phải, giãn dòng đủ cho chữ hoa có 2 tầng dấu
+          fontSize: (points.length ? 64 : words.join(' ').length > 28 ? 72 : words.join(' ').length > 18 ? 84 : 96) * (cond ? 1.2 : 1),
+          lineHeight: 1.32, rowGap: 6, color: C.ink, letterSpacing: 0}}>
           {words.map((w, i) => <span key={i} style={{color: i % 3 === 1 ? accent : C.ink}}>{w}</span>)}
         </div>
         {vs.length ? <div style={{position: 'absolute', left: 64, right: 64, bottom: 56, display: 'flex', gap: 28}}>
