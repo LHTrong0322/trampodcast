@@ -69,34 +69,6 @@ def word_times(text: str, pcm: bytes) -> list[dict]:
     return out
 
 
-def hold_pauses(plan: dict, pcm: dict, text: dict) -> dict:
-    """Trọng 22/11: hình so sánh quan trọng (beat có "hold": giây) được đứng yên thêm cho người xem kịp nhìn.
-    Chèn khoảng lặng vào giọng đọc ngay cuối câu chứa cụm "at" của beat đó; hình kế tiếp tự lùi theo."""
-    for i, sec in enumerate(plan.get("sections") or []):
-        k = f"s{i}"
-        holds = [b for b in (sec.get("beats") or []) if b.get("hold") and b.get("at")]
-        if k not in pcm or not holds:
-            continue
-        cuts = []
-        wt = word_times(text[k], pcm[k])
-        toks = [_norm(w["t"]) for w in wt]
-        for b in holds:
-            ph = [_norm(x) for x in str(b["at"]).split() if _norm(x)]
-            j = next((x for x in range(len(toks) - len(ph) + 1) if toks[x:x + len(ph)] == ph), -1)
-            if j < 0:
-                log(f"   ! giữ hình '{b['at']}': không thấy trong lời đọc")
-                continue
-            e = next((x for x in range(j, len(wt)) if re.search(r"[.!?…]$", wt[x]["t"])), len(wt) - 1)
-            cuts.append((wt[e]["e"] + 0.15, min(4.0, float(b["hold"]))))
-        a = pcm[k]
-        for at, sec_ in sorted(cuts, reverse=True):
-            pos = min(len(a), int(at * SR) * 2)
-            a = a[:pos] + V.gap(sec_) + a[pos:]
-            log(f"   Giữ hình {sec_:.1f}s ở phần {i + 1} (giây {at:.1f})")
-        pcm[k] = a
-    return pcm
-
-
 def build_timeline(plan, pcm, text, gap=0.35):
     """Ghép audio các đoạn (nghỉ ngắn giữa đoạn để giữ nhịp) + lập danh sách cảnh (giây)."""
     secs = plan["sections"]
@@ -171,8 +143,51 @@ def beats_for(beats: list, words: list, dur: float, data: dict) -> list:
             nb["items"] = [logo(x) for x in nb["items"]]
         if "logo" in b and nb.get("logo") is None:
             nb["logo"] = None
+        if not nb.get("logo") and nb.get("type") in ("statement", "bignum", "question"):
+            nb["logo"] = mention_logo(words, s, coins)   # Trọng 22/11: nhắc tới dự án nào thì hiện logo dự án đó
         out.append({**nb, "s": round(max(0.0, s), 2)})
+    return settle_beats(out, dur)
+
+
+# Trọng 22/11: hình đang dựng dở không được biến mất (biểu đồ chưa vẽ xong đã chuyển cảnh).
+# Mỗi kiểu hình có thời gian tối thiểu đủ để chạy xong hiệu ứng và để người xem đọc; "hold" kéo dài thêm.
+# Tuyệt đối KHÔNG chèn khoảng lặng vào giọng đọc để giữ hình (Trọng 22/11: nghe như video bị mất tiếng).
+MIN_BEAT = {"race": 5.5, "chart": 4.0, "versus": 3.5, "flow": 4.0, "dots": 3.0, "bignum": 2.6, "logos": 2.4,
+            "statement": 2.4, "question": 2.0}
+
+
+def settle_beats(beats: list, dur: float) -> list:
+    beats = sorted(beats, key=lambda b: b["s"])
+    out = []
+    for b in beats:
+        if out:
+            p = out[-1]
+            need = max(MIN_BEAT.get(p.get("type"), 2.2), float(p.get("hold") or 0))
+            if b["s"] < p["s"] + need:
+                if b.get("type") == "question" or p["s"] + need > dur - 1.0:
+                    continue   # không đủ chỗ: bỏ hình phụ, giữ hình trước cho trọn
+                d = p["s"] + need - b["s"]
+                b = {**b, "s": round(p["s"] + need, 2)}
+                if b.get("step_s"):
+                    b["step_s"] = [None if x is None else round(max(0.0, x - d), 2) for x in b["step_s"]]
+        out.append(b)
     return out
+
+
+def mention_logo(words: list, s: float, coins: dict) -> str | None:
+    """Logo của dự án được nhắc trong câu đang đọc lúc hình bật lên (tên đầy đủ hoặc ticker)."""
+    names = {}
+    for t, c in coins.items():
+        if c.get("logo"):
+            names[_norm(t)] = c["logo"]
+            for part in str(c.get("name", "")).split():
+                if len(part) >= 4 and _norm(part) not in ("protocol", "network", "finance", "token", "labs"):
+                    names[_norm(part)] = c["logo"]
+    near = [_norm(w["t"]) for w in words if s - 1.5 <= w["s"] <= s + 4.0]
+    for w in near:
+        if w in names:
+            return names[w]
+    return None
 
 def project_of(s: dict, data: dict) -> dict | None:
     pj = s.get("project") or {}
@@ -238,7 +253,6 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     except (TypeError, ValueError):
         f = 1.0
     pcm = {k: speed(v, f) for k, v in pcm.items()}
-    pcm = hold_pauses(plan, pcm, text)
     audio, tl, total = build_timeline(plan, pcm, text)
     prep_public(lab)
     V.pcm_to_wav(audio, RD / "voice.wav")

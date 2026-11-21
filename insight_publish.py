@@ -143,6 +143,16 @@ Trả JSON:
 }}"""
 
 
+def scene_changes(video: Path, thr: float = 0.06) -> int:
+    """Số lần hình thay đổi rõ rệt (ffmpeg scene detection): thước đo nhịp độ khách quan."""
+    try:
+        r = subprocess.run(["ffmpeg", "-loglevel", "info", "-i", str(video), "-vf", f"scale=320:-2,select='gt(scene,{thr})',showinfo",
+                            "-an", "-f", "null", "-"], capture_output=True, text=True, timeout=600)
+        return r.stderr.count("pts_time:")
+    except Exception:
+        return 0
+
+
 def frames_of(video: Path, n: int, w: int = 640) -> list[bytes]:
     dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(video)],
                                capture_output=True, text=True).stdout or 1)
@@ -209,7 +219,18 @@ def review(gem, cfg, res: dict, thumb: Path | None) -> dict:
     plan = res["plan"]
     words = sum(len(s["narration"].split()) for s in plan["sections"])
     wpm = int(words / max(1, res["duration"]) * 60 * 1.1)
-    imgs = [(f"long_{i}", b) for i, b in enumerate(frames_of(res["long"], 10))]
+    N = 18   # Trọng 22/11: review nhìn nhiều khung hơn, kèm giây + lời đang đọc, để chấm nhịp và dữ liệu cho đúng
+    imgs = [(f"long_{i}", b) for i, b in enumerate(frames_of(res["long"], N))]
+    dur = res["duration"]
+    times = [1.5 if k == 0 else dur * k / N for k in range(N)]
+    def said(t):
+        for sc in res.get("scenes") or []:
+            if sc["from"] <= t < sc["from"] + sc["dur"]:
+                ws = [w["t"] for w in sc.get("words") or [] if abs(sc["from"] + w["s"] - t) < 2.5]
+                return " ".join(ws)[:120]
+        return ""
+    timeline = "\n".join(f"- long_{k} ở giây {tt:.0f}: lời đọc \"{said(tt)}\"" for k, tt in enumerate(times))
+    changes = scene_changes(res["long"])
     for j, s in enumerate(res["shorts"][:2]):
         imgs += [(f"short{j}_{i}", b) for i, b in enumerate(frames_of(s["path"], 2, 360))]
     if thumb and thumb.exists():
@@ -220,8 +241,11 @@ def review(gem, cfg, res: dict, thumb: Path | None) -> dict:
         b = io.BytesIO()
         im.save(b, "JPEG", quality=80)
         imgs.append(("thumbnail", b.getvalue()))
-    prompt = REVIEW_PROMPT.format(n=10, ns=len(imgs) - 10, title=plan.get("title", ""), minutes=res["duration"] / 60,
+    prompt = REVIEW_PROMPT.format(n=N, ns=len(imgs) - N, title=plan.get("title", ""), minutes=res["duration"] / 60,
                                   voice=res["voice"], wpm=wpm, hook=plan.get("hook", ""))
+    prompt += (f"\n\nTHÔNG TIN THÊM (đo bằng máy): video đổi hình {changes} lần, tức khoảng {changes / max(1, dur / 60):.0f} lần mỗi phút "
+               "(chuẩn kênh: từ 8 lần/phút là nhịp tốt). Khung hình chỉ là ảnh tĩnh nên hãy chấm nhịp độ dựa trên số lần đổi hình này "
+               "và độ khác nhau giữa các khung, không chỉ dựa trên vài ảnh.\nLời đang đọc ở từng khung (để chấm dữ liệu có đúng ý lời đọc không):\n" + timeline)
     for fn in (claude_review_cli, claude_review):   # ưu tiên Claude (gói Pro, rồi API), Gemini dự phòng
         try:
             rv = fn(prompt, imgs)

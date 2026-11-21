@@ -267,6 +267,11 @@ def market_data(lab: Path) -> dict:
     return d
 
 
+NAME_TICKER = {"uniswap": "UNI", "hyperliquid": "HYPE", "aave": "AAVE", "ethena": "ENA", "solana": "SOL", "bitcoin": "BTC",
+               "ethereum": "ETH", "chainlink": "LINK", "pendle": "PENDLE", "jupiter": "JUP", "lido": "LDO", "maker": "MKR",
+               "sky": "SKY", "virtuals": "VIRTUAL", "arbitrum": "ARB", "optimism": "OP", "celestia": "TIA", "sui": "SUI"}
+
+
 def _days(v) -> int:
     """Số ngày lấy giá: số nguyên, hoặc "ytd" = từ 1/1 năm nay."""
     if str(v).lower() == "ytd":
@@ -290,6 +295,13 @@ def coin_data(lab: Path, plan: dict, data: dict):
         if pj:
             tick.append(str(pj).lstrip("$").upper())
     want: dict = {}
+    import voice_ab as VA   # coin được nhắc bằng ticker viết hoa trong lời đọc cũng lấy logo (Trọng 22/11: nhắc dự án là có logo)
+    for s_ in plan.get("sections", []):
+        for w in re.findall(r"\b[A-Z][A-Z0-9]{2,9}\b", s_.get("narration", "")):
+            if w not in VA.SPELL:
+                tick.append(w)
+        low = s_.get("narration", "").lower()
+        tick += [t for n, t in NAME_TICKER.items() if re.search(r"\b" + n + r"\b", low)]
     for b in [b for s in plan.get("sections", []) for b in (s.get("beats") or [])] + (plan.get("hook_beats") or []):
         if b.get("type") == "chart" and b.get("ticker") and b.get("days"):
             want[str(b["ticker"]).lstrip("$").upper()] = _days(b.get("days"))

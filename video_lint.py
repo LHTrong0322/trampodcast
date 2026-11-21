@@ -67,6 +67,9 @@ def lint(plan: dict) -> list[str]:
             if (b - a) / WPS > 8.4:
                 seg = " ".join(w[a:a + 6])
                 bad.append(f"Phần {k}: từ '{seg}...' có {(b - a) / WPS:.0f} giây không đổi hình (tối đa 8 giây), thêm 1 hình số liệu hoặc ví dụ.")
+        for b in beats:
+            if b.get("type") == "question":
+                bad.append(f"Phần {k}: thẻ câu hỏi '{b.get('text', '')}' không có dữ liệu (review 22/11 trừ điểm), thay bằng số liệu, biểu đồ hoặc logo kèm số.")
         for n, (i, b) in enumerate(an):
             if b.get("type") == "question":
                 nxt = an[n + 1][0] if n + 1 < len(an) else len(w)

@@ -20,10 +20,11 @@ export type Beat = {
 
 const toneColor = (t?: string) => (t === 'down' ? C.red : t === 'up' ? C.green : C.ink);
 
-const Card: React.FC<{w: number; h: number; children: React.ReactNode; pad?: number; solid?: boolean}> = ({w, h, children, pad = 40, solid}) => {
+// Trọng 22/11: VĨNH VIỄN chỉ dùng nền sạch (trắng). Không thẻ nền màu đậm/gradient.
+const Card: React.FC<{w: number; h: number; children: React.ReactNode; pad?: number}> = ({w, h, children, pad = 40}) => {
   const ac = useAccent();
   return (
-    <div className={solid ? 'beat-solid' : undefined} style={{width: w, height: h, borderRadius: 28, background: solid ? `linear-gradient(135deg, ${ac}, #131836)` : C.panel, border: `1px solid ${C.line}`, borderTop: `5px solid ${ac}`,
+    <div style={{width: w, height: h, borderRadius: 28, background: C.panel, border: `1px solid ${C.line}`, borderTop: `5px solid ${ac}`,
       boxShadow: '0 20px 56px rgba(40,50,110,0.14)', padding: pad, boxSizing: 'border-box', fontFamily: FONT, position: 'relative',
       overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>{children}</div>
   );
@@ -133,10 +134,11 @@ const Statement: React.FC<{b: Beat; w: number; h: number; question?: boolean}> =
   const ac = useAccent();
   const s = spring({frame: f - 2, fps, config: {damping: 13}});
   return (
-    <Card w={w} h={h} pad={56} solid={!question && (b.text || '').length % 2 === 0}>
+    <Card w={w} h={h} pad={56}>
+      {b.logo ? <div style={{position: 'absolute', right: 44, top: 40}}><Logo src={b.logo} size={96} /></div> : null}
       {question ? <div style={{fontSize: 120, fontWeight: 900, color: ac, lineHeight: 0.8, marginBottom: 10}}>?</div>
         : <div style={{fontSize: 120, fontWeight: 900, color: `${ac}55`, lineHeight: 0.6, marginBottom: 10}}>“</div>}
-      <div style={{fontSize: (b.text || '').length > 40 ? 52 : 64, fontWeight: 800, color: !question && (b.text || '').length % 2 === 0 ? '#FFFFFF' : C.ink, lineHeight: 1.18,
+      <div style={{fontSize: (b.text || '').length > 40 ? 52 : 64, fontWeight: 800, color: C.ink, lineHeight: 1.18,
         transform: `scale(${interpolate(s, [0, 1], [0.92, 1])})`, opacity: s, transformOrigin: 'left center'}}>{b.text}</div>
       {b.sub ? <div style={{fontSize: 28, fontWeight: 600, color: C.muted, marginTop: 22}}>{b.sub}</div> : null}
     </Card>

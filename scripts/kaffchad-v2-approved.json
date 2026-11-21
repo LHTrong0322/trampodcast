@@ -76,13 +76,8 @@
    "beats": [
     {
      "at": "khi dự án kiếm được",
-     "type": "question",
-     "text": "Dự án kiếm tiền, token có được hưởng không?"
-    },
-    {
-     "at": "nhìn aave và hype",
      "type": "logos",
-     "label": "Hai dự án DeFi top đầu",
+     "label": "Dự án kiếm tiền, token có được hưởng?",
      "items": [
       {
        "label": "AAVE",
@@ -122,12 +117,7 @@
      "days": "ytd",
      "label": "Giá AAVE và HYPE từ đầu năm",
      "sub": "Giá thật từ 1/1 tới hôm nay (CoinGecko)",
-     "hold": 3.0
-    },
-    {
-     "at": "dwf labs",
-     "type": "statement",
-     "text": "DWF Labs: market maker có tiếng"
+     "hold": 5
     },
     {
      "at": "còn thống kê 13",
@@ -137,9 +127,21 @@
      "label": "token có buyback thắng BTC từ đầu năm (DWF Labs, market maker lớn)"
     },
     {
-     "at": "vậy bạn làm gì",
-     "type": "question",
-     "text": "Bao nhiêu % revenue quay về token?"
+     "at": "trước khi mua hãy hỏi",
+     "type": "versus",
+     "left": {
+      "label": "AAVE",
+      "value": "~30%",
+      "logo": "AAVE",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "HYPE",
+      "value": "97-99%",
+      "logo": "HYPE",
+      "tone": "up"
+     },
+     "sub": "% revenue quay về token qua buyback"
     },
     {
      "at": "nhưng có buyback rồi",
@@ -176,11 +178,6 @@
    "beats": [
     {
      "at": "câu hỏi thứ hai là",
-     "type": "question",
-     "text": "Ai sẽ mua token tiếp theo?"
-    },
-    {
-     "at": "họ dành hàng tuần",
      "type": "flow",
      "label": "Bẫy của dân đầu tư cơ bản",
      "steps": [
@@ -199,8 +196,8 @@
     {
      "at": "ví dụ chính là aave",
      "type": "bignum",
-     "value": "-25%",
-     "label": "AAVE: buyback 50 triệu đô/năm, token vẫn giảm",
+     "value": "$50M/năm",
+     "label": "AAVE buyback mỗi năm, giá vẫn đi xuống",
      "logo": "AAVE",
      "tone": "down"
     },
@@ -220,16 +217,6 @@
      "at": "chốt lại",
      "type": "statement",
      "text": "Tốt chưa đủ, phải có người mua mới"
-    },
-    {
-     "at": "vậy bạn làm gì",
-     "type": "question",
-     "text": "Dòng tiền mới sẽ đến từ đâu?"
-    },
-    {
-     "at": "câu hỏi tiếp theo sẽ",
-     "type": "statement",
-     "text": "Câu 3: chỗ tìm dòng tiền mới"
     }
    ],
    "quote": "",
@@ -261,11 +248,6 @@
    "beats": [
     {
      "at": "câu hỏi thứ ba",
-     "type": "question",
-     "text": "Thị trường đang bỏ sót điều gì?"
-    },
-    {
-     "at": "đây là thesis",
      "type": "statement",
      "text": "Thesis: luận điểm thị trường chưa định giá"
     },
@@ -290,11 +272,6 @@
      "tone": "up"
     },
     {
-     "at": "token vẫn là token đó",
-     "type": "statement",
-     "text": "Token không đổi, cách nhìn đã đổi"
-    },
-    {
      "at": "thesis chưa được định giá",
      "type": "flow",
      "label": "4 nguồn thesis chưa được định giá",
@@ -312,19 +289,14 @@
      ]
     },
     {
-     "at": "trong crypto sự chú ý",
-     "type": "statement",
-     "text": "Sự chú ý cũng là thanh khoản"
-    },
-    {
      "at": "chốt lại",
      "type": "statement",
      "text": "Mua lúc ít người tin, không phải lúc ai cũng biết"
     },
     {
      "at": "tìm một sự kiện",
-     "type": "question",
-     "text": "Sự kiện nào sắp đổi cách nhìn?"
+     "type": "statement",
+     "text": "Tìm sự kiện sắp đổi cách nhìn của thị trường"
     },
     {
      "at": "nhưng thesis đúng",
@@ -361,21 +333,37 @@
    "beats": [
     {
      "at": "câu nhiều người bỏ qua",
-     "type": "question",
+     "type": "statement",
      "text": "Thesis này đã quá đông chưa?"
     },
     {
      "at": "vẫn là uniswap",
-     "type": "bignum",
-     "value": "~0%",
-     "label": "UNI ngày fee switch được thông qua: tin đã được mua trước",
-     "logo": "UNI",
-     "tone": "flat"
+     "type": "versus",
+     "left": {
+      "label": "Lúc đề xuất",
+      "value": "+30%",
+      "logo": "UNI",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Lúc thông qua",
+      "value": "~0%",
+      "logo": "UNI",
+      "tone": "flat"
+     },
+     "sub": "Giá UNI quanh tin fee switch (2025)"
     },
     {
      "at": "tin tốt đã đến",
-     "type": "statement",
-     "text": "Tin tốt đến, người cần mua đã mua rồi"
+     "type": "logos",
+     "label": "Tin tốt đến, người cần mua đã mua từ lúc đề xuất",
+     "items": [
+      {
+       "label": "UNI",
+       "value": "Bán tin",
+       "logo": "UNI"
+      }
+     ]
     },
     {
      "at": "một luận điểm có thể đúng",
@@ -398,24 +386,9 @@
      "label": "VIRTUAL 1 năm qua: sự chú ý rời đi"
     },
     {
-     "at": "theo quan điểm cá nhân",
-     "type": "statement",
-     "text": "Đừng mua mọi narrative đang hot"
-    },
-    {
      "at": "chốt lại",
      "type": "statement",
      "text": "Đúng mà quá đông thì vẫn thua"
-    },
-    {
-     "at": "vậy bạn làm gì",
-     "type": "question",
-     "text": "Ai cũng nói về nó? Cẩn thận gấp đôi"
-    },
-    {
-     "at": "hãy cẩn thận gấp đôi",
-     "type": "statement",
-     "text": "Ai cũng nói về nó? Cẩn thận gấp đôi"
     }
    ],
    "quote": "",
@@ -448,11 +421,6 @@
    "beats": [
     {
      "at": "vậy cơ hội lớn",
-     "type": "question",
-     "text": "Cơ hội lớn nằm ở đâu?"
-    },
-    {
-     "at": "một thesis ít người",
      "type": "flow",
      "label": "Điểm giao nhau của cơ hội lớn",
      "steps": [

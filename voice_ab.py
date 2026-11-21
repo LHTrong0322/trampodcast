@@ -46,7 +46,14 @@ def speakable(t: str) -> str:
     t = re.sub(r"(\d+(?:[.,]\d+)?)\s*%", r"\1 phần trăm", t)
     t = t.replace("&", " and ").replace("→", ", ").replace("/", " trên ")
     t = re.sub(r"\$?\b[A-Z][A-Z0-9]{2,}\b", _name, t)
+    for k, v in PRON.items():   # tên dự án máy hay đọc vấp: viết theo cách đọc liền
+        t = re.sub(r"\b" + k + r"\b", v, t, flags=re.I)
     return re.sub(r"\s{2,}", " ", t).strip()
+
+
+# Trọng 22/11: "vẫn còn lỗi đọc không liền mạch tên dự án". Bản nghe lại (Whisper) cho thấy Aave bị đọc thành "A" hoặc "AV".
+# Ghi tên theo cách đọc để giọng máy đọc liền một hơi.
+PRON = {"Aave": "A vê"}   # chỉ thêm tên đã nghe thấy bị đọc vấp; tên đọc chuẩn tiếng Anh rồi (Hyperliquid, Uniswap, Virtual) thì để nguyên
 
 
 # Trọng chốt 21/11: TÊN DỰ ÁN đọc liền một từ (AAVE đọc "Aave", không đánh vần A A V E).

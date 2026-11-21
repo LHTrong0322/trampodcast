@@ -163,10 +163,10 @@ const Bullets: React.FC<{items: string[]; dur: number; fps: number}> = ({items, 
         const nextAt = i + 1 < items.length ? Math.round(fps * (1.2 + (dur * 0.6 * (i + 1)) / items.length)) : 1e9;
         const active = f >= at && f < nextAt;   // dòng đang nói thì nổi bật, dòng cũ mờ đi (review 1518)
         return (
-          <div key={i} style={{display: 'flex', alignItems: 'center', gap: 18, opacity: s * (active ? 1 : 0.55),
+          <div key={i} style={{display: 'flex', alignItems: 'center', gap: 18, opacity: s * (active ? 1 : 0.8),
             transform: `translateX(${(1 - s) * -40}px) scale(${active ? 1.03 : 1})`, transformOrigin: 'left center',
             padding: '8px 16px', marginLeft: -16, borderRadius: 14, background: active ? `${ac}18` : 'transparent',
-            fontFamily: FONT, fontSize: 34, fontWeight: active ? 700 : 600, color: C.ink}}>
+            fontFamily: FONT, fontSize: 40, fontWeight: active ? 800 : 700, color: C.ink}}>
             <div style={{width: 10, height: 10, borderRadius: 99, background: ac, flexShrink: 0}} />
             <span>{b}</span>
           </div>
@@ -194,8 +194,8 @@ export const QuoteCard: React.FC<{post: Post | null; quote: string; w: number; h
 
 const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Post | null}> = (p) => (
   // Trọng 22/11 (review: "câu số 4 đã hứa mà trình bày y hệt câu 1-3"): phần được nhấn đổi màu cam + nhãn riêng
-  p.sc.emphasis ? <AccentCtx.Provider value="#E8590C"><AbsoluteFill style={{background: 'linear-gradient(180deg, #FFF4E6, #FFFFFF 60%)'}} />
-    <SectionInner {...p} /></AccentCtx.Provider> : <SectionInner {...p} />
+  // Trọng 22/11: nền luôn sạch, phần nhấn chỉ đổi màu nhấn + nhãn, không tô nền
+  p.sc.emphasis ? <AccentCtx.Provider value="#E8590C"><SectionInner {...p} /></AccentCtx.Provider> : <SectionInner {...p} />
 );
 const SectionInner: React.FC<{sc: Scene; data: any; brandName: string; post?: Post | null}> = ({sc, data, brandName, post}) => {
   const f = useCurrentFrame();
@@ -206,24 +206,30 @@ const SectionInner: React.FC<{sc: Scene; data: any; brandName: string; post?: Po
   const hasData = !!(sc.data && sc.data.type && sc.data.type !== 'none');
   const quoteAt = sc.dur * 0.55;
   const toQuote = hasData && !!sc.quote;
+  // Trọng 22/11 (review: "khung nào cũng chữ trái + thẻ phải"): hình so sánh/biểu đồ chiếm trọn khung, cột chữ lùi đi
+  const curBeat = [...(sc.beats || [])].sort((a, b) => a.s - b.s).filter((b) => t >= b.s - 0.15).pop();
+  const wide = !!curBeat && ['race', 'versus', 'chart'].includes(curBeat.type);
+  const wideK = interpolate(t - (curBeat?.s ?? 0), [-0.15, 0.35], [0, 1], clamp) * (wide ? 1 : 0);
   return (
     <AbsoluteFill>
-      {sc.emphasis ? null : <Backdrop />}
+      <Backdrop />
       <TopBar source={sc.source} idx={sc.idx} total={sc.total} brand={brandName} project={sc.project} />
       <div style={{position: 'absolute', left: 110, top: 170, display: 'flex', alignItems: 'center', gap: 16, opacity: numS, fontFamily: FONT}}>
         <div style={{fontWeight: 800, fontSize: 30, color: ac}}>{String(sc.idx).padStart(2, '0')}</div>
         <div style={{width: 10, height: 10, borderRadius: 99, background: ac, transform: `scale(${numS})`}} />
         <div style={{color: C.muted, fontWeight: 700, fontSize: 22, letterSpacing: 4}}>INSIGHT</div>
       </div>
-      <div style={{position: 'absolute', left: 110, top: 230, width: 800, display: 'flex', flexDirection: 'column', gap: 40}}>
+      <div style={{position: 'absolute', left: 110, top: 230, width: 800, display: 'flex', flexDirection: 'column', gap: 40, opacity: 1 - wideK}}>
         {sc.emphasis ? <div><Chip text={sc.emphasis} /></div> : null}
         <RevealWords text={sc.heading || ''} size={58} delay={1} stagger={1} maxWidth={800}
           highlight={[sc.project?.name || '', sc.keyStat || ''].filter(Boolean)} />
         {sc.bullets?.length ? <Bullets items={sc.bullets} dur={sc.dur} fps={fps} /> : null}
       </div>
-      <div style={{position: 'absolute', right: 100, top: 190, width: 840, height: 560,
-        transform: `scale(${1 + Math.min(t, 40) * 0.0015}) translateY(${-Math.min(t, 40) * 0.4}px)`, transformOrigin: 'center'}}>
-        {sc.beats?.length ? <BeatPanel beats={sc.beats} t={t} sceneDur={sc.dur} data={data} w={840} h={560} /> : null}
+      {wide ? <div style={{position: 'absolute', left: 140, top: 150, opacity: wideK, fontFamily: FONT, fontWeight: 800, fontSize: 30, color: ac}}>
+        {String(sc.idx).padStart(2, '0')} · {(sc.heading || '').toUpperCase()}</div> : null}
+      <div style={{position: 'absolute', right: wide ? 140 : 100, top: wide ? 210 : 190, width: wide ? 1640 : 840, height: wide ? 640 : 560,
+        transform: wide ? 'none' : `scale(${1 + Math.min(t, 40) * 0.0015}) translateY(${-Math.min(t, 40) * 0.4}px)`, transformOrigin: 'center'}}>
+        {sc.beats?.length ? <BeatPanel beats={sc.beats} t={t} sceneDur={sc.dur} data={data} w={wide ? 1640 : 840} h={wide ? 640 : 560} /> : null}
         {sc.beats?.length ? null : <>
         <div style={{position: 'absolute', inset: 0, opacity: toQuote ? interpolate(t - quoteAt, [0, 0.5], [1, 0], clamp) : 1}}>
           {hasData ? <DataPanel spec={sc.data!} data={data} w={840} h={560} />

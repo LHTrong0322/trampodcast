@@ -246,4 +246,14 @@ postfa.st/sizes/youtube/shorts.
 - Tiêu đề phần hiện gần như ngay (không còn khung chữ bị cắt dở).
 - Short: 1,3 giây đầu chính là ảnh bìa (số liệu + logo), thẻ hình to hơn (960x560), phụ đề nâng lên khỏi vùng giao diện app che.
 - Ảnh bìa YouTube: số to hơn khoảng 20%, nhãn phụ `thumb_tag` màu nhấn.
-- Hình kết quả quan trọng (so sánh HYPE/AAVE...) thêm `"hold": 3`: giọng đọc tự lặng 3 giây sau câu đó để người xem kịp nhìn; biểu đồ race vẽ chậm trong khoảng 3 giây.
+
+## LỖI ĐÃ BỊ TRỌNG NHẮC, KHÔNG ĐƯỢC TÁI PHẠM (22/11)
+1. KHÔNG BAO GIỜ chèn khoảng lặng vào giọng đọc (nghe như video mất tiếng). Muốn giữ hình lâu: `"hold": giây` trên beat, chỉ kéo dài phần HÌNH (insight_render.settle_beats dời hình sau), giọng vẫn đọc liền.
+2. Hình đang chạy hiệu ứng không được biến mất giữa chừng: mỗi kiểu hình có thời gian tối thiểu (MIN_BEAT: race 5.5s, chart 4s, versus 3.5s...). Hình phụ không đủ chỗ thì bị bỏ, không cắt hình trước.
+3. Thời gian dựng được phép dài hơn, chất lượng và giá trị cho người xem là trên hết. Không vội.
+4. Tên dự án đọc liền: tên viết hoa đổi thành 1 từ (voice_ab.speakable), tên máy vẫn đọc vấp thì thêm vào voice_ab.PRON (hiện có Aave đọc "A vê"). Sau mỗi bản dựng, đọc bản nghe lại của video-qa để soát tên dự án.
+5. VĨNH VIỄN không dùng thẻ nền màu đậm/gradient, nền phần nhấn cũng không tô màu. Chỉ nền sạch (trắng), nhấn bằng màu chữ và nhãn.
+6. Nhắc tới dự án nào thì hiện logo dự án đó (insight_render.mention_logo tự gắn logo cho thẻ chữ/số; insight_lab.NAME_TICKER + ticker viết hoa trong lời đọc để tải logo).
+7. Không dùng thẻ "question" (chỉ có chữ câu hỏi, review trừ điểm): thay bằng số liệu, biểu đồ, logo kèm số. video_lint báo lỗi nếu còn.
+8. Biểu đồ/so sánh (race, versus, chart) chiếm trọn khung, cột chữ lùi đi: khung hình đổi bố cục, không lúc nào cũng "chữ trái thẻ phải".
+9. Sau mỗi bản dựng: đọc reviews.json, mục nào dưới 7 thì sửa khung rồi dựng lại cho tới khi đạt. Bot review nay xem 18 khung kèm giây, lời đang đọc và số lần đổi hình đo bằng máy.
