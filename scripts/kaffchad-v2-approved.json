@@ -69,7 +69,7 @@
     "Token có hưởng lợi?",
     "Ai mua tiếp?",
     "Thị trường bỏ sót gì?",
-    "Đã quá đông chưa? (retail hay bỏ qua)"
+    "Câu 4: ? (retail hay bỏ qua)"
    ],
    "step_at": [
     "4 câu hỏi",
@@ -94,17 +94,19 @@
     {
      "at": "khi dự án kiếm được",
      "type": "logos",
-     "label": "Dự án kiếm tiền, token có được hưởng?",
+     "label": "Cả hai đều kiếm tiền. Token có được hưởng?",
      "items": [
       {
        "label": "AAVE",
-       "value": "",
-       "logo": "AAVE"
+       "value": "Có revenue",
+       "logo": "AAVE",
+       "tone": "up"
       },
       {
        "label": "HYPE",
-       "value": "",
-       "logo": "HYPE"
+       "value": "Có revenue",
+       "logo": "HYPE",
+       "tone": "up"
       }
      ]
     },
@@ -456,27 +458,35 @@
     },
     {
      "at": "thử áp vào hype",
-     "type": "logos",
-     "label": "Thử áp 4 điều kiện (ví dụ, không phải khuyến nghị)",
-     "items": [
+     "type": "matrix",
+     "label": "Áp 2 tiêu chí vào HYPE và AAVE",
+     "cols": [
       {
        "label": "HYPE",
-       "value": "Value accrual mạnh",
-       "logo": "HYPE",
-       "tone": "up"
+       "logo": "HYPE"
       },
       {
        "label": "AAVE",
-       "value": "Value accrual yếu hơn",
-       "logo": "AAVE",
-       "tone": "down"
+       "logo": "AAVE"
       }
-     ]
-    },
-    {
-     "at": "còn aave mạnh fundamentals",
-     "type": "statement",
-     "text": "AAVE: fundamentals mạnh, ít giá trị về token"
+     ],
+     "rows": [
+      {
+       "label": "Fundamentals",
+       "marks": [
+        "✓",
+        "✓"
+       ]
+      },
+      {
+       "label": "Nhu cầu thật cho token",
+       "marks": [
+        "✓",
+        "~"
+       ]
+      }
+     ],
+     "sub": "Ví dụ cách dùng, không phải khuyến nghị mua bán"
     },
     {
      "at": "fundamentals là hôm nay",

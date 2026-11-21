@@ -40,7 +40,7 @@ PROMPT = I.PROMPT.replace(
       "edu": "true nếu phần này giảng một kiến thức/khái niệm quan trọng (giọng tự đọc chậm 5%), không thì false",
       "emphasis": "nhãn ≤ 4 từ nếu đây là phần hook đã hứa riêng (vd CÂU NGƯỜI TA BỎ QUA), không thì trống",
       "beats": [{{"at": "3-5 chữ CHÉP NGUYÊN từ lời đọc, hình hiện đúng lúc giọng nói cụm này",
-                 "type": "bignum | versus | dots | flow | logos | race | chart | statement | question",
+                 "type": "bignum | versus | dots | flow | logos | race | chart | matrix | statement",
                  "value": "số to (bignum)", "label": "chú thích ngắn", "logo": "TICKER", "tone": "up | down | flat",
                  "left": {{"label": "AAVE", "value": "-25%", "logo": "AAVE", "tone": "down"}}, "right": {{"...": "(versus)"}},
                  "steps": ["(flow) đúng số ý lời đọc nhắc"], "step_at": ["cụm chữ lời đọc cho từng bước"],
@@ -349,7 +349,7 @@ def coin_data(lab: Path, plan: dict, data: dict):
     for b in [b for s in plan.get("sections", []) for b in (s.get("beats") or [])] + (plan.get("hook_beats") or []):
         if b.get("type") == "chart" and b.get("ticker") and b.get("days"):
             want[str(b["ticker"]).lstrip("$").upper()] = _days(b.get("days"))
-        for x in [b, b.get("left") or {}, b.get("right") or {}] + list(b.get("items") or []):   # logo coin trong nhịp hình
+        for x in [b, b.get("left") or {}, b.get("right") or {}] + list(b.get("items") or []) + list(b.get("cols") or []):   # logo coin trong nhịp hình
             if x.get("logo"):
                 tick.append(str(x["logo"]).lstrip("$").upper())
         if b.get("type") == "chart" and b.get("ticker"):

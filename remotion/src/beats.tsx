@@ -8,7 +8,7 @@ import {DataPanel} from './data';
 export type Side = {label: string; value: string; logo?: string | null; tone?: 'up' | 'down' | 'flat'};
 export type Beat = {
   s: number;
-  type: 'bignum' | 'versus' | 'dots' | 'flow' | 'statement' | 'chart' | 'logos' | 'question' | 'race';
+  type: 'bignum' | 'versus' | 'dots' | 'flow' | 'statement' | 'chart' | 'logos' | 'question' | 'race' | 'matrix';
   value?: string; label?: string; logo?: string | null; tone?: 'up' | 'down' | 'flat';
   left?: Side; right?: Side;
   total?: number; hit?: number;
@@ -16,6 +16,7 @@ export type Beat = {
   text?: string; sub?: string;
   ticker?: string; tickers?: string[]; days?: number;
   items?: Side[];
+  cols?: {label: string; logo?: string | null}[]; rows?: {label: string; marks: string[]}[];
 };
 
 const toneColor = (t?: string) => (t === 'down' ? C.red : t === 'up' ? C.green : C.ink);
@@ -167,6 +168,33 @@ const Logos: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
   );
 };
 
+// Trọng 22/11 (review: "thử áp vào HYPE và AAVE" cần bảng tick): bảng so sánh nhiều tiêu chí, từng dòng hiện dần
+const Matrix: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
+  const f = useCurrentFrame();
+  const cols = (b.cols || []).slice(0, 3), rows = (b.rows || []).slice(0, 5);
+  const mark = (m: string) => m === '✓' ? {c: C.green, t: '✓'} : m === '✗' ? {c: C.red, t: '✗'} : {c: '#E8A317', t: m || '~'};
+  const cw = 190;
+  return (
+    <Card w={w} h={h} pad={36}>
+      {b.label ? <div style={{fontSize: 30, fontWeight: 800, color: C.muted, marginBottom: 18}}>{b.label}</div> : null}
+      <div style={{display: 'flex', alignItems: 'center', paddingBottom: 14, borderBottom: `2px solid ${C.line}`}}>
+        <div style={{flex: 1}} />
+        {cols.map((c, i) => <div key={i} style={{width: cw, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8}}>
+          <Logo src={c.logo} size={72} label={c.label} /><div style={{fontSize: 30, fontWeight: 800, color: C.ink}}>{c.label}</div></div>)}
+      </div>
+      {rows.map((r, i) => {
+        const s = interpolate(f - 6 - i * 14, [0, 10], [0, 1], clamp);
+        return <div key={i} style={{display: 'flex', alignItems: 'center', padding: '16px 0', borderBottom: `1px solid ${C.line}`, opacity: s}}>
+          <div style={{flex: 1, fontSize: 34, fontWeight: 700, color: C.ink}}>{r.label}</div>
+          {cols.map((_, j) => { const m = mark(r.marks[j]); return <div key={j} style={{width: cw, textAlign: 'center', fontSize: 52, fontWeight: 900,
+            color: m.c, transform: `scale(${0.6 + 0.4 * s})`}}>{m.t}</div>; })}
+        </div>;
+      })}
+      {b.sub ? <div style={{marginTop: 14, fontSize: 24, fontWeight: 600, color: C.muted}}>{b.sub}</div> : null}
+    </Card>
+  );
+};
+
 // Chọn beat đang chạy theo thời gian t (giây trong cảnh)
 export const BeatPanel: React.FC<{beats: Beat[]; t: number; sceneDur: number; data: any; w: number; h: number}> = ({beats, t, sceneDur, data, w, h}) => {
   const {fps} = useVideoConfig();
@@ -186,6 +214,7 @@ export const BeatPanel: React.FC<{beats: Beat[]; t: number; sceneDur: number; da
       case 'flow': return <Flow b={b} w={w} h={h} t={Math.max(0, local)} dur={end - b.s} />;
       case 'logos': return <Logos b={b} w={w} h={h} />;
       case 'question': return <Statement b={b} w={w} h={h} question />;
+      case 'matrix': return <Matrix b={b} w={w} h={h} />;
       case 'race': return <Race b={b} w={w} h={h} data={data} />;
       case 'chart': return <DataPanel spec={{type: 'coin_chart', tickers: [b.ticker || ''], title: b.label}} data={data} w={w} h={h} />;
       default: return <Statement b={b} w={w} h={h} />;

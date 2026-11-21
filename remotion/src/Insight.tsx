@@ -275,7 +275,8 @@ const OutroScene: React.FC<{sc: Scene; brandName: string}> = ({sc, brandName}) =
             <div style={{width: 64, height: 64, borderRadius: 18, background: C.green, color: '#fff', fontSize: 40, display: 'flex',
               alignItems: 'center', justifyContent: 'center', transform: `scale(${s})`}}>✓</div>{p}</div>;
         })}
-        {sc.cta ? <div style={{marginTop: 20, fontFamily: FONT, fontWeight: 800, fontSize: 44, color: ac,
+        {sc.cta ? <div style={{marginTop: 30, alignSelf: 'flex-start', padding: '18px 34px', borderRadius: 20, background: `${ac}14`, border: `2px solid ${ac}`,
+          fontFamily: FONT, fontWeight: 800, fontSize: 52, color: ac,
           opacity: interpolate(f - Math.round(fps * Math.max(2, sc.dur * 0.35)), [0, 14], [0, 1], clamp)}}>{sc.cta}</div> : null}
       </AbsoluteFill>
       <div style={{position: 'absolute', right: 140, bottom: 300, opacity: btn, transform: `scale(${btn * pulse})`, fontFamily: FONT,
