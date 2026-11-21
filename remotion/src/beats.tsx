@@ -42,7 +42,7 @@ const BigNum: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => (
     <div style={{display: 'flex', alignItems: 'center', gap: 34}}>
       {b.logo ? <Logo src={b.logo} size={150} label={b.label} /> : null}
       <div style={{display: 'flex', flexDirection: 'column', gap: 12}}>
-        <CountUp value={b.value || ''} size={150} delay={2} color={toneColor(b.tone)} />
+        <CountUp value={b.value || ''} size={(b.value || '').length > 9 ? 96 : (b.value || '').length > 6 ? 120 : 150} delay={2} color={toneColor(b.tone)} />
         <div style={{fontSize: 34, fontWeight: 700, color: C.muted, maxWidth: w - 300, lineHeight: 1.2}}>{b.label}</div>
       </div>
     </div>
