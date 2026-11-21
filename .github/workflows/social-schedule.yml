@@ -8,7 +8,7 @@ on:
         required: false
         default: ""
   schedule:
-    - cron: "7 * * * *"   # mỗi giờ phút 07: đăng bình luận nào đã tới giờ
+    - cron: "7,22,37,52 * * * *"   # 15 phút một lần (GitHub hay bỏ lịch): đăng bình luận nào đã tới giờ
 
 permissions:
   contents: write
