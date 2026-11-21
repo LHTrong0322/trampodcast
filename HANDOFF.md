@@ -1,5 +1,12 @@
 # HANDOFF: Smart Penguin Insights + Trạm Podcast Crypto (bàn giao cho đoạn chat mới)
 
+
+## GIỌNG ĐỌC (TRỌNG CHỌN 14:35 NGÀY 21/11)
+- Trọng chọn mẫu N: giọng Ludo "vibe KOL crypto", tự tin, cuốn, giọng Sài Gòn thành thị, KHÔNG làm chậm.
+- Dựng video với voice = `gemini:Ludo@kol` (insight_lab.speak: lời dặn STYLE["kol"] trong voice_ludo2.py,
+  chuẩn hoá chữ speakable, mỗi câu một dòng, chặn bản dài bất thường, làm đẹp giọng voice_master.CHAIN tempo 1.0).
+- Kho key Gemini tự chuyển: INSIGHT_GEMINI_API_KEY, GEMINI_API_KEY, GEMINI_API_KEY2..9, GEMINI_API_KEYS. Lượt reset 15:00 giờ VN.
+
 ## ✅ TRỌNG CHỐT 01:41 NGÀY 21/11 (MỚI NHẤT, ĐỌC TRƯỚC TIÊN)
 - VIDEO CHUẨN MỚI = release insight-20261120-1915 (bài zeroxkyle, giọng gemini:Ludo, nền TRẮNG SẠCH, bố cục + nhịp kiểu 2125).
   Trọng: "video này đã ổn, sau này chất lượng như này trở lên". Không làm video nào kém hơn bản này.

@@ -350,15 +350,42 @@ def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
     if not key and os.getenv("ALLOW_MAIN_KEY") != "1":
         log(f"   ⚠️ Chưa có INSIGHT_GEMINI_API_KEY → bỏ qua giọng Gemini {name} để giữ lượt cho podcast")
         return False
+    # "Ludo@kol": giọng Ludo + lời dặn phong cách (Trọng chọn mẫu N "vibe KOL crypto" 21/11)
+    name, _, style = name.partition("@")
     cfg["podcast"]["voice"] = name
     cfg["podcast"]["voice_style"] = ""
+    if style:
+        import voice_ludo2 as VL
+        cfg["podcast"]["voice_style"] = VL.STYLE[style]
     gem = P.Gemini(key or os.getenv("GEMINI_API_KEY", ""))
+    import subprocess
     import time
     # mỗi đoạn đọc riêng 1 lượt → không bao giờ bị cắt giữa câu khi chia lại audio
     for i, t in enumerate(parts):
         if i:
             time.sleep(int(cfg["podcast"].get("tts_pause_seconds", 25)))
-        V.pcm_to_wav(V.tts_once(gem, cfg, t), outdir / f"{i:02d}.wav")
+        if not style:
+            V.pcm_to_wav(V.tts_once(gem, cfg, t), outdir / f"{i:02d}.wav")
+            continue
+        import voice_ab as VA
+        import voice_master as VM
+        txt = VL.lines(VA.speakable(t))
+        for attempt in range(3):
+            pcm = V.tts_once(gem, cfg, txt)
+            sec = len(pcm) / (P.SAMPLE_RATE * 2)
+            if sec <= len(txt.split()) / 150 * 60 * 1.35:
+                break
+            log(f"   ! đoạn {i} dài bất thường ({sec:.0f}s), có thể máy đọc cả lời dặn, đọc lại")
+            time.sleep(10)
+        else:
+            raise RuntimeError(f"đoạn {i} đọc lỗi 3 lần (dài bất thường)")
+        raw = outdir / f"{i:02d}.raw.wav"
+        V.pcm_to_wav(pcm, raw)
+        # làm đẹp giọng kiểu studio, giữ nguyên tốc độ
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(raw), "-af", VM.CHAIN.format(tempo=1.0),
+                        "-ar", str(P.SAMPLE_RATE), "-ac", "1", "-c:a", "pcm_s16le", str(outdir / f"{i:02d}.wav")],
+                       check=True)
+        raw.unlink()
     return True
 
 
