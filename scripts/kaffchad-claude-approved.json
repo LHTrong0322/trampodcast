@@ -3,8 +3,8 @@
  "description": "Vì sao AAVE giảm 25% còn HYPE tăng khoảng 170% từ đầu năm? 4 câu hỏi để lọc altcoin trước khi xuống tiền: value accrual, người mua tiếp theo, thesis thị trường bỏ sót và độ đông của kèo.",
  "theme": "Tư duy đầu tư crypto",
  "hook_screen": "COIN TỐT CHƯA CHẮC TĂNG GIÁ",
- "hook_stat": "+170%",
- "hook_label": "HYPE từ đầu năm",
+ "hook_stat": "",
+ "hook_label": "",
  "outro_points": [],
  "thumb_text": "COIN TỐT VẪN LỖ? 4 CÂU HỎI",
  "thumb_stat": "+170%",
@@ -30,19 +30,10 @@
    ],
    "quote": "Một bên có giao thức thành công. Bên kia có cơ chế khiến thành công đó có ý nghĩa với token",
    "data": {
-    "type": "stat_compare",
-    "title": "Từ đầu năm (theo bài của Kaff)",
+    "type": "none",
     "tickers": [],
-    "items": [
-     {
-      "label": "AAVE",
-      "value": "-25%"
-     },
-     {
-      "label": "HYPE",
-      "value": "+170%"
-     }
-    ]
+    "items": [],
+    "title": ""
    },
    "project": {
     "name": "",
@@ -54,6 +45,57 @@
    ],
    "source_ids": [
     0
+   ],
+   "beats": [
+    {
+     "at": "vì sao dự án tốt",
+     "type": "question",
+     "text": "Dự án tốt mà token vẫn giảm?"
+    },
+    {
+     "at": "aave là một trong",
+     "type": "versus",
+     "left": {
+      "label": "AAVE",
+      "value": "-25%",
+      "logo": "AAVE",
+      "tone": "down"
+     },
+     "right": {
+      "label": "HYPE",
+      "value": "+170%",
+      "logo": "HYPE",
+      "tone": "up"
+     },
+     "sub": "Từ đầu năm 2026"
+    },
+    {
+     "at": "khác biệt nằm ở value accrual",
+     "type": "flow",
+     "label": "Value accrual",
+     "steps": [
+      "Dự án kiếm revenue",
+      "Dùng revenue để buyback",
+      "Token được hưởng"
+     ]
+    },
+    {
+     "at": "dwf labs còn thấy",
+     "type": "dots",
+     "total": 15,
+     "hit": 13,
+     "label": "token có value accrual thắng BTC từ đầu năm (DWF Labs)"
+    },
+    {
+     "at": "vậy bạn làm gì",
+     "type": "question",
+     "text": "Revenue của dự án đi đâu?"
+    },
+    {
+     "at": "nhưng kể cả token",
+     "type": "statement",
+     "text": "Có hưởng lợi, giá vẫn có thể đứng yên rất lâu"
+    }
    ]
   },
   {
@@ -68,12 +110,10 @@
    ],
    "quote": "Rẻ có thể rẻ rất lâu",
    "data": {
-    "type": "coin_chart",
-    "title": "AAVE",
-    "tickers": [
-     "AAVE"
-    ],
-    "items": []
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
    },
    "project": {
     "name": "",
@@ -85,6 +125,46 @@
    ],
    "source_ids": [
     0
+   ],
+   "beats": [
+    {
+     "at": "câu hỏi thứ hai",
+     "type": "question",
+     "text": "Ai sẽ mua token tiếp theo?"
+    },
+    {
+     "at": "họ dành hàng tuần",
+     "type": "flow",
+     "label": "Bẫy của dân đầu tư cơ bản",
+     "steps": [
+      "Revenue tăng",
+      "TVL hàng tỷ đô",
+      "Có người dùng thật",
+      "Nhưng không ai mua token"
+     ]
+    },
+    {
+     "at": "aave là ví dụ rõ nhất",
+     "type": "bignum",
+     "value": "-25%",
+     "label": "AAVE từ đầu năm: sản phẩm tốt, TVL hàng tỷ đô",
+     "logo": "AAVE",
+     "tone": "down"
+    },
+    {
+     "at": "rẻ có thể rẻ rất lâu",
+     "type": "statement",
+     "text": "Rẻ có thể rẻ rất lâu"
+    },
+    {
+     "at": "vậy bạn làm gì",
+     "type": "flow",
+     "label": "Kiểm tra on-chain 1 tuần",
+     "steps": [
+      "Ví lớn đang gom?",
+      "Hay đang xả?"
+     ]
+    }
    ]
   },
   {
@@ -99,10 +179,10 @@
    ],
    "quote": "Sự chú ý tự nó có thể trở thành thanh khoản",
    "data": {
-    "type": "market_heatmap",
-    "title": "Dòng tiền đang xoay vào đâu",
+    "type": "none",
     "tickers": [],
-    "items": []
+    "items": [],
+    "title": ""
    },
    "project": {
     "name": "",
@@ -114,6 +194,52 @@
    ],
    "source_ids": [
     0
+   ],
+   "beats": [
+    {
+     "at": "câu hỏi thứ ba",
+     "type": "question",
+     "text": "Thị trường đang bỏ sót điều gì?"
+    },
+    {
+     "at": "có thể là sản phẩm",
+     "type": "flow",
+     "label": "Thesis chưa được định giá",
+     "steps": [
+      "Sản phẩm bắt đầu có người dùng",
+      "Nguồn cầu mới cho token",
+      "Fee switch: chia phí cho holder"
+     ]
+    },
+    {
+     "at": "ví dụ thật",
+     "type": "bignum",
+     "value": "+30%",
+     "label": "UNI sau tin Uniswap đề xuất bật fee switch (11/2025)",
+     "logo": "UNI",
+     "tone": "up"
+    },
+    {
+     "at": "vì trong crypto",
+     "type": "statement",
+     "text": "Sự chú ý cũng là thanh khoản"
+    },
+    {
+     "at": "một thesis bắt đầu",
+     "type": "flow",
+     "label": "Vòng đời một thesis",
+     "steps": [
+      "Vài người tin",
+      "Dữ liệu ủng hộ",
+      "Người mua mới vào",
+      "Ai cũng đồng ý"
+     ]
+    },
+    {
+     "at": "vậy bạn làm gì",
+     "type": "question",
+     "text": "Sự kiện nào sắp đổi cách nhìn của thị trường?"
+    }
    ]
   },
   {
@@ -128,10 +254,10 @@
    ],
    "quote": "Một thesis có thể đúng mà vẫn là một lệnh tệ nếu nó đã quá đông",
    "data": {
-    "type": "fear_greed",
-    "title": "Chỉ số Sợ hãi & Tham lam",
+    "type": "none",
     "tickers": [],
-    "items": []
+    "items": [],
+    "title": ""
    },
    "project": {
     "name": "",
@@ -143,6 +269,44 @@
    ],
    "source_ids": [
     0
+   ],
+   "beats": [
+    {
+     "at": "một kèo có thể đúng",
+     "type": "statement",
+     "text": "Kèo đúng vẫn có thể thua"
+    },
+    {
+     "at": "nhưng hôm cộng đồng holder",
+     "type": "bignum",
+     "value": "~0%",
+     "label": "UNI hôm fee switch được thông qua: tin đã được mua trước",
+     "logo": "UNI",
+     "tone": "flat"
+    },
+    {
+     "at": "đây là câu hỏi số 4",
+     "type": "question",
+     "text": "Thesis này đã quá đông chưa?"
+    },
+    {
+     "at": "khi ai cũng đặt cược",
+     "type": "question",
+     "text": "Tin tốt đến, còn ai để mua?"
+    },
+    {
+     "at": "virtual coin đầu ngành",
+     "type": "bignum",
+     "value": "-88%",
+     "label": "VIRTUAL so với đỉnh 5,07 đô khi narrative hạ nhiệt",
+     "logo": "VIRTUAL",
+     "tone": "down"
+    },
+    {
+     "at": "vậy bạn làm gì",
+     "type": "statement",
+     "text": "Ai cũng nói về nó? Cẩn thận gấp đôi"
+    }
    ]
   },
   {
@@ -157,27 +321,10 @@
    ],
    "quote": "Fundamentals là hôm nay. Thesis là ngày mai",
    "data": {
-    "type": "checklist",
-    "title": "Điểm giao nhau của cơ hội lớn",
+    "type": "none",
     "tickers": [],
-    "items": [
-     {
-      "label": "Thesis ít người để ý",
-      "value": ""
-     },
-     {
-      "label": "Fundamentals tốt lên",
-      "value": ""
-     },
-     {
-      "label": "Nhu cầu token thật",
-      "value": ""
-     },
-     {
-      "label": "Có catalyst",
-      "value": ""
-     }
-    ]
+    "items": [],
+    "title": ""
    },
    "project": {
     "name": "",
@@ -189,11 +336,59 @@
    ],
    "source_ids": [
     0
+   ],
+   "beats": [
+    {
+     "at": "đây là công thức",
+     "type": "statement",
+     "text": "Công thức điểm giao nhau"
+    },
+    {
+     "at": "một thesis ít người để ý",
+     "type": "flow",
+     "label": "Điểm giao nhau của cơ hội lớn",
+     "steps": [
+      "Thesis ít người để ý",
+      "Fundamentals tốt lên",
+      "Nhu cầu thật cho token",
+      "Có catalyst"
+     ]
+    },
+    {
+     "at": "fundamentals cho bạn biết",
+     "type": "statement",
+     "text": "Fundamentals là hôm nay. Thesis là ngày mai"
+    },
+    {
+     "at": "vậy bạn làm gì",
+     "type": "question",
+     "text": "Coin của bạn thiếu mấy điều kiện?",
+     "sub": "Thiếu từ 2 trở lên: đáng xem lại"
+    }
    ]
   }
  ],
  "short_hooks": {
   "0": "AAVE -25%, HYPE +170%: vì sao?",
   "3": "Kèo đúng vẫn thua nếu quá đông"
- }
+ },
+ "hook_beats": [
+  {
+   "at": "aave giảm 25",
+   "type": "versus",
+   "left": {
+    "label": "AAVE",
+    "value": "-25%",
+    "logo": "AAVE",
+    "tone": "down"
+   },
+   "right": {
+    "label": "HYPE",
+    "value": "+170%",
+    "logo": "HYPE",
+    "tone": "up"
+   },
+   "sub": "Từ đầu năm 2026"
+  }
+ ]
 }
