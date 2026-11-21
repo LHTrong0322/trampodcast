@@ -127,7 +127,7 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null}> = ({sc, post}) => {
           </div>
           <div style={{position: 'absolute', top: 175, display: t >= agendaAt ? 'none' : 'flex', flexDirection: 'column', gap: 28, opacity: out}}>
             <div><Chip text={(sc.theme || 'INSIGHT').toUpperCase()} /></div>
-            <RevealWords text={sc.title || ''} size={70} delay={6} stagger={3} maxWidth={900} />
+            <RevealWords text={sc.title || ''} size={64} delay={6} stagger={3} maxWidth={900} />
           </div>
           {t >= agendaAt ? (
             <Sequence from={Math.round(agendaAt * fps)} layout="none">
