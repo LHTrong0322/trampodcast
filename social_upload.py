@@ -16,6 +16,8 @@ import json
 import os
 from pathlib import Path
 
+import re
+
 import requests
 
 import podcast as P
@@ -27,6 +29,42 @@ TIMEOUT = 600
 
 def _env(*names: str) -> bool:
     return all(os.getenv(n, "").strip() for n in names)
+
+
+
+# ---------------------------------------------------------------- Facebook: luật link (Trọng 21/11)
+# Thuật toán Facebook bóp tiếp cận bài có link, nên KHÔNG BAO GIỜ gắn link trong caption/mô tả.
+# Link chỉ đặt ở bình luận đầu tiên; không bình luận được thì bỏ qua, không gắn link ở đâu cả.
+TELEGRAM = "https://t.me/SmartPanda0322"
+_URL = re.compile(r"(https?://\S+|\bt\.me/\S+|\b(?:www\.)?[a-z0-9-]+\.(?:com|io|me|xyz|net|org|gg|be)/\S*)", re.I)
+
+
+def strip_links(text: str) -> str:
+    out = []
+    for line in (text or "").splitlines():
+        if _URL.search(line):
+            line = _URL.sub("", line).rstrip(" :·•-|")
+            if len(re.sub(r"[^\wÀ-ỹ]", "", line)) < 12:   # dòng chỉ còn nhãn kiểu "💬 Telegram" thì bỏ hẳn
+                continue
+        out.append(line)
+    return re.sub(r"\n{3,}", "\n\n", "\n".join(out)).strip()
+
+
+def fb_comment(object_id: str, text: str) -> tuple[bool, str]:
+    try:
+        r = requests.post(f"https://graph.facebook.com/{FB_VER}/{object_id}/comments",
+                          data={"access_token": os.environ["FB_PAGE_TOKEN"].strip(), "message": text}, timeout=60)
+        return r.ok, r.text[:200]
+    except Exception as ex:
+        return False, str(ex)[:200]
+
+
+def fb_link_comment(yt_url: str | None) -> str:
+    parts = []
+    if yt_url:
+        parts.append(f"▶ Bản đầy đủ trên YouTube: {yt_url}")
+    parts.append(f"💬 Telegram: {TELEGRAM}")
+    return "\n".join(parts)
 
 
 # ---------------------------------------------------------------- YouTube
@@ -73,6 +111,7 @@ def youtube(res: dict, seo: dict, thumb: Path | None) -> list[str]:
     tok = _yt_token()
     title = (seo.get("yt_titles") or [res["plan"].get("title", "")])[0]
     vid = yt_upload(tok, Path(res["long"]), title, seo.get("yt_description", ""), seo.get("yt_tags", []), privacy)
+    res["yt_url"] = f"https://youtu.be/{vid}"
     out = [f"YouTube video dài ({privacy}): https://youtu.be/{vid}"]
     if thumb and thumb.exists():
         yt_thumb(tok, vid, thumb)
@@ -97,7 +136,7 @@ def facebook(res: dict, seo: dict) -> list[str]:
     title = (seo.get("yt_titles") or [res["plan"].get("title", "")])[0]
     with open(res["long"], "rb") as f:   # video dài: đăng lên trang dạng video thường
         r = requests.post(f"https://graph-video.facebook.com/{FB_VER}/{page}/videos",
-                          data={"access_token": tok, "title": title, "description": seo.get("yt_description", "")[:5000],
+                          data={"access_token": tok, "title": title, "description": strip_links(seo.get("yt_description", ""))[:5000],
                                 "published": "true" if publish else "false"},
                           files={"source": ("video.mp4", f, "video/mp4")}, timeout=TIMEOUT)
     r.raise_for_status()
@@ -114,12 +153,15 @@ def facebook(res: dict, seo: dict) -> list[str]:
                                headers={"Authorization": f"OAuth {tok}", "offset": "0", "file_size": str(size)},
                                data=f, timeout=TIMEOUT)
         up.raise_for_status()
-        cap = f"{sh.get('tiktok_caption') or s['title']} {' '.join(sh.get('tiktok_hashtags') or seo.get('hashtags', []))}"
+        cap = strip_links(f"{sh.get('tiktok_caption') or s['title']} {' '.join(sh.get('tiktok_hashtags') or seo.get('hashtags', []))}")
         fin = requests.post(f"https://graph.facebook.com/{FB_VER}/{page}/video_reels", params={
             "access_token": tok, "video_id": vid, "upload_phase": "finish",
             "video_state": "PUBLISHED" if publish else "DRAFT", "description": cap[:2200]}, timeout=60)
         fin.raise_for_status()
         out.append(f"Facebook Reel {i + 1} ({'công khai' if publish else 'bản nháp'}): id {vid}")
+        if publish:   # link chỉ ở bình luận; lỗi thì thôi, không gắn link ở đâu
+            ok, err = fb_comment(vid, fb_link_comment(res.get("yt_url")))
+            out.append(f"   bình luận link: {'OK, nhớ ghim' if ok else 'không đăng được, đã bỏ qua link'}")
     return out
 
 

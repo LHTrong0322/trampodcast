@@ -47,7 +47,7 @@ def yt_add(tok: str, playlist: str | None, vid: str):
 def fb_long(path: Path, title: str, desc: str, publish: bool) -> str:
     with open(path, "rb") as f:
         r = requests.post(f"https://graph-video.facebook.com/{FB}/{os.environ['FB_PAGE_ID'].strip()}/videos",
-                          data={"access_token": os.environ["FB_PAGE_TOKEN"].strip(), "title": title, "description": desc[:5000],
+                          data={"access_token": os.environ["FB_PAGE_TOKEN"].strip(), "title": title, "description": SU.strip_links(desc)[:5000],
                                 "published": "true" if publish else "false"}, files={"source": ("video.mp4", f, "video/mp4")}, timeout=600)
     r.raise_for_status()
     return r.json().get("id", "")
@@ -65,7 +65,7 @@ def fb_reel(path: Path, caption: str, publish: bool) -> str:
     up.raise_for_status()
     fin = requests.post(f"https://graph.facebook.com/{FB}/{page}/video_reels", params={
         "access_token": tok, "video_id": vid, "upload_phase": "finish",
-        "video_state": "PUBLISHED" if publish else "DRAFT", "description": caption[:2200]}, timeout=60)
+        "video_state": "PUBLISHED" if publish else "DRAFT", "description": SU.strip_links(caption)[:2200]}, timeout=60)
     fin.raise_for_status()
     return vid
 
@@ -115,10 +115,16 @@ def main():
             if "long" in fb_items:
                 fid = fb_long(rel["long"], title, seo.get("yt_description", ""), pub)
                 report.append(f"Facebook video dài ({'công khai' if pub else 'chưa đăng'}): id {fid}")
+                if pub:
+                    ok, _ = SU.fb_comment(fid, SU.fb_link_comment(f"https://youtu.be/{long_id}" if long_id else None))
+                    report.append(f"   bình luận link: {'OK, nhớ ghim' if ok else 'không đăng được, đã bỏ qua link'}")
             for i, k in enumerate(["short1", "short2"]):
                 if k in fb_items and rel[k]:
                     rid = fb_reel(rel[k], cap(i), pub)
                     report.append(f"Facebook Reel từ Short {i + 1} ({'công khai' if pub else 'bản nháp'}): id {rid}")
+                    if pub:
+                        ok, _ = SU.fb_comment(rid, SU.fb_link_comment(f"https://youtu.be/{long_id}" if long_id else None))
+                        report.append(f"   bình luận link: {'OK, nhớ ghim' if ok else 'không đăng được, đã bỏ qua link'}")
         except Exception as ex:
             report.append(f"Facebook LỖI: {str(ex)[:200]}")
     for line in report:

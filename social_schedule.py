@@ -81,7 +81,7 @@ def post(plan_path: Path):
         u.raise_for_status()
         fin = requests.post(f"https://graph.facebook.com/{FB}/{page}/video_reels", params={
             "access_token": tok, "video_id": rid, "upload_phase": "finish", "video_state": "SCHEDULED",
-            "scheduled_publish_time": str(fb["publish_unix"]), "description": fb["caption"][:2200]}, timeout=60)
+            "scheduled_publish_time": str(fb["publish_unix"]), "description": SU.strip_links(fb["caption"])[:2200]}, timeout=60)
         if not fin.ok:
             raise RuntimeError(f"Facebook đặt lịch lỗi: {fin.text[:300]}")
         st["fb_id"] = rid
@@ -114,6 +114,8 @@ def comments():
             if datetime.fromisoformat(c["comment_at"].replace("Z", "+00:00")) > now:
                 continue
             text = c["comment"].replace("{YT_URL}", yt_url)
+            if key == "facebook" and SU.TELEGRAM not in text:   # link Telegram chỉ nằm ở bình luận Facebook
+                text += f"\n💬 Telegram: {SU.TELEGRAM}"
             ok, err = False, ""
             try:
                 if key == "youtube" and st.get("yt_id"):
@@ -133,9 +135,20 @@ def comments():
             if ok:
                 msg = f"💬 Đã đăng bình luận {key} ({where}). Vào bấm ⋮ > Ghim nhé."
             else:
-                msg = f"💬 Máy không đăng được bình luận {key} ({err[:120]}). Dán tay rồi Ghim ở {where}:\n\n{text}"
+                msg = (f"💬 Máy không đăng được bình luận {key} ({err[:120]}). Dán tay rồi Ghim ở {where}:\n\n{text}"
+                       if key == "youtube" else f"💬 Facebook chưa có quyền bình luận nên đã BỎ QUA link (không gắn link vào bài). Lỗi: {err[:120]}")
             print("BÌNH LUẬN:", key, "OK" if ok else "LỖI " + err)
             _tg(msg)
+        # Trọng 21/11: Facebook bóp bài có link, nên caption Reel đã đăng phải sạch link (link chỉ ở bình luận)
+        if st.get("fb_id") and not st.get("fb_caption_clean") and (plan.get("facebook") or {}).get("caption"):
+            try:
+                r = requests.post(f"https://graph.facebook.com/{FB}/{st['fb_id']}", timeout=60, data={
+                    "access_token": os.environ["FB_PAGE_TOKEN"].strip(), "description": SU.strip_links(plan["facebook"]["caption"])[:2200]})
+                print("FACEBOOK CAPTION SẠCH LINK:", "OK" if r.ok else f"LỖI {r.text[:200]}")
+                if r.ok:
+                    st["fb_caption_clean"] = True
+            except Exception as ex:
+                print("FACEBOOK CAPTION lỗi:", str(ex)[:150])
         # Trọng 21/11: gỡ phụ đề tự động của YouTube (đè lên phụ đề có sẵn trong video). YouTube tạo nó vài phút
         # đến vài giờ sau khi đăng, nên cứ mỗi lần chạy thì thử lại cho tới khi gỡ được (tối đa 48 giờ).
         if st.get("yt_id") and not st.get("asr_removed"):
