@@ -1,8 +1,8 @@
-import time
 """Smart Penguin Insights, xuất bản: ảnh bìa, gói SEO (YouTube + TikTok), GitHub Release, gửi Telegram,
 và BOT REVIEW (AI xem khung hình, chấm điểm, gợi ý cải tiến cho video sau)."""
 from __future__ import annotations
 
+import time
 import base64
 import json
 import os
