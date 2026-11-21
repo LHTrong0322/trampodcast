@@ -55,7 +55,7 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5
         {warn ? <div style={{position: 'absolute', right: points.length ? 420 : 60, top: points.length ? 120 : 60, width: 104, height: 104, borderRadius: 99,
           background: '#E5383B', color: '#FFFFFF', fontSize: 72, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 0 0 8px rgba(229,56,59,0.22), 0 14px 34px rgba(229,56,59,0.35)', transform: 'rotate(-8deg)'}}>!</div> : null}
-        {tag ? <div style={{position: 'absolute', left: 64, top: vs.length ? 574 : 600, padding: '12px 26px', borderRadius: 16, background: accent,
+        {tag ? <div style={{position: 'absolute', left: 64, ...(stat && !vs.length ? {bottom: 200} : {top: vs.length ? 574 : 600}), padding: '12px 26px', borderRadius: 16, background: accent,
           color: '#FFFFFF', fontWeight: 800, fontSize: 38, letterSpacing: 1}}>{tag.toUpperCase()}</div> : null}
         <div style={{position: 'absolute', right: 40, bottom: 30, color: 'rgba(19,24,54,0.7)', fontWeight: 700, fontSize: 28}}>@Trong0322</div>
       </AbsoluteFill>

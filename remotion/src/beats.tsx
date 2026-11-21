@@ -40,7 +40,7 @@ const Logo: React.FC<{src?: string | null; size: number; label?: string}> = ({sr
 const BigNum: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => (
   <Card w={w} h={h}>
     <div style={{display: 'flex', alignItems: 'center', gap: 34}}>
-      {b.logo !== undefined ? <Logo src={b.logo} size={150} label={b.label} /> : null}
+      {b.logo ? <Logo src={b.logo} size={150} label={b.label} /> : null}
       <div style={{display: 'flex', flexDirection: 'column', gap: 12}}>
         <CountUp value={b.value || ''} size={150} delay={2} color={toneColor(b.tone)} />
         <div style={{fontSize: 34, fontWeight: 700, color: C.muted, maxWidth: w - 300, lineHeight: 1.2}}>{b.label}</div>
