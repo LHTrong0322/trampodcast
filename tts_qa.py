@@ -32,7 +32,13 @@ def words(t: str) -> list[str]:
 
 
 def transcribe(path: str) -> list[tuple[float, float, str]]:
-    segs, _ = _model().transcribe(path, language="vi", vad_filter=True, beam_size=1)
+    import subprocess
+    import numpy as np
+    # tự giải mã bằng ffmpeg (thư viện av trên máy GitHub hay lệch phiên bản)
+    raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", path, "-ac", "1", "-ar", "16000", "-f", "s16le", "-"],
+                         capture_output=True, check=True).stdout
+    audio = np.frombuffer(raw, np.int16).astype(np.float32) / 32768
+    segs, _ = _model().transcribe(audio, language="vi", vad_filter=True, beam_size=1)
     return [(s.start, s.end, s.text.strip()) for s in segs]
 
 
