@@ -2,10 +2,10 @@
  "title": "Crypto 2026: Tip chọn Altcoins tiềm năng để hold dài hạn",
  "description": "Phân tích bài The Liquid Investors Buffet của Kyle (@zeroxkyle): vì sao altcoin bị coi là hàng rác, Hyperliquid thay đổi tư duy đầu tư thế nào, Ethena tự sửa mình ra sao và checklist chọn coin để hold dài hạn.",
  "theme": "Tư duy đầu tư crypto dài hạn",
- "hook": "Kyle nói chu kỳ này chỉ có một thước đo đáng tin: doanh thu thật và đang tăng. Còn lại, kể cả những màn hợp tác với tên tuổi lớn, phần nhiều chỉ là cái cớ để bơm giá.",
+ "hook": "Phần lớn altcoin chu kỳ này sẽ về 0. Chỉ có một thước đo giúp bạn lọc ra coin sống sót: doanh thu thật, và đang tăng.",
  "hook_stat": "",
  "hook_label": "",
- "hook_screen": "CHỈ MỘT THƯỚC ĐO ĐÁNG TIN: DOANH THU THẬT",
+ "hook_screen": "PHẦN LỚN ALTCOIN SẼ VỀ 0",
  "intro": "Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Hôm nay mình mổ xẻ bài viết The Liquid Investors Buffet của Kyle, một nhà đầu tư có hơn sáu mươi hai nghìn người theo dõi trên X. Thông điệp của anh ấy rất gọn: crypto đang dần trở thành thứ có thể đầu tư được, chứ không chỉ để lướt sóng. Nhưng điều đó chỉ đúng khi bạn chọn đúng tài sản. Và chúng ta đang ở giai đoạn giao thoa cực kỳ quan trọng.",
  "sections": [
   {
@@ -200,8 +200,8 @@
   "1": "4 dấu hiệu một đồng coin rác bạn nên tránh ngay",
   "4": "3 điều Kyle kiểm tra trước khi giữ một đồng coin dài hạn"
  },
- "thumb_text": "CÁCH CHỌN COIN TIỀM NĂNG ĐỂ HOLD DÀI HẠN",
- "thumb_stat": "3 TIÊU CHÍ",
+ "thumb_text": "ALTCOIN NÀO ĐÁNG HOLD? 3 BỘ LỌC",
+ "thumb_stat": "",
  "thumb_points": [
   "Token gắn lợi ích",
   "Có doanh thu thật",
