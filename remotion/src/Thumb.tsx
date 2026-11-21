@@ -24,22 +24,21 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5
           fontFamily: HF, fontStretch: font === 'archivo' ? '62%' : undefined, fontWeight: font === 'anton' ? 400 : 900,
           // Trọng 22/11: chữ to quá bị mất dấu (dấu mũ + ngã chồng lên dòng trên). Cỡ vừa phải, giãn dòng đủ cho chữ hoa có 2 tầng dấu
           fontSize: (points.length ? 64 : words.join(' ').length > 28 ? 72 : words.join(' ').length > 18 ? 84 : 96) * (cond ? 1.2 : 1),
-          lineHeight: 1.32, rowGap: 6, ...(vs.length ? {fontSize: 112} : {}), color: C.ink, letterSpacing: 0}}>
+          lineHeight: 1.32, rowGap: 6, ...(vs.length ? {fontSize: cond ? 118 : 100, flexWrap: 'nowrap', whiteSpace: 'nowrap', top: 190} : {}), color: C.ink, letterSpacing: 0}}>
           {words.map((w, i) => <span key={i} style={{color: i % 3 === 1 ? accent : C.ink}}>{w}</span>)}
         </div>
-        {vs.length ? <div style={{position: 'absolute', left: 64, right: 64, top: 330, display: 'flex', alignItems: 'center', gap: 20}}>
+        {vs.length ? <div style={{position: 'absolute', left: 64, right: 64, top: 400, display: 'flex', alignItems: 'center', gap: 18}}>
           {vs.map((x, i) => <React.Fragment key={i}>
             {i ? <div style={{fontWeight: 800, fontSize: 40, color: C.muted, flexShrink: 0}}>VS</div> : null}
-            <div style={{flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 18, padding: '22px 26px', borderRadius: 26,
+            <div style={{flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 16, padding: '24px 24px', borderRadius: 26,
             background: '#FFFFFF', border: `1px solid ${C.line}`, boxShadow: '0 14px 40px rgba(40,50,110,0.14)'}}>
-            {x.logo ? <Img src={staticFile(x.logo)} style={{width: 88, height: 88, borderRadius: 99, flexShrink: 0}} /> : null}
-            <div style={{fontWeight: 800, fontSize: 40, color: C.ink}}>{x.label}</div>
+            {x.logo ? <Img src={staticFile(x.logo)} style={{width: 72, height: 72, borderRadius: 99, flexShrink: 0}} /> : null}
+            <div style={{fontWeight: 800, fontSize: 36, color: C.ink}}>{x.label}</div>
             <div style={{flex: 1}} />
             <div style={{fontFamily: HF, fontStretch: font === 'archivo' ? '62%' : undefined, fontWeight: font === 'anton' ? 400 : 900,
-              fontSize: cond ? 96 : 80, color: x.tone === 'down' ? C.red : x.tone === 'up' ? C.green : C.ink, whiteSpace: 'nowrap'}}>{x.value}</div>
+              fontSize: cond ? 84 : 68, color: x.tone === 'down' ? C.red : x.tone === 'up' ? C.green : C.ink, whiteSpace: 'nowrap'}}>{x.value}</div>
           </div></React.Fragment>)}
         </div> : null}
-        {vs.length ? <div style={{position: 'absolute', left: 64, top: 520, color: C.muted, fontWeight: 700, fontSize: 30}}>Từ đầu năm 2026 · 4 câu hỏi trước khi mua</div> : null}
         {stat && !vs.length ? <div style={{position: 'absolute', left: 64, bottom: 60, padding: '10px 30px', borderRadius: 20, background: accent,
           color: '#FFFFFF', fontWeight: 800, fontSize: 92, lineHeight: 1.1}}>{stat}</div> : null}
         {points.length ? <div style={{position: 'absolute', right: 56, top: 170, width: 400, padding: '30px 30px', borderRadius: 26,
