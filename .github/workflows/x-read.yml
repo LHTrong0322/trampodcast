@@ -1,0 +1,33 @@
+name: "Đọc bài X (lấy nội dung để viết kịch bản nháp)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "Link bài X"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests feedparser pyyaml beautifulsoup4 pillow numpy
+      - name: Đọc bài
+        run: |
+          mkdir -p lab
+          python -c "
+          import json, sys; from pathlib import Path; import insight_lab as L
+          p = L.read_post(sys.argv[1], Path('lab'))
+          print('=====POST=====')
+          print(json.dumps({k: p.get(k) for k in ('author','handle','url','date','title')}, ensure_ascii=False))
+          print(p.get('text',''))
+          print('=====END=====')
+          " "${{ github.event.inputs.url }}"
