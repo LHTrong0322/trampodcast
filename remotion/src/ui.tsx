@@ -171,16 +171,17 @@ export const CountUp: React.FC<{value: string; delay?: number; size: number; col
   const f = useCurrentFrame();
   const m = value.match(/^([^\d]*)(\d+(?:[.,]\d+)?)(.*)$/);
   let shown = value;
-  if (m) {
+  // review 22/11: số đếm dở trên khung tĩnh trông như số liệu khác (vd ~25% thay vì ~30%); khoảng "97-99%" không đếm
+  if (m && !/\d/.test(m[3]) && !m[1].includes('~')) {
     const target = parseFloat(m[2].replace(/,/g, ''));
     const dec = (m[2].split(/[.]/)[1] || '').length;
-    const p = interpolate(f - delay, [0, 28], [0, 1], {...clamp, easing: ease});
+    const p = interpolate(f - delay, [0, 16], [0, 1], {...clamp, easing: ease});
     const v = target * p;
     const num = dec ? v.toFixed(dec) : m[2].includes(',') ? Math.round(v).toLocaleString('en-US') : String(Math.round(v));
     shown = m[1] + num + m[3];
   }
   const s = useSpring(delay, 10, 0.6);
-  return <div style={{fontFamily: FONT, fontWeight: 800, fontSize: size, color, lineHeight: 1,
+  return <div style={{fontFamily: FONT, fontWeight: 800, fontSize: size, color, lineHeight: 1, whiteSpace: 'nowrap',
     transform: `scale(${interpolate(s, [0, 1], [0.6, 1])})`, opacity: s,
     textShadow: 'none', letterSpacing: -1}}>{shown}</div>;
 };

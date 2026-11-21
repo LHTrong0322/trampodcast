@@ -60,6 +60,11 @@
     "tone": "up"
    },
    "sub": "Từ 1/1 tới {DATE}"
+  },
+  {
+   "at": "4 câu hỏi",
+   "type": "statement",
+   "text": "4 câu hỏi trước khi mua. Câu 4: retail hay bỏ qua"
   }
  ],
  "sections": [

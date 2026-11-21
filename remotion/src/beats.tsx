@@ -42,7 +42,7 @@ const BigNum: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => (
     <div style={{display: 'flex', alignItems: 'center', gap: 34}}>
       {b.logo ? <Logo src={b.logo} size={150} label={b.label} /> : null}
       <div style={{display: 'flex', flexDirection: 'column', gap: 12}}>
-        <CountUp value={b.value || ''} size={(b.value || '').length > 9 ? 96 : (b.value || '').length > 6 ? 120 : 150} delay={2} color={toneColor(b.tone)} />
+        <CountUp value={b.value || ''} size={(b.value || '').length > 7 ? Math.max(64, Math.min(96, Math.floor((w - 340) / ((b.value || '').length * 0.62)))) : (b.value || '').length > 5 ? 120 : 150} delay={2} color={toneColor(b.tone)} />
         <div style={{fontSize: 34, fontWeight: 700, color: C.muted, maxWidth: w - 300, lineHeight: 1.2}}>{b.label}</div>
       </div>
     </div>
@@ -86,7 +86,7 @@ const Dots: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
     <Card w={w} h={h}>
       <div style={{display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center', maxWidth: cols * (size + 14)}}>
         {Array.from({length: total}).map((_, i) => {
-          const on = i < hit && f > 6 + i * 3;
+          const on = i < hit && f > 4 + i * 1.2;   // review 22/11: tô đủ chấm nhanh, khung tĩnh không thấy số chấm lệch số liệu
           return <div key={i} style={{width: size, height: size, borderRadius: 999, background: on ? C.green : `${C.ink}14`,
             transform: `scale(${on ? 1 : 0.85})`, transition: 'none', boxShadow: on ? `0 0 0 5px ${C.green}22` : 'none'}} />;
         })}
@@ -227,9 +227,9 @@ const Race: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, da
         })}
       </svg>
       {lines.map((l) => {
-        const m = Math.max(2, Math.round(l.pct.length * prog));
-        const v = l.pct[m - 1];
-        return <div key={l.t} style={{position: 'absolute', left: pad.l + W + 18, top: y(v) - 34, display: 'flex', alignItems: 'center', gap: 10}}>
+        const v = l.pct[l.pct.length - 1];   // review 22/11: chỉ hiện SỐ CUỐI (số đang chạy trông như số liệu khác)
+        return <div key={l.t} style={{position: 'absolute', left: pad.l + W + 18, top: y(v) - 34, display: 'flex', alignItems: 'center', gap: 10,
+          opacity: interpolate(prog, [0.75, 1], [0, 1], clamp)}}>
           <Logo src={l.logo} size={48} label={l.t} />
           <div style={{fontWeight: 800, fontSize: 44, color: v < 0 ? C.red : C.green, whiteSpace: 'nowrap'}}>{v >= 0 ? '+' : '-'}{Math.abs(v) >= 10 ? 5 * Math.round(Math.abs(v) / 5) : Math.round(Math.abs(v))}%</div>
         </div>;

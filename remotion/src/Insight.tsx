@@ -268,7 +268,7 @@ const OutroScene: React.FC<{sc: Scene; brandName: string}> = ({sc, brandName}) =
         {(sc.points || []).map((p, i) => {
           // review 2219: hiện đậm từng câu kèm dấu tick, rải đều theo lời đọc
           const n = (sc.points || []).length;
-          const at = Math.round(fps * (0.6 + (Math.max(4, sc.dur * 0.55) * i) / Math.max(1, n)));
+          const at = Math.round(fps * (0.6 + (Math.max(3, sc.dur * 0.3) * i) / Math.max(1, n)));   // review 22/11: hiện đủ các ý sớm
           const s = interpolate(f - at, [0, 12], [0, 1], clamp);
           return <div key={i} style={{display: 'flex', gap: 26, alignItems: 'center', opacity: s, transform: `translateX(${(1 - s) * -40}px)`,
             fontFamily: FONT, fontWeight: 800, fontSize: 58, color: C.ink}}>
