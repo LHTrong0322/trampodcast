@@ -17,6 +17,7 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
   const ac = sc.project?.color || DEFAULT_ACCENT;
   const hasData = !!(sc.data && sc.data.type && sc.data.type !== 'none');
   const cover = (props as any).cover;
+  const cta = (props as any).cta as {text: string; from: number} | undefined;
   return (
     <AccentCtx.Provider value={tone(ac)}>
       <AbsoluteFill style={{background: C.bg}}>
@@ -45,7 +46,25 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
         <Captions words={sc.words} bottom={470} size={54} maxWidth={940} perChunk={5} />
         {cover && f < 40 ? <AbsoluteFill style={{opacity: interpolate(f, [26, 40], [1, 0], clamp)}}><ShortThumb {...cover} /></AbsoluteFill> : null}
         <div style={{position: 'absolute', left: 0, bottom: 0, height: 8, width: (f / durationInFrames) * width, background: ac}} />
+        {cta && f >= cta.from * 30 ? <EndCard text={cta.text} t={f - cta.from * 30} /> : null}
       </AbsoluteFill>
     </AccentCtx.Provider>
+  );
+};
+
+// Trọng 22/11: khung kết mọi short, nền trắng sạch, chữ mời xem full video (nằm trong vùng an toàn 220..1500)
+const EndCard: React.FC<{text: string; t: number}> = ({text, t}) => {
+  const op = interpolate(t, [0, 8], [0, 1], clamp);
+  const up = interpolate(t, [0, 12], [40, 0], clamp);
+  const pop = interpolate(t, [0, 10], [0.8, 1], clamp);
+  return (
+    <AbsoluteFill style={{background: '#FFFFFF', opacity: op, alignItems: 'center', justifyContent: 'center'}}>
+      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 40, marginTop: -160, padding: '0 80px'}}>
+        <Img src={staticFile('logo.png')} style={{width: 260, height: 260, borderRadius: 999, transform: `scale(${pop})`}} />
+        <div style={{fontFamily: FONT, fontWeight: 900, fontSize: 76, lineHeight: 1.15, color: C.ink, textAlign: 'center',
+          textTransform: 'uppercase', transform: `translateY(${up}px)`}}>{text}</div>
+        <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 34, color: C.muted, transform: `translateY(${up}px)`}}>@Trong0322</div>
+      </div>
+    </AbsoluteFill>
   );
 };

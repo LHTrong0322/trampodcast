@@ -52,7 +52,9 @@
 ## ✅ TRỌNG CHỐT 02:22 NGÀY 22/11 (SHORT)
 - Short = highlight cắt từ video dài: lấy TRỌN lời đọc 1 phần (không cắt câu), thêm hook đọc trước, dựng lại khung 9:16.
 - CUỐI MỌI SHORT có câu đọc + chữ lớn "Xem full video trên kênh Smart Penguin Insights nhé!" (sources.yaml insight.short_cta,
-  kịch bản có thể ghi đè bằng khoá short_cta). Code: insight.py (đọc thêm 1 câu CTA, dùng chung cho mọi short), video.scene_outro(cta=...).
+  kịch bản có thể ghi đè bằng khoá short_cta). Khung kết NỀN TRẮNG, chỉ logo + câu mời + @Trong0322, KHÔNG có dòng "Nội dung do AI tổng hợp".
+  Code (đường dựng chính thức Remotion): insight_lab.prepare đọc thêm phần "short_cta" 1 lần; insight_render ghép vào cuối mỗi short
+  (trừ sẵn vào shorts_max_seconds) và truyền prop cta; remotion/src/InsightShort.tsx vẽ EndCard.
 - sources.yaml insight: shorts tối đa 5, shorts_max_seconds 59 (dưới 60s để đăng được YouTube, Facebook, TikTok).
 
 ## ✅ TRỌNG CHỐT 01:41 NGÀY 21/11 (MỚI NHẤT, ĐỌC TRƯỚC TIÊN)

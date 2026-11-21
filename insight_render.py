@@ -277,6 +277,8 @@ def _guard(props: dict):
     props["scenes"] = P.nodash(props.get("scenes") or [])
     if "shortTitle" in props:
         props["shortTitle"] = P.nodash(props["shortTitle"])
+    if props.get("cta"):
+        props["cta"]["text"] = P.nodash(props["cta"].get("text", ""))
     chk = {k: v for k, v in props.items() if k != "data"}
     if L._banned(chk):
         raise RuntimeError("Chữ trên video còn nhắc ENA/95%/14 ngày, dừng dựng")
@@ -369,6 +371,10 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     # ---- video ngắn 9:16: mỗi insight hay nhất 1 video, cắt ở cuối câu, ≤ shorts_max_seconds ----
     mx = float(ic.get("shorts_max_seconds", 55))
     shr = plan.get("short_hooks") or {}
+    # Trọng 22/11: cuối mỗi short đọc câu mời xem full video, khung kết nền trắng (InsightShort.tsx, prop cta)
+    cta_pcm = orig.get("short_cta", b"")
+    cta_tail = (V.gap(0.35) + cta_pcm + V.gap(1.0)) if cta_pcm else b""
+    mx -= len(cta_tail) / SR / 2
     for n, i in enumerate(plan.get("shorts", [])):
         k = f"s{i}"
         w = word_times(text[k], orig[k])
@@ -376,7 +382,8 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
         if end > mx:
             ends = [x["e"] for x in w if re.search(r"[.!?…]$", x["t"]) and x["e"] <= mx]
             end = (ends[-1] + 0.25) if ends else mx
-        a = orig[k][: int(end * SR) * 2] + V.gap(1.2)
+        body = orig[k][: int(end * SR) * 2]
+        a = body + (cta_tail if cta_pcm else V.gap(1.2))
         V.pcm_to_wav(a, RD / f"short{n}.wav")
         sc = next(x for x in scenes if x.get("idx") == i + 1)
         sprops = {"fps": 30, "width": 1080, "height": 1920, "audio": f"short{n}.wav", "duration": round(len(a) / SR / 2, 3),
@@ -384,6 +391,8 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                               "beats": beats_for(plan["sections"][i].get("beats") or [], w, round(len(a) / SR / 2, 3), data)}],
                   "data": data, "brand": brand, "post": pinfo,
                   "shortTitle": V.en_money(str(shr.get(str(i)) or shr.get(i) or sc["heading"]))}
+        if cta_pcm:
+            sprops["cta"] = {"text": V.en_money(text.get("short_cta", "")), "from": round(len(body) / SR / 2 + 0.2, 3)}
         try:   # Trọng 22/11: giây đầu của short chính là ảnh bìa (TikTok/Reels lấy khung đầu làm bìa, người lướt thấy ngay số liệu)
             import short_covers as SC
             lg = {kk: v.get("logo") for kk, v in (data.get("coins") or {}).items()}

@@ -291,10 +291,7 @@ def cook(out: Path, cfg: dict, gem, st: dict) -> dict:
     sh_lines = {i: P.sanitize_script(str(sh_raw.get(str(i)) or sh_raw.get(i) or "")) for i in sh_idx}
 
     # 1-2 lượt đọc cho cả tập
-    # câu kêu gọi cuối mỗi short (Trọng 22/11: short nào cũng kết bằng lời mời xem full video)
-    sh_cta = P.sanitize_script(str(plan.get("short_cta") or ic.get("short_cta") or "")) if sh_idx else ""
-    parts = ([hook] if hook else []) + [intro] + narr + [outro] + [sh_lines[i] for i in sh_idx if sh_lines[i]] \
-        + ([sh_cta] if sh_cta else [])
+    parts = ([hook] if hook else []) + [intro] + narr + [outro] + [sh_lines[i] for i in sh_idx if sh_lines[i]]
     log(f"③ Đọc giọng ({sum(map(len, parts))} ký tự)")
     pcs = tts_parts(gem, cfg, parts)
     hook_pcm = pcs.pop(0) if hook else b""
@@ -302,7 +299,6 @@ def cook(out: Path, cfg: dict, gem, st: dict) -> dict:
     sec_pcm = [pcs.pop(0) for _ in narr]
     outro_pcm = pcs.pop(0)
     sh_pcm = {i: pcs.pop(0) for i in sh_idx if sh_lines[i] and pcs}
-    cta_pcm = pcs.pop(0) if sh_cta and pcs else b""
 
     now = datetime.now(P.VN_TZ)
     authors = []
@@ -374,14 +370,12 @@ def cook(out: Path, cfg: dict, gem, st: dict) -> dict:
 
     v_files = []
     speed = float(vcfg.get("shorts_speed", 1.08))
-    cta_a = (V.gap(0.3) + cta_pcm + V.gap(0.5)) if cta_pcm else V.gap(2.2)
-    end_dur = max(2.2, len(cta_a) / SR / 2)
     for n, k in enumerate(sh_idx, 1):
         it = dict(items[k])
         body = P._ffmpeg_pcm(["-f", "s16le", "-ar", str(SR), "-ac", "1"], it["pcm"], f"atempo={speed}")
         sents = [x for x in re.split(r"(?<=[.!?…])\s+", it["narration"]) if x.strip()]
         hk = sh_pcm.get(k, b"")
-        budget = float(ic.get("shorts_max_seconds", 45)) - end_dur - 0.4 - len(hk) / SR / 2 - 0.2
+        budget = float(ic.get("shorts_max_seconds", 45)) - 2.6 - len(hk) / SR / 2 - 0.2
         if len(body) / SR / 2 > budget and len(sents) > 1:
             b_ = V.chunk_bounds({"pcm": body}, [s_.split() for s_ in sents], len(body) / SR / 2)
             keep = max(1, len([1 for a, b in b_ if b <= budget]))
@@ -395,7 +389,7 @@ def cook(out: Path, cfg: dict, gem, st: dict) -> dict:
         a_ = it["pcm"] + V.gap(0.4)
         dur = len(a_) / SR / 2
         vs = [{"dur": dur, "pcm": a_, "draw": V.scene_story_v(it, dur, wl, it["imgs_v"], every * 0.8), "wipe": False},
-              {"dur": end_dur, "pcm": cta_a, "draw": V.scene_outro(vertical=True, cta=sh_cta if cta_pcm else "")}]
+              {"dur": 2.2, "pcm": V.gap(2.2), "draw": V.scene_outro(vertical=True)}]
         for sc in vs:
             kk = int(round(sc["dur"] * M.FPS))
             sc["pcm"] = (sc["pcm"] + V.gap(1))[: int(kk / M.FPS * SR) * 2]

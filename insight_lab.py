@@ -576,10 +576,14 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     parts = [("hook", plan.get("hook", "")), ("intro", plan.get("intro", ""))]
     parts += [(f"s{k}", s["narration"]) for k, s in enumerate(plan["sections"])]
     parts += [("outro", plan.get("outro", ""))]
-    parts = [(k, P.sanitize_script(t)) for k, t in parts if t and t.strip()]
-    plan["parts"] = [{"key": k, "text": t} for k, t in parts]
     plan["shorts"] = [i for i in plan.get("shorts", []) if isinstance(i, int) and 0 <= i < len(plan["sections"])][
                      : int(ic.get("shorts", 3))]
+    # Trọng 22/11: cuối MỌI short có câu mời xem full video (đọc 1 lần, ghép vào cuối từng short)
+    if plan["shorts"]:
+        plan["short_cta"] = P.nodash(str(plan.get("short_cta") or ic.get("short_cta") or "")).strip()
+        parts += [("short_cta", plan["short_cta"])]
+    parts = [(k, P.sanitize_script(t)) for k, t in parts if t and t.strip()]
+    plan["parts"] = [{"key": k, "text": t} for k, t in parts]
     plan["voices"] = {}
     for v in voices:
         log(f"④ Đọc giọng {v}")
