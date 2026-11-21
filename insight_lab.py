@@ -378,6 +378,15 @@ def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
         import tts_qa
         # đoạn ngắn để nguyên 1 dòng (tách dòng làm máy dễ đọc lặp câu mở đầu, log 21/11)
         txt = VA.speakable(t) if len(t.split()) < 60 else VL.lines(VA.speakable(t))
+        # Kho giọng đã đọc (nhánh podcast-data): đoạn nào đã đọc đạt rồi thì lần dựng sau dùng lại, không tốn lượt Gemini
+        import hashlib
+        cache = Path(os.getenv("TTS_CACHE", "public/insight/tts-cache"))
+        key = hashlib.sha1(f"{name}|{style}|{cfg['podcast'].get('voice_style','')}|{txt}".encode()).hexdigest()[:20]
+        hit = cache / f"{key}.wav"
+        if hit.exists():
+            shutil.copy(hit, outdir / f"{i:02d}.wav")
+            log(f"   ♻ đoạn {i}: dùng lại giọng đã đọc (không tốn lượt)")
+            continue
         raw = outdir / f"{i:02d}.raw.wav"
         # Trọng chốt 21/11: nghe lại từng đoạn trước khi dựng, lặp/thiếu/thừa thì đọc lại (tối đa 4 lần)
         for attempt in range(4):
@@ -400,6 +409,15 @@ def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
                         "-ar", str(P.SAMPLE_RATE), "-ac", "1", "-c:a", "pcm_s16le", str(outdir / f"{i:02d}.wav")],
                        check=True)
         raw.unlink()
+        try:
+            cache.mkdir(parents=True, exist_ok=True)
+            shutil.copy(outdir / f"{i:02d}.wav", hit)
+            import time as _t
+            for old_f in cache.glob("*.wav"):   # giữ kho gọn: xoá file quá 10 ngày
+                if _t.time() - old_f.stat().st_mtime > 10 * 86400:
+                    old_f.unlink()
+        except Exception as ex:
+            log(f"   ! không lưu được kho giọng: {ex}")
     return True
 
 
