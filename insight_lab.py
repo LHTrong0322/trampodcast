@@ -44,7 +44,7 @@ PROMPT = I.PROMPT.replace(
                  "left": {{"label": "AAVE", "value": "-25%", "logo": "AAVE", "tone": "down"}}, "right": {{"...": "(versus)"}},
                  "steps": ["(flow) đúng số ý lời đọc nhắc"], "step_at": ["cụm chữ lời đọc cho từng bước"],
                  "tickers": ["(race) 2-3 coin so % cùng kỳ"], "days": "ytd hoặc số ngày (race/chart)", "ticker": "(chart)",
-                 "text": "(statement/question) ≤ 10 từ", "hold": "(tuỳ chọn) 2-3 giây lặng cho hình so sánh/kết quả quan trọng"}}]}}''')
+                 "text": "(statement/question) ≤ 10 từ", "hold": "(tuỳ chọn) giữ HÌNH thêm vài giây", "music": "(tuỳ chọn) 2-3 giây giọng nghỉ, nhạc nền dâng lên, cho kết quả quan trọng"}}]}}''')
 PROMPT += """
 Độ dài: nếu bài nguồn đủ ý, viết đủ {max_sections} phần, mỗi phần 130-180 từ; hook ≤ 2 câu thật cuốn.
 Không nhắc đến AI, máy, bot hay "nội dung tổng hợp" ở bất kỳ đâu trong lời đọc.

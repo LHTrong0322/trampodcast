@@ -117,7 +117,8 @@
      "days": "ytd",
      "label": "Giá AAVE và HYPE từ đầu năm",
      "sub": "Giá thật từ 1/1 tới hôm nay (CoinGecko)",
-     "hold": 5
+     "hold": 5,
+     "music": 2.5
     },
     {
      "at": "còn thống kê 13",

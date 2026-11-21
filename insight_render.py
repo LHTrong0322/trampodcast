@@ -69,7 +69,7 @@ def word_times(text: str, pcm: bytes) -> list[dict]:
     return out
 
 
-def build_timeline(plan, pcm, text, gap=0.35):
+def build_timeline(plan, pcm, text, gap=0.35, pre: dict | None = None):
     """Ghép audio các đoạn (nghỉ ngắn giữa đoạn để giữ nhịp) + lập danh sách cảnh (giây)."""
     secs = plan["sections"]
     order = (["hook"] if "hook" in pcm else []) + ["intro"] + [f"s{k}" for k in range(len(secs))] + ["outro"]
@@ -77,25 +77,65 @@ def build_timeline(plan, pcm, text, gap=0.35):
     for key in order:
         a = pcm[key] + V.gap(gap if key != "outro" else 2.6)
         dur = len(a) / SR / 2
-        scenes.append({"key": key, "from": round(t, 3), "dur": round(dur, 3), "words": word_times(text[key], pcm[key])})
+        scenes.append({"key": key, "from": round(t, 3), "dur": round(dur, 3), "words": (pre or {}).get(key) or word_times(text[key], pcm[key])})
         audio += a
         t += dur
     return audio, scenes, t
 
 
-def mix_music(voice_wav: Path, out_wav: Path, seconds: float, seed: int):
-    """Nhạc nền tự nhỏ đi khi có giọng, chuẩn âm lượng YouTube."""
+def music_breaks(plan: dict, pcm: dict, text: dict) -> tuple[dict, dict, list]:
+    """Trọng 22/11: "đôi lúc có thể chèn nhạc nền, không nhất thiết đọc liên tục".
+    Beat có "music": giây → sau câu chứa cụm "at", giọng nghỉ đúng số giây đó và NHẠC NỀN DÂNG LÊN (không bao giờ là im lặng trơn).
+    Mốc chữ tính trên giọng gốc rồi dời phần sau đi đúng khoảng nghỉ, nên hình vẫn khớp lời."""
+    pre, breaks = {}, {}
+    for i, sec in enumerate(plan.get("sections") or []):
+        k = f"s{i}"
+        mus = [b for b in (sec.get("beats") or []) if b.get("music") and b.get("at")]
+        if k not in pcm or not mus:
+            continue
+        wt = word_times(text[k], pcm[k])
+        toks = [_norm(w["t"]) for w in wt]
+        cuts = []
+        for b in mus:
+            ph = [_norm(x) for x in str(b["at"]).split() if _norm(x)]
+            j = next((x for x in range(len(toks) - len(ph) + 1) if toks[x:x + len(ph)] == ph), -1)
+            if j < 0:
+                log(f"   ! nghỉ nhạc '{b['at']}': không thấy trong lời đọc")
+                continue
+            e = next((x for x in range(j, len(wt)) if re.search(r"[.!?…]$", wt[x]["t"])), len(wt) - 1)
+            cuts.append((round(wt[e]["e"] + 0.2, 2), min(4.0, float(b["music"]))))
+        a, ws = pcm[k], [dict(w) for w in wt]
+        for at, d in sorted(cuts, reverse=True):
+            pos = min(len(a), int(at * SR) * 2)
+            a = a[:pos] + V.gap(d) + a[pos:]
+            for w in ws:
+                if w["s"] >= at:
+                    w["s"] = round(w["s"] + d, 3)
+                    w["e"] = round(w["e"] + d, 3)
+            log(f"   Nghỉ nhạc {d:.1f}s ở phần {i + 1} (giây {at:.1f})")
+        pcm[k], pre[k], breaks[k] = a, ws, sorted(cuts)
+    return pcm, pre, breaks
+
+
+def mix_music(voice_wav: Path, out_wav: Path, seconds: float, seed: int, swell: list | None = None):
+    """Nhạc nền tự nhỏ đi khi có giọng, chuẩn âm lượng YouTube. swell = [(giây bắt đầu, độ dài)] nhạc dâng lên lúc giọng nghỉ."""
     raw = MU.make_music(seconds + 1, seed)
     tmp = out_wav.with_suffix(".pcm")
     tmp.write_bytes(raw.tobytes() if hasattr(raw, "tobytes") else raw)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(voice_wav), "-f", "s16le", "-ar", str(SR), "-ac", "1",
                     "-i", str(tmp), "-filter_complex",
-                    "[1:a]lowpass=f=3200,volume=0.2[m];[0:a]asplit=2[v1][v2];"
+                    f"[1:a]lowpass=f=3200,volume='{_swell_expr(swell)}':eval=frame[m];[0:a]asplit=2[v1][v2];"
                     "[m][v1]sidechaincompress=threshold=0.015:ratio=6:attack=20:release=450[md];"
                     "[v2][md]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11[a]",
                     "-map", "[a]", "-ar", "48000", str(out_wav)], check=True)
     tmp.unlink()
 
+
+
+def _swell_expr(swell: list | None) -> str:
+    base = "0.2"
+    terms = [f"clip((t-{a:.2f})/0.5,0,1)*clip(({a + d:.2f}-t)/0.6,0,1)" for a, d in (swell or [])]
+    return base + ("+0.45*(" + "+".join(terms) + ")" if terms else "")
 
 
 def _norm(w: str) -> str:
@@ -253,11 +293,14 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     except (TypeError, ValueError):
         f = 1.0
     pcm = {k: speed(v, f) for k, v in pcm.items()}
-    audio, tl, total = build_timeline(plan, pcm, text)
+    orig = dict(pcm)   # video ngắn dùng giọng gốc (không có nhạc nền nên không chèn khoảng nghỉ)
+    pcm, pre, brk = music_breaks(plan, pcm, text)
+    audio, tl, total = build_timeline(plan, pcm, text, pre=pre)
+    swell = [(sc["from"] + a, d) for sc in tl for a, d in brk.get(sc["key"], [])]
     prep_public(lab)
     V.pcm_to_wav(audio, RD / "voice.wav")
     try:
-        mix_music(RD / "voice.wav", RD / "mix.wav", total, 7)
+        mix_music(RD / "voice.wav", RD / "mix.wav", total, 7, swell)
         audio_file = "mix.wav"
     except Exception as ex:
         log(f"   ! nhạc lỗi: {ex}")
@@ -328,16 +371,17 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     shr = plan.get("short_hooks") or {}
     for n, i in enumerate(plan.get("shorts", [])):
         k = f"s{i}"
-        w = word_times(text[k], pcm[k])
-        end = len(pcm[k]) / SR / 2
+        w = word_times(text[k], orig[k])
+        end = len(orig[k]) / SR / 2
         if end > mx:
             ends = [x["e"] for x in w if re.search(r"[.!?…]$", x["t"]) and x["e"] <= mx]
             end = (ends[-1] + 0.25) if ends else mx
-        a = pcm[k][: int(end * SR) * 2] + V.gap(1.2)
+        a = orig[k][: int(end * SR) * 2] + V.gap(1.2)
         V.pcm_to_wav(a, RD / f"short{n}.wav")
         sc = next(x for x in scenes if x.get("idx") == i + 1)
         sprops = {"fps": 30, "width": 1080, "height": 1920, "audio": f"short{n}.wav", "duration": round(len(a) / SR / 2, 3),
-                  "scenes": [{**sc, "from": 0, "dur": round(len(a) / SR / 2, 3), "words": [x for x in w if x["s"] < end]}],
+                  "scenes": [{**sc, "from": 0, "dur": round(len(a) / SR / 2, 3), "words": [x for x in w if x["s"] < end],
+                              "beats": beats_for(plan["sections"][i].get("beats") or [], w, round(len(a) / SR / 2, 3), data)}],
                   "data": data, "brand": brand, "post": pinfo,
                   "shortTitle": V.en_money(str(shr.get(str(i)) or shr.get(i) or sc["heading"]))}
         try:   # Trọng 22/11: giây đầu của short chính là ảnh bìa (TikTok/Reels lấy khung đầu làm bìa, người lướt thấy ngay số liệu)

@@ -248,7 +248,7 @@ postfa.st/sizes/youtube/shorts.
 - Ảnh bìa YouTube: số to hơn khoảng 20%, nhãn phụ `thumb_tag` màu nhấn.
 
 ## LỖI ĐÃ BỊ TRỌNG NHẮC, KHÔNG ĐƯỢC TÁI PHẠM (22/11)
-1. KHÔNG BAO GIỜ chèn khoảng lặng vào giọng đọc (nghe như video mất tiếng). Muốn giữ hình lâu: `"hold": giây` trên beat, chỉ kéo dài phần HÌNH (insight_render.settle_beats dời hình sau), giọng vẫn đọc liền.
+1. KHÔNG BAO GIỜ để im lặng trơn (nghe như video mất tiếng). Muốn giữ hình lâu: `"hold": giây` chỉ kéo dài HÌNH. Muốn giọng nghỉ cho người xem thấm: `"music": giây` (2-3 giây) trên beat, giọng nghỉ sau câu đó và NHẠC NỀN DÂNG LÊN (Trọng 22/11 cho phép). Mốc chữ được dời đúng khoảng nghỉ nên hình vẫn khớp lời; video ngắn không chèn nghỉ.
 2. Hình đang chạy hiệu ứng không được biến mất giữa chừng: mỗi kiểu hình có thời gian tối thiểu (MIN_BEAT: race 5.5s, chart 4s, versus 3.5s...). Hình phụ không đủ chỗ thì bị bỏ, không cắt hình trước.
 3. Thời gian dựng được phép dài hơn, chất lượng và giá trị cho người xem là trên hết. Không vội.
 4. Tên dự án đọc liền: tên viết hoa đổi thành 1 từ (voice_ab.speakable), tên máy vẫn đọc vấp thì thêm vào voice_ab.PRON (hiện có Aave đọc "A vê"). Sau mỗi bản dựng, đọc bản nghe lại của video-qa để soát tên dự án.
