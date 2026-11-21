@@ -18,11 +18,18 @@ import video as V
 ROOT = Path(__file__).resolve().parent
 
 
-def props_for(plan: dict, sec_idx: int, title: str) -> dict:
+def props_for(plan: dict, sec_idx: int, title: str, logos: dict | None = None) -> dict:
     s = plan["sections"][sec_idx]
+    up = title.upper()
+    # bảng so sánh của ảnh bìa YouTube: chỉ dùng khi tiêu đề short nhắc đủ các coin trong đó
+    vs = [{**x, "logo": (logos or {}).get(str(x.get("logo", "")).upper())} for x in (plan.get("thumb_vs") or [])
+          if str(x.get("label", "")).upper() in up]
+    if len(vs) < 2:
+        vs = []
     return {"comp": "ShortThumb", "width": 1080, "height": 1920,
             "text": P.nodash(V.en_money(title))[:60],
-            "stat": P.nodash(V.en_money(s.get("key_stat", "")))[:10],
+            "stat": "" if vs else P.nodash(V.en_money(s.get("key_stat", "")))[:10],
+            "vs": vs,
             "label": P.nodash(V.en_money(s.get("key_label", "")))[:40],
             # chỉ hiện ý liệt kê khi kịch bản ghi riêng cho ảnh bìa (bullet của phần thường không khớp tiêu đề short)
             "points": [P.nodash(V.en_money(b))[:34] for b in ((plan.get("short_cover_points") or {}).get(str(sec_idx)) or [])][:3],
@@ -30,10 +37,10 @@ def props_for(plan: dict, sec_idx: int, title: str) -> dict:
             "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")}
 
 
-def make(plan: dict, sec_idx: int, title: str, out: Path) -> Path | None:
+def make(plan: dict, sec_idx: int, title: str, out: Path, logos: dict | None = None) -> Path | None:
     import insight_render as R
     try:
-        R.run_remotion(props_for(plan, sec_idx, title), out, frames="0")
+        R.run_remotion(props_for(plan, sec_idx, title, logos), out, frames="0")
         return out
     except Exception as ex:
         P.log(f"   ! ảnh bìa short lỗi: {ex}")
@@ -55,14 +62,25 @@ def main(tag: str, script: str, fb_ids: str = ""):
     hooks = {int(k): v for k, v in (plan.get("short_hooks") or {}).items()}
     out = Path("covers"); out.mkdir(exist_ok=True)
     import insight_render as R
-    lab = Path("lab_empty"); lab.mkdir(exist_ok=True)
+    lab = Path("lab_empty"); (lab / "logos").mkdir(parents=True, exist_ok=True)
+    logos = {}
+    for x in plan.get("thumb_vs") or []:   # logo coin cho bảng so sánh
+        t = str(x.get("logo", "")).upper()
+        try:
+            info = V.coin_info(t) if t else None
+            if info and info.get("large"):
+                import requests
+                (lab / "logos" / f"{t}.png").write_bytes(requests.get(info["large"], timeout=30).content)
+                logos[t] = f"logos/{t}.png"
+        except Exception as ex:
+            print("logo lỗi", t, ex)
     R.prep_public(lab)   # phông chữ + logo kênh cho Remotion
     files = []
     for j, i in enumerate(plan.get("shorts", [])[:2]):
         title = hooks.get(i) or plan["sections"][i]["heading"]
         f = out / f"short{j + 1}-cover-{tag}.png"
         import insight_render as R
-        R.run_remotion(props_for(plan, i, title), f, frames="0")
+        R.run_remotion(props_for(plan, i, title, logos), f, frames="0")
         files.append(f)
         print("ảnh bìa", f, "|", title)
     repo = os.getenv("GITHUB_REPOSITORY")

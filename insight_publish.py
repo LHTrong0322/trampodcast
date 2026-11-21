@@ -318,7 +318,8 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None) -> di
         seo["yt_titles"] = [res["plan"]["title"]] + [t for t in seo.get("yt_titles", []) if t != res["plan"]["title"]][:2]
     (out / f"seo-{tag}.json").write_text(json.dumps(seo, ensure_ascii=False, indent=1), encoding="utf-8")
     import short_covers as SC   # Trọng 21/11: mỗi short có ảnh bìa riêng
-    covers = [SC.make(res["plan"], s["section"], s["title"], out / f"short{j + 1}-cover-{tag}.png") for j, s in enumerate(res["shorts"])]
+    lg = {k: v.get("logo") for k, v in ((res.get("data") or {}).get("coins") or {}).items()}
+    covers = [SC.make(res["plan"], s["section"], s["title"], out / f"short{j + 1}-cover-{tag}.png", lg) for j, s in enumerate(res["shorts"])]
     for s, c in zip(res["shorts"], covers):
         s["cover"] = str(c) if c else None
     files = [res["long"]] + [s["path"] for s in res["shorts"]] + ([thumb] if thumb else []) + [c for c in covers if c] + [out / f"seo-{tag}.json"]
