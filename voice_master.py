@@ -25,29 +25,42 @@ CHAIN = ("highpass=f=80,equalizer=f=250:t=q:w=1.2:g=-2.5,equalizer=f=3500:t=q:w=
          "atempo={tempo},loudnorm=I=-14:TP=-1.0:LRA=7")
 
 
-def fetch_b() -> Path:
-    runs = requests.get(f"https://api.github.com/repos/{REPO}/actions/workflows/voice-ab.yml/runs",
+def fetch(workflow: str) -> list[Path]:
+    runs = requests.get(f"https://api.github.com/repos/{REPO}/actions/workflows/{workflow}/runs",
                         params={"status": "success", "per_page": 1}, headers=H, timeout=60).json()["workflow_runs"]
     arts = requests.get(runs[0]["artifacts_url"], headers=H, timeout=60).json()["artifacts"]
     z = requests.get(arts[0]["archive_download_url"], headers=H, timeout=120)
-    out = Path("samples"); out.mkdir(exist_ok=True)
+    out = Path("src"); out.mkdir(exist_ok=True)
     with zipfile.ZipFile(io.BytesIO(z.content)) as zf:
-        zf.extract("B-ludo.mp3", out)
-    return out / "B-ludo.mp3"
+        zf.extractall(out)
+    return sorted(out.glob("*.mp3"))
+
+
+def duration(p: Path) -> float:
+    return float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0",
+                                 str(p)], capture_output=True, text=True).stdout)
 
 
 def main():
-    src = fetch_b()
-    VS.WORDS[0] = 117
-    for code, tempo, label in (("H", 1.08, "Ludo B, nhanh hơn 8 phần trăm + làm đẹp giọng"),
-                               ("I", 1.12, "Ludo B, nhanh hơn 12 phần trăm + làm đẹp giọng")):
-        dst = Path("samples") / f"{code}-ludo.mp3"
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), "-af", CHAIN.format(tempo=tempo),
-                        "-ar", "48000", "-b:a", "160k", str(dst)], check=True)
-        dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0",
-                                    str(dst)], capture_output=True, text=True).stdout)
-        print(code, f"{dur:.0f}s · {117 / dur * 60:.0f} từ/phút")
-        VS.send(dst, f"{code}. {label}")
+    """Lấy các mẫu của lần chạy gần nhất, chỉnh về đúng tốc độ mục tiêu (giữ cao độ) rồi gửi lại."""
+    wf = os.getenv("SRC_WORKFLOW", "voice-ludo2.yml")
+    target = float(os.getenv("TARGET_WPM", "160"))
+    words = int(os.getenv("WORDS", "117"))
+    only = [x for x in os.getenv("ONLY", "").split(",") if x]
+    Path("samples").mkdir(exist_ok=True)
+    for src in fetch(wf):
+        code = src.stem.split("-")[0]
+        if only and code not in only:
+            continue
+        wpm = words / duration(src) * 60
+        tempo = max(0.75, min(1.25, target / wpm))
+        dst = Path("samples") / f"{code}{code}-{int(target)}.mp3"
+        # đã làm đẹp giọng ở bước trước, ở đây chỉ chỉnh tốc độ + chuẩn âm lượng
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), "-af",
+                        f"atempo={tempo:.3f},loudnorm=I=-14:TP=-1.0:LRA=7", "-ar", "48000", "-b:a", "160k", str(dst)],
+                       check=True)
+        print(code, f"{wpm:.0f} → {words / duration(dst) * 60:.0f} từ/phút (x{tempo:.2f})")
+        VS.send(dst, f"{code}{code}. Mẫu {code} chỉnh về khoảng {int(target)} từ/phút")
 
 
 if __name__ == "__main__":
