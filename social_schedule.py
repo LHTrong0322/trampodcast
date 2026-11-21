@@ -13,7 +13,7 @@ import json
 import os
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
@@ -136,6 +136,25 @@ def comments():
                 msg = f"💬 Máy không đăng được bình luận {key} ({err[:120]}). Dán tay rồi Ghim ở {where}:\n\n{text}"
             print("BÌNH LUẬN:", key, "OK" if ok else "LỖI " + err)
             _tg(msg)
+        # Trọng 21/11: gỡ phụ đề tự động của YouTube (đè lên phụ đề có sẵn trong video). YouTube tạo nó vài phút
+        # đến vài giờ sau khi đăng, nên cứ mỗi lần chạy thì thử lại cho tới khi gỡ được (tối đa 48 giờ).
+        if st.get("yt_id") and not st.get("asr_removed"):
+            try:
+                tok = SU._yt_token()
+                H = {"Authorization": f"Bearer {tok}"}
+                caps = requests.get("https://www.googleapis.com/youtube/v3/captions", params={"part": "snippet", "videoId": st["yt_id"]},
+                                    headers=H, timeout=60).json().get("items", [])
+                for c in caps:
+                    if c["snippet"].get("trackKind") == "asr":
+                        r = requests.delete("https://www.googleapis.com/youtube/v3/captions", params={"id": c["id"]}, headers=H, timeout=60)
+                        if r.status_code in (200, 204):
+                            st["asr_removed"] = True
+                            print("PHỤ ĐỀ TỰ ĐỘNG: đã gỡ", st["yt_id"])
+                pub = (plan.get("youtube") or {}).get("publish_at", "")
+                if pub and now > datetime.fromisoformat(pub.replace("Z", "+00:00")) + timedelta(hours=48):
+                    st["asr_removed"] = st.get("asr_removed") or "het_han"
+            except Exception as ex:
+                print("PHỤ ĐỀ TỰ ĐỘNG lỗi:", str(ex)[:150])
         sp.write_text(json.dumps(st, ensure_ascii=False, indent=1), encoding="utf-8")
 
 

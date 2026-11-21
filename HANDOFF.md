@@ -29,6 +29,10 @@
   Bình luận tự đăng mỗi giờ phút 07 khi tới giờ, Trọng tự ghim (API không ghim được). Trạng thái ở <tag>.state.json.
   Đăng ngay chọn lọc: social-post.yml (youtube/facebook = long, short1, short2). Mô tả luôn có Telegram https://t.me/SmartPanda0322
   Kênh YouTube id UC2tX8_Z9beionA0HVu6q4Gw (đã xác minh, ảnh bìa tự gắn được). 3 playlist đã tạo.
+  Phụ đề tự động YouTube: Trọng muốn GỠ (đè lên phụ đề trong video). social_schedule.py tự gỡ track asr sau khi đăng;
+  gỡ tay: dispatch yt-captions.yml (video=<id>, action=delete_asr). Trọng tắt lồng tiếng tự động trong Studio.
+  YouTube handle đang đổi sang @smartpenguininsights cho giống Facebook (Trọng làm tay, API không đổi được).
+  Facebook token thiếu pages_manage_engagement nên máy không bình luận được trên Reel (gửi Telegram để dán tay).
   Facebook token thiếu pages_manage_metadata nên không đổi ảnh bìa Trang được (Trọng tải tay).
 - TỪ NGỮ (Trọng 21/11): dùng "insider" thay "người trong cuộc", "retail" thay "nhỏ lẻ / nhà đầu tư nhỏ lẻ" trong lời đọc
   và chữ trên hình (đã thêm vào SYSTEM trong insight.py; nhớ áp dụng khi viết kịch bản nháp).
