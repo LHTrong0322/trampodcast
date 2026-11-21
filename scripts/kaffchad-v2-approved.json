@@ -1,0 +1,409 @@
+{
+ "title": "Coin tốt vẫn lỗ? 4 câu hỏi trước khi mua altcoins",
+ "description": "Vì sao AAVE giảm 25% còn HYPE tăng khoảng 170% từ đầu năm? 4 câu hỏi để lọc altcoin trước khi xuống tiền: value accrual, người mua tiếp theo, thesis thị trường bỏ sót và độ đông của kèo.",
+ "theme": "Tư duy đầu tư crypto",
+ "hook_screen": "COIN TỐT CHƯA CHẮC TĂNG GIÁ",
+ "hook_stat": "",
+ "hook_label": "",
+ "outro_points": [
+  "Token có hưởng lợi không?",
+  "Ai sẽ mua tiếp?",
+  "Thị trường bỏ sót gì?",
+  "Đã quá đông chưa?"
+ ],
+ "thumb_text": "COIN TỐT VẪN LỖ?",
+ "thumb_stat": "",
+ "thumb_points": [],
+ "thumb_warn": false,
+ "shorts": [
+  0,
+  3
+ ],
+ "hook": "Cùng là dự án DeFi top đầu. Nhưng AAVE giảm 25 phần trăm từ đầu năm, còn HYPE tăng khoảng 170 phần trăm. Vì sao coin tốt vẫn lỗ? 4 câu hỏi, và câu số 4 là câu phần lớn retail bỏ qua.",
+ "intro": "Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Có một thesis mà Trọng rất tâm đắc: mua một dự án tốt và kiếm tiền từ token của nó là hai chuyện khác nhau. Vào luôn câu hỏi thứ nhất.",
+ "outro": "Tóm lại, trước khi mua một altcoin, hãy hỏi 4 câu. Token có hưởng lợi không? Ai sẽ mua tiếp? Thị trường bỏ sót gì? Đã quá đông chưa? Đây là kinh nghiệm của Trọng, không phải lời khuyên đầu tư, mọi người hãy luôn tự nghiên cứu kỹ trước khi xuống tiền nhé. Lưu video này lại làm checklist, và bình luận tên coin bạn đang giữ, mình sẽ chạy thử 4 câu hỏi cho bạn.",
+ "short_hooks": {
+  "0": "Vì sao HYPE tăng 170% còn AAVE giảm 25%?",
+  "3": "Tin tốt ra mà giá không tăng?"
+ },
+ "own_source": true,
+ "agenda_label": "4 CÂU HỎI + 1 CÔNG THỨC",
+ "outro_cta": "LƯU LẠI CHECKLIST · BÌNH LUẬN TÊN COIN CỦA BẠN",
+ "thumb_vs": [
+  {
+   "label": "AAVE",
+   "value": "-25%",
+   "logo": "AAVE",
+   "tone": "down"
+  },
+  {
+   "label": "HYPE",
+   "value": "+170%",
+   "logo": "HYPE",
+   "tone": "up"
+  }
+ ],
+ "hook_beats": [
+  {
+   "at": "cùng là dự án defi",
+   "type": "versus",
+   "left": {
+    "label": "AAVE",
+    "value": "-25%",
+    "logo": "AAVE",
+    "tone": "down"
+   },
+   "right": {
+    "label": "HYPE",
+    "value": "+170%",
+    "logo": "HYPE",
+    "tone": "up"
+   },
+   "sub": "Từ đầu năm 2026"
+  }
+ ],
+ "sections": [
+  {
+   "heading": "Token có hưởng lợi khi dự án thắng?",
+   "key_stat": "+170%",
+   "key_label": "HYPE từ đầu năm, AAVE -25%",
+   "narration": "Khi dự án kiếm được tiền, token có được hưởng không? Nhìn AAVE và HYPE. Cả hai đều dùng revenue để buyback, nhưng Hyperliquid dùng gần như toàn bộ phí để mua HYPE, còn Aave chỉ dùng khoảng một phần ba revenue. Giá cũng khác hẳn: HYPE tăng khoảng 170 phần trăm, AAVE giảm 25 phần trăm từ đầu năm. DWF Labs, một market maker có tiếng trong thị trường, còn thống kê 13 trên 15 token có cơ chế như vậy đã outperform BTC từ đầu năm. Vậy bạn làm gì? Trước khi mua, hãy hỏi: bao nhiêu phần trăm revenue quay về token? Nhưng có buyback rồi, giá vẫn có thể đứng yên. Câu hỏi thứ hai sẽ cho thấy vì sao.",
+   "bullets": [
+    "HYPE: gần như toàn bộ phí buyback",
+    "AAVE: khoảng 1/3 revenue",
+    "13/15 token có buyback thắng BTC"
+   ],
+   "beats": [
+    {
+     "at": "khi dự án kiếm được",
+     "type": "question",
+     "text": "Dự án kiếm tiền, token có được hưởng không?"
+    },
+    {
+     "at": "nhưng hyperliquid dùng",
+     "type": "bignum",
+     "value": "97-99%",
+     "label": "phí giao dịch Hyperliquid dùng mua lại HYPE",
+     "logo": "HYPE",
+     "tone": "up"
+    },
+    {
+     "at": "còn aave chỉ dùng",
+     "type": "bignum",
+     "value": "~30%",
+     "label": "revenue Aave dùng buyback (50 triệu đô/năm)",
+     "logo": "AAVE",
+     "tone": "flat"
+    },
+    {
+     "at": "giá cũng khác hẳn",
+     "type": "versus",
+     "left": {
+      "label": "AAVE",
+      "value": "-25%",
+      "logo": "AAVE",
+      "tone": "down"
+     },
+     "right": {
+      "label": "HYPE",
+      "value": "+170%",
+      "logo": "HYPE",
+      "tone": "up"
+     },
+     "sub": "Từ đầu năm 2026"
+    },
+    {
+     "at": "dwf labs",
+     "type": "dots",
+     "total": 15,
+     "hit": 13,
+     "label": "token có buyback thắng BTC từ đầu năm (DWF Labs, market maker lớn)"
+    },
+    {
+     "at": "vậy bạn làm gì",
+     "type": "question",
+     "text": "Bao nhiêu % revenue quay về token?"
+    }
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Ai sẽ mua token tiếp theo?",
+   "key_stat": "-25%",
+   "key_label": "AAVE từ đầu năm",
+   "narration": "Câu hỏi thứ hai là cái bẫy của dân đầu tư theo cơ bản. Họ dành hàng tuần để chứng minh một dự án đang bị định giá thấp, nhờ revenue, TVL hay người dùng. Nhưng lại quên hỏi: ai sẽ là người mua token tiếp theo? Ví dụ chính là AAVE: buyback 50 triệu đô một năm mà token vẫn giảm 25 phần trăm từ đầu năm. Rẻ có thể rẻ rất lâu. Ngược lại, có những coin cơ bản chỉ bằng một nửa nhưng lại outperform tất cả, vì dòng tiền đang đổ vào đó. Chốt lại: tốt chưa đủ, phải có người mua mới. Vậy bạn làm gì? Hãy hỏi thêm: dòng tiền mới sẽ đến từ đâu? Câu hỏi tiếp theo sẽ chỉ bạn chỗ tìm.",
+   "bullets": [
+    "Rẻ có thể rẻ rất lâu",
+    "Tốt chưa đủ, cần người mua mới",
+    "Dòng tiền mới từ đâu?"
+   ],
+   "beats": [
+    {
+     "at": "họ dành hàng tuần",
+     "type": "flow",
+     "label": "Bẫy của dân đầu tư cơ bản",
+     "steps": [
+      "Revenue tăng",
+      "TVL lớn",
+      "Có người dùng thật",
+      "Nhưng không ai mua token"
+     ],
+     "step_at": [
+      "họ dành hàng tuần",
+      "tvl",
+      "người dùng",
+      "nhưng lại quên hỏi"
+     ]
+    },
+    {
+     "at": "ví dụ chính là aave",
+     "type": "bignum",
+     "value": "-25%",
+     "label": "AAVE: buyback 50 triệu đô/năm, token vẫn giảm",
+     "logo": "AAVE",
+     "tone": "down"
+    },
+    {
+     "at": "ngược lại",
+     "type": "statement",
+     "text": "Cơ bản bằng một nửa, vẫn chạy hơn vì có dòng tiền"
+    },
+    {
+     "at": "chốt lại",
+     "type": "statement",
+     "text": "Tốt chưa đủ, phải có người mua mới"
+    },
+    {
+     "at": "vậy bạn làm gì",
+     "type": "question",
+     "text": "Dòng tiền mới sẽ đến từ đâu?"
+    }
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Thị trường đang bỏ sót điều gì?",
+   "key_stat": "+30%",
+   "key_label": "UNI sau tin fee switch",
+   "narration": "Câu hỏi thứ ba: thị trường đang bỏ sót điều gì? Đây là thesis, tức là luận điểm đầu tư mà phần đông chưa định giá vào. Ví dụ thật: tháng 11 năm 2025, Uniswap đề xuất bật fee switch, tức là bắt đầu chia phí cho người giữ token UNI. Chỉ sau tin đề xuất, UNI tăng khoảng 30 phần trăm. Token vẫn là token đó, nhưng thị trường đã nhìn nó khác đi. Thesis chưa được định giá thường đến từ bốn chỗ. Sản phẩm bắt đầu có người dùng. Cơ chế chia phí. Nguồn cầu mới cho token. Hoặc dòng tiền xoay vào mảng chưa ai để ý. Trong crypto, sự chú ý cũng là thanh khoản. Chốt lại: mua lúc thesis còn ít người tin, không phải lúc ai cũng biết. Vậy bạn làm gì? Với dự án bạn đang theo, tìm một sự kiện sắp tới có thể làm thị trường đổi cách nhìn. Nhưng thesis đúng vẫn có thể khiến bạn lỗ. Câu hỏi số 4 sẽ trả lời.",
+   "bullets": [
+    "Fee switch: UNI +30% sau tin",
+    "4 nguồn thesis chưa định giá",
+    "Mua khi còn ít người tin"
+   ],
+   "beats": [
+    {
+     "at": "câu hỏi thứ ba",
+     "type": "question",
+     "text": "Thị trường đang bỏ sót điều gì?"
+    },
+    {
+     "at": "ví dụ thật",
+     "type": "bignum",
+     "value": "+30%",
+     "label": "UNI chỉ sau tin đề xuất bật fee switch (11/2025)",
+     "logo": "UNI",
+     "tone": "up"
+    },
+    {
+     "at": "thesis chưa được định giá",
+     "type": "flow",
+     "label": "4 nguồn thesis chưa được định giá",
+     "steps": [
+      "Sản phẩm bắt đầu có người dùng",
+      "Cơ chế chia phí",
+      "Nguồn cầu mới cho token",
+      "Dòng tiền xoay mảng mới"
+     ],
+     "step_at": [
+      "sản phẩm bắt đầu",
+      "cơ chế chia phí",
+      "nguồn cầu mới",
+      "hoặc dòng tiền"
+     ]
+    },
+    {
+     "at": "trong crypto sự chú ý",
+     "type": "statement",
+     "text": "Sự chú ý cũng là thanh khoản"
+    },
+    {
+     "at": "chốt lại",
+     "type": "statement",
+     "text": "Mua lúc ít người tin, không phải lúc ai cũng biết"
+    }
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Thesis này đã quá đông chưa?",
+   "key_stat": "",
+   "key_label": "",
+   "narration": "Và đây là câu hỏi số 4, câu nhiều người bỏ qua nhất: thesis này đã quá đông chưa? Vẫn là Uniswap: cuối năm 2025, khi fee switch được bỏ phiếu thông qua thật, giá UNI gần như đứng yên. Tin tốt đã đến, nhưng người cần mua thì đã mua từ lúc đề xuất. Một luận điểm có thể đúng, nhưng vẫn là lệnh trade tệ nếu đám đông đã vào. Narrative còn nguy hiểm hơn. VIRTUAL, coin đầu ngành AI agent, từng xuống thấp hơn đỉnh 5,07 đô khoảng 88 phần trăm khi sự chú ý chuyển đi. Theo quan điểm cá nhân của mình, đừng mua mọi narrative đang hot. Chốt lại: đúng mà quá đông thì vẫn thua. Vậy bạn làm gì? Nếu ai quanh bạn cũng đang nói về một dự án, hãy cẩn thận gấp đôi.",
+   "bullets": [
+    "UNI: tin tốt ra, giá đứng yên",
+    "VIRTUAL -88% từ đỉnh",
+    "Đúng mà quá đông vẫn thua"
+   ],
+   "beats": [
+    {
+     "at": "và đây là câu hỏi số 4",
+     "type": "question",
+     "text": "Thesis này đã quá đông chưa?"
+    },
+    {
+     "at": "vẫn là uniswap",
+     "type": "bignum",
+     "value": "~0%",
+     "label": "UNI ngày fee switch được thông qua: tin đã được mua trước",
+     "logo": "UNI",
+     "tone": "flat"
+    },
+    {
+     "at": "virtual coin đầu ngành",
+     "type": "bignum",
+     "value": "-88%",
+     "label": "VIRTUAL so với đỉnh 5,07 đô khi narrative hạ nhiệt",
+     "logo": "VIRTUAL",
+     "tone": "down"
+    },
+    {
+     "at": "chốt lại",
+     "type": "statement",
+     "text": "Đúng mà quá đông thì vẫn thua"
+    },
+    {
+     "at": "vậy bạn làm gì",
+     "type": "question",
+     "text": "Ai cũng nói về nó? Cẩn thận gấp đôi"
+    }
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Công thức: điểm giao nhau",
+   "key_stat": "4",
+   "key_label": "Điều kiện cùng lúc",
+   "narration": "Vậy cơ hội lớn nằm ở đâu? Với Trọng đây là điểm giao nhau của bốn thứ: một thesis ít người để ý, fundamentals đang tốt lên, nhu cầu thật cho token, và một chất xúc tác có thể đổi suy nghĩ của thị trường. Thử áp vào HYPE và AAVE: HYPE có cả fundamentals lẫn nhu cầu thật cho token, còn AAVE mạnh fundamentals nhưng giá trị quay về token ít hơn. Đây chỉ là ví dụ cách dùng, không phải khuyến nghị mua bán. Fundamentals là hôm nay, thesis là ngày mai.",
+   "bullets": [
+    "Fundamentals là hôm nay",
+    "Thesis là ngày mai",
+    "Hiểu trước thị trường"
+   ],
+   "beats": [
+    {
+     "at": "một thesis ít người",
+     "type": "flow",
+     "label": "Điểm giao nhau của cơ hội lớn",
+     "steps": [
+      "Thesis ít người để ý",
+      "Fundamentals tốt lên",
+      "Nhu cầu thật cho token",
+      "Có chất xúc tác"
+     ],
+     "step_at": [
+      "một thesis ít người",
+      "fundamentals đang tốt lên",
+      "nhu cầu thật cho token",
+      "và một chất xúc tác"
+     ]
+    },
+    {
+     "at": "thử áp vào hype",
+     "type": "logos",
+     "label": "Thử áp 4 điều kiện (ví dụ, không phải khuyến nghị)",
+     "items": [
+      {
+       "label": "HYPE",
+       "value": "Value accrual mạnh",
+       "logo": "HYPE",
+       "tone": "up"
+      },
+      {
+       "label": "AAVE",
+       "value": "Value accrual yếu hơn",
+       "logo": "AAVE",
+       "tone": "down"
+      }
+     ]
+    },
+    {
+     "at": "fundamentals là hôm nay",
+     "type": "statement",
+     "text": "Fundamentals là hôm nay. Thesis là ngày mai"
+    }
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  }
+ ]
+}
