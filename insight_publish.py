@@ -1,3 +1,4 @@
+import time
 """Smart Penguin Insights, xuất bản: ảnh bìa, gói SEO (YouTube + TikTok), GitHub Release, gửi Telegram,
 và BOT REVIEW (AI xem khung hình, chấm điểm, gợi ý cải tiến cho video sau)."""
 from __future__ import annotations
@@ -293,8 +294,16 @@ def tg_video(path: Path, caption: str):
 def tg_photo(path: Path, caption: str):
     api, chat = _tg()
     if api and path and path.exists():
-        with open(path, "rb") as f:
-            requests.post(f"{api}/sendPhoto", timeout=120, data={"chat_id": chat, "caption": caption[:1000]}, files={"photo": f})
+        for i in range(3):
+            try:
+                with open(path, "rb") as f:
+                    r = requests.post(f"{api}/sendPhoto", timeout=120, data={"chat_id": chat, "caption": caption[:1000]}, files={"photo": f})
+                if r.ok:
+                    return
+                log(f"   ! Telegram sendPhoto lỗi: {r.text[:200]}")
+            except Exception as e:
+                log(f"   ! Telegram sendPhoto lỗi mạng (lần {i+1}): {e}")
+            time.sleep(5 * (i + 1))
 
 
 # ---------------------------------------------------------------------------
