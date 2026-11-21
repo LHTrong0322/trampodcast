@@ -308,7 +308,7 @@ def live_numbers(plan: dict, data: dict):
             return [fill(v) for v in x]
         if not isinstance(x, str) or "{" not in x:
             return x
-        x = x.replace("{DATE}", now.strftime("%d/%m"))
+        x = x.replace("{DATE}", datetime.now(P.VN_TZ).strftime("%d/%m"))   # ngày theo giờ Việt Nam
 
         def rep(m):
             v = ytd(m.group(2))

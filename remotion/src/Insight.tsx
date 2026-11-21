@@ -214,7 +214,7 @@ const SectionInner: React.FC<{sc: Scene; data: any; brandName: string; post?: Po
     <AbsoluteFill>
       <Backdrop />
       <TopBar source={sc.source} idx={sc.idx} total={sc.total} brand={brandName} project={sc.project} />
-      <div style={{position: 'absolute', left: 110, top: 170, display: 'flex', alignItems: 'center', gap: 16, opacity: numS, fontFamily: FONT}}>
+      <div style={{position: 'absolute', left: 110, top: 170, display: 'flex', alignItems: 'center', gap: 16, opacity: numS * (1 - wideK), fontFamily: FONT}}>
         <div style={{fontWeight: 800, fontSize: 30, color: ac}}>{String(sc.idx).padStart(2, '0')}</div>
         <div style={{width: 10, height: 10, borderRadius: 99, background: ac, transform: `scale(${numS})`}} />
         <div style={{color: C.muted, fontWeight: 700, fontSize: 22, letterSpacing: 4}}>INSIGHT</div>
