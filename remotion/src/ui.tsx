@@ -172,37 +172,51 @@ export const CountUp: React.FC<{value: string; delay?: number; size: number; col
     textShadow: 'none', letterSpacing: -1}}>{shown}</div>;
 };
 
-// ---------- phụ đề: hiện cả cụm câu (không chạy từng chữ), gọn & dễ đọc ----------
+// ---------- phụ đề: hiện cả cụm câu, ngắt theo cụm ý, tô màu từ khoá (review 1518) ----------
+const KEYWORDS = /^(buyback|unlock|revenue|tokenomics|narrative|insider|retail|holder|token|altcoin|crypto|fdv|tvl|dca|vc|etf|ath|tge|airdrop|float|overhang|alignment|doanh|lợi|nhuận)$/i;
+const isKey = (w: string) => {
+  const c = w.replace(/[.,!?…:;"“”()]/g, '');
+  return /\d/.test(c) || (c.length >= 2 && /^[A-Z0-9$]+$/.test(c)) || KEYWORDS.test(c);
+};
 export const Captions: React.FC<{words: Word[]; bottom: number; size: number; maxWidth: number; perChunk?: number}> = ({
   words, bottom, size, maxWidth, perChunk = 12,
 }) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
+  const ac = useAccent();
   const t = f / fps;
   if (!words.length) return null;
   const chunks: Word[][] = [];
   let cur: Word[] = [];
+  const nextStop = (i: number) => {   // còn bao nhiêu từ nữa thì tới dấu câu
+    for (let k = i + 1; k < Math.min(words.length, i + 5); k++) if (/[.!?…,;:]$/.test(words[k].t)) return k - i;
+    return 99;
+  };
   words.forEach((w, i) => {
     cur.push(w);
     const stop = /[.!?…]$/.test(w.t);
     const comma = /[,;:]$/.test(w.t);
     const gap = i + 1 < words.length && words[i + 1].s - w.e > 0.3;
-    if (cur.length >= perChunk || stop || (comma && cur.length >= 5) || gap) {
+    // đủ dài nhưng cụm ý sắp kết thúc trong 3 từ nữa thì đợi, tránh câu cụt kiểu "không quá"
+    const full = cur.length >= perChunk && !(nextStop(i) <= 3 && cur.length < perChunk + 4);
+    if (full || stop || (comma && cur.length >= 4) || (gap && cur.length >= 3)) {
       chunks.push(cur);
       cur = [];
     }
   });
-  if (cur.length) chunks.push(cur);
+  if (cur.length) {
+    if (cur.length <= 2 && chunks.length) chunks[chunks.length - 1].push(...cur); else chunks.push(cur);
+  }
   const idx = chunks.findIndex((c, i) => t >= c[0].s - 0.05 && t < (chunks[i + 1]?.[0].s ?? c[c.length - 1].e + 0.4) - 0.05);
   if (idx < 0) return null;
   const c = chunks[idx];
   const op = interpolate(t - c[0].s, [-0.05, 0.12], [0, 1], clamp);
   return (
     <div style={{position: 'absolute', left: 0, right: 0, bottom, display: 'flex', justifyContent: 'center'}}>
-      <div style={{maxWidth, textAlign: 'center', fontFamily: FONT, fontWeight: 600, fontSize: size, lineHeight: 1.3,
-        color: '#FFFFFF', opacity: op, padding: '10px 26px', borderRadius: 14, background: 'rgba(19,24,54,0.88)',
+      <div style={{maxWidth, textAlign: 'center', fontFamily: FONT, fontWeight: 700, fontSize: size, lineHeight: 1.25,
+        color: '#FFFFFF', opacity: op, padding: '12px 30px', borderRadius: 16, background: 'rgba(19,24,54,0.9)',
         textShadow: 'none'}}>
-        {c.map((w) => w.t).join(' ')}
+        {c.map((w, i) => <span key={i} style={{color: isKey(w.t) ? '#FFD166' : '#FFFFFF'}}>{w.t}{i < c.length - 1 ? ' ' : ''}</span>)}
       </div>
     </div>
   );

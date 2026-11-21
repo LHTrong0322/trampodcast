@@ -27,18 +27,18 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
               <div style={{color: C.muted, fontWeight: 600, fontSize: 22}}>@Trong0322{sc.source ? <> · Source: <span style={{color: C.ink}}>{sc.source}</span></> : null}</div>
             </div>
           </div>
-          <div style={{display: 'flex', gap: 12, flexWrap: 'wrap'}}>{sc.project?.name ? <Chip text={sc.project.name} size={26} /> : null}<Chip text="Full video trên YouTube" size={22} /></div>
-          <RevealWords text={props.shortTitle || sc.heading || ''} size={64} delay={4} stagger={3} maxWidth={860}
+          <div style={{display: 'flex', gap: 12, flexWrap: 'wrap'}}>{sc.project?.name ? <Chip text={sc.project.name} size={26} /> : null}</div>
+          <RevealWords text={props.shortTitle || sc.heading || ''} size={(props.shortTitle || sc.heading || '').length > 45 ? 54 : 62} delay={4} stagger={3} maxWidth={860}
             highlight={[sc.project?.name || ''].filter(Boolean)} />
         </div>
-        <div style={{position: 'absolute', top: 690, left: 70}}>
+        <div style={{position: 'absolute', top: 700, left: 70}}>
           {hasData ? <DataPanel spec={sc.data!} data={props.data} w={860} h={500} />
             : <QuoteCard post={props.post} quote={sc.quote || sc.heading || ''} w={860} h={500} />}
         </div>
         {sc.keyStat ? <div style={{position: 'absolute', top: 1215, left: 70, display: 'flex', alignItems: 'center', gap: 24}}>
           <CountUp value={sc.keyStat} size={72} delay={20} /><div style={{fontFamily: FONT, color: C.muted, fontSize: 30, fontWeight: 600, maxWidth: 480}}>{sc.keyLabel}</div>
         </div> : null}
-        <Captions words={sc.words} bottom={440} size={46} maxWidth={800} perChunk={7} />
+        <Captions words={sc.words} bottom={440} size={44} maxWidth={860} perChunk={6} />
         <div style={{position: 'absolute', left: 0, bottom: 0, height: 8, width: (f / durationInFrames) * width, background: ac}} />
       </AbsoluteFill>
     </AccentCtx.Provider>

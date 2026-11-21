@@ -52,18 +52,22 @@ const TopBar: React.FC<{source?: string; idx?: number; total?: number; brand: st
 };
 
 // ---------- HOOK ----------
-const HookScene: React.FC<{sc: Scene}> = ({sc}) => (
+const HookScene: React.FC<{sc: Scene}> = ({sc}) => {
+  const f = useCurrentFrame();
+  const zoom = 1 + Math.min(f, 600) * 0.00012;   // zoom chậm cho có chuyển động (review 1518)
+  return (
   <AbsoluteFill>
     <Backdrop img={sc.images?.[0]} dim={0.7} />
-    <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 26}}>
+    <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 26, transform: `scale(${zoom})`}}>
       {sc.stat ? <CountUp value={sc.stat} size={220} delay={4} /> : null}
       {sc.label ? <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 36, color: C.muted, letterSpacing: 4, textTransform: 'uppercase'}}>{sc.label}</div> : null}
       <div style={{maxWidth: 1500, textAlign: 'center', display: 'flex', justifyContent: 'center'}}>
-        <RevealWords text={sc.hook || ''} size={sc.stat ? 58 : 84} delay={sc.stat ? 16 : 4} stagger={2} maxWidth={1500} />
+        <RevealWords text={sc.hook || ''} size={sc.stat ? 66 : 96} delay={sc.stat ? 16 : 2} stagger={2} maxWidth={1560} />
       </div>
     </AbsoluteFill>
   </AbsoluteFill>
-);
+  );
+};
 
 // ---------- thẻ bài X ----------
 const PostCard: React.FC<{post: Post; delay: number}> = ({post, delay}) => {
@@ -103,7 +107,7 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null}> = ({sc, post}) => {
   const {fps} = useVideoConfig();
   const ac = useAccent();
   const t = f / fps;
-  const agendaAt = Math.min(11, sc.dur * 0.4);
+  const agendaAt = Math.min(6, sc.dur * 0.3);   // review 1518: thẻ giới thiệu kênh ngắn lại
   const out = interpolate(t - agendaAt, [0, 0.5], [1, 0], clamp);
   return (
     <AbsoluteFill>
@@ -154,9 +158,13 @@ const Bullets: React.FC<{items: string[]; dur: number; fps: number}> = ({items, 
       {items.map((b, i) => {
         const at = Math.round(fps * (1.2 + (dur * 0.6 * i) / Math.max(1, items.length)));
         const s = interpolate(f - at, [0, 12], [0, 1], clamp);
+        const nextAt = i + 1 < items.length ? Math.round(fps * (1.2 + (dur * 0.6 * (i + 1)) / items.length)) : 1e9;
+        const active = f >= at && f < nextAt;   // dòng đang nói thì nổi bật, dòng cũ mờ đi (review 1518)
         return (
-          <div key={i} style={{display: 'flex', alignItems: 'center', gap: 18, opacity: s, transform: `translateX(${(1 - s) * -40}px)`,
-            fontFamily: FONT, fontSize: 34, fontWeight: 600, color: C.ink}}>
+          <div key={i} style={{display: 'flex', alignItems: 'center', gap: 18, opacity: s * (active ? 1 : 0.55),
+            transform: `translateX(${(1 - s) * -40}px) scale(${active ? 1.03 : 1})`, transformOrigin: 'left center',
+            padding: '8px 16px', marginLeft: -16, borderRadius: 14, background: active ? `${ac}18` : 'transparent',
+            fontFamily: FONT, fontSize: 34, fontWeight: active ? 700 : 600, color: C.ink}}>
             <div style={{width: 10, height: 10, borderRadius: 99, background: ac, flexShrink: 0}} />
             <span>{b}</span>
           </div>
@@ -205,7 +213,8 @@ const SectionScene: React.FC<{sc: Scene; data: any; brandName: string; post?: Po
           highlight={[sc.project?.name || '', sc.keyStat || ''].filter(Boolean)} />
         {sc.bullets?.length ? <Bullets items={sc.bullets} dur={sc.dur} fps={fps} /> : null}
       </div>
-      <div style={{position: 'absolute', right: 100, top: 190, width: 840, height: 560}}>
+      <div style={{position: 'absolute', right: 100, top: 190, width: 840, height: 560,
+        transform: `scale(${1 + Math.min(t, 40) * 0.0015}) translateY(${-Math.min(t, 40) * 0.4}px)`, transformOrigin: 'center'}}>
         <div style={{position: 'absolute', inset: 0, opacity: toQuote ? interpolate(t - quoteAt, [0, 0.5], [1, 0], clamp) : 1}}>
           {hasData ? <DataPanel spec={sc.data!} data={data} w={840} h={560} />
             : <QuoteCard post={post || null} quote={sc.quote || sc.heading || ''} w={840} h={560} />}
@@ -281,7 +290,7 @@ export const Insight: React.FC<InsightProps> = (props) => {
             {sc.type === 'intro' ? <IntroScene sc={sc} post={props.post} /> : null}
             {sc.type === 'section' ? <SectionScene sc={sc} data={props.data} brandName={brandName} post={props.post} /> : null}
             {sc.type === 'outro' ? <OutroScene sc={sc} brandName={brandName} /> : null}
-            {sc.type !== 'hook' ? <Captions words={sc.words} bottom={64} size={40} maxWidth={1500} /> : null}
+            {sc.type !== 'hook' ? <Captions words={sc.words} bottom={60} size={46} maxWidth={1560} perChunk={10} /> : null}
             {i > 0 ? <Glitch /> : null}
           </AccentCtx.Provider>
         </Sequence>
