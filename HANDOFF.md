@@ -2,6 +2,13 @@
 
 
 
+
+## CHẤM 2 VÒNG (TRỌNG CHỐT 17:44 NGÀY 21/11)
+- VÒNG 1, kịch bản: viết nháp xong phải cho Claude chấm (workflow `script-review.yml`, inputs draft + url bài X, file script_review.py).
+  Dưới 8 điểm thì sửa đúng các góp ý "fixes" rồi chấm lại. CHỈ khi đạt từ 8 điểm mới gửi Trọng duyệt, kèm điểm từng tiêu chí.
+  Chế độ tự viết (AI viết kịch bản trong insight_lab.prepare) cũng tự chấm và viết lại tối đa 2 lần.
+- VÒNG 2, video: bot review cũ sau khi dựng (insight_publish.review), điểm lưu ở insight/reviews.json nhánh podcast-data.
+
 ## KINH NGHIỆM TỪ VIDEO ZEROXKYLE BẢN GIỌNG KOL (insight-20261121-1615, TRỌNG DUYỆT "ổn rồi" 16:58 NGÀY 21/11)
 - Giọng chuẩn: `gemini:Ludo@kol` (mẫu N), giữ nguyên tốc độ, làm đẹp giọng studio. Lời dặn style phải NGẮN (dài là máy đọc to cả lời dặn).
 - Từ ngữ BẮT BUỘC (code tự đổi ở insight_lab.fix_terms, áp cả kịch bản đã duyệt): "mở khoá" → unlock, "lợi nhuận" → revenue

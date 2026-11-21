@@ -466,6 +466,24 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
         if not _banned(top) and n_ok >= 3:
             break
         log(f"   ! kịch bản còn nhắc ENA/95%/14 ngày (lần {attempt + 1}), viết lại")
+    if not approved and os.getenv("CLAUDE_CODE_OAUTH_TOKEN"):
+        # Trọng chốt 21/11: VÒNG 1, Claude chấm kịch bản, dưới 8 điểm thì viết lại theo góp ý (tối đa 2 lần)
+        import script_review as SR
+        src = "\n\n".join(p.get("text", "")[:6000] for p in posts)
+        rv = {}
+        for rnd in range(3):
+            try:
+                rv = SR.review(json.dumps(plan, ensure_ascii=False, indent=1), src)
+            except Exception as ex:
+                log(f"   ! chấm kịch bản lỗi: {str(ex)[:150]}")
+                break
+            log(f"   Vòng 1 chấm kịch bản lần {rnd + 1}: {rv.get('score')} điểm")
+            if rv.get("pass") or rnd == 2:
+                break
+            fix = prompt + "\nBản trước bị chấm " + str(rv.get("score")) + "/10. Sửa ĐÚNG các điểm sau:\n" + \
+                "\n".join(f"- {x}" for x in rv.get("fixes", []))
+            plan = P.nodash(V.llm_json(gem, cfg, system, fix))
+        plan["script_score"] = rv.get("score")
     plan = scrub_plan(plan)
     plan = fix_terms(plan)   # Trọng chốt 21/11: tự đổi từ Việt sang từ chuyên ngành tiếng Anh
     if len([s for s in plan.get("sections", []) if s.get("narration")]) < 2 or not plan.get("hook"):
