@@ -186,7 +186,7 @@ const Matrix: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
         const s = interpolate(f - 6 - i * 14, [0, 10], [0, 1], clamp);
         return <div key={i} style={{display: 'flex', alignItems: 'center', padding: '16px 0', borderBottom: `1px solid ${C.line}`, opacity: s}}>
           <div style={{flex: 1, fontSize: 34, fontWeight: 700, color: C.ink}}>{r.label}</div>
-          {cols.map((_, j) => { const m = mark(r.marks[j]); return <div key={j} style={{width: cw, textAlign: 'center', fontSize: 52, fontWeight: 900,
+          {cols.map((_, j) => { const m = mark(r.marks[j]); return <div key={j} style={{width: cw, textAlign: 'center', fontSize: m.t.length > 1 ? 34 : 52, fontWeight: 900,
             color: m.c, transform: `scale(${0.6 + 0.4 * s})`}}>{m.t}</div>; })}
         </div>;
       })}

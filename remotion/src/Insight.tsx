@@ -104,7 +104,7 @@ const PostCard: React.FC<{post: Post; delay: number}> = ({post, delay}) => {
 };
 
 // ---------- INTRO: tiêu đề → danh sách insight ----------
-const IntroScene: React.FC<{sc: Scene; post: Post | null}> = ({sc, post}) => {
+const IntroScene: React.FC<{sc: Scene; post: Post | null; data?: any}> = ({sc, post, data}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const ac = useAccent();
@@ -146,6 +146,8 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null}> = ({sc, post}) => {
           ) : null}
         </div>
         {post && !sc.hidePost ? <PostCard post={post} delay={14} /> : null}
+        {sc.hidePost && sc.beats?.length ? <div style={{width: 760, height: 520, opacity: interpolate(t, [0.2, 0.7], [0, 1], clamp)}}>
+          <BeatPanel beats={sc.beats.slice(0, 1)} t={Math.max(2, t)} sceneDur={sc.dur} data={data} w={760} h={520} /></div> : null}
       </AbsoluteFill>
     </AbsoluteFill>
   );
@@ -311,7 +313,7 @@ export const Insight: React.FC<InsightProps> = (props) => {
         <Sequence key={i} from={Math.round(sc.from * fps)} durationInFrames={Math.max(1, Math.round(sc.dur * fps))}>
           <AccentCtx.Provider value={tone(sc.project?.color || DEFAULT_ACCENT)}>
             {sc.type === 'hook' ? <HookScene sc={sc} /> : null}
-            {sc.type === 'intro' ? <IntroScene sc={sc} post={props.post} /> : null}
+            {sc.type === 'intro' ? <IntroScene sc={sc} post={props.post} data={props.data} /> : null}
             {sc.type === 'section' ? <SectionScene sc={sc} data={props.data} brandName={brandName} post={props.post} /> : null}
             {sc.type === 'outro' ? <OutroScene sc={sc} brandName={brandName} /> : null}
             {sc.type !== 'hook' ? <Captions words={sc.words} bottom={60} size={46} maxWidth={1560} perChunk={10} /> : null}
