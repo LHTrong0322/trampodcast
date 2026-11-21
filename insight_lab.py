@@ -269,8 +269,7 @@ def market_data(lab: Path) -> dict:
 
 
 NAME_TICKER = {"uniswap": "UNI", "hyperliquid": "HYPE", "aave": "AAVE", "ethena": "ENA", "solana": "SOL", "bitcoin": "BTC",
-               "ethereum": "ETH", "chainlink": "LINK", "pendle": "PENDLE", "jupiter": "JUP", "lido": "LDO", "maker": "MKR",
-               "sky": "SKY", "virtuals": "VIRTUAL", "arbitrum": "ARB", "optimism": "OP", "celestia": "TIA", "sui": "SUI"}
+               "ethereum": "ETH", "chainlink": "LINK", "pendle": "PENDLE", "virtuals": "VIRTUAL", "arbitrum": "ARB", "celestia": "TIA", "sui": "SUI"}
 
 
 def _days(v) -> int:
@@ -313,8 +312,10 @@ def live_numbers(plan: dict, data: dict):
         def rep(m):
             v = ytd(m.group(2))
             if v is None:
-                log(f"   ! không có giá {m.group(2)} để điền {m.group(0)}")
-                return m.group(3) or "?"
+                raise RuntimeError(f"Không có giá {m.group(2)} để điền {m.group(0)}, dừng dựng (không xuất video có '?')")
+            before = m.string[max(0, m.start() - 25):m.start()].lower()
+            if m.group(1) == "YTD" and (("giảm" in before and v > 0) or ("tăng" in before and v < 0)):
+                raise RuntimeError(f"Giá {m.group(2)} từ 1/1 là {v:+.0f}% nhưng kịch bản viết '{before.strip()}', cần sửa kịch bản trước khi dựng")
             r = int(5 * round(abs(v) / 5)) if abs(v) >= 10 else round(abs(v))
             return (("+" if v >= 0 else "-") + str(r)) if m.group(1) == "YTDS" else str(r)
         return re.sub(r"\{(YTDS?):([A-Z0-9]+)(?:\|([^}]*))?\}", rep, x)
@@ -358,27 +359,71 @@ def coin_data(lab: Path, plan: dict, data: dict):
             tick.append(t)
             want[t] = max(want.get(t, 30), _days(b.get("days")))
     data.setdefault("coins", {})
-    for t in dict.fromkeys(x for x in tick if re.fullmatch(r"[A-Z0-9]{2,10}", x) and (x != "ENA" or plan.get("allow_ena"))):
-        info = V.coin_info(t)
+    # Trọng 22/11: bản 0427 bị CoinGecko chặn vì gọi quá nhiều (thêm logo cho mọi tên dự án) → hook ra "?%", biểu đồ trống.
+    # Giờ: coin CẦN SỐ (biểu đồ, so sánh, ô điền {YTD}) lấy trước, gọi lại khi bị chặn; coin chỉ cần logo thì không lấy giá;
+    # thiếu số cần thiết thì DỪNG dựng, không bao giờ xuất video thiếu dữ liệu.
+    raw = json.dumps(plan, ensure_ascii=False)
+    need = set(want) | set(re.findall(r"\{YTDS?:([A-Z0-9]+)", raw))
+    for x in plan.get("thumb_vs") or []:
+        if x.get("logo"):
+            need.add(str(x["logo"]).lstrip("$").upper())
+    for s_ in plan.get("sections", []):
+        d_ = s_.get("data") or {}
+        if d_.get("type") == "coin_chart":
+            need |= {str(t).lstrip("$").upper() for t in d_.get("tickers") or []}
+    order = [t for t in dict.fromkeys(list(need) + tick) if re.fullmatch(r"[A-Z0-9]{2,10}", t) and (t != "ENA" or plan.get("allow_ena"))]
+    for t in order:
+        info = _cg_search(t)
         if not info:
             log(f"   ! không tìm thấy coin {t}")
             continue
-        try:
-            time.sleep(1.5)
-            ch = requests.get(f"https://api.coingecko.com/api/v3/coins/{info['id']}/market_chart",
-                              params={"vs_currency": "usd", "days": want.get(t, 30)}, timeout=30).json()
-            pts = [p[1] for p in ch.get("prices", [])]
-            if len(pts) < 10:
-                continue
-            (lab / "logos").mkdir(exist_ok=True)
-            if info.get("large"):
+        (lab / "logos").mkdir(exist_ok=True)
+        if info.get("large") and not (lab / "logos" / f"{t}.png").exists():
+            try:
                 (lab / "logos" / f"{t}.png").write_bytes(requests.get(info["large"], timeout=20).content)
-            data["coins"][t] = {"name": info.get("name", t), "price": pts[-1], "series": pts[::max(1, len(pts) // 120)],
-                                "days": want.get(t, 30), "logo": f"logos/{t}.png" if (lab / "logos" / f"{t}.png").exists() else None,
-                                "color": BRAND_OVERRIDE.get(t) or brand_color(lab / "logos" / f"{t}.png")}
-            log(f"   Coin {t}: {len(pts)} điểm giá")
+            except Exception as ex:
+                log(f"   ! logo {t} lỗi: {ex}")
+        lg = f"logos/{t}.png" if (lab / "logos" / f"{t}.png").exists() else None
+        entry = {"name": info.get("name", t), "logo": lg, "color": BRAND_OVERRIDE.get(t) or (brand_color(lab / "logos" / f"{t}.png") if lg else "#4F5BD5")}
+        if t in need or len([c for c in data["coins"].values() if c.get("series")]) < 4:
+            ch = _cg(f"https://api.coingecko.com/api/v3/coins/{info['id']}/market_chart",
+                     {"vs_currency": "usd", "days": want.get(t, 30)})
+            pts = [p[1] for p in (ch or {}).get("prices", [])]
+            if len(pts) >= 10:
+                entry.update({"price": pts[-1], "series": pts[::max(1, len(pts) // 120)], "days": want.get(t, 30)})
+                log(f"   Coin {t}: {len(pts)} điểm giá")
+            else:
+                log(f"   ! giá {t} không lấy được")
+        data["coins"][t] = entry
+    miss = sorted(t for t in need if not (data["coins"].get(t) or {}).get("series"))
+    if miss:
+        raise RuntimeError(f"Thiếu giá thật của {', '.join(miss)} (CoinGecko không trả), dừng dựng để không xuất video thiếu số liệu")
+
+
+def _cg(url: str, params: dict | None = None):
+    """Gọi CoinGecko, bị chặn (429) hay lỗi mạng thì đợi rồi gọi lại, tối đa 5 lần."""
+    import time
+    for i in range(5):
+        try:
+            time.sleep(2.0)
+            r = requests.get(url, params=params, timeout=30, headers={"User-Agent": "SmartPenguinInsights/1.0"})
+            if r.status_code == 200:
+                return r.json()
+            log(f"   CoinGecko {r.status_code}, đợi rồi thử lại ({i + 1}/5)")
         except Exception as ex:
-            log(f"   ! giá {t} lỗi: {ex}")
+            log(f"   CoinGecko lỗi mạng: {ex} ({i + 1}/5)")
+        time.sleep(15 * (i + 1))
+    return None
+
+
+_CG_INFO: dict = {}
+
+
+def _cg_search(t: str):
+    if t not in _CG_INFO:
+        js = _cg("https://api.coingecko.com/api/v3/search", {"query": t}) or {}
+        _CG_INFO[t] = next((c for c in js.get("coins", [])[:8] if c.get("symbol", "").upper() == t and c.get("market_cap_rank")), None)
+    return _CG_INFO[t]
 
 
 def save_images(lab: Path, plan: dict, gem=None, cfg=None):
