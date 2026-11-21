@@ -30,34 +30,19 @@ TERMS = {
     "retail": "retail (English: 'REE-tail')",
 }
 
-ACCENT = {
-    "hn": "Standard Northern Vietnamese (Hanoi) accent, the polished diction of a VTV finance presenter. "
-          "Crisp consonants, clean tones, no regional or rural coloring at all.",
-    "kol": "Educated urban Saigon accent of a young, successful Vietnamese crypto KOL with a big YouTube following. "
-           "PERSONA OVERRIDE: drop the news-presenter formality; sound like a confident insider sharing alpha with "
-           "his community, charismatic, energetic but controlled, a hint of a smile, about 170 words per minute. "
-           "Still polished and premium, never rural, never shouting, never a salesman.",
-    "sg": "Educated urban Saigon accent, polished and modern like a top Vietnamese business podcast host. "
-          "Clear diction, no countryside or rural coloring at all.",
+# Lời dặn NGẮN (bản dài bị máy đọc to luôn cả lời dặn). Cùng độ dài với bản B đã chạy tốt.
+STYLE = {
+    "hn": ("Ludo, host of a premium Vietnamese finance channel. Deep, warm, composed, authoritative, like a VTV "
+           "finance presenter. Standard Hanoi accent, crisp and polished, no regional coloring. Measured pace, "
+           "about 160 words per minute, steady intonation, firm sentence endings. English crypto terms pronounced "
+           "naturally in English."),
+    "sg": ("Ludo, host of a premium Vietnamese business podcast. Deep, warm, composed and confident. Educated urban "
+           "Saigon accent, polished and modern, no countryside coloring. Measured pace, about 160 words per minute, "
+           "steady intonation. English crypto terms pronounced naturally in English."),
+    "kol": ("Ludo, a successful young Vietnamese crypto KOL talking to his community. Confident, charismatic, "
+            "energetic but controlled, a hint of a smile. Polished urban Saigon accent, never rural, never salesy. "
+            "About 170 words per minute. English crypto terms pronounced naturally in English."),
 }
-
-PROMPT = """Ludo: Host of "Smart Penguin Insights", a premium Vietnamese crypto and finance channel on YouTube.
-Sounds like a senior market analyst who also presents on a national finance show: deep, warm, composed, authoritative,
-quietly confident. Polished and professional, like Bloomberg or a VTV finance segment, never folksy, never
-salesy, never a hyped TikTok voice, never robotic.
-
-Scene: Recording in a treated professional studio with a broadcast microphone, close and intimate, low and resonant.
-
-Notes: Accent: {accent}
-Pacing: measured and calm, about 160 words per minute. Unhurried, every syllable clear. Never rush.
-Breathing: a natural breath at every line break. Brief pause at commas, a fuller pause at full stops and after a colon.
-Intonation: steady and controlled; sentences end firmly, not rising, not sing-song. Avoid exaggerated or dramatic swings.
-Emphasis: subtle stress on numbers, list markers ("Thứ nhất", "Thứ hai") and contrast words ("còn", "nhưng").
-English terms: these are English words; say them like a Vietnamese professional educated abroad, with natural
-English pronunciation and stress, NOT with Vietnamese tones, then flow smoothly back into Vietnamese:
-{terms}
-Opening line: slightly more presence to draw the listener in, still calm and premium.
-Words in square brackets like [short pause] are silent pause cues, never read them aloud."""
 
 
 def lines(t: str) -> str:
@@ -96,17 +81,16 @@ def main():
     variants = [
         ("J", "Ludo", "hn", "Ludo giọng chuẩn Hà Nội, dẫn chương trình tài chính"),
         ("K", "Ludo", "sg", "Ludo giọng Sài Gòn thành thị, podcast kinh doanh"),
-        ("L", "Charon", "hn", "Charon (giọng trầm, rõ) chuẩn Hà Nội"),
-        ("M", "Sadaltager", "hn", "Sadaltager (giọng chuyên gia) chuẩn Hà Nội"),
         ("N", "Ludo", "kol", "Ludo vibe KOL crypto, tự tin, cuốn"),
+        ("L", "Charon", "hn", "Charon (giọng trầm, rõ) chuẩn Hà Nội"),
         ("O", "Puck", "kol", "Puck (giọng trẻ, sáng) vibe KOL crypto"),
     ]
     for code, voice, acc, label in variants:
         print(code, label)
         try:
-            pcm = gem.tts(["gemini-3.8-flash-tts"], voice, PROMPT.format(accent=ACCENT[acc], terms=terms), plain)
+            pcm = gem.tts(["gemini-3.8-flash-tts"], voice, STYLE[acc], plain)
             sec = len(pcm) / (P.SAMPLE_RATE * 2)
-            if sec > len(plain.split()) / 150 * 60 * 1.4:   # dài bất thường = máy đọc cả lời dặn, bỏ
+            if sec > len(plain.split()) / 150 * 60 * 1.35:   # dài bất thường = máy đọc cả lời dặn, bỏ
                 raise RuntimeError(f"audio dài bất thường {sec:.0f}s, có thể đọc nhầm lời dặn")
             raw = out / f"{code}-raw.mp3"
             VS.to_mp3(pcm, raw)
