@@ -6,7 +6,7 @@ Kiểu: chuẩn insight-20261121-1615 (giọng gemini:Ludo@kol, nền trắng s�
 Số liệu:
 - Từ bài gốc: AAVE -25% từ đầu năm, HYPE khoảng +170% từ đầu năm, DWF Labs: 13/15 token có cơ chế tích luỹ giá trị thắng BTC từ đầu năm.
 - Bổ sung có nguồn (để có ví dụ thật cho từng phần): UNI tăng khoảng 30% khi Uniswap đề xuất bật fee switch (The Block, 11/2025); DAO thông qua ngày 25/12/2025, UNI gần như đi ngang (DL News); VIRTUAL thấp hơn đỉnh 5,07 đô khoảng 88% (Decrypt).
-Trạng thái: VÒNG 1 CHẤM KỊCH BẢN, chỉ gửi Trọng khi đạt từ 8 điểm. Chỉ dựng khi Trọng nhắn "ok kịch bản".
+Trạng thái: VÒNG 1 ĐẠT 8.35/10 (Claude chấm lần 4: 6.9, 7.6, 7.8, 8.35), đã sửa thêm các góp ý nhỏ. 3 số liệu bổ sung đã đối chiếu với The Block, DL News, Decrypt. Chỉ dựng khi Trọng nhắn "ok kịch bản".
 
 ## Tiêu đề YouTube (chọn 1)
 A. Coin tốt vẫn lỗ? 4 câu hỏi trước khi mua altcoin
@@ -22,7 +22,7 @@ Lời đọc: Chào mừng mọi người đã quay trở lại với Smart Peng
 Chữ trên hình: thẻ bài X của Kaff (có avatar thật), một dòng chạy nhanh "4 câu hỏi lọc coin", không có slide mục lục tĩnh.
 
 ## Phần 1: Token có hưởng lợi khi dự án thắng?
-Lời đọc: Vì sao dự án tốt mà token vẫn giảm? Aave là một trong những mảng kinh doanh mạnh nhất DeFi, nhưng token AAVE giảm 25 phần trăm từ đầu năm. HYPE thì tăng khoảng 170 phần trăm, dù thị trường chung đang khó. Khác biệt nằm ở value accrual, tức là cơ chế đưa thành công của dự án về token, ví dụ dùng revenue để buyback. Đó là câu hỏi đầu tiên: khi dự án kiếm được tiền, token có được hưởng không? DWF Labs còn thấy 13 trên 15 token có cơ chế như vậy đã thắng BTC từ đầu năm. Vậy bạn làm gì? Trước khi mua, hãy tìm xem revenue của dự án đi đâu. Nhưng kể cả token có hưởng lợi, giá vẫn có thể đứng yên rất lâu. Lý do nằm ở câu hỏi thứ hai.
+Lời đọc: Vì sao dự án tốt mà token vẫn giảm? Aave là một trong những mảng kinh doanh mạnh nhất DeFi, nhưng token AAVE giảm 25 phần trăm từ đầu năm. HYPE thì tăng khoảng 170 phần trăm, dù thị trường chung đang khó. Khác biệt nằm ở value accrual, tức là cơ chế đưa thành công của dự án về token. Ví dụ: dùng revenue để buyback. Đó là câu hỏi đầu tiên: khi dự án kiếm được tiền, token có được hưởng không? DWF Labs còn thấy 13 trên 15 token có cơ chế như vậy đã thắng BTC từ đầu năm. Vậy bạn làm gì? Trước khi mua, hãy tìm xem revenue của dự án đi đâu. Nhưng kể cả token có hưởng lợi, giá vẫn có thể đứng yên rất lâu. Lý do nằm ở câu hỏi thứ hai.
 Chữ trên hình:
 - Tiêu đề: Token có hưởng lợi khi dự án thắng?
 - Ý chính: AAVE -25% từ đầu năm / HYPE +170% từ đầu năm / Revenue có quay về token?
@@ -38,10 +38,10 @@ Chữ trên hình:
 - Ý chính: Rẻ có thể rẻ rất lâu / Tốt chưa đủ, cần người mua mới / Dòng tiền mới từ đâu?
 
 ## Phần 3: Thị trường đang bỏ sót điều gì?
-Lời đọc: Câu hỏi thứ ba: thị trường đang bỏ sót điều gì? Đây là thesis, tức là luận điểm đầu tư mà phần đông chưa định giá vào. Có thể là sản phẩm bắt đầu có người dùng. Có thể là một nguồn cầu mới cho token. Hoặc là fee switch, tức là bật cơ chế chia phí cho người giữ token. Ví dụ thật: khi Uniswap đề xuất bật fee switch tháng 11 năm 2025, UNI tăng khoảng 30 phần trăm chỉ sau tin đề xuất. Token vẫn vậy, nhưng cách thị trường nhìn nó đã đổi. Vì sao giá chạy nhanh vậy? Vì trong crypto, sự chú ý cũng là thanh khoản. Một thesis bắt đầu với vài người tin. Rồi dữ liệu ủng hộ, người mua mới vào, và điều nghe vô lý bỗng thành hiển nhiên. Vậy bạn làm gì? Với coin bạn đang theo, hãy ghi ra một điều có thể làm thị trường đổi cách nhìn trong vài tháng tới. Không ghi ra được, nghĩa là bạn chưa có thesis. Nhưng có thesis đúng vẫn có thể thua. Vì sao, câu hỏi số 4 sẽ trả lời.
+Lời đọc: Câu hỏi thứ ba: thị trường đang bỏ sót điều gì? Đây là thesis, tức là luận điểm đầu tư mà phần đông chưa định giá vào. Có thể là sản phẩm bắt đầu có người dùng. Có thể là một nguồn cầu mới cho token. Hoặc là fee switch, tức là bật cơ chế chia phí cho người giữ token. Ví dụ thật: khi Uniswap đề xuất bật fee switch tháng 11 năm 2025, UNI tăng khoảng 30 phần trăm chỉ sau tin đề xuất. Token vẫn vậy, nhưng cách thị trường nhìn nó đã đổi. Vì sao giá chạy nhanh vậy? Vì trong crypto, sự chú ý cũng là thanh khoản. Một thesis bắt đầu với vài người tin. Rồi dữ liệu ủng hộ, người mua mới vào, và điều nghe vô lý bỗng thành hiển nhiên. Vậy bạn làm gì? Mở roadmap hoặc trang quản trị của dự án bạn đang theo, tìm sự kiện gần nhất có thể làm thị trường đổi cách nhìn. Không tìm ra, nghĩa là bạn chưa có thesis. Nhưng có thesis đúng vẫn có thể thua. Vì sao, câu hỏi số 4 sẽ trả lời.
 Chữ trên hình:
 - Tiêu đề: Thị trường đang bỏ sót điều gì?
-- Hình dữ liệu: bản đồ nhiệt thị trường thật (dòng tiền đang xoay vào mảng nào)
+- Hình dữ liệu: bản đồ nhiệt thị trường thật (dòng tiền đang xoay vào mảng nào), ghi nguồn CoinGecko và ngày lấy dữ liệu
 - Thẻ số: +30% (UNI sau tin đề xuất fee switch, The Block 11/2025)
 - Ý chính: Sản phẩm có người dùng / Nguồn cầu token mới / Fee switch
 - Thuật ngữ: thesis = luận điểm đầu tư; fee switch = bật cơ chế chia phí cho người giữ token
@@ -50,7 +50,7 @@ Chữ trên hình:
 Lời đọc: Một kèo có thể đúng mà bạn vẫn thua. Uniswap thật sự bật fee switch vào cuối năm 2025. Nhưng hôm cộng đồng holder bỏ phiếu thông qua, giá UNI gần như đứng yên, vì phần tăng đã xảy ra từ lúc đề xuất. Đây là câu hỏi số 4, câu nhiều người bỏ qua nhất: thesis này đã quá đông chưa? Khi ai cũng đặt cược cho cùng một kết quả, lúc tin tốt đến, còn ai để mua? Narrative hot còn nguy hiểm hơn. VIRTUAL, coin đầu ngành AI agent, từng xuống thấp hơn đỉnh 5,07 đô khoảng 88 phần trăm khi sự chú ý chuyển đi. Vậy bạn làm gì? Nếu ai quanh bạn cũng đang nói về một coin, hãy cẩn thận gấp đôi. Vậy coin nào mới đáng để ý? Câu trả lời ở phần tiếp theo.
 Chữ trên hình:
 - Tiêu đề: Thesis này đã quá đông chưa?
-- Hình dữ liệu: chỉ số Sợ hãi & Tham lam thật (đo độ đông của thị trường)
+- Hình dữ liệu: chỉ số Sợ hãi & Tham lam thật (đo độ đông của thị trường), ghi nguồn alternative.me và ngày lấy dữ liệu
 - Thẻ số: -88% (VIRTUAL so với đỉnh 5,07 đô, Decrypt)
 - Ý chính: UNI: tin tốt ra, giá đứng yên / Ai cũng nói về nó thì đã muộn / Narrative hot dễ trả lại hết
 
