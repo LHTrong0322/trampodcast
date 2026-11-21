@@ -3,8 +3,9 @@ import {AbsoluteFill, Img, staticFile} from 'remotion';
 import {AccentCtx, tone, C, FONT, useFonts} from './ui';
 
 // Ảnh bìa YouTube 1280×720: chữ to, 1 con số, logo dự án + logo kênh
-export type ThumbProps = {text: string; stat?: string; accent?: string; projectLogo?: string | null; bg?: string | null; brand: string; points?: string[]; warn?: boolean};
-export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5', projectLogo, bg, brand, points = [], warn = false}) => {
+export type ThumbProps = {text: string; stat?: string; accent?: string; projectLogo?: string | null; bg?: string | null; brand: string; points?: string[]; warn?: boolean;
+  vs?: {label: string; value: string; logo?: string | null; tone?: string}[]};
+export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5', projectLogo, bg, brand, points = [], warn = false, vs = []}) => {
   const accent = tone(acIn);
   useFonts();
   const words = (text || '').toUpperCase().split(/\s+/);
@@ -21,7 +22,16 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5
           fontWeight: 800, fontSize: points.length ? 80 : words.join(' ').length > 28 ? 92 : 112, lineHeight: 1.02, color: C.ink, letterSpacing: -1}}>
           {words.map((w, i) => <span key={i} style={{color: i % 3 === 1 ? accent : C.ink}}>{w}</span>)}
         </div>
-        {stat ? <div style={{position: 'absolute', left: 64, bottom: 60, padding: '10px 30px', borderRadius: 20, background: accent,
+        {vs.length ? <div style={{position: 'absolute', left: 64, right: 64, bottom: 56, display: 'flex', gap: 28}}>
+          {vs.map((x, i) => <div key={i} style={{flex: 1, display: 'flex', alignItems: 'center', gap: 22, padding: '18px 28px', borderRadius: 26,
+            background: '#FFFFFF', border: `1px solid ${C.line}`, boxShadow: '0 14px 40px rgba(40,50,110,0.14)'}}>
+            {x.logo ? <Img src={staticFile(x.logo)} style={{width: 96, height: 96, borderRadius: 99}} /> : null}
+            <div style={{fontWeight: 800, fontSize: 46, color: C.ink}}>{x.label}</div>
+            <div style={{flex: 1}} />
+            <div style={{fontWeight: 800, fontSize: 92, color: x.tone === 'down' ? C.red : x.tone === 'up' ? C.green : C.ink}}>{x.value}</div>
+          </div>)}
+        </div> : null}
+        {stat && !vs.length ? <div style={{position: 'absolute', left: 64, bottom: 60, padding: '10px 30px', borderRadius: 20, background: accent,
           color: '#FFFFFF', fontWeight: 800, fontSize: 92, lineHeight: 1.1}}>{stat}</div> : null}
         {points.length ? <div style={{position: 'absolute', right: 56, top: 170, width: 400, padding: '30px 30px', borderRadius: 26,
           background: '#FFFFFF', border: `1px solid ${C.line}`, boxShadow: '0 18px 50px rgba(40,50,110,0.12)', display: 'flex', flexDirection: 'column', gap: 22}}>

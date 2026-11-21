@@ -238,10 +238,12 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
             chapters.append((sc["from"], "Mở đầu"))
             scenes.append({**base, "type": "intro", "title": V.en_money(plan.get("title", "")), "theme": plan.get("theme", ""),
                            "points": [V.en_money(s["heading"]) for s in secs][:6], "agendaLabel": P.nodash(plan.get("agenda_label", "")),
+                           "hidePost": bool(plan.get("own_source")),
                            "images": [f"img/{x}" for x in imgs.get("intro", [])][:1]})
         elif k == "outro":
             chapters.append((sc["from"], "Tóm lại"))
-            scenes.append({**base, "type": "outro", "points": [V.en_money(s["heading"]) for s in secs][:5]})
+            scenes.append({**base, "type": "outro", "cta": P.nodash(plan.get("outro_cta", "")),
+                           "points": [V.en_money(x) for x in (plan.get("outro_points") or [s["heading"] for s in secs])][:5]})
         else:
             i = int(k[1:])
             s = secs[i]
@@ -273,7 +275,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     long_path = out_dir / f"smart-penguin-{tag}-16x9.mp4"
     log(f"Dựng video dài · {total / 60:.1f} phút · giọng {voice}")
     run_remotion(_guard(props), long_path, frames)
-    res = {"long": long_path, "shorts": [], "chapters": chapters, "duration": total, "voice": voice, "plan": plan,
+    res = {"long": long_path, "shorts": [], "chapters": chapters, "duration": total, "voice": voice, "plan": plan, "data": data,
            "scenes": scenes}
     if not shorts or frames:
         return res

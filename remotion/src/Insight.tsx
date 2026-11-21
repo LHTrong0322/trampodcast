@@ -13,7 +13,7 @@ export type Scene = {
   hook?: string; stat?: string; label?: string; images?: string[];
   title?: string; theme?: string;
   idx?: number; total?: number; heading?: string; keyStat?: string; keyLabel?: string; bullets?: string[];
-  quote?: string; source?: string; data?: DataSpec | null; beats?: Beat[]; points?: string[]; agendaLabel?: string; project?: Project | null;
+  quote?: string; source?: string; data?: DataSpec | null; beats?: Beat[]; points?: string[]; agendaLabel?: string; cta?: string; hidePost?: boolean; project?: Project | null;
 };
 export type InsightProps = {fps: number; width: number; height: number; audio: string; music?: string; duration: number;
   scenes: Scene[]; post: Post | null; brand: Record<string, string>; data?: any; logo?: string; mode?: string; shortTitle?: string};
@@ -145,7 +145,7 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null}> = ({sc, post}) => {
             </Sequence>
           ) : null}
         </div>
-        {post ? <PostCard post={post} delay={14} /> : null}
+        {post && !sc.hidePost ? <PostCard post={post} delay={14} /> : null}
       </AbsoluteFill>
     </AbsoluteFill>
   );
@@ -254,11 +254,17 @@ const OutroScene: React.FC<{sc: Scene; brandName: string}> = ({sc, brandName}) =
       <AbsoluteFill style={{padding: '150px 140px', flexDirection: 'column', gap: 32}}>
         <div><Chip text="TÓM LẠI" /></div>
         {(sc.points || []).map((p, i) => {
-          const s = interpolate(f - 10 - i * 12, [0, 14], [0, 1], clamp);
-          return <div key={i} style={{display: 'flex', gap: 24, alignItems: 'baseline', opacity: s, transform: `translateX(${(1 - s) * -40}px)`,
-            fontFamily: FONT, fontWeight: 800, fontSize: 48, color: C.ink}}>
-            <span style={{color: ac}}>{String(i + 1).padStart(2, '0')}</span>{p}</div>;
+          // review 2219: hiện đậm từng câu kèm dấu tick, rải đều theo lời đọc
+          const n = (sc.points || []).length;
+          const at = Math.round(fps * (0.6 + (Math.max(4, sc.dur * 0.55) * i) / Math.max(1, n)));
+          const s = interpolate(f - at, [0, 12], [0, 1], clamp);
+          return <div key={i} style={{display: 'flex', gap: 26, alignItems: 'center', opacity: s, transform: `translateX(${(1 - s) * -40}px)`,
+            fontFamily: FONT, fontWeight: 800, fontSize: 58, color: C.ink}}>
+            <div style={{width: 64, height: 64, borderRadius: 18, background: C.green, color: '#fff', fontSize: 40, display: 'flex',
+              alignItems: 'center', justifyContent: 'center', transform: `scale(${s})`}}>✓</div>{p}</div>;
         })}
+        {sc.cta ? <div style={{marginTop: 20, fontFamily: FONT, fontWeight: 800, fontSize: 44, color: ac,
+          opacity: interpolate(f - Math.round(fps * Math.max(2, sc.dur * 0.6)), [0, 14], [0, 1], clamp)}}>{sc.cta}</div> : null}
       </AbsoluteFill>
       <div style={{position: 'absolute', right: 140, bottom: 300, opacity: btn, transform: `scale(${btn * pulse})`, fontFamily: FONT,
         padding: '24px 50px', borderRadius: 99, background: C.red, color: '#fff', fontWeight: 800, fontSize: 40}}>ĐĂNG KÝ · {brandName}</div>
