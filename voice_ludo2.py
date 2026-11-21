@@ -33,6 +33,10 @@ TERMS = {
 ACCENT = {
     "hn": "Standard Northern Vietnamese (Hanoi) accent, the polished diction of a VTV finance presenter. "
           "Crisp consonants, clean tones, no regional or rural coloring at all.",
+    "kol": "Educated urban Saigon accent of a young, successful Vietnamese crypto KOL with a big YouTube following. "
+           "PERSONA OVERRIDE: drop the news-presenter formality; sound like a confident insider sharing alpha with "
+           "his community, charismatic, energetic but controlled, a hint of a smile, about 170 words per minute. "
+           "Still polished and premium, never rural, never shouting, never a salesman.",
     "sg": "Educated urban Saigon accent, polished and modern like a top Vietnamese business podcast host. "
           "Clear diction, no countryside or rural coloring at all.",
 }
@@ -94,6 +98,8 @@ def main():
         ("K", "Ludo", "sg", "Ludo giọng Sài Gòn thành thị, podcast kinh doanh"),
         ("L", "Charon", "hn", "Charon (giọng trầm, rõ) chuẩn Hà Nội"),
         ("M", "Sadaltager", "hn", "Sadaltager (giọng chuyên gia) chuẩn Hà Nội"),
+        ("N", "Ludo", "kol", "Ludo vibe KOL crypto, tự tin, cuốn"),
+        ("O", "Puck", "kol", "Puck (giọng trẻ, sáng) vibe KOL crypto"),
     ]
     for code, voice, acc, label in variants:
         print(code, label)
@@ -112,6 +118,7 @@ def main():
         except Exception as ex:
             print(f"   ! {code} lỗi: {str(ex)[:300]}")
         time.sleep(12)
+    print('Thứ tự key đã dùng: xem dòng ↪ ở trên (nếu có)')
 
 
 def raw_tts(gem, prompt: str) -> bytes:
