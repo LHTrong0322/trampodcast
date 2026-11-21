@@ -94,6 +94,14 @@
   .ic{background:rgba(255,255,255,.1);border:0;color:#fff;font:inherit;font-weight:700;font-size:12px;height:38px;min-width:38px;border-radius:999px;cursor:pointer;padding:0 10px}
   .big{background:var(--cheese);color:var(--ink);height:46px;width:46px;font-size:17px}
   .spd{min-width:56px}
+  /* mạng xã hội của Trọng (logo lấy từ bộ icon Simple Icons) */
+  .socials{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px}
+  .socials a{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1.5px solid var(--line);border-radius:999px;
+    padding:7px 13px 7px 9px;font-size:13px;font-weight:700;text-decoration:none;color:var(--ink);transition:transform .12s,border-color .12s}
+  .socials a:hover{transform:translateY(-1px);border-color:var(--crust)}
+  .socials img{width:18px;height:18px;display:block}
+  footer .socials{justify-content:center;margin:0 0 12px}
+  @media (max-width:520px){ .socials a span{display:none} .socials a{padding:8px} .socials img{width:22px;height:22px} }
   @media (max-width:520px){ .hero h2{font-size:20px} .ctl .time{min-width:0;font-size:11px} .feed{display:none} }
 </style>
 </head>
@@ -108,8 +116,21 @@
     </div>
     <a class="feed" id="feedLink" href="feed.xml" hidden>📡 Feed podcast</a>
   </header>
+  <nav class="socials" aria-label="Mạng xã hội của Trọng">
+    <a href="https://www.youtube.com/channel/UC2tX8_Z9beionA0HVu6q4Gw" target="_blank" rel="noopener" aria-label="YouTube"><img src="https://cdn.simpleicons.org/youtube/FF0000" alt="" loading="lazy"><span>YouTube</span></a>
+    <a href="https://www.facebook.com/smartpenguininsights" target="_blank" rel="noopener" aria-label="Facebook"><img src="https://cdn.simpleicons.org/facebook/0866FF" alt="" loading="lazy"><span>Facebook</span></a>
+    <a href="https://t.me/SmartPanda0322" target="_blank" rel="noopener" aria-label="Telegram"><img src="https://cdn.simpleicons.org/telegram/26A5E4" alt="" loading="lazy"><span>Telegram</span></a>
+    <a href="https://x.com/Trong0322" target="_blank" rel="noopener" aria-label="X"><img src="https://cdn.simpleicons.org/x/000000" alt="" loading="lazy"><span>X</span></a>
+  </nav>
   <main id="app"><div class="empty">Đang tải… 🎙️</div></main>
-  <footer>🤖 Agent build by <a href="https://x.com/Trong0322" target="_blank" rel="noopener">@Trong0322</a> · Nội dung do AI tổng hợp, không phải lời khuyên đầu tư</footer>
+  <footer>
+    <nav class="socials" aria-label="Mạng xã hội của Trọng">
+      <a href="https://www.youtube.com/channel/UC2tX8_Z9beionA0HVu6q4Gw" target="_blank" rel="noopener" aria-label="YouTube"><img src="https://cdn.simpleicons.org/youtube/FF0000" alt="" loading="lazy"><span>YouTube</span></a>
+      <a href="https://www.facebook.com/smartpenguininsights" target="_blank" rel="noopener" aria-label="Facebook"><img src="https://cdn.simpleicons.org/facebook/0866FF" alt="" loading="lazy"><span>Facebook</span></a>
+      <a href="https://t.me/SmartPanda0322" target="_blank" rel="noopener" aria-label="Telegram"><img src="https://cdn.simpleicons.org/telegram/26A5E4" alt="" loading="lazy"><span>Telegram</span></a>
+      <a href="https://x.com/Trong0322" target="_blank" rel="noopener" aria-label="X"><img src="https://cdn.simpleicons.org/x/000000" alt="" loading="lazy"><span>X</span></a>
+    </nav>
+    🤖 Agent build by <a href="https://x.com/Trong0322" target="_blank" rel="noopener">@Trong0322</a> · Nội dung do AI tổng hợp, không phải lời khuyên đầu tư</footer>
 </div>
 
 <div class="player" id="player" hidden>
