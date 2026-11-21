@@ -1,0 +1,44 @@
+name: "Vẽ thử ảnh bìa với nhiều phông"
+
+on:
+  workflow_dispatch:
+    inputs:
+      script:
+        description: "Kịch bản, vd scripts/kaffchad-v2-approved.json"
+        required: true
+      fonts:
+        description: "Danh sách phông"
+        required: false
+        default: "anton,barlow,archivo,montserrat,bvp"
+
+permissions:
+  contents: write
+
+jobs:
+  covers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests feedparser pyyaml beautifulsoup4 pillow numpy
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Cài Remotion
+        working-directory: remotion
+        run: npm ci --silent
+      - name: Vẽ ảnh bìa thử
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+        run: python thumb_preview.py "${{ github.event.inputs.script }}" "${{ github.event.inputs.fonts }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: thumb-preview
+          path: thumbs/*.png

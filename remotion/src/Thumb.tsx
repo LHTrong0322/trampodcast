@@ -1,11 +1,13 @@
 import React from 'react';
 import {AbsoluteFill, Img, staticFile} from 'remotion';
-import {AccentCtx, tone, C, FONT, useFonts} from './ui';
+import {AccentCtx, tone, C, FONT, DISPLAY_FONT, useFonts} from './ui';
 
 // Ảnh bìa YouTube 1280×720: chữ to, 1 con số, logo dự án + logo kênh
 export type ThumbProps = {text: string; stat?: string; accent?: string; projectLogo?: string | null; bg?: string | null; brand: string; points?: string[]; warn?: boolean;
-  vs?: {label: string; value: string; logo?: string | null; tone?: string}[]};
-export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5', projectLogo, bg, brand, points = [], warn = false, vs = []}) => {
+  vs?: {label: string; value: string; logo?: string | null; tone?: string}[]; font?: string};
+export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5', projectLogo, bg, brand, points = [], warn = false, vs = [], font = 'bvp'}) => {
+  const HF = DISPLAY_FONT[font] || FONT;
+  const cond = font === 'anton' || font === 'barlow' || font === 'archivo';
   const accent = tone(acIn);
   useFonts();
   const words = (text || '').toUpperCase().split(/\s+/);
@@ -19,7 +21,9 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5
           <div style={{color: C.ink, fontWeight: 800, fontSize: 26, letterSpacing: 2}}>{brand.toUpperCase()}</div>
         </div>
         <div style={{position: 'absolute', left: 64, top: 150, width: points.length ? 740 : 820, display: 'flex', flexWrap: 'wrap', columnGap: 22,
-          fontWeight: 800, fontSize: points.length ? 80 : words.join(' ').length > 28 ? 92 : 112, lineHeight: 1.02, color: C.ink, letterSpacing: -1}}>
+          fontFamily: HF, fontStretch: font === 'archivo' ? '62%' : undefined, fontWeight: font === 'anton' ? 400 : 900,
+          fontSize: (points.length ? 80 : words.join(' ').length > 28 ? 92 : 112) * (cond ? 1.35 : 1), lineHeight: cond ? 0.98 : 1.02,
+          color: C.ink, letterSpacing: cond ? 0 : -1}}>
           {words.map((w, i) => <span key={i} style={{color: i % 3 === 1 ? accent : C.ink}}>{w}</span>)}
         </div>
         {vs.length ? <div style={{position: 'absolute', left: 64, right: 64, bottom: 56, display: 'flex', gap: 28}}>
@@ -28,7 +32,8 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5
             {x.logo ? <Img src={staticFile(x.logo)} style={{width: 96, height: 96, borderRadius: 99}} /> : null}
             <div style={{fontWeight: 800, fontSize: 46, color: C.ink}}>{x.label}</div>
             <div style={{flex: 1}} />
-            <div style={{fontWeight: 800, fontSize: 92, color: x.tone === 'down' ? C.red : x.tone === 'up' ? C.green : C.ink}}>{x.value}</div>
+            <div style={{fontFamily: HF, fontStretch: font === 'archivo' ? '62%' : undefined, fontWeight: font === 'anton' ? 400 : 900,
+              fontSize: cond ? 112 : 92, color: x.tone === 'down' ? C.red : x.tone === 'up' ? C.green : C.ink}}>{x.value}</div>
           </div>)}
         </div> : null}
         {stat && !vs.length ? <div style={{position: 'absolute', left: 64, bottom: 60, padding: '10px 30px', borderRadius: 20, background: accent,

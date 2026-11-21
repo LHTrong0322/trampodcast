@@ -40,15 +40,27 @@ const FONTS: [string, string][] = [
   ['700', 'fonts/BeVietnamPro-Bold.ttf'],
   ['800', 'fonts/BeVietnamPro-ExtraBold.ttf'],
 ];
+// phông tiêu đề cho ảnh bìa (Trọng 22/11: thử phông đậm, hẹp, đọc rõ khi thu nhỏ; đều có đủ dấu tiếng Việt, giấy phép OFL)
+const DISPLAY: [string, string, string][] = [
+  ['Anton', 'fonts/Anton-Regular.ttf', '400'],
+  ['BarlowCond', 'fonts/BarlowCondensed-Black.ttf', '900'],
+  ['ArchivoX', 'fonts/Archivo-Variable.ttf', '100 900'],
+  ['MontserratX', 'fonts/Montserrat-Variable.ttf', '100 900'],
+];
+export const DISPLAY_FONT: Record<string, string> = {
+  anton: "'Anton', 'BVP', sans-serif", barlow: "'BarlowCond', 'BVP', sans-serif",
+  archivo: "'ArchivoX', 'BVP', sans-serif", montserrat: "'MontserratX', 'BVP', sans-serif", bvp: FONT,
+};
 let fontsLoaded: Promise<unknown> | null = null;
 export const useFonts = () => {
   const [handle] = useState(() => delayRender('fonts'));
   useEffect(() => {
     if (!fontsLoaded) {
       fontsLoaded = Promise.all(
-        FONTS.map(([w, f]) => new FontFace('BVP', `url(${staticFile(f)})`, {weight: w}).load().then((ff) => {
-          (document.fonts as any).add(ff);
-        })),
+        [...FONTS.map(([w, f]) => ['BVP', f, w]), ...DISPLAY].map(([fam, f, w]) =>
+          new FontFace(fam, `url(${staticFile(f)})`, {weight: w, ...(fam === 'ArchivoX' ? {stretch: '62% 125%'} : {})}).load().then((ff) => {
+            (document.fonts as any).add(ff);
+          }).catch(() => null)),
       );
     }
     fontsLoaded.then(() => continueRender(handle)).catch(() => continueRender(handle));
