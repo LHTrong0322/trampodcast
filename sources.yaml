@@ -83,7 +83,7 @@ x_rss:
 #  VIDEO TỔNG HỢP TUẦN (dùng lượt Gemini còn dư sau podcast mỗi ngày)
 # ---------------------------------------------------------------------
 video:
-  enabled: true
+  enabled: false              # Trọng 23/11: DỪNG video tổng hợp tuần (không làm sẵn đoạn video hằng ngày nữa)
   stories_per_day: 3          # mỗi ngày làm sẵn đoạn video cho bao nhiêu tin nóng nhất (1 lượt đọc)
   max_weekly_stories: 12      # video ngang tối đa bao nhiêu tin
   shorts: 4                   # số video dọc 9:16 (Reels/Shorts) mỗi tuần
@@ -92,6 +92,22 @@ video:
   music_volume: 0.22          # âm lượng nhạc nền (0.1 = rất nhỏ, 0.35 = rõ)
   shorts_speed: 1.08          # video dọc đọc nhanh hơn 8%
   shorts_max_seconds: 30      # video dọc tối đa bao nhiêu giây
+
+# ---------------------------------------------------------------------
+#  TIN NÓNG 4 TIẾNG (Trọng 23/11, news_flash.py + .github/workflows/news-flash.yml)
+#  Cứ 4 tiếng lọc tin: chỉ tin CỰC KỲ quan trọng hoặc rất dễ viral mới viết kịch bản short.
+#  Kịch bản gửi Telegram để Trọng duyệt (nút ✅ / ❌ hoặc /duyet, /bo, /sua), duyệt xong mới dựng
+#  short 9:16 theo bộ khung Smart Penguin Insights, giọng VieNeu Hải Đăng, gửi lại Telegram. Không tự đăng.
+# ---------------------------------------------------------------------
+news_flash:
+  enabled: true
+  voice: "vieneu:Hải Đăng"
+  min_importance: 9           # điểm quan trọng tối thiểu (thang 10) để làm video
+  min_viral: 9                # hoặc điểm "câu view" tối thiểu (thang 10)
+  max_per_day: 3              # tối đa bao nhiêu kịch bản tin nóng mỗi ngày
+  expire_hours: 10            # kịch bản chờ duyệt quá bao lâu thì bỏ (tin đã cũ)
+  lookback_hours: 5           # mỗi lần lọc xem tin trong bao nhiêu giờ gần nhất
+  short_cta: "Theo dõi Smart Penguin Insights để không lỡ tin nóng nhé!"
 
 # ---------------------------------------------------------------------
 #  TRẠM INSIGHT, gửi link bài X chất lượng vào bot Telegram → video chia sẻ insight

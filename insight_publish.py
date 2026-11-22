@@ -446,6 +446,8 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, draft
         url = f"https://github.com/{repo}/releases/tag/{rt}"
     log("⑦ Gửi Telegram")
     plan = res["plan"]
+    if plan.get("news"):   # Trọng 23/11: tin nóng chỉ có short (giọng Hải Đăng), gửi gọn để duyệt, không tự đăng
+        return publish_news(gem, cfg, res, seo, covers, url, data_dir, tag)
     tg_text(f"🐧 SMART PENGUIN INSIGHTS · video mới ({res['duration'] / 60:.1f} phút · giọng {res['voice'].split(':')[1]})\n"
             f"1 video YouTube 16:9 + {len(res['shorts'])} video ngắn 9:16 (TikTok/Shorts/Reels)\n" + (f"📦 File gốc: {url}" if url else ""))
     tg_photo(thumb, "🖼 Ảnh bìa YouTube")
@@ -500,3 +502,31 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, draft
             except Exception as ex:
                 log(f"   ! cập nhật bài học lỗi: {ex}")
     return {"release": url, "seo": seo, "review": rv, "thumb": str(thumb) if thumb else None}
+
+
+def publish_news(gem, cfg, res, seo, covers, url, data_dir, tag) -> dict:
+    """Tin nóng (news_flash.py): chỉ gửi short 9:16 + caption + bot review, KHÔNG đăng tự động."""
+    plan = res["plan"]
+    tg_text(f"⚡ TIN NÓNG · short đã dựng xong (giọng {res['voice'].split(':')[-1]})\n{plan.get('title', '')}\n"
+            + (f"📦 File gốc: {url}" if url else "") + "\nXem rồi đăng tay nếu ổn nhé.")
+    for j, s in enumerate(res["shorts"]):
+        if j < len(covers) and covers[j]:
+            tg_photo(covers[j], f"🖼 Ảnh bìa short {j + 1}")
+        sh = (seo.get("shorts") or [{}])[j] if j < len(seo.get("shorts") or []) else {}
+        tg_video(s["path"], f"📱 {sh.get('yt_title') or s['title']}")
+    if seo.get("shorts"):
+        sh = seo["shorts"][0]
+        tg_text("🎵 CAPTION copy dán khi đăng\n\n"
+                f"Shorts title: {sh.get('yt_title', '')}\n\n"
+                f"TikTok/Reels: {with_tags(sh.get('tiktok_caption', ''), sh.get('tiktok_hashtags', []))}")
+    log("⑧ Bot review")
+    rv = review(gem, cfg, res, None)
+    if rv:
+        tg_text(review_text(rv))
+        if data_dir:   # lưu riêng, không trộn vào bài học của video insight dài
+            p = data_dir / "insight" / "news-reviews.json"
+            p.parent.mkdir(parents=True, exist_ok=True)
+            arr = json.loads(p.read_text(encoding="utf-8")) if p.exists() else []
+            arr.append({"tag": tag, "at": datetime.now(P.VN_TZ).isoformat(timespec="minutes"), **rv})
+            p.write_text(json.dumps(arr[-30:], ensure_ascii=False, indent=1), encoding="utf-8")
+    return {"release": url, "seo": seo, "review": rv, "thumb": None}

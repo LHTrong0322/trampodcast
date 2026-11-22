@@ -1,0 +1,115 @@
+name: Tin nóng 4 tiếng (lọc tin → kịch bản short chờ duyệt → dựng Hải Đăng)
+
+# Trọng 23/11: cứ 4 tiếng lọc tin, chỉ tin cực kỳ quan trọng hoặc rất dễ viral mới viết kịch bản short.
+# Kịch bản gửi Telegram chờ Trọng duyệt (nút ✅/✏️/❌ hoặc /duyet, /sua, /bo, /tin). Duyệt xong mới dựng.
+# Lượt "poll" do news-flash-gate.yml gọi khi có lệnh mới trên Telegram. KHÔNG bao giờ tự đăng.
+on:
+  schedule:
+    # 03:17, 07:17, 11:17, 15:17, 19:17, 23:17 giờ VN (tránh giờ chẵn và tránh podcast 05:02)
+    - cron: "17 0,4,8,12,16,20 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "pick = lọc tin ngay · poll = đọc lệnh duyệt trên Telegram rồi dựng bản đã duyệt"
+        required: false
+        default: "poll"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: podcast
+  cancel-in-progress: false
+
+jobs:
+  flash:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      INSIGHT_GEMINI_API_KEY: ${{ secrets.INSIGHT_GEMINI_API_KEY }}
+      GEMINI_API_KEY2: ${{ secrets.GEMINI_API_KEY2 }}
+      GEMINI_API_KEY3: ${{ secrets.GEMINI_API_KEY3 }}
+      GEMINI_API_KEY4: ${{ secrets.GEMINI_API_KEY4 }}
+      GEMINI_API_KEY5: ${{ secrets.GEMINI_API_KEY5 }}
+      GEMINI_API_KEY6: ${{ secrets.GEMINI_API_KEY6 }}
+      GEMINI_API_KEY7: ${{ secrets.GEMINI_API_KEY7 }}
+      GEMINI_API_KEY8: ${{ secrets.GEMINI_API_KEY8 }}
+      GEMINI_API_KEY9: ${{ secrets.GEMINI_API_KEY9 }}
+      GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      TG_API_ID: ${{ secrets.TG_API_ID }}
+      TG_API_HASH: ${{ secrets.TG_API_HASH }}
+      TG_SESSION: ${{ secrets.TG_SESSION }}
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+      PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      SOCIAL_AUTOPOST: "0"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lấy dữ liệu (nhánh podcast-data)
+        run: |
+          git clone --depth 1 --branch podcast-data \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" public
+          rm -rf public/.git
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Cài thư viện cơ bản
+        run: |
+          pip install -q requests feedparser pyyaml beautifulsoup4 telethon pillow numpy
+          npm i -g --silent @anthropic-ai/claude-code   # Claude xác nhận tin + chấm kịch bản
+
+      - name: Lọc tin / đọc lệnh duyệt
+        id: nf
+        run: |
+          MODE="${{ github.event.inputs.mode }}"
+          [ "${{ github.event_name }}" = "schedule" ] && MODE=pick
+          python news_flash.py "${MODE:-poll}" --out public
+
+      - name: Cài ffmpeg + giọng Hải Đăng
+        if: steps.nf.outputs.build != ''
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+          pip install -q vieneu faster-whisper
+
+      - name: Cài Remotion (bộ dựng video)
+        if: steps.nf.outputs.build != ''
+        working-directory: remotion
+        run: npm ci --silent
+
+      - name: Dựng short tin nóng + gửi Telegram
+        if: steps.nf.outputs.build != ''
+        run: python news_flash.py build --out public --id "${{ steps.nf.outputs.build }}"
+
+      - name: Báo lỗi vào Telegram
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          curl -s -o /dev/null "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=⚠️ Bot tin nóng bị lỗi. Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" || true
+
+      - name: Lưu dữ liệu (nhánh podcast-data)
+        if: always()
+        run: |
+          rm -rf public/insight/render public/video/weekly
+          cd public
+          git init -q -b podcast-data
+          git config user.name "tram-podcast-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Tin nóng $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -f -q "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" podcast-data

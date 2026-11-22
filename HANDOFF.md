@@ -5,6 +5,21 @@
 
 
 
+## ⚡ TIN NÓNG 4 TIẾNG + DỪNG VIDEO TUẦN (TRỌNG CHỐT 00:28 NGÀY 23/11)
+- DỪNG video tổng hợp tuần: video-weekly.yml bỏ lịch (chỉ còn bấm tay), podcast.yml bỏ bước "làm sẵn đoạn video của ngày", sources.yaml video.enabled: false.
+- Tin nóng (news_flash.py, sources.yaml news_flash): news-flash.yml chạy 03:17, 07:17, 11:17, 15:17, 19:17, 23:17 giờ VN, gom tin cùng nguồn podcast,
+  Gemini chấm quan trọng/câu view (cần >= 9), Claude xác nhận lần 2, tối đa 3 kịch bản/ngày. KHÔNG có tin đủ lớn thì thôi, không cố.
+- Kịch bản viết bằng insight_lab.prepare (INSIGHT_FORMAT=news, INSIGHT_SCRIPT_ONLY=1): format short, 1 phần, shorts [0], Claude chấm >= 8.
+- TRỌNG DUYỆT TRƯỚC KHI DỰNG (Trọng 00:30 23/11): kịch bản gửi Telegram kèm nút ✅ Duyệt / ✏️ Sửa / ❌ Bỏ. Lệnh: /tin, /duyet [mã], /bo [mã],
+  /sua [mã] <góp ý>, hoặc reply vào tin nháp ("ok" = duyệt, "bỏ" = bỏ, chữ khác = góp ý viết lại). Menu lệnh tự cài (setMyCommands).
+  Lệnh đọc chung hộp thư với insight.inbox (news_flash.on_update được gọi trong inbox), nên link X vẫn nhận như cũ.
+  Chờ quá 10 tiếng thì tự bỏ (tin cũ).
+- news-flash-gate.yml (15 phút/lần, rất nhẹ): chỉ gọi news-flash.yml mode poll khi có kịch bản chờ VÀ có tin nhắn mới, hoặc có bản đã duyệt;
+  đang có podcast/insight/news-flash chạy thì đợi lượt sau (cùng concurrency group "podcast", tránh đè mất lượt podcast).
+- Dựng sau khi duyệt: giọng VieNeu "Hải Đăng" (không 2 lượt, không Ludo), short 9:16 theo khung Smart Penguin Insights, CTA cuối
+  news_flash.short_cta. insight_publish.publish_news chỉ gửi short + ảnh bìa + caption + bot review, KHÔNG tự đăng. Review lưu insight/news-reviews.json.
+- Trạng thái: podcast-data flash/state.json (drafts: waiting, revise, approved, building, built, failed, rejected, expired), kịch bản flash/scripts/<mã>.json.
+
 ## BỘ LỌC GIÁO DỤC (TRỌNG CHỐT 23:22 NGÀY 21/11)
 - Nội dung video phải mang tính giáo dục nhiều hơn. Tên riêng lạ (vd DWF Labs, Assistance Fund) giải thích 1 câu lần đầu.
 - So sánh 2 dự án phải có con số của CẢ HAI (vd Hyperliquid dùng khoảng 97 đến 99% phí để buyback HYPE, Aave 50 triệu đô một năm, khoảng 1/3 revenue).

@@ -125,7 +125,9 @@ def read_web(url: str) -> dict | None:
 def inbox(out: Path, cfg: dict, extra_links: str = "") -> dict:
     st = load_store(out)
     owner = str(os.getenv("TELEGRAM_CHAT_ID", "")).strip()
-    res = tg("getUpdates", offset=st["offset"] + 1, timeout=0, allowed_updates='["message"]') or {}
+    # Trọng 23/11: thêm callback_query để bấm nút Duyệt/Bỏ kịch bản tin nóng (news_flash.py)
+    res = tg("getUpdates", offset=st["offset"] + 1, timeout=0, allowed_updates='["message","callback_query"]') or {}
+    import news_flash as NF
     if extra_links.strip():   # link nhập trực tiếp khi bấm chạy trên GitHub
         res.setdefault("result", []).append({"update_id": st["offset"],
                                              "message": {"chat": {"id": owner}, "text": extra_links}})
@@ -133,9 +135,16 @@ def inbox(out: Path, cfg: dict, extra_links: str = "") -> dict:
     added = 0
     for up in res.get("result", []):
         st["offset"] = max(st["offset"], up["update_id"])
-        msg = up.get("message") or {}
+        msg = up.get("message") or (up.get("callback_query") or {}).get("message") or {}
         chat = str((msg.get("chat") or {}).get("id", ""))
         if owner and chat != owner:          # chỉ nhận tin của chủ bot
+            continue
+        try:   # lệnh/nút duyệt tin nóng: /duyet, /bo, /sua, /tin, trả lời "ok" vào tin nháp
+            if NF.on_update(out, cfg, up):
+                continue
+        except Exception as ex:
+            log(f"   ! xử lý lệnh tin nóng lỗi: {ex}")
+        if up.get("callback_query"):
             continue
         text = msg.get("text") or msg.get("caption") or ""
         if text.strip().lower().startswith("/cook"):

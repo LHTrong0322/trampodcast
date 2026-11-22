@@ -1,0 +1,50 @@
+name: Tin nóng, canh lệnh duyệt Telegram (15 phút/lần)
+
+# Rất nhẹ: chỉ gọi news-flash.yml (mode poll) khi có kịch bản đang chờ VÀ Trọng vừa nhắn/bấm nút,
+# hoặc có bản đã duyệt chưa dựng. Không ghi dữ liệu. Có việc khác đang chạy (podcast, insight...) thì đợi lượt sau,
+# để không chen hàng làm mất lượt chạy podcast.
+on:
+  schedule:
+    - cron: "4,19,34,49 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: news-flash-gate
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Kiểm tra
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          R="${{ github.repository }}"
+          for f in podcast.yml insight.yml news-flash.yml video-weekly.yml; do
+            for s in in_progress queued; do
+              if [ -n "$(gh run list -R "$R" --workflow "$f" --status $s --json databaseId -q '.[].databaseId')" ]; then
+                echo "Đang có $f ($s), đợi lượt sau."; exit 0
+              fi
+            done
+          done
+          gh api "repos/$R/contents/flash/state.json?ref=podcast-data" -H "Accept: application/vnd.github.raw" > state.json 2>/dev/null || echo '{}' > state.json
+          gh api "repos/$R/contents/insight/store.json?ref=podcast-data" -H "Accept: application/vnd.github.raw" > store.json 2>/dev/null || echo '{}' > store.json
+          pip install -q requests feedparser pyyaml beautifulsoup4 pillow numpy
+          RUN=$(python news_flash.py gate --state state.json --store store.json | sed -n 's/.*run=//p' | tail -1)
+          echo "run=$RUN"
+          if [ "$RUN" = "yes" ]; then
+            gh workflow run news-flash.yml -R "$R" -f mode=poll
+            echo "Đã gọi news-flash.yml (poll)"
+          fi

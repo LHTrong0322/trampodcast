@@ -65,6 +65,20 @@ duy nhất" ở bất kỳ đâu: không trong hook, intro, lời đọc, tiêu 
 thumb_stat, short_hooks; không làm phần nào về Ethena; không dùng con số 95% hay mốc 14 ngày. Hãy khai thác các ý khác
 của bài (thị trường lemon/coin rác, FDV, PMF, token alignment, Hyperliquid, tâm lý nhà đầu tư, cách chọn tài sản...)."""
 
+# Trọng 23/11: TIN NÓNG dạng short (news_flash.py). Cùng bộ khung Smart Penguin Insights, nhưng là 1 video ngắn 9:16.
+NEWS_PROMPT = """
+CHẾ ĐỘ TIN NÓNG (ghi đè các yêu cầu độ dài ở trên): đây KHÔNG phải tập insight dài mà là 1 VIDEO NGẮN 9:16 về MỘT tin
+quan trọng vừa xảy ra, đăng TikTok/Shorts/Reels. Viết ĐÚNG 1 phần (sections có 1 phần tử), "shorts": [0].
+- short_hooks {{"0": "..."}}: câu mở ≤ 12 từ, có con số hoặc điều bất ngờ của tin (vd "BlackRock vừa gom thêm $500M BTC trong 1 ngày").
+- narration của phần: 95-130 từ (khoảng 35-45 giây), câu ngắn, nhịp nhanh, theo khuôn: chuyện gì vừa xảy ra (ai, bao nhiêu, khi nào)
+  → vì sao quan trọng (bối cảnh 1-2 câu, giải thích nửa câu nếu tên lạ) → ảnh hưởng tới nhà đầu tư/ giá coin liên quan
+  → 1 câu kết hỏi ý kiến người xem để bình luận. KHÔNG dự đoán giá, KHÔNG hô mua bán, KHÔNG phóng đại quá mức tin gốc.
+- Nêu nguồn tin bằng tên báo/kênh trong lời đọc nếu cần (vd "theo CoinDesk"), KHÔNG nhắc @handle nào; số liệu CHỈ lấy từ tin nguồn, không bịa.
+- beats: 5-7 beats, cứ khoảng 5 giây một beat; ưu tiên bignum có số thật của tin, logo dự án/coin, chart giá coin liên quan (days 7).
+- hook, intro, outro giữ thật ngắn (intro 1 câu, outro 1 câu "không phải lời khuyên đầu tư"); chúng chỉ dùng cho bản 16:9 phụ.
+- title ≤ 70 ký tự kiểu tin nóng, có con số; thumb_text ≤ 24 ký tự; thumb_tag "TIN NÓNG".
+"""
+
 # Nội dung chủ kênh cấm đưa vào video (Trọng chốt 20/11): đoạn ENA/Ethena tăng 95% trong 14 ngày
 # 19:09 20/11: Trọng đã duyệt kịch bản có nhắc Ethena/ENA (4 việc tự sửa), chỉ cấm con số 95% và mốc 14 ngày
 BANNED = re.compile(r"\b95\s*%|\b95\s*phần trăm|chín mươi lăm phần trăm|\b14\s*(ngày|days?)\b|mười bốn ngày", re.I)
@@ -711,7 +725,20 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     system = I.SYSTEM.format(name=ic.get("name", "Smart Penguin Insights"), host_desc=ic.get("host_desc", "điềm đạm, sâu sắc"),
                              self_word=ic.get("self_word", "mình"), audience=ic.get("audience", "mọi người"))
     log("② Viết kịch bản")
-    prompt = PROMPT.format(posts=listing, minutes=ic.get("target_minutes", 7), max_sections=ic.get("max_sections", 6))
+    news = os.getenv("INSIGHT_FORMAT", "").strip().lower() == "news"   # Trọng 23/11: tin nóng dạng short
+    prompt = PROMPT.format(posts=listing, minutes=1 if news else ic.get("target_minutes", 7),
+                           max_sections=1 if news else ic.get("max_sections", 6))
+    if news:
+        prompt += NEWS_PROMPT.format()
+    min_secs = 1 if news else 3
+
+    def as_news(pl: dict) -> dict:
+        if news:
+            pl["sections"] = [x for x in pl.get("sections", []) if x.get("narration")][:1]
+            pl.update(format="short", news=True, shorts=[0], own_source=True,
+                      short_cta=P.nodash(str((cfg.get("news_flash") or {}).get("short_cta") or pl.get("short_cta") or "")))
+            pl["thumb_tag"] = pl.get("thumb_tag") or "TIN NÓNG"
+        return pl
     if notes:
         prompt += "\nRút kinh nghiệm từ review các video trước (áp dụng):\n" + "\n".join(f"- {n}" for n in notes)
     plan = {}
@@ -724,10 +751,10 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
             posts = [plan["source_post"]]
             log(f"   Không có link X, dùng nguồn số liệu trong kịch bản: {posts[0].get('url', '')}")
     for attempt in range(0 if approved else 3):
-        plan = P.nodash(V.llm_json(gem, cfg, system, prompt))
+        plan = as_news(P.nodash(V.llm_json(gem, cfg, system, prompt)))
         top = {k: plan.get(k) for k in ("title", "hook", "hook_stat", "intro", "thumb_text", "thumb_stat")}
         n_ok = len([s for s in plan.get("sections", []) if s.get("narration") and not _banned(s)])
-        if not _banned(top) and n_ok >= 3:
+        if not _banned(top) and n_ok >= min_secs:
             break
         log(f"   ! kịch bản còn nhắc ENA/95%/14 ngày (lần {attempt + 1}), viết lại")
     if not approved and os.getenv("CLAUDE_CODE_OAUTH_TOKEN"):
@@ -749,8 +776,9 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
                 break
             fix = prompt + "\nBản trước bị chấm " + str(rv.get("score")) + "/10. Sửa ĐÚNG các điểm sau:\n" + \
                 "\n".join(f"- {x}" for x in rv.get("fixes", []))
-            plan = P.nodash(V.llm_json(gem, cfg, system, fix))
+            plan = as_news(P.nodash(V.llm_json(gem, cfg, system, fix)))
         plan["script_score"] = rv.get("score")
+        plan["script_review"] = {k: rv.get(k) for k in ("score", "scores", "nhan_xet", "pass")}
     plan = scrub_plan(plan)
     plan = fix_terms_plan(plan)   # Trọng chốt 21/11: tự đổi từ Việt sang từ chuyên ngành tiếng Anh
     try:   # Trọng 22/11: soát khung (nhịp đổi hình, biểu đồ, đếm ý, ảnh bìa, short) trước khi tốn lượt giọng đọc
@@ -759,9 +787,14 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
         log(f"   Soát khung: {len(plan['lint'])} chỗ cần sửa" + "".join(f"\n     - {x}" for x in plan["lint"][:12]))
     except Exception as ex:
         log(f"   ! soát khung lỗi: {ex}")
-    if len([s for s in plan.get("sections", []) if s.get("narration")]) < 2 or not plan.get("hook"):
+    if len([s for s in plan.get("sections", []) if s.get("narration")]) < (1 if news else 2) or not plan.get("hook"):
         raise RuntimeError("Kịch bản không đủ nội dung sau khi bỏ đoạn ENA")
     plan["sections"] = [s for s in plan.get("sections", []) if s.get("narration")][: int(ic.get("max_sections", 6))]
+    if os.getenv("INSIGHT_SCRIPT_ONLY") == "1":   # Trọng 23/11: tin nóng phải được duyệt kịch bản trên Telegram trước khi dựng
+        plan["source_post"] = plan.get("source_post") or (posts[0] if posts else {})
+        (lab / "plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=1), encoding="utf-8")
+        log(f"✓ Chỉ viết kịch bản (chờ duyệt): {lab / 'plan.json'}")
+        return lab
     plan["posts"] = posts
     log("③ Dữ liệu thị trường + ảnh (AI lọc ảnh lạc đề)")
     md = market_data(lab)

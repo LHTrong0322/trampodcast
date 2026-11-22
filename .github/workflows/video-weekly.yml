@@ -1,9 +1,7 @@
 name: Video tổng hợp tuần (16:9 + Shorts 9:16)
 
 on:
-  schedule:
-    # Chủ nhật 08:23 UTC = 15:23 giờ VN (dư thời gian cho GitHub chạy trễ, kịp xem trước 19:00)
-    - cron: "23 8 * * 0"
+  # Trọng 23/11: DỪNG video tổng hợp tuần, bỏ lịch tự chạy (chỉ còn bấm tay nếu cần)
   workflow_dispatch:
     inputs:
       backfill:
