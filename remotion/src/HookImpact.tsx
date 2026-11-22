@@ -39,7 +39,7 @@ const Drop: React.FC<{p: number; col: string; w: number; h: number}> = ({p, col,
   );
 };
 
-const Bubble: React.FC<{size: number; crack: number; pop: number}> = ({size, crack, pop}) => (
+const Bubble: React.FC<{size: number; crack: number; pop: number; bob?: number}> = ({size, crack, pop, bob = 0}) => (
   <svg width={size} height={size} viewBox="0 0 200 200" style={{transform: `scale(${pop})`}}>
     <defs>
       <radialGradient id="bub" cx="35%" cy="30%" r="75%">
@@ -49,19 +49,38 @@ const Bubble: React.FC<{size: number; crack: number; pop: number}> = ({size, cra
       </radialGradient>
     </defs>
     <circle cx="100" cy="100" r="88" fill="url(#bub)" stroke="#7C6CFF" strokeWidth="4" />
-    <ellipse cx="52" cy="92" rx="10" ry="22" fill="#FFFFFF" opacity="0.9" transform="rotate(-30 68 58)" />
-    {/* sticker AI: con chip có mạch nơ-ron + tia lấp lánh (Trọng 23/11: thay chữ AI bằng biểu tượng) */}
-    <g transform="translate(100 104) rotate(-8) scale(0.86)">
-      <rect x="-50" y="-50" width="100" height="100" rx="22" fill="#FFFFFF" stroke="#131836" strokeWidth="4" />
-      {[-26, -9, 9, 26].map((d) => <g key={d}>
-        <line x1={d} y1="-50" x2={d} y2="-62" stroke="#131836" strokeWidth="5" strokeLinecap="round" />
-        <line x1={d} y1="50" x2={d} y2="62" stroke="#131836" strokeWidth="5" strokeLinecap="round" />
-        <line x1="-50" y1={d} x2="-62" y2={d} stroke="#131836" strokeWidth="5" strokeLinecap="round" />
-        <line x1="50" y1={d} x2="62" y2={d} stroke="#131836" strokeWidth="5" strokeLinecap="round" />
-      </g>)}
-      <rect x="-32" y="-32" width="64" height="64" rx="12" fill="#7C6CFF" />
-      <path d="M-14 -16 L6 -4 L-10 14 M6 -4 L16 14" fill="none" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" opacity="0.85" />
-      {[[-14, -16], [6, -4], [-10, 14], [16, 14]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="5.5" fill="#FFFFFF" />)}
+    {/* robot AI dễ thương (Trọng 23/11: dùng hình robot thay chữ AI), vẽ riêng bằng SVG */}
+    <defs>
+      <linearGradient id="rbWhite" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#FFFFFF" /><stop offset="1" stopColor="#D9DCE6" />
+      </linearGradient>
+      <linearGradient id="rbVisor" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#1E3550" /><stop offset="1" stopColor="#0B1626" />
+      </linearGradient>
+    </defs>
+    <g transform={`translate(100 ${104 + bob}) scale(0.78)`}>
+      <ellipse cx="0" cy="98" rx="34" ry="5" fill="#131836" opacity="0.12" />
+      {/* tay */}
+      <rect x="-64" y="20" width="20" height="50" rx="10" fill="url(#rbWhite)" transform="rotate(12 -54 20)" />
+      <rect x="44" y="20" width="20" height="50" rx="10" fill="url(#rbWhite)" transform="rotate(-12 54 20)" />
+      {/* thân */}
+      <path d="M-42 22 Q-46 84 0 86 Q46 84 42 22 Q30 6 0 6 Q-30 6 -42 22 Z" fill="url(#rbWhite)" />
+      <path d="M-40 50 L-12 50 L-8 56 L8 56 L12 50 L40 50" fill="none" stroke="#B8BDCC" strokeWidth="2" />
+      <ellipse cx="-22" cy="30" rx="6" ry="12" fill="#FFFFFF" opacity="0.9" transform="rotate(25 -22 30)" />
+      {/* cổ */}
+      <rect x="-14" y="-6" width="28" height="16" rx="6" fill="#C9CDD9" />
+      {/* tai */}
+      <rect x="-66" y="-52" width="16" height="30" rx="7" fill="url(#rbWhite)" />
+      <rect x="50" y="-52" width="16" height="30" rx="7" fill="url(#rbWhite)" />
+      {/* đầu */}
+      <rect x="-20" y="-88" width="40" height="12" rx="6" fill="url(#rbWhite)" />
+      <rect x="-56" y="-80" width="112" height="76" rx="30" fill="url(#rbWhite)" />
+      <rect x="-48" y="-72" width="96" height="58" rx="22" fill="url(#rbVisor)" />
+      {/* mắt + miệng phát sáng */}
+      <path d="M-30 -40 Q-21 -54 -12 -40 Z" fill="#4FE3F0" />
+      <path d="M12 -40 Q21 -54 30 -40 Z" fill="#4FE3F0" />
+      <path d="M-7 -30 Q0 -20 7 -30 Z" fill="#4FE3F0" />
+      <ellipse cx="-34" cy="-66" rx="10" ry="4" fill="#FFFFFF" opacity="0.18" />
     </g>
     <path d="M58 46 Q60 58 72 60 Q60 62 58 74 Q56 62 44 60 Q56 58 58 46 Z" fill="#FFC83D" stroke="#131836" strokeWidth="2.5" />
     <path d="M154 134 Q155 141 162 142 Q155 143 154 150 Q153 143 146 142 Q153 141 154 134 Z" fill="#FFC83D" stroke="#131836" strokeWidth="2" />
@@ -119,7 +138,7 @@ export const HookImpact: React.FC<HookImpactProps> = ({value, label, tag, chips,
       </div>
       {/* màn câu hỏi */}
       {k > 0 ? <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 56, opacity: k}}>
-        <Bubble size={300} crack={interpolate(t, [qAt + 0.5, qAt + 1.1], [0, 1], clamp)}
+        <Bubble size={300} bob={Math.sin(t * 3) * 3} crack={interpolate(t, [qAt + 0.5, qAt + 1.1], [0, 1], clamp)}
           pop={interpolate(t, [qAt, qAt + 0.5], [0.6, 1], {...clamp, easing: ease}) * (1 + 0.025 * Math.sin(t * 5))} />
         <div style={{display: 'flex', flexDirection: 'column', gap: 26, maxWidth: 1420}}>
           <div style={{display: 'flex', flexWrap: 'wrap', columnGap: 30}}>

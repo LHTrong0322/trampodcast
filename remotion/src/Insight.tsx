@@ -1,5 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Img, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {HookImpact} from './HookImpact';
 import {AccentCtx, tone, Backdrop, C, Captions, Chip, clamp, CountUp, FONT, Glitch, RevealWords, useAccent, useFonts, useSpring, Word} from './ui';
 import {DataPanel, DataSpec} from './data';
 import {Beat, BeatPanel} from './beats';
@@ -55,6 +56,7 @@ const TopBar: React.FC<{source?: string; idx?: number; total?: number; brand: st
 // ---------- HOOK ----------
 const HookScene: React.FC<{sc: Scene}> = ({sc}) => {
   const f = useCurrentFrame();
+  if ((sc as any).impact) return <HookImpact {...(sc as any).impact} />;   // Trọng 23/11: mở đầu kiểu cú sốc
   const zoom = 1 + Math.min(f, 600) * 0.00012;   // zoom chậm cho có chuyển động (review 1518)
   return (
   <AbsoluteFill>

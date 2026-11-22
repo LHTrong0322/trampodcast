@@ -142,6 +142,32 @@ def _norm(w: str) -> str:
     return re.sub(r"[^\w%$/]", "", w.lower())
 
 
+def at_time(words: list, phrase: str, start: float = 0.0) -> float | None:
+    """Giây giọng đọc nói tới cụm từ (tính từ đầu cảnh)."""
+    ws = [_norm(w["t"]) for w in words]
+    ph = [_norm(x) for x in str(phrase).split() if _norm(x)]
+    for i in range(len(ws) - len(ph) + 1):
+        if ph and words[i]["s"] >= start and ws[i:i + len(ph)] == ph:
+            return round(words[i]["s"], 2)
+    log(f"   ! cụm '{phrase}' không khớp lời đọc mở đầu")
+    return None
+
+
+def hook_impact(hi: dict, words: list, dur: float) -> dict:
+    """Màn mở đầu kiểu cú sốc (HookImpact): số lớn, thẻ tài sản bật theo lời, rồi câu hỏi lớn."""
+    chips, last = [], 0.0
+    for i, c in enumerate(hi.get("chips") or []):
+        t = at_time(words, c.get("at", ""), last)
+        t = t if t is not None else 2.5 + i * 0.9
+        last = t
+        chips.append({"text": P.nodash(c["text"]), "s": t})
+    q = at_time(words, hi.get("q_at", ""), last) or max(last + 1.2, dur * 0.6)
+    sub = at_time(words, hi.get("sub_at", ""), q) if hi.get("sub_at") else None
+    return {"value": V.en_money(hi.get("value", "")), "label": P.nodash(hi.get("label", "")), "tag": P.nodash(hi.get("tag", "")),
+            "chips": chips, "question": P.nodash(hi.get("question", "")), "sub": P.nodash(hi.get("sub", "")),
+            "qAt": q, "subAt": sub if sub is not None else q + 1.2, "tone": hi.get("tone", "down")}
+
+
 def beats_for(beats: list, words: list, dur: float, data: dict) -> list:
     """Gắn mỗi nhịp hình vào ĐÚNG lúc giọng đọc nói cụm từ "at" (Trọng 21/11: hình phải khớp lời)."""
     ws = [_norm(w["t"]) for w in words]
@@ -353,7 +379,8 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                            "stat": real_number(V.en_money(plan.get("hook_stat", "")), posts),
                            "label": V.en_money(plan.get("hook_label", "")) if real_number(V.en_money(plan.get("hook_stat", "")), posts) else "",
                            "images": [f"img/{x}" for x in imgs.get("intro", [])][:1],
-                           "beats": beats_for(plan.get("hook_beats") or [], sc["words"], sc["dur"], data)})
+                           "beats": beats_for(plan.get("hook_beats") or [], sc["words"], sc["dur"], data),
+                           "impact": hook_impact(plan["hook_impact"], sc["words"], sc["dur"]) if plan.get("hook_impact") else None})
         elif k == "intro":
             chapters.append((sc["from"], "Mở đầu"))
             scenes.append({**base, "type": "intro", "title": V.en_money(plan.get("title", "")), "theme": plan.get("theme", ""),
