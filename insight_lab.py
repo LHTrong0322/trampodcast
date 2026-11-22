@@ -482,37 +482,43 @@ YAHOO = {"S&P": "^GSPC", "SPX": "^GSPC", "VIX": "^VIX", "NDX": "^NDX", "DXY": "D
 
 def _btc_weekly() -> list:
     """Giá đóng cửa BTC theo TUẦN, càng dài càng tốt (cần >350 tuần để tính 350WMA): [(ngày 'YYYY-MM-DD', giá)].
-    Yahoo Finance, dự phòng Stooq, rồi CryptoCompare (gộp 7 ngày). Trả [] nếu không lấy được."""
+    Log 23/11: Yahoo range=max interval=1wk chỉ trả 147 điểm, Stooq và CryptoCompare trả 0 trên máy GitHub.
+    Giờ: Yahoo giá NGÀY từ 2014 rồi gộp tuần, dự phòng Binance (data-api.binance.vision, không chặn theo vùng), Kraken."""
+    import time as _t
+
+    def weekly(rows):   # gộp giá ngày thành giá đóng cửa mỗi 7 ngày, mốc cuối là ngày mới nhất
+        return rows[::-7][::-1] if len(rows) > 2600 else rows
     try:
-        r = requests.get("https://query1.finance.yahoo.com/v8/finance/chart/BTC-USD", params={"range": "max", "interval": "1wk"},
-                         headers={"User-Agent": "Mozilla/5.0"}, timeout=30)
+        r = requests.get("https://query1.finance.yahoo.com/v8/finance/chart/BTC-USD",
+                         params={"period1": 1410000000, "period2": int(_t.time()), "interval": "1d"},
+                         headers={"User-Agent": "Mozilla/5.0"}, timeout=40)
         res = ((r.json().get("chart") or {}).get("result") or [{}])[0]
         ts = res.get("timestamp") or []
         cl = (((res.get("indicators") or {}).get("quote") or [{}])[0].get("close")) or []
-        out = [(datetime.utcfromtimestamp(t).strftime("%Y-%m-%d"), c) for t, c in zip(ts, cl) if c]
+        out = weekly([(datetime.utcfromtimestamp(t).strftime("%Y-%m-%d"), c) for t, c in zip(ts, cl) if c])
         if len(out) > 400:
             return out
-        log(f"   ! Yahoo BTC tuần chỉ có {len(out)} điểm")
+        log(f"   ! Yahoo BTC chỉ có {len(out)} điểm tuần")
     except Exception as ex:
-        log(f"   ! Yahoo BTC tuần: {ex}")
+        log(f"   ! Yahoo BTC: {ex}")
     try:
-        txt = requests.get("https://stooq.com/q/d/l/", params={"s": "btcusd", "i": "w"}, timeout=30).text
-        out = [(l.split(",")[0], float(l.split(",")[4])) for l in txt.strip().splitlines()[1:] if l.count(",") >= 4]
+        js = requests.get("https://data-api.binance.vision/api/v3/klines",
+                          params={"symbol": "BTCUSDT", "interval": "1w", "limit": 1000}, timeout=30).json()
+        out = [(datetime.utcfromtimestamp(k[0] / 1000).strftime("%Y-%m-%d"), float(k[4])) for k in js if isinstance(k, list)]
         if len(out) > 400:
             return out
-        log(f"   ! Stooq BTC tuần chỉ có {len(out)} điểm")
+        log(f"   ! Binance BTC tuần chỉ có {len(out)} điểm")
     except Exception as ex:
-        log(f"   ! Stooq BTC tuần: {ex}")
+        log(f"   ! Binance BTC tuần: {ex}")
     try:
-        js = requests.get("https://min-api.cryptocompare.com/data/v2/histoday",
-                          params={"fsym": "BTC", "tsym": "USD", "limit": 2000, "aggregate": 7}, timeout=30).json()
-        rows = ((js.get("Data") or {}).get("Data")) or []
-        out = [(datetime.utcfromtimestamp(x["time"]).strftime("%Y-%m-%d"), x["close"]) for x in rows if x.get("close")]
+        js = requests.get("https://api.kraken.com/0/public/OHLC", params={"pair": "XBTUSD", "interval": 10080}, timeout=30).json()
+        rows = next(iter((js.get("result") or {}).values()), [])
+        out = [(datetime.utcfromtimestamp(k[0]).strftime("%Y-%m-%d"), float(k[4])) for k in rows if isinstance(k, list)]
         if len(out) > 400:
             return out
-        log(f"   ! CryptoCompare BTC tuần chỉ có {len(out)} điểm")
+        log(f"   ! Kraken BTC tuần chỉ có {len(out)} điểm")
     except Exception as ex:
-        log(f"   ! CryptoCompare BTC tuần: {ex}")
+        log(f"   ! Kraken BTC tuần: {ex}")
     return []
 
 
@@ -691,7 +697,12 @@ def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
         raw = outdir / f"{i:02d}.raw.wav"
         # Trọng chốt 21/11: nghe lại từng đoạn trước khi dựng, lặp/thiếu/thừa thì đọc lại (tối đa 4 lần)
         for attempt in range(4):
-            pcm = V.tts_once(gem, cfg, txt)
+            say = txt
+            # log 23/11: hook "Bitcoin về năm mươi lăm nghìn đô. Crypto chết rồi..." bị Gemini đọc lặp câu đầu 4/4 lần.
+            # Từ lần đọc lại: câu đầu ngắn thì nối sang câu sau bằng dấu phẩy (chữ giữ nguyên, chỉ đổi chỗ ngắt)
+            if (attempt or i == 0) and re.match(r"^[^.!?\n]{3,60}[.!]\s+\S", say):
+                say = re.sub(r"^([^.!?\n]{3,60})[.!]\s+(\S)", lambda m: m.group(1) + ", " + m.group(2).lower(), say, count=1)
+            pcm = V.tts_once(gem, cfg, say)
             sec = len(pcm) / (P.SAMPLE_RATE * 2)
             if sec > len(txt.split()) / 150 * 60 * 1.35:
                 why = f"dài bất thường {sec:.0f}s"
