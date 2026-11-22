@@ -293,8 +293,10 @@ def review(gem, cfg, res: dict, thumb: Path | None) -> dict:
         return ""
     timeline = "\n".join(f"- long_{k} ở giây {tt:.0f}: lời đọc \"{said(tt)}\"" for k, tt in enumerate(times))
     changes = scene_changes(res["long"])
+    short_first = str(plan.get("format", "")).lower() == "short"   # Trọng 22/11: video ngắn chấm khác video dài
     for j, s in enumerate(res["shorts"][:2]):
-        imgs += [(f"short{j}_{i}", b) for i, b in enumerate(frames_of(s["path"], 2, 360))]
+        k = 10 if (short_first and j == 0) else 2
+        imgs += [(f"short{j}_{i}", b) for i, b in enumerate(frames_of(s["path"], k, 540 if k > 2 else 360))]
     if thumb and thumb.exists():
         from PIL import Image
         import io
@@ -308,6 +310,11 @@ def review(gem, cfg, res: dict, thumb: Path | None) -> dict:
     prompt += (f"\n\nTHÔNG TIN THÊM (đo bằng máy): video đổi hình {changes} lần, tức khoảng {changes / max(1, dur / 60):.0f} lần mỗi phút "
                "(chuẩn kênh: từ 8 lần/phút là nhịp tốt). Khung hình chỉ là ảnh tĩnh nên hãy chấm nhịp độ dựa trên số lần đổi hình này "
                "và độ khác nhau giữa các khung, không chỉ dựa trên vài ảnh.\nLời đang đọc ở từng khung (để chấm dữ liệu có đúng ý lời đọc không):\n" + timeline)
+    if short_first:
+        prompt += ("\n\nLƯU Ý QUAN TRỌNG: đây là video SHORT-FIRST. Sản phẩm chính là short0 (10 khung short0_*), video dài chỉ là bản phụ. "
+                   "Chấm theo chuẩn video ngắn 9:16: hook 1 đến 2 giây, một ý chính, nhịp đổi hình 3 đến 6 giây, chữ đọc được trên điện thoại, "
+                   "dưới 60 giây. KHÔNG trừ điểm vì video dài ngắn hơn 4 phút hay ít phần. Mục short_9x16 là mục nặng nhất, "
+                   "các mục khác (hook, nhịp độ, phụ đề, dữ liệu) chấm chủ yếu trên short0.")
     for fn in (claude_review_cli, claude_review):   # ưu tiên Claude (gói Pro, rồi API), Gemini dự phòng
         try:
             rv = fn(prompt, imgs)

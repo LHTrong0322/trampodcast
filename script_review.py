@@ -63,6 +63,60 @@ KỊCH BẢN NHÁP:
   "nhan_xet": "2 câu tóm tắt"}}"""
 
 
+# Trọng 22/11: video ngắn (short-first, kịch bản có "format": "short") chấm theo tiêu chí RIÊNG,
+# không trừ điểm vì "ngắn hơn 4 phút", không bắt có 2 short, không bắt mục lục hay đếm phần như video dài.
+RUBRIC_SHORT = """Bạn là biên tập viên video ngắn 9:16 (YouTube Shorts, TikTok, Reels) tiếng Việt, khó tính, chấm kịch bản cho kênh
+"Smart Penguin Insights". Đây là kịch bản SHORT-FIRST: sản phẩm chính là video ngắn dưới 60 giây (phần trong "shorts",
+đọc: short_hooks + narration của phần đó + short_cta). Video dài 16:9 đi kèm chỉ là bản phụ: KHÔNG chấm và KHÔNG trừ điểm
+vì thời lượng, số phần, mục lục hay số lượng short của nó. Giọng máy khoảng 210 từ/phút, đoạn "edu" đọc chậm 5%.
+
+Chấm THẲNG TAY từng tiêu chí trên thang 10 (số thập phân được):
+- hook_1s: câu đầu (short_hooks) gây tò mò trong 1 đến 2 giây, có con số hoặc nghịch lý, dưới 15 từ
+- mot_y: cả short xoay quanh MỘT ý chính, không lan man; người xem nhận được "câu trả lời" trước giây 40
+- giu_chan: không có đoạn quá 5 giây không có thông tin mới; câu ngắn, nhịp nhanh, có twist hoặc "nhưng" giữa video
+- do_dai: tổng hook + lời đọc + CTA trong khoảng 30 đến 59 giây (tính khoảng 3,5 từ/giây); quá 59 giây là lỗi nặng
+- gia_tri: có ví dụ hoặc con số cụ thể và một việc người xem làm được ngay
+- de_hieu: người mới hiểu ngay khi nghe 1 lần; thuật ngữ lạ được giải thích nửa câu
+- chinh_xac: số liệu khớp nguồn, không bịa, không hô hào mua bán
+- quy_tac: đúng quy tắc từ ngữ của Trọng (xem bên dưới)
+- ket: câu kết gọn, có lời mời theo dõi hoặc câu hỏi để bình luận; kết nối được với câu mở (vòng lặp càng tốt)
+- hinh_anh: hình (beats) đổi khoảng 3 đến 6 giây một lần, chữ trên hình rất ngắn, đọc được trên điện thoại
+- giao_duc (BỘ LỌC GIÁO DỤC): tên riêng lạ giải thích 1 câu lần đầu; so sánh có số của CẢ HAI bên; sau kiến thức khó có ví dụ cụ thể.
+  Thiếu một trong ba điều này thì giao_duc tối đa 6.
+
+QUY TẮC TỪ NGỮ CỦA TRỌNG (vi phạm thì quy_tac tối đa 5):
+- Không dùng dấu gạch ngang dài (em dash, en dash).
+- Nói insider (không "người trong cuộc"), retail (không "nhỏ lẻ"), unlock (không "mở khoá"),
+  revenue hoặc doanh thu (không "lợi nhuận") với dự án crypto.
+- Thuật ngữ giữ tiếng Anh. Viết tắt phổ thông (FDV, DCA, TVL, VC, ETF, ATH...) dùng nguyên, KHÔNG giải thích.
+
+BÀI HỌC TỪ CÁC VIDEO TRƯỚC:
+{lessons}
+
+NGUỒN SỐ LIỆU:
+{source}
+
+KỊCH BẢN:
+{draft}
+
+Điểm tổng = trung bình các tiêu chí. Trả về DUY NHẤT JSON:
+{{"score": số, "scores": {{"hook_1s": số, ...}},
+  "fixes": ["việc sửa cụ thể, chỉ rõ câu nào, sửa thành gì"],
+  "rewrites": {{"short_hook": "câu mở viết lại nếu hook_1s dưới 8, không thì để trống"}},
+  "nhan_xet": "2 câu tóm tắt"}}"""
+
+
+def is_short(draft: str) -> bool:
+    """Kịch bản JSON có "format": "short" (hoặc nháp .md ghi dòng "Dạng: short") thì chấm theo tiêu chí video ngắn."""
+    try:
+        d = json.loads(draft)
+        if isinstance(d, dict):
+            return str(d.get("format", "")).lower() == "short"
+    except Exception:
+        pass
+    return bool(re.search(r"^\W*Dạng\W*:?\W*short\b", draft, re.I | re.M))
+
+
 def run_claude(prompt: str) -> dict:
     tok = re.sub(r"\s+", "", os.getenv("CLAUDE_CODE_OAUTH_TOKEN", ""))
     env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
@@ -70,7 +124,7 @@ def run_claude(prompt: str) -> dict:
         env["CLAUDE_CODE_OAUTH_TOKEN"] = tok
     model = os.getenv("SCRIPT_REVIEW_MODEL", "sonnet")
     r = subprocess.run(["claude", "-p", prompt + "\n\nChỉ in ra JSON hợp lệ, không thêm chữ nào khác.",
-                        "--max-turns", "3", "--model", model, "--output-format", "text"],
+                        "--max-turns", "6", "--model", model, "--output-format", "text"],
                        env=env, capture_output=True, text=True, timeout=900)
     m = re.search(r"\{.*\}", r.stdout, re.S)
     if not m:
@@ -78,12 +132,14 @@ def run_claude(prompt: str) -> dict:
     return json.loads(m.group(0))
 
 
-def review(draft: str, source: str = "", lessons: str = "") -> dict:
-    rv = run_claude(RUBRIC.format(draft=draft, source=source or "(không có)", lessons=lessons or "(chưa có)"))
+def review(draft: str, source: str = "", lessons: str = "", fmt: str = "") -> dict:
+    short = fmt == "short" or (not fmt and is_short(draft))
+    rv = run_claude((RUBRIC_SHORT if short else RUBRIC).format(draft=draft, source=source or "(không có)", lessons=lessons or "(chưa có)"))
     sc = rv.get("scores") or {}
     if sc and not rv.get("score"):
         rv["score"] = round(sum(float(v) for v in sc.values()) / len(sc), 1)
     rv["pass"] = float(rv.get("score") or 0) >= PASS
+    rv["format"] = "short" if short else "long"
     return rv
 
 

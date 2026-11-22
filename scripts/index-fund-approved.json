@@ -1,4 +1,5 @@
 {
+ "format": "short",
  "title": "Index fund là gì? Vì sao 79% quỹ chuyên nghiệp thua nó",
  "description": "Bài học đầu tư từ số 0: index fund (quỹ chỉ số) hoạt động thế nào, vì sao phí thấp lại thắng phần lớn quỹ chuyên nghiệp, đánh đổi là gì, và cách tìm hiểu quỹ ETF chỉ số ở Việt Nam.",
  "theme": "Đầu tư từ số 0",
@@ -297,14 +298,10 @@
  ],
  "outro_cta": "VN30 HAY VNDIAMOND? BÌNH LUẬN NHÉ",
  "shorts": [
-  0,
-  1,
-  2
+  0
  ],
  "short_hooks": {
-  "0": "79% quỹ chuyên nghiệp thua một rổ không ai chọn?",
-  "1": "Phí 1% một năm ăn mất 18 nghìn đô?",
-  "2": "ETF VN30 là gì mà ai cũng nhắc tới?"
+  "0": "79% quỹ chuyên nghiệp thua một rổ không ai chọn?"
  },
  "short_cta": "Theo dõi Smart Penguin Insights để học đầu tư từ số 0 nhé!",
  "thumb_text": "INDEX FUND LÀ GÌ?",
