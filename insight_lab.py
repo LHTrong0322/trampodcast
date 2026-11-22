@@ -480,6 +480,70 @@ def coin_data(lab: Path, plan: dict, data: dict):
 YAHOO = {"S&P": "^GSPC", "SPX": "^GSPC", "VIX": "^VIX", "NDX": "^NDX", "DXY": "DX-Y.NYB", "DJI": "^DJI"}
 
 
+def _btc_weekly() -> list:
+    """Giá đóng cửa BTC theo TUẦN, càng dài càng tốt (cần >350 tuần để tính 350WMA): [(ngày 'YYYY-MM-DD', giá)].
+    Yahoo Finance, dự phòng Stooq, rồi CryptoCompare (gộp 7 ngày). Trả [] nếu không lấy được."""
+    try:
+        r = requests.get("https://query1.finance.yahoo.com/v8/finance/chart/BTC-USD", params={"range": "max", "interval": "1wk"},
+                         headers={"User-Agent": "Mozilla/5.0"}, timeout=30)
+        res = ((r.json().get("chart") or {}).get("result") or [{}])[0]
+        ts = res.get("timestamp") or []
+        cl = (((res.get("indicators") or {}).get("quote") or [{}])[0].get("close")) or []
+        out = [(datetime.utcfromtimestamp(t).strftime("%Y-%m-%d"), c) for t, c in zip(ts, cl) if c]
+        if len(out) > 400:
+            return out
+        log(f"   ! Yahoo BTC tuần chỉ có {len(out)} điểm")
+    except Exception as ex:
+        log(f"   ! Yahoo BTC tuần: {ex}")
+    try:
+        txt = requests.get("https://stooq.com/q/d/l/", params={"s": "btcusd", "i": "w"}, timeout=30).text
+        out = [(l.split(",")[0], float(l.split(",")[4])) for l in txt.strip().splitlines()[1:] if l.count(",") >= 4]
+        if len(out) > 400:
+            return out
+        log(f"   ! Stooq BTC tuần chỉ có {len(out)} điểm")
+    except Exception as ex:
+        log(f"   ! Stooq BTC tuần: {ex}")
+    try:
+        js = requests.get("https://min-api.cryptocompare.com/data/v2/histoday",
+                          params={"fsym": "BTC", "tsym": "USD", "limit": 2000, "aggregate": 7}, timeout=30).json()
+        rows = ((js.get("Data") or {}).get("Data")) or []
+        out = [(datetime.utcfromtimestamp(x["time"]).strftime("%Y-%m-%d"), x["close"]) for x in rows if x.get("close")]
+        if len(out) > 400:
+            return out
+        log(f"   ! CryptoCompare BTC tuần chỉ có {len(out)} điểm")
+    except Exception as ex:
+        log(f"   ! CryptoCompare BTC tuần: {ex}")
+    return []
+
+
+def wma_data(plan: dict, data: dict):
+    """Trọng 23/11 (video 100y): biểu đồ giá BTC theo tuần + đường trung bình 200 tuần và 350 tuần (beat type "wma").
+    Số trên hình là dữ liệu THẬT tính từ giá tuần. Không lấy được giá thì bỏ beat đó (ghi log), không dừng cả bản dựng."""
+    secs = [("hook_beats", plan)] + [("beats", s) for s in plan.get("sections", [])]
+    if not any(b.get("type") == "wma" for k, s in secs for b in (s.get(k) or [])):
+        return
+    rows = _btc_weekly()
+    if len(rows) > 400:
+        px = [p for _, p in rows]
+
+        def ma(n):
+            return [None if i + 1 < n else sum(px[i + 1 - n: i + 1]) / n for i in range(len(px))]
+        m200, m350 = ma(200), ma(350)
+        keep = min(len(px), 290)   # khoảng 5,5 năm gần nhất: thấy rõ đáy 2022 và hiện tại
+        win = slice(len(px) - keep, len(px))
+        data["wma"] = {"dates": [d for d, _ in rows][win], "price": px[win], "ma200": m200[win], "ma350": m350[win],
+                       "now": px[-1], "now200": m200[-1], "now350": m350[-1]}
+        log(f"   Giá BTC tuần: {len(px)} điểm, giá {px[-1]:,.0f}, 200WMA {m200[-1]:,.0f}, 350WMA {m350[-1]:,.0f} "
+            f"({(px[-1] / m200[-1] - 1) * 100:+.1f}% so với 200WMA)")
+        return
+    for k, s in secs:
+        if s.get(k):
+            before = len(s[k])
+            s[k] = [b for b in s[k] if b.get("type") != "wma"]
+            if len(s[k]) < before:
+                log("   ! bỏ biểu đồ 200WMA: không lấy được giá BTC theo tuần")
+
+
 def _stock_series(t: str, days: int) -> list:
     """Giá đóng cửa ngày của cổ phiếu/chỉ số: Yahoo Finance, dự phòng Stooq. Trả [] nếu không lấy được."""
     sym = YAHOO.get(t, t)
@@ -807,6 +871,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     log("③ Dữ liệu thị trường + ảnh (AI lọc ảnh lạc đề)")
     md = market_data(lab)
     coin_data(lab, plan, md)
+    wma_data(plan, md)   # biểu đồ BTC tuần + 200WMA/350WMA (Trọng 23/11)
     plan = live_numbers(plan, md)   # Trọng 22/11: hook, biểu đồ, ảnh bìa, short dùng CÙNG một bộ số giá thật
     (lab / "data.json").write_text(json.dumps(md, ensure_ascii=False), encoding="utf-8")
     save_images(lab, plan, gem, cfg)

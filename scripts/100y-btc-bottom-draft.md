@@ -1,9 +1,9 @@
-# Kịch bản nháp v2: bài @100y_eth "Generational BTC Buy Is Coming" (chờ Trọng duyệt)
+# Kịch bản nháp v3: bài @100y_eth "Generational BTC Buy Is Coming" (chờ Trọng duyệt)
 
 Nguồn: https://x.com/100y_eth/status/2124147616028188896
 Kiểu: giống video chuẩn insight-20261121-1615 (giọng gemini:Ludo@kol, nền trắng sạch, logo mở đầu, Hook + Mở đầu + 5 phần + Tóm lại, khoảng 4 phút).
 Mọi con số dưới đây đều có trong bài gốc của 100y. Không thêm số ngoài bài.
-Trạng thái: v2 sau khi tự review (00:45 23/11). CHỜ Trọng nhắn "ok kịch bản" mới dựng.
+Trạng thái: Trọng DUYỆT 01:03 23/11 (bản cuối nằm ở scripts/100y-btc-approved.json, gồm 6 sửa câu nối Trọng đồng ý). File này chỉ để tham khảo. CHỜ Trọng nhắn "ok kịch bản" mới dựng.
 
 ## Tự review v1 (lý do đổi)
 1. Hook v1 "năm tín hiệu cùng chỉ về một vùng giá" còn mơ hồ, không có vòng lặp tò mò. v2: tương phản (ai cũng nói crypto chết) + con số đích $43K ngay 5 giây đầu, trả lời ở Phần 3.
@@ -17,17 +17,16 @@ Trạng thái: v2 sau khi tự review (00:45 23/11). CHỜ Trọng nhắn "ok k�
 9. CTA v1 hỏi mở "DCA ở vùng nào" khó trả lời. v2 hỏi chọn phe A/B, một chữ là bình luận được, dễ kéo tương tác.
 10. Thêm 1 câu nhắc lời hứa giữa video (cuối Phần 3) để giữ người xem qua đoạn 2 phút, chỗ các video trước hay rớt.
 
-## Tiêu đề YouTube (2 lựa chọn)
-1. Bitcoin $55K: Đáy thế hệ hay còn rơi về $43K?
-2. Bitcoin về $43K? 5 tín hiệu cơ hội mua của cả thế hệ
+## Tiêu đề YouTube (Trọng chốt 00:53 23/11)
+$55k có phải cơ hội thế hệ của BTC trong chu kỳ?
 
 ## Hook (giây 0, chữ hiện đủ trên hình)
-Lời đọc: Bitcoin năm mươi lăm nghìn đô. Ai cũng nói crypto đã chết. Nhưng một chỉ số thường báo trước đáy ở các chu kỳ trước đang chỉ về con số bốn mươi ba nghìn đô.
-Chữ trên hình: BTC $55K → $43K?
-Dòng cam kết (giây 3 đến 5, chữ lớn): CƠ HỘI MUA CỦA CẢ THẾ HỆ?
+Lời đọc (Trọng chốt): Bitcoin về năm mươi lăm nghìn đô. Crypto chết rồi, hay đây là cơ hội mua của cả một thế hệ? Năm tín hiệu dưới đây cùng chỉ về một vùng giá.
+Chữ trên hình: BTC $55K: CƠ HỘI THẾ HỆ?
+Dòng cam kết (giây 3 đến 5, chữ lớn): 5 TÍN HIỆU, 1 VÙNG GIÁ
 
 ## Mở đầu
-Lời đọc: Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Hôm nay là bài của 100y: năm tín hiệu cho thấy cơ hội mua Bitcoin của cả một thế hệ đang tới gần. Mình sẽ đi từng nấc giá một. Và ở cuối video là kịch bản đáy cuối mà 100y tin nhất. Nó liên quan tới AI. Bắt đầu nhé.
+Lời đọc (Trọng chốt): Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Hôm nay mình mổ xẻ bài "Generational BTC Buy Is Coming" của 100y, Head of Research tại Four Pillars, một công ty research tier 1 ở Hàn Quốc. Mình sẽ đi từng nấc giá một về dự đoán của 100y. Và ở cuối video là kịch bản đáy cuối mà anh ấy tin tưởng nhất. Nó liên quan tới AI. Bắt đầu nhé.
 Chữ trên hình: thẻ bài X của 100y; bậc thang đáy trống 4 nấc (hiện dấu ? ở mỗi nấc).
 
 ## Phần 1: Nấc đầu tiên, giá thành đào
@@ -40,13 +39,14 @@ Chữ trên hình:
 - Thuật ngữ: Halving = phần thưởng đào BTC giảm một nửa
 
 ## Phần 2: Nấc thứ hai, đường 200 tuần đã gãy
-Lời đọc: Trong crypto có câu: đường trung bình 200 tuần chính là đáy. Năm 2018, cú sập COVID, vụ Terra, vụ FTX, nó đều là điểm tựa tâm lý. Lần này khác hẳn. Bitcoin đã thủng cả đường 200 tuần lẫn 300 tuần. Giá đang thấp hơn đường 200 tuần khoảng mười tám phần trăm. Lần gần nhất thấy cảnh này là năm 2022, sau Terra và 3AC, khi giá rơi khoảng hai mươi phần trăm dưới đường này. Sau đó mất chín tháng để lấy lại. Còn nấc hỗ trợ kế tiếp là đường 350 tuần, quanh năm mươi hai nghìn đô. Nhưng đó vẫn chưa phải con số đáng sợ nhất.
+Lời đọc: Trong crypto có một câu cửa miệng: đường trung bình 200 tuần chính là vùng giá trị của BTC. Năm 2018, cú sập COVID, vụ Terra, vụ FTX, nó đều là điểm tựa tâm lý. Lần này khác hẳn. Bitcoin đã thủng cả đường 200 tuần lẫn 300 tuần. Giá đang thấp hơn đường 200 tuần khoảng mười tám phần trăm. Lần gần nhất thấy cảnh này là năm 2022, sau Terra và 3AC, khi giá rơi khoảng hai mươi phần trăm dưới đường này. Sau đó mất chín tháng để lấy lại, và mười bốn tháng mới bứt phá hẳn. Còn nấc hỗ trợ kế tiếp là đường 350 tuần, quanh năm mươi hai nghìn đô. Nhưng đó vẫn chưa phải con số đáng sợ nhất.
 Chữ trên hình:
 - Tiêu đề: Nấc 2: Đường 200 tuần đã gãy
 - Thẻ số: -18% dưới 200WMA
-- So sánh 2 cột (versus): 2022: -20%, 9 tháng hồi / Hiện tại: -18%
+- Thẻ số 2: 350WMA ≈ $52K
+- Biểu đồ (Trọng muốn): giá BTC theo tuần + đường 200WMA và 350WMA, đánh dấu 2022 và hiện tại
+- So sánh 2 cột (versus): 2022: -20%, 9 tháng hồi, 14 tháng bứt phá / Hiện tại: -18%
 - Bậc thang: thêm nấc $52K (350WMA)
-- Trích X: "Đường 200 tuần là đáy"
 - Thuật ngữ: 200WMA = đường giá trung bình 200 tuần
 
 ## Phần 3: Nấc cuối, MVRV chỉ về $43K
@@ -89,9 +89,9 @@ Hook đọc trước + số to chiếm nửa trên khung ngay giây 0. Cuối m�
 - Short 5 (Phần 5). Hook: "Bong bóng AI vỡ lại là tin tốt cho Bitcoin?" Số to: AI VỠ → BƠM TIỀN
 
 ## Ảnh bìa
-- Chữ lớn: BTC VỀ $43K?
-- Ô nhấn (đỏ, biểu tượng cảnh báo): $55K → $43K, mũi tên đi xuống
-- Dòng phụ 1 dòng chữ to: ĐÁY CỦA CẢ THẾ HỆ
+- Chữ lớn: $55K: CƠ HỘI THẾ HỆ?
+- Ô nhấn (đỏ, biểu tượng cảnh báo): ĐÁY $43K?
+- Dòng phụ 1 dòng chữ to: 5 TÍN HIỆU
 - Không dùng 3 ô checklist nhỏ (review gần nhất chê không đọc được trên điện thoại).
 - Logo SMART PENGUIN INSIGHTS góc trên, @Trong0322 góc dưới.
-- Hook, tiêu đề, ảnh bìa cùng xoay quanh "$55K → $43K" để người click không thấy lệch.
+- Hook, tiêu đề, ảnh bìa cùng xoay quanh "$55K, cơ hội thế hệ" để người click không thấy lệch.

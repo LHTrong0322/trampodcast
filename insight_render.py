@@ -441,20 +441,46 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     cta_pcm = orig.get("short_cta", b"")
     cta_tail = (V.gap(0.35) + cta_pcm + V.gap(1.0)) if cta_pcm else b""
     mx -= len(cta_tail) / SR / 2
+    spans = plan.get("short_spans") or []
     for n, i in enumerate(plan.get("shorts", [])):
         k = f"s{i}"
-        w = word_times(text[k], orig[k])
-        end = len(orig[k]) / SR / 2
-        if end > mx:
-            ends = [x["e"] for x in w if re.search(r"[.!?…]$", x["t"]) and x["e"] <= mx]
-            end = (ends[-1] + 0.25) if ends else mx
-        body = orig[k][: int(end * SR) * 2]
+        w_full = word_times(text[k], orig[k])
+        full_dur = len(orig[k]) / SR / 2
+        # Trọng 23/11: short lấy ĐÚNG khoảnh khắc tinh tuý (short_spans[n] = {"from": cụm đầu, "to": cụm cuối}), không cố định từ đầu phần
+        sp_ = spans[n] if n < len(spans) and isinstance(spans[n], dict) else {}
+        ws_ = [_norm(x["t"]) for x in w_full]
+
+        def _hit(phrase, start=0):
+            q = [_norm(x) for x in str(phrase or "").split() if _norm(x)]
+            return next((j for j in range(start, len(ws_) - len(q) + 1) if q and ws_[j:j + len(q)] == q), None), len(q)
+        j0, _ = _hit(sp_.get("from"))
+        start = max(0.0, w_full[j0]["s"] - 0.12) if j0 is not None else 0.0
+        if sp_.get("from") and j0 is None:
+            log(f"   ! short {n + 1}: không thấy cụm bắt đầu '{sp_.get('from')}', lấy từ đầu phần")
+        j1, ln = _hit(sp_.get("to"), j0 or 0)
+        end = min(full_dur, w_full[j1 + ln - 1]["e"] + 0.25) if j1 is not None else full_dur
+        if sp_.get("to") and j1 is None:
+            log(f"   ! short {n + 1}: không thấy cụm kết thúc '{sp_.get('to')}', lấy tới hết phần")
+        if end - start > mx:
+            ends = [x["e"] for x in w_full if re.search(r"[.!?…]$", x["t"]) and start < x["e"] <= start + mx]
+            end = (ends[-1] + 0.25) if ends else start + mx
+        body = orig[k][int(start * SR) * 2: int(end * SR) * 2]
         a = body + (cta_tail if cta_pcm else V.gap(1.2))
         V.pcm_to_wav(a, RD / f"short{n}.wav")
         sc = next(x for x in scenes if x.get("idx") == i + 1)
+        w = [{**x, "s": round(x["s"] - start, 3), "e": round(x["e"] - start, 3)} for x in w_full if x["s"] >= start - 0.05 and x["s"] < end]
+        bts = beats_for(plan["sections"][i].get("beats") or [], w_full, full_dur, data)   # gắn hình theo cả phần rồi dời về mốc short
+        cur = [b for b in bts if b["s"] <= start + 0.2]
+        if cur:   # hình đang chạy lúc short bắt đầu: dời về giây 0, các bước sơ đồ dời theo
+            c0 = dict(cur[-1])
+            d = start - c0["s"]
+            if c0.get("step_s"):
+                c0["step_s"] = [None if x is None else round(max(0.0, x - d), 2) for x in c0["step_s"]]
+            cur = [c0]
+        bts = ([{**cur[-1], "s": 0.0}] if cur else []) + [{**b, "s": round(b["s"] - start, 3)} for b in bts if start + 0.2 < b["s"] < end]
+        log(f"   Short {n + 1}: phần {i + 1}, giây {start:.1f} đến {end:.1f}")
         sprops = {"fps": 30, "width": 1080, "height": 1920, "audio": f"short{n}.wav", "duration": round(len(a) / SR / 2, 3),
-                  "scenes": [{**sc, "from": 0, "dur": round(len(a) / SR / 2, 3), "words": [x for x in w if x["s"] < end],
-                              "beats": beats_for(plan["sections"][i].get("beats") or [], w, round(len(a) / SR / 2, 3), data)}],
+                  "scenes": [{**sc, "from": 0, "dur": round(len(a) / SR / 2, 3), "words": w, "beats": bts}],
                   "data": data, "brand": brand, "post": pinfo,
                   "shortTitle": V.en_money(str(shr.get(str(i)) or shr.get(i) or sc["heading"]))}
         if cta_pcm:

@@ -1,0 +1,541 @@
+{
+ "title": "$55k có phải cơ hội thế hệ của BTC trong chu kỳ?",
+ "description": "Bitcoin về $55K. 100y (Head of Research tại Four Pillars) đưa ra 5 tín hiệu: giá thành đào, đường 200 tuần, MVRV, chu kỳ 4 năm và kịch bản khủng hoảng AI, cùng chỉ về vùng mua $45K đến $55K.",
+ "theme": "Phân tích Bitcoin",
+ "hook_screen": "BTC $55K: CƠ HỘI THẾ HỆ?",
+ "hook_stat": "",
+ "hook_label": "",
+ "hook": "Bitcoin về năm mươi lăm nghìn đô. Crypto chết rồi, hay đây là cơ hội mua của cả một thế hệ? Năm tín hiệu dưới đây cùng chỉ về một vùng giá.",
+ "hook_beats": [
+  {
+   "at": "bitcoin về năm mươi lăm nghìn đô",
+   "type": "bignum",
+   "value": "$55K",
+   "label": "Crypto chết rồi, hay cơ hội của cả thế hệ?",
+   "tone": "down"
+  },
+  {
+   "at": "năm tín hiệu dưới đây",
+   "type": "statement",
+   "text": "5 tín hiệu, 1 vùng giá"
+  }
+ ],
+ "intro": "Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Hôm nay mình mổ xẻ bài \"Generational BTC Buy Is Coming\" của 100y, Head of Research tại Four Pillars, một công ty research tier 1 ở Hàn Quốc. Mình sẽ đi từng nấc giá một về dự đoán của 100y. Và ở cuối video là kịch bản đáy cuối mà anh ấy tin tưởng nhất. Nó liên quan tới AI. Bắt đầu nhé.",
+ "agenda_label": "5 TÍN HIỆU",
+ "own_source": false,
+ "sections": [
+  {
+   "heading": "Chi phí đào BTC: $62.9K",
+   "key_stat": "$62.9K",
+   "key_label": "chi phí đào 1 BTC, Q3/2026",
+   "bullets": [
+    "Giá thành đào ≈ $62.9K",
+    "Giá BTC đang thấp hơn",
+    "M2 tăng, BTC giảm"
+   ],
+   "beats": [
+    {
+     "at": "ước tính dựa trên báo cáo",
+     "type": "bignum",
+     "value": "$62.9K",
+     "label": "Chi phí đào 1 BTC, Q3/2026 (CryptoQuant, Marathon)"
+    },
+    {
+     "at": "giá đang thấp hơn mức đó",
+     "type": "versus",
+     "left": {
+      "label": "Giá thành đào",
+      "value": "$62.9K",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "Giá BTC",
+      "value": "$55K",
+      "tone": "down"
+     },
+     "sub": "Thợ đào bán ra là lỗ"
+    },
+    {
+     "at": "dù vậy",
+     "type": "flow",
+     "label": "Vì sao chưa phải đáy tuyệt đối",
+     "steps": [
+      "Halving giảm lượng BTC đào ra",
+      "Thợ đào chuyển sang data center AI"
+     ],
+     "step_at": [
+      "dù vậy",
+      "nhiều thợ đào đã chuyển"
+     ]
+    },
+    {
+     "at": "thêm một thước đo nữa",
+     "type": "versus",
+     "left": {
+      "label": "M2 Mỹ năm 2026",
+      "value": "Tăng",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Bitcoin",
+      "value": "Giảm mạnh",
+      "tone": "down"
+     },
+     "sub": "Tương quan gần như về 0"
+    },
+    {
+     "at": "tương quan giữa hai bên",
+     "type": "bignum",
+     "value": "≈ 0",
+     "label": "Tương quan giữa BTC và M2 Mỹ năm 2026",
+     "tone": "down"
+    },
+    {
+     "at": "theo 100y",
+     "type": "statement",
+     "text": "BTC có thể đang bị định giá thấp so với thanh khoản"
+    }
+   ],
+   "narration": "CryptoQuant ước tính dựa trên báo cáo của Marathon, chi phí đào một BTC quý ba năm 2026 khoảng sáu mươi hai phẩy chín nghìn đô. Giá đang thấp hơn mức đó. Khi giá dưới giá thành, thợ đào ít muốn bán lỗ. Dù vậy, 100y không coi đây là đáy tuyệt đối, vì nhiều thợ đào đã chuyển sang làm data center AI. Thêm một thước đo nữa là M2, tức lượng tiền trong hệ thống Mỹ. Năm 2026, M2 tăng trở lại, nhưng Bitcoin vẫn giảm mạnh. Tương quan giữa hai bên gần như về 0. Theo 100y, BTC có thể đang bị định giá thấp so với thanh khoản hiện có. Vậy nấc hỗ trợ tiếp theo nằm ở đâu?",
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Đường 200 tuần (200WMA) đã gãy",
+   "key_stat": "-18%",
+   "key_label": "dưới 200WMA",
+   "bullets": [
+    "-18% dưới 200WMA",
+    "350WMA ≈ $52K",
+    "2022: 9 tháng hồi, 14 tháng bứt phá"
+   ],
+   "beats": [
+    {
+     "at": "trong crypto có một câu cửa miệng",
+     "type": "statement",
+     "text": "Đường 200 tuần = vùng giá trị của BTC"
+    },
+    {
+     "at": "nó từng là điểm tựa",
+     "type": "flow",
+     "label": "Điểm tựa tâm lý",
+     "steps": [
+      "COVID",
+      "Terra",
+      "FTX"
+     ],
+     "step_at": [
+      "cú sập covid",
+      "vụ terra",
+      "vụ ftx"
+     ]
+    },
+    {
+     "at": "lần này khác hẳn",
+     "type": "wma",
+     "label": "BTC theo tuần và đường 200WMA, 350WMA"
+    },
+    {
+     "at": "giá đang thấp hơn đường",
+     "type": "bignum",
+     "value": "-18%",
+     "label": "dưới đường 200 tuần (200WMA)",
+     "tone": "down"
+    },
+    {
+     "at": "lần gần nhất thấy cảnh này",
+     "type": "versus",
+     "left": {
+      "label": "6/2022",
+      "value": "-20%",
+      "tone": "down"
+     },
+     "right": {
+      "label": "Hiện tại",
+      "value": "-18%",
+      "tone": "down"
+     },
+     "sub": "2022: 9 tháng hồi lại, 14 tháng bứt phá"
+    },
+    {
+     "at": "sau đó mất chín tháng",
+     "type": "bignum",
+     "value": "9 tháng",
+     "label": "để lấy lại đường 200 tuần (năm 2022)",
+     "tone": "up"
+    },
+    {
+     "at": "còn nấc hỗ trợ kế tiếp",
+     "type": "bignum",
+     "value": "≈$52K",
+     "label": "350WMA, nấc hỗ trợ kế tiếp"
+    }
+   ],
+   "narration": "Trong crypto có một câu cửa miệng: đường trung bình 200 tuần chính là vùng giá trị của BTC. Nó từng là điểm tựa tâm lý sau những cú sập COVID, vụ Terra, vụ FTX. Lần này khác hẳn. Bitcoin đã thủng cả đường 200 tuần lẫn 300 tuần. Giá đang thấp hơn đường 200 tuần khoảng mười tám phần trăm. Lần gần nhất thấy cảnh này là năm 2022, sau Terra và 3AC, khi giá rơi khoảng hai mươi phần trăm dưới đường này. Sau đó mất chín tháng để lấy lại. Còn nấc hỗ trợ kế tiếp là đường 350 tuần, quanh năm mươi hai nghìn đô. Nhưng đó vẫn chưa phải con số đáng sợ nhất.",
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "MVRV sắp xuống dưới 1",
+   "key_stat": "≈$43K",
+   "key_label": "đáy ước tính nếu MVRV về 0.8",
+   "bullets": [
+    "MVRV dưới 1 = vùng mua dài hạn",
+    "Đáy MVRV mỗi chu kỳ một cao hơn",
+    "Đáy ước tính ≈ $43K"
+   ],
+   "beats": [
+    {
+     "at": "con số đó đến từ",
+     "type": "statement",
+     "text": "MVRV = vốn hoá hiện tại / vốn hoá thực"
+    },
+    {
+     "at": "chỉ số này lấy vốn hoá",
+     "type": "flow",
+     "label": "Cách tính MVRV",
+     "steps": [
+      "Vốn hoá hiện tại",
+      "chia vốn hoá thực",
+      "= MVRV"
+     ],
+     "step_at": [
+      "chỉ số này lấy vốn hoá",
+      "chia cho vốn hoá thực",
+      "tức giá mà mỗi đồng"
+     ]
+    },
+    {
+     "at": "nói đơn giản",
+     "type": "versus",
+     "left": {
+      "label": "MVRV cao",
+      "value": "Giá xa giá vốn",
+      "tone": "up"
+     },
+     "right": {
+      "label": "MVRV thấp",
+      "value": "Sát giá vốn holder",
+      "tone": "down"
+     },
+     "sub": "Giá vốn = giá mỗi BTC được chuyển lần cuối on-chain"
+    },
+    {
+     "at": "thường là vùng mua dài hạn",
+     "type": "flow",
+     "label": "Khi MVRV xuống dưới 1",
+     "steps": [
+      "Vùng mua dài hạn đẹp",
+      "Đáy thật sau 1 đến 6 tháng",
+      "Đi ngang 6 đến 12 tháng"
+     ],
+     "step_at": [
+      "thường là vùng mua dài hạn",
+      "đáy thật thường đến",
+      "rồi giá đi ngang"
+     ]
+    },
+    {
+     "at": "điểm thú vị",
+     "type": "flow",
+     "label": "Đáy MVRV mỗi chu kỳ",
+     "steps": [
+      "0.395",
+      "0.564",
+      "0.691",
+      "0.760",
+      "0.8?"
+     ]
+    },
+    {
+     "at": "nếu lần này đáy quanh",
+     "type": "bignum",
+     "value": "≈$43K",
+     "label": "Đáy BTC ước tính nếu MVRV về 0.8",
+     "tone": "down"
+    },
+    {
+     "at": "vậy còn thời gian thì sao",
+     "type": "statement",
+     "text": "Còn thời gian? Chu kỳ 4 năm nói gì"
+    }
+   ],
+   "narration": "Con số đó đến từ MVRV. Chỉ số này lấy vốn hoá hiện tại chia cho vốn hoá thực, tức giá mà mỗi đồng BTC được chuyển lần cuối trên chuỗi. Nói đơn giản: MVRV thấp nghĩa là giá đang sát giá vốn chung của holder. Lịch sử cho thấy MVRV dưới 1 thường là vùng mua dài hạn đẹp. Đáy thật thường đến một đến sáu tháng sau đó, rồi giá đi ngang sáu đến mười hai tháng. Hiện MVRV chưa xuống dưới 1, nhưng đã rất gần. Điểm thú vị: đáy MVRV mỗi chu kỳ một cao hơn, từ 0,395 lên 0,564, 0,691 rồi 0,760. Nếu lần này đáy quanh 0,8, Bitcoin có thể chạm khoảng bốn mươi ba nghìn đô. Vậy còn thời gian thì sao? Chu kỳ bốn năm đang nói gì?",
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Chu kỳ bốn năm bắt đầu lại?",
+   "key_stat": "363 ngày",
+   "key_label": "giảm theo chu kỳ, đã bị vượt",
+   "bullets": [
+    "~1.061 đến 1.068 ngày tăng",
+    "~363 ngày giảm",
+    "Đã quá 363 ngày từ đỉnh"
+   ],
+   "beats": [
+    {
+     "at": "thừa nhận anh không tin",
+     "type": "statement",
+     "text": "Không có lý do sâu xa, nhưng chính xác đến khó tin"
+    },
+    {
+     "at": "từ đáy",
+     "type": "bignum",
+     "value": "~1.061 ngày",
+     "label": "BTC tăng sau mỗi đáy (từ 2015)",
+     "tone": "up"
+    },
+    {
+     "at": "rồi giảm khoảng",
+     "type": "versus",
+     "left": {
+      "label": "Tăng",
+      "value": "~1.061 đến 1.068 ngày",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Giảm",
+      "value": "~363 ngày",
+      "tone": "down"
+     },
+     "sub": "Lặp lại từ đáy 2015"
+    },
+    {
+     "at": "cộng thêm halving",
+     "type": "flow",
+     "label": "Vì sao narrative này mạnh",
+     "steps": [
+      "Halving",
+      "BTC không có dòng tiền",
+      "Narrative quyết định tâm lý"
+     ],
+     "step_at": [
+      "cộng thêm halving",
+      "với một tài sản",
+      "narrative quyết định tâm lý"
+     ]
+    },
+    {
+     "at": "nhưng có một rủi ro",
+     "type": "bignum",
+     "value": ">363 ngày",
+     "label": "Đã quá 363 ngày kể từ đỉnh, giá vẫn rơi",
+     "tone": "down"
+    },
+    {
+     "at": "nếu lệch thêm nữa",
+     "type": "statement",
+     "text": "Lệch thêm: chu kỳ 4 năm có thể không còn đúng"
+    }
+   ],
+   "narration": "100y thừa nhận anh không tin chu kỳ bốn năm có lý do gì sâu xa. Vậy mà nó chính xác đến khó tin. Từ đáy 2015, Bitcoin cứ tăng khoảng một nghìn lẻ sáu mươi mốt đến một nghìn lẻ sáu mươi tám ngày, rồi giảm khoảng ba trăm sáu mươi ba ngày. Cộng thêm halving, đây là narrative cực mạnh. Với một tài sản không có dòng tiền như BTC, narrative quyết định tâm lý. Nếu lịch sử lặp lại, bear market sắp kết thúc. Nhưng có một rủi ro. Đã quá ba trăm sáu mươi ba ngày kể từ đỉnh, mà giá vẫn rơi. Nếu lệch thêm nữa, chu kỳ bốn năm có thể không còn đúng. Vậy cái gì sẽ phá vỡ thế giằng co này?",
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Tâm lý tệ nhất, và cú bơm tiền tất yếu",
+   "key_stat": "Thấp nhất từ 2020",
+   "key_label": "Google Trends từ khoá Bitcoin",
+   "bullets": [
+    "Google Trends thấp nhất từ 2020",
+    "AI tăng hay vỡ đều dẫn tới bơm tiền",
+    "Khủng hoảng AI → đáy cuối BTC"
+   ],
+   "beats": [
+    {
+     "at": "bắt đầu từ tâm lý",
+     "type": "statement",
+     "text": "X: crypto vô dụng, mọi token là rác"
+    },
+    {
+     "at": "google trends cho bitcoin",
+     "type": "bignum",
+     "value": "Thấp nhất từ 2020",
+     "label": "Google Trends từ khoá Bitcoin",
+     "tone": "down"
+    },
+    {
+     "at": "còn cú hích",
+     "type": "statement",
+     "text": "Cú hích: AI sẽ dẫn tới bơm tiền lớn"
+    },
+    {
+     "at": "nếu ai tiếp tục tăng trưởng",
+     "type": "versus",
+     "left": {
+      "label": "AI tiếp tục tăng",
+      "value": "Tín dụng mở rộng",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Bong bóng AI vỡ",
+      "value": "Nới lỏng như 2008",
+      "tone": "up"
+     },
+     "sub": "Kịch bản nào cũng dẫn tới bơm tiền"
+    },
+    {
+     "at": "nếu bong bóng ai vỡ",
+     "type": "bignum",
+     "value": "Như 2008",
+     "label": "Bong bóng AI vỡ: Mỹ nới lỏng tiền tệ, bơm tiền",
+     "tone": "up"
+    },
+    {
+     "at": "giờ là tài sản chiến lược",
+     "type": "statement",
+     "text": "AI là tài sản chiến lược: Mỹ không thể thua Trung Quốc"
+    },
+    {
+     "at": "sau lùm xùm",
+     "type": "flow",
+     "label": "100y nghiêng về kịch bản AI vỡ",
+     "steps": [
+      "Jensen Huang rời Nvidia",
+      "Kết quả bầu cử giữa kỳ",
+      "Nghiêng về kịch bản AI vỡ"
+     ],
+     "step_at": [
+      "sau lùm xùm",
+      "kết quả bầu cử",
+      "anh nghiêng về"
+     ]
+    },
+    {
+     "at": "kịch bản gốc",
+     "type": "flow",
+     "label": "Kịch bản gốc của 100y",
+     "steps": [
+      "Khủng hoảng AI",
+      "Đáy cuối của BTC",
+      "Bơm tiền đảo chiều"
+     ],
+     "step_at": [
+      "khủng hoảng ai tạo đáy",
+      "trong vòng một năm",
+      "rồi bơm tiền"
+     ]
+    }
+   ],
+   "narration": "Bắt đầu từ tâm lý. Mấy tuần qua, X ngập bài nói crypto vô dụng, mọi token đều là rác. Google Trends cho Bitcoin về mức thấp nhất kể từ 2020. Lịch sử cho thấy lúc ai cũng bỏ cuộc thường là lúc mua tốt nhất. Còn cú hích, 100y tin AI sẽ dẫn tới bơm tiền lớn. Nếu AI tiếp tục tăng trưởng, tín dụng tư nhân mở rộng. Nếu bong bóng AI vỡ, chính phủ Mỹ sẽ nới lỏng tiền tệ như năm 2008. AI giờ là tài sản chiến lược quốc gia, Mỹ không thể thua Trung Quốc. Sau lùm xùm Jensen Huang rời Nvidia và kết quả bầu cử giữa kỳ, anh nghiêng về kịch bản thứ hai. Kịch bản gốc: khủng hoảng AI tạo đáy cuối cho Bitcoin trong vòng một năm, rồi bơm tiền đảo chiều xu hướng.",
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  }
+ ],
+ "outro": "Giá có thể xấu, nhưng ngành crypto chưa bao giờ mạnh như bây giờ. Perps, prediction markets, stablecoin và RWA đều đã tìm thấy PMF. DTCC, NYSE, Bank of America đều đang làm token hoá và stablecoin. Ghi nhớ năm tín hiệu: giá thủng đường 200 tuần, MVRV sắp dưới 1, chu kỳ bốn năm sắp xoay chiều, giá dưới giá thành đào, và tâm lý tệ nhất. Vùng mua 100y nhắm là bốn mươi lăm đến năm mươi lăm nghìn đô, nhưng đáy có thể còn thấp hơn. Đây là góc nhìn của 100y, không phải lời khuyên đầu tư, mọi người hãy luôn tự nghiên cứu kỹ trước khi xuống tiền. Cá nhân Trọng tầm này chỉ DCA dài hạn BTC và ETH hàng tuần để có entry và tâm lý vững vàng nhất. Bạn sẽ DCA Bitcoin ở vùng giá nào? Bình luận cho mình biết nhé.",
+ "outro_points": [
+  "Thủng 200WMA",
+  "MVRV sắp dưới 1",
+  "Chu kỳ 4 năm sắp xoay chiều",
+  "Dưới giá thành đào",
+  "Tâm lý tệ nhất"
+ ],
+ "outro_cta": "BÌNH LUẬN: BẠN DCA BTC Ở VÙNG GIÁ NÀO?",
+ "shorts": [
+  2,
+  4,
+  0,
+  1,
+  3
+ ],
+ "short_spans": [
+  {
+   "from": "lịch sử cho thấy",
+   "to": "khoảng bốn mươi ba nghìn đô"
+  },
+  {
+   "from": "còn cú hích",
+   "to": "rồi bơm tiền đảo chiều xu hướng"
+  },
+  {
+   "from": "",
+   "to": "so với thanh khoản hiện có"
+  },
+  {
+   "from": "lần này khác hẳn",
+   "to": "mất chín tháng để lấy lại"
+  },
+  {
+   "from": "",
+   "to": "có thể không còn đúng"
+  }
+ ],
+ "short_hooks": {
+  "2": "Chỉ số này chỉ Bitcoin về $43K?",
+  "4": "Bong bóng AI vỡ lại là tin tốt cho Bitcoin?",
+  "0": "Bitcoin đang rẻ hơn cả giá thành đào?",
+  "1": "Đường 200 tuần của Bitcoin vừa gãy?",
+  "3": "Chu kỳ 4 năm của Bitcoin đang lệch nhịp?"
+ },
+ "thumb_text": "$55K: CƠ HỘI THẾ HỆ?",
+ "thumb_stat": "$43K?",
+ "thumb_points": [],
+ "thumb_warn": true,
+ "thumb_tag": "5 TÍN HIỆU"
+}

@@ -303,3 +303,10 @@ Tắt: config insight.two_pass: false hoặc env INSIGHT_TWO_PASS=0. Job timeout
 - Bài cổ phiếu/vĩ mô: "lợi nhuận" = earnings (EPS, P/E), "tỷ lệ rủi ro so với lợi nhuận" = risk/reward; chỉ dự án crypto mới đổi lợi nhuận → revenue (insight_lab.fix_terms_plan).
 - Cổ phiếu/chỉ số dùng biểu đồ được (Trọng 22/11): giá lấy từ Yahoo Finance, dự phòng Stooq (insight_lab._stock_series); không lấy được thì bỏ hình đó, không dừng cả bản dựng.
 - Short có thẻ cuối "Xem bản đầy đủ" 3 giây (remotion EndCard, social_schedule.with_endcard) và bìa riêng cho từng short ("thumb"/"endcard" trong file kế hoạch đăng). Bìa short có hình dán theo chủ đề (short_covers._icon).
+
+## VIDEO 100y BTC (23/11)
+- Kịch bản Trọng duyệt 01:03 23/11: scripts/100y-btc-approved.json (link https://x.com/100y_eth/status/2124147616028188896).
+- Mới: beat "wma" = biểu đồ giá BTC theo tuần + đường 200WMA, 350WMA (dữ liệu thật: Yahoo, dự phòng Stooq, CryptoCompare;
+  insight_lab.wma_data, remotion/src/beats.tsx Wma). Không lấy được giá tuần thì bỏ beat, ghi log, không dừng dựng.
+- Mới: "short_spans" (cùng thứ tự với "shorts"): mỗi short lấy đúng đoạn tinh tuý {"from": cụm đầu, "to": cụm cuối} trong phần,
+  không cố định từ đầu phần (Trọng 23/11: short lấy tinh tuý, không cố định số lượng hay theo từng phần).
