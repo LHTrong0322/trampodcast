@@ -268,7 +268,13 @@ def market_data(lab: Path) -> dict:
     return d
 
 
-NAME_TICKER = {"uniswap": "UNI", "hyperliquid": "HYPE", "aave": "AAVE", "ethena": "ENA", "solana": "SOL", "bitcoin": "BTC",
+STOCKS = {"NVDA": "Nvidia", "AAPL": "Apple", "MSFT": "Microsoft", "GOOGL": "Google", "AMZN": "Amazon", "META": "Meta", "TSLA": "Tesla",
+          "AMD": "AMD", "AVGO": "Broadcom", "TSM": "TSMC", "COIN": "Coinbase", "MSTR": "Strategy", "HOOD": "Robinhood", "CRCL": "Circle",
+          "ORCL": "Oracle", "PLTR": "Palantir", "INTC": "Intel", "NFLX": "Netflix"}
+INDEXES = {"VIX", "SPX", "SPY", "QQQ", "NDX", "DXY", "DJI", "S&P"}
+NAME_TICKER = {"nvidia": "NVDA", "apple": "AAPL", "microsoft": "MSFT", "google": "GOOGL", "amazon": "AMZN", "tesla": "TSLA",
+               "coinbase": "COIN", "microstrategy": "MSTR", "robinhood": "HOOD", "broadcom": "AVGO", "oracle": "ORCL", "palantir": "PLTR",
+               "uniswap": "UNI", "hyperliquid": "HYPE", "aave": "AAVE", "ethena": "ENA", "solana": "SOL", "bitcoin": "BTC",
                "ethereum": "ETH", "chainlink": "LINK", "pendle": "PENDLE", "virtuals": "VIRTUAL", "arbitrum": "ARB", "celestia": "TIA", "sui": "SUI"}
 
 
@@ -373,6 +379,25 @@ def coin_data(lab: Path, plan: dict, data: dict):
             need |= {str(t).lstrip("$").upper() for t in d_.get("tickers") or []}
     order = [t for t in dict.fromkeys(list(need) + tick) if re.fullmatch(r"[A-Z0-9]{2,10}", t) and (t != "ENA" or plan.get("allow_ena"))]
     for t in order:
+        if t in INDEXES:   # chỉ số (VIX, S&P...) không có logo coin: không tra CoinGecko (bản AI bubble bị gắn nhầm logo token tên VIX)
+            continue
+        if t in STOCKS:    # cổ phiếu (Trọng 22/11: nhắc NVDA phải có logo): lấy logo công ty, không tra CoinGecko
+            lp = lab / "logos" / f"{t}.png"
+            lp.parent.mkdir(exist_ok=True)
+            for url in (f"https://financialmodelingprep.com/image-stock/{t}.png", f"https://assets.parqet.com/logos/symbol/{t}?format=png"):
+                try:
+                    r = requests.get(url, timeout=20)
+                    if r.ok and r.headers.get("content-type", "").startswith("image") and len(r.content) > 400:
+                        lp.write_bytes(r.content)
+                        break
+                except Exception:
+                    pass
+            if lp.exists():
+                data["coins"][t] = {"name": STOCKS[t], "logo": f"logos/{t}.png", "color": brand_color(lp), "stock": True}
+                log(f"   Logo cổ phiếu {t}")
+            else:
+                log(f"   ! không lấy được logo cổ phiếu {t}")
+            continue
         info = _cg_search(t)
         if not info:
             log(f"   ! không tìm thấy coin {t}")
@@ -561,8 +586,14 @@ TERM_FIX = [
     (r"(?i)\bnhỏ lẻ\b", "retail"),
     (r"(?i)những người trong cuộc|người trong cuộc", "insider"),
     (r"(?i)mở kho[áa]", "unlock"),
+    # Trọng 22/11 (video AI bubble đọc sai "Revenue trên mỗi cổ phiếu"): lợi nhuận của cổ phiếu (EPS, P/E) là EARNINGS, không phải revenue;
+    # "rủi ro so với lợi nhuận" là risk/reward. Chỉ lợi nhuận của dự án crypto mới đổi thành revenue.
+    (r"(?i)tỷ lệ rủi ro so với lợi nhuận", "tỷ lệ risk/reward"),
+    (r"(?i)(?<=lần )lợi nhuận", "earnings"),
+    (r"(?i)lợi nhuận trên mỗi cổ phiếu", "earnings trên mỗi cổ phiếu"),
     (r"(?i)(?<!hứa )(?<!cam kết )lợi nhuận", "revenue"),
 ]
+STOCK_HINT = re.compile(r"\bEPS\b|P/E|cổ phiếu|S&P|Nasdaq|Nvidia|Big Tech", re.I)
 
 
 def fix_terms(obj, key: str = ""):
@@ -575,9 +606,24 @@ def fix_terms(obj, key: str = ""):
         return [fix_terms(v, key) for v in obj]
     if isinstance(obj, str):
         for pat, rep in TERM_FIX:
+            if rep == "revenue" and _STOCK_CTX:
+                rep = "earnings"   # bài về cổ phiếu: lợi nhuận = earnings
             obj = re.sub(pat, rep, obj)
-        return re.sub(r"(^|[.!?]\s+)(insider|retail|unlock|revenue)\b", lambda m: m.group(1) + m.group(2).capitalize(), obj)
+        return re.sub(r"(^|[.!?]\s+)(insider|retail|unlock|revenue|earnings)\b", lambda m: m.group(1) + m.group(2).capitalize(), obj)
     return obj
+
+
+_STOCK_CTX = False
+
+
+def fix_terms_plan(plan: dict) -> dict:
+    """Đổi từ cho cả kịch bản, tự nhận bài cổ phiếu/vĩ mô (EPS, P/E, cổ phiếu...) để dùng earnings thay revenue."""
+    global _STOCK_CTX
+    _STOCK_CTX = len(STOCK_HINT.findall(json.dumps(plan.get("sections") or [], ensure_ascii=False))) >= 3
+    try:
+        return fix_terms(plan)
+    finally:
+        _STOCK_CTX = False
 
 
 def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release: bool = False,
@@ -645,7 +691,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
             plan = P.nodash(V.llm_json(gem, cfg, system, fix))
         plan["script_score"] = rv.get("score")
     plan = scrub_plan(plan)
-    plan = fix_terms(plan)   # Trọng chốt 21/11: tự đổi từ Việt sang từ chuyên ngành tiếng Anh
+    plan = fix_terms_plan(plan)   # Trọng chốt 21/11: tự đổi từ Việt sang từ chuyên ngành tiếng Anh
     try:   # Trọng 22/11: soát khung (nhịp đổi hình, biểu đồ, đếm ý, ảnh bìa, short) trước khi tốn lượt giọng đọc
         import video_lint as VL
         plan["lint"] = VL.lint(plan)

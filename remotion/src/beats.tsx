@@ -34,8 +34,11 @@ const Card: React.FC<{w: number; h: number; children: React.ReactNode; pad?: num
 const Logo: React.FC<{src?: string | null; size: number; label?: string}> = ({src, size, label}) => {
   const ac = useAccent();
   return src ? <Img src={staticFile(src)} style={{width: size, height: size, borderRadius: 999, boxShadow: '0 8px 22px rgba(40,50,110,0.18)'}} />
-    : <div style={{width: size, height: size, borderRadius: 999, background: `${ac}22`, color: ac, fontWeight: 800, fontSize: size * 0.34,
-      display: 'flex', alignItems: 'center', justifyContent: 'center'}}>{(label || '?').slice(0, 4)}</div>;
+    // Trọng 22/11: không còn vòng tròn chữ bị cắt ("45 n", "CapE", "Nvid"). Không có logo thì: ticker ngắn → nhãn đủ chữ; còn lại → không vẽ gì
+    : label && /^[A-Z0-9&.$]{2,6}$/.test(label) ? <div style={{minWidth: size, height: size * 0.62, padding: `0 ${size * 0.14}px`, borderRadius: size * 0.2,
+      background: '#FFFFFF', border: `${Math.max(3, size * 0.035)}px solid ${ac}`, color: ac, fontWeight: 900, fontSize: size * 0.3,
+      display: 'flex', alignItems: 'center', justifyContent: 'center', transform: 'rotate(-6deg)', boxShadow: '0 8px 22px rgba(40,50,110,0.18)'}}>{label}</div>
+    : null;
 };
 
 const BigNum: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => (

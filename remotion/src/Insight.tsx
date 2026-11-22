@@ -103,52 +103,82 @@ const PostCard: React.FC<{post: Post; delay: number}> = ({post, delay}) => {
   );
 };
 
-// ---------- INTRO: tiêu đề → danh sách insight ----------
+// ---------- INTRO (Trọng 22/11: "phần mở đầu quá xấu và quá chán, đập đi xây lại") ----------
+// Màn 1: tên kênh bật lên, tiêu đề tập lớn giữa màn, con số gây sốc làm nền chìm phía sau, thẻ so sánh/ nguồn nhỏ gọn.
+// Màn 2: tiêu đề thu nhỏ lên góc trái, các chương trượt vào thành hàng thẻ số lớn, sáng lần lượt theo thời gian.
 const IntroScene: React.FC<{sc: Scene; post: Post | null; data?: any}> = ({sc, post, data}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const ac = useAccent();
   const t = f / fps;
-  const agendaAt = Math.min(6, sc.dur * 0.3);   // review 1518: thẻ giới thiệu kênh ngắn lại
-  const out = interpolate(t - agendaAt, [0, 0.5], [1, 0], clamp);
+  const pts = (sc.points || []).slice(0, 5);
+  const agendaAt = Math.min(5.5, sc.dur * 0.38);
+  const k = interpolate(t - agendaAt, [0, 0.7], [0, 1], {...clamp, easing: (x: number) => 1 - Math.pow(1 - x, 3)});
+  const pop = useSpring(2, 14);
+  const water = (sc as any).stat || '';
+  const words = (sc.title || '').split(/\s+/).filter(Boolean);
+  const cardW = Math.min(330, (1700 - (pts.length - 1) * 22) / Math.max(1, pts.length));
+  const per = Math.max(0.5, (sc.dur - agendaAt - 0.8) / Math.max(1, pts.length));
   return (
-    <AbsoluteFill>
-      <Backdrop img={sc.images?.[0]} dim={0.88} />
-      <AbsoluteFill style={{flexDirection: 'row', alignItems: 'center', padding: '0 110px', gap: 70}}>
-        <div style={{flex: 1, position: 'relative', height: 700}}>
-          {/* Trọng 21/11: câu chào mở đầu phải có logo kênh */}
-          <div style={{position: 'absolute', top: 0, display: 'flex', alignItems: 'center', gap: 22,
-            opacity: interpolate(t, [0.1, 0.6], [0, 1], clamp), transform: `scale(${interpolate(t, [0.1, 0.6], [0.85, 1], clamp)})`, transformOrigin: 'left center'}}>
-            <Img src={staticFile('logo.png')} style={{width: 112, height: 112, borderRadius: 999, boxShadow: `0 0 0 6px ${ac}33, 0 14px 40px rgba(40,50,110,0.18)`}} />
-            <div style={{display: 'flex', flexDirection: 'column', gap: 4}}>
-              <div style={{fontFamily: FONT, fontWeight: 800, fontSize: 40, letterSpacing: 2, color: C.ink}}>SMART PENGUIN INSIGHTS</div>
-              <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 26, color: C.muted}}>@Trong0322</div>
-            </div>
-          </div>
-          <div style={{position: 'absolute', top: 175, display: t >= agendaAt ? 'none' : 'flex', flexDirection: 'column', gap: 28, opacity: out}}>
-            <div><Chip text={(sc.theme || 'INSIGHT').toUpperCase()} /></div>
-            <RevealWords text={sc.title || ''} size={64} delay={6} stagger={3} maxWidth={900} />
-          </div>
-          {t >= agendaAt ? (
-            <Sequence from={Math.round(agendaAt * fps)} layout="none">
-              <div style={{position: 'absolute', top: 165, display: 'flex', flexDirection: 'column', gap: 24}}>
-                <div><Chip text={sc.agendaLabel || `${(sc.points || []).length} INSIGHT TRONG VIDEO`} /></div>
-                {(sc.points || []).map((p, i) => {
-                  // review 1915: hiện TỪNG DÒNG rải đều theo thời gian còn lại của phần mở đầu, không hiện cả bảng một lúc
-                  const step = Math.max(9, Math.floor(((sc.dur - agendaAt) * fps - 20) / Math.max(1, (sc.points || []).length)));
-                  const s = interpolate(f - Math.round(agendaAt * fps) - 8 - i * step, [0, 12], [0, 1], clamp);
-                  return <div key={i} style={{display: 'flex', gap: 22, alignItems: 'baseline', opacity: s, transform: `translateX(${(1 - s) * -30}px)`,
-                    fontFamily: FONT, fontWeight: 700, fontSize: 38, color: C.ink, maxWidth: 900, lineHeight: 1.25}}>
-                    <span style={{fontWeight: 800, color: ac, fontSize: 34, width: 56, flexShrink: 0}}>{String(i + 1).padStart(2, '0')}</span>{p}</div>;
-                })}
-              </div>
-            </Sequence>
-          ) : null}
+    <AbsoluteFill style={{background: C.bg, overflow: 'hidden'}}>
+      <Backdrop img={sc.images?.[0]} dim={0.92} />
+      {/* con số gây sốc: màn 1 là khối số lớn bên phải, màn 2 chìm thành nền */}
+      {water ? <div style={{position: 'absolute', right: interpolate(k, [0, 1], [110, -40]), top: interpolate(k, [0, 1], [360, 640]),
+        fontFamily: FONT, fontWeight: 900, fontSize: interpolate(k, [0, 1], [210, 420]), letterSpacing: -6, lineHeight: 1, whiteSpace: 'nowrap',
+        color: k > 0.5 ? `${ac}12` : (/^[-−]/.test(water) ? '#E5383B' : /^[+]/.test(water) ? '#1F9D63' : ac),
+        opacity: interpolate(t, [1.0, 1.4], [0, 1], clamp), transform: `scale(${interpolate(t, [1.0, 1.5], [1.25, 1], clamp)})`, transformOrigin: 'right top'}}>
+        {water}
+        {(sc as any).statLabel && k < 0.5 ? <div style={{fontSize: 40, letterSpacing: 4, fontWeight: 800, color: C.muted, textAlign: 'right', marginTop: 12}}>
+          {(sc as any).statLabel}</div> : null}
+      </div> : null}
+      {/* vệt màu chạy ngang khi chuyển cảnh */}
+      <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, width: `${interpolate(t - agendaAt, [-0.2, 0.35, 0.8], [0, 100, 0], clamp)}%`,
+        background: `${ac}14`}} />
+      {/* thanh thương hiệu */}
+      <div style={{position: 'absolute', left: 110, top: 70, display: 'flex', alignItems: 'center', gap: 18, opacity: pop,
+        transform: `translateY(${(1 - pop) * -30}px)`}}>
+        <Img src={staticFile('logo.png')} style={{width: 84, height: 84, borderRadius: 999, boxShadow: `0 0 0 5px ${ac}33, 0 12px 30px rgba(40,50,110,0.18)`}} />
+        <div>
+          <div style={{fontFamily: FONT, fontWeight: 900, fontSize: 32, letterSpacing: 4, color: C.ink}}>SMART PENGUIN INSIGHTS</div>
+          <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 22, color: C.muted, letterSpacing: 1}}>@Trong0322 · {(sc.theme || 'Insight crypto').toUpperCase()}</div>
         </div>
-        {post && !sc.hidePost ? <PostCard post={post} delay={14} /> : null}
-        {sc.hidePost && sc.beats?.length ? <div style={{width: 760, height: 520, opacity: interpolate(t, [0.2, 0.7], [0, 1], clamp)}}>
-          <BeatPanel beats={sc.beats.slice(0, 1)} t={Math.max(2, t)} sceneDur={sc.dur} data={data} w={760} h={520} /></div> : null}
-      </AbsoluteFill>
+      </div>
+      {/* tiêu đề tập: lớn giữa màn → thu nhỏ lên trái */}
+      <div style={{position: 'absolute', left: 110, width: water || (sc.hidePost && sc.beats?.length) ? 980 : 1700, top: interpolate(k, [0, 1], [330, 200]),
+        display: 'flex', flexWrap: 'wrap', columnGap: 24, rowGap: 4, transformOrigin: 'left top',
+        transform: `scale(${interpolate(k, [0, 1], [1, water ? 0.56 : 0.62])})`}}>
+        {words.map((w, i) => {
+          const s = interpolate(t - 0.35 - i * 0.07, [0, 0.35], [0, 1], clamp);
+          const key = w.toLowerCase().replace(/[^\p{L}\p{N}$%]/gu, '');
+          const hot = ((sc as any).hl || []).includes(key);
+          return <span key={i} style={{fontFamily: FONT, fontWeight: 900, fontSize: 112, lineHeight: 1.28, paddingTop: 10, color: hot ? ac : C.ink,
+            opacity: s, transform: `translateY(${(1 - s) * 40}px)`, display: 'inline-block'}}>{w}</span>;
+        })}
+        <div style={{flexBasis: '100%', height: 10, marginTop: 10, borderRadius: 99, background: ac, maxWidth: interpolate(t, [0.6, 1.6], [0, 420], clamp)}} />
+      </div>
+      {/* thẻ so sánh (kịch bản của Trọng) hoặc nguồn nhỏ gọn, chỉ ở màn 1 */}
+      {k < 1 && sc.hidePost && sc.beats?.length ? <div style={{position: 'absolute', right: 110, bottom: 70, opacity: interpolate(t, [1.2, 1.7], [0, 1], clamp) * (1 - k),
+        transform: `scale(${0.8 + 0.2 * interpolate(t, [1.2, 1.7], [0, 1], clamp)})`, transformOrigin: 'right bottom'}}>
+        <BeatPanel beats={sc.beats.slice(0, 1)} t={Math.max(2, t)} sceneDur={sc.dur} data={data} w={760} h={330} /></div> : null}
+      {k < 1 && post && !sc.hidePost ? <div style={{position: 'absolute', left: 110, bottom: 80, display: 'flex', alignItems: 'center', gap: 14, opacity: (1 - k) * pop,
+        padding: '12px 22px', borderRadius: 99, background: '#FFFFFF', border: `1px solid ${C.line}`, boxShadow: '0 10px 26px rgba(40,50,110,0.1)'}}>
+        {post.avatar ? <Img src={staticFile(post.avatar)} style={{width: 44, height: 44, borderRadius: 99}} /> : null}
+        <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 24, color: C.muted}}>Ý tưởng từ <b style={{color: C.ink}}>@{post.handle}</b> trên 𝕏</div>
+      </div> : null}
+      {/* màn 2: hàng thẻ chương */}
+      {k > 0 ? <div style={{position: 'absolute', left: 110, right: 110, top: 470, display: 'flex', gap: 22}}>
+        {pts.map((p, i) => {
+          const s = interpolate(t - agendaAt - 0.25 - i * 0.12, [0, 0.45], [0, 1], {...clamp, easing: (x: number) => 1 - Math.pow(1 - x, 3)});
+          const on = t >= agendaAt + 0.6 + i * per;
+          return <div key={i} style={{width: cardW, minHeight: 300, padding: '26px 26px', borderRadius: 26, background: '#FFFFFF',
+            border: `2px solid ${on ? ac : C.line}`, boxShadow: on ? `0 18px 44px ${ac}33` : '0 10px 28px rgba(40,50,110,0.10)',
+            opacity: s, transform: `translateY(${(1 - s) * 120}px) scale(${on ? 1.03 : 1})`, display: 'flex', flexDirection: 'column', gap: 16}}>
+            <div style={{fontFamily: FONT, fontWeight: 900, fontSize: 76, lineHeight: 1, color: on ? ac : `${ac}66`}}>{String(i + 1).padStart(2, '0')}</div>
+            <div style={{fontFamily: FONT, fontWeight: 800, fontSize: pts.length > 4 ? 30 : 34, lineHeight: 1.25, color: C.ink}}>{p}</div>
+          </div>;
+        })}
+      </div> : null}
+      {k > 0 && sc.agendaLabel ? <div style={{position: 'absolute', left: 110, top: 410, opacity: k}}><Chip text={sc.agendaLabel} /></div> : null}
     </AbsoluteFill>
   );
 };
