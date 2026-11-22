@@ -1,7 +1,7 @@
 """Nhân bản giọng Trọng bằng VieNeu (miễn phí, chạy trên máy GitHub).
 
 Lấy tin nhắn giọng nói / file âm thanh mới nhất Trọng gửi cho bot Telegram,
-dùng làm giọng mẫu, đọc thử đoạn kịch bản mẫu (giống voice_ab.py) rồi gửi lại Telegram.
+dùng TOÀN BỘ bản thu làm giọng mẫu, đọc thử đoạn kịch bản mẫu (giống voice_ab.py) rồi gửi lại Telegram.
 Không đổi offset của bot, nên không ảnh hưởng hộp thư lấy link của insight.
 File giọng gốc không lưu vào repo.
 """
@@ -42,15 +42,46 @@ def download(file_id: str) -> Path:
     raw = OUT / ("ref_raw" + Path(path).suffix)
     raw.write_bytes(requests.get(f"https://api.telegram.org/file/bot{TOKEN}/{path}", timeout=120).content)
     ref = OUT / "ref.wav"
-    # bỏ khoảng lặng đầu, chuẩn âm lượng, mono 24kHz, tối đa 20 giây
+    # lấy TOÀN BỘ bản thu: bỏ các khoảng lặng dài, chuẩn âm lượng, mono 24kHz
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(raw), "-ac", "1", "-ar", "24000",
-                    "-af", "silenceremove=start_periods=1:start_threshold=-45dB,highpass=f=70,loudnorm=I=-18",
-                    "-t", "20", str(ref)], check=True)
+                    "-af", "silenceremove=start_periods=1:start_threshold=-45dB:stop_periods=-1:stop_duration=0.6:"
+                    "stop_threshold=-45dB,highpass=f=70,loudnorm=I=-18", str(ref)], check=True)
     raw.unlink()
     dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0",
                                 str(ref)], capture_output=True, text=True).stdout.strip() or 0)
     print(f"Giọng mẫu: {dur:.1f} giây")
     return ref
+
+
+WIN = 8.0  # VieNeu chỉ nhận tối đa 8 giây mỗi lần tham chiếu
+
+
+def enroll_full(tts, ref: Path) -> dict:
+    """Dùng hết bản thu: cắt thành các đoạn 8 giây, lấy đặc trưng giọng của MỌI đoạn rồi gộp trung bình
+    (chất giọng), chọn đoạn gần giọng trung bình nhất làm mẫu nhịp đọc."""
+    import soundfile as sf
+    wav, sr = sf.read(str(ref), dtype="float32")
+    n = int(WIN * sr)
+    parts = []
+    for i in range(0, max(1, len(wav) - int(3 * sr)), n):
+        seg = wav[i:i + n]
+        if len(seg) < 3 * sr or float(np.sqrt(np.mean(seg ** 2))) < 0.01:
+            continue
+        f = OUT / f"seg{len(parts)}.wav"
+        sf.write(str(f), seg, sr)
+        emb, codes = tts.encode_reference(str(f), denoise=True)
+        f.unlink()
+        parts.append((np.asarray(emb, dtype=np.float32), codes))
+    if not parts:
+        raise RuntimeError("Bản thu quá ngắn hoặc quá nhỏ tiếng")
+    embs = np.stack([e.reshape(-1) for e, _ in parts])
+    unit = embs / (np.linalg.norm(embs, axis=1, keepdims=True) + 1e-8)
+    mean = unit.mean(0)
+    best = int(np.argmax(unit @ mean))
+    norm0 = float(np.linalg.norm(embs[best]))
+    mean = (mean / (np.linalg.norm(mean) + 1e-8) * norm0).reshape(parts[0][0].shape).astype(parts[0][0].dtype)
+    print(f"Đã dùng {len(parts)} đoạn 8 giây (toàn bộ bản thu), đoạn mẫu nhịp đọc: số {best + 1}")
+    return {"speaker_emb": mean, "codes": parts[best][1]}
 
 
 def to_mp3(wav: np.ndarray, sr: int, path: Path):
@@ -70,6 +101,7 @@ def main():
 
     from vieneu import Vieneu
     tts = Vieneu()
+    voice = enroll_full(tts, ref)
     text = AB.speakable(AB.HOOK + " " + AB.BODY)
     variants = [
         ("D", "Giọng Trọng nhân bản, tự nhiên", dict(temperature=0.8)),
@@ -78,7 +110,7 @@ def main():
     for code, name, kw in variants:
         print(code, name)
         try:
-            wav = tts.infer(text, ref_audio=str(ref), denoise=True, **kw)
+            wav = tts.infer(text, voice=voice, **kw)
             mp3 = OUT / f"{code}_trong_clone.mp3"
             to_mp3(np.asarray(wav, dtype=np.float32), tts.sample_rate, mp3)
             AB.VS.send(mp3, f"{code} · {name} (VieNeu, miễn phí)")
