@@ -13,6 +13,7 @@ Không bao giờ in key/token ra log.
 from __future__ import annotations
 
 import json
+from hashtags import with_tags   # hashtag không trùng (Trọng 22/11)
 import os
 from pathlib import Path
 
@@ -119,7 +120,8 @@ def youtube(res: dict, seo: dict, thumb: Path | None) -> list[str]:
         sh = (seo.get("shorts") or [])[i] if i < len(seo.get("shorts") or []) else {}
         t = (sh.get("yt_title") or s["title"])[:90]
         t = t if "#shorts" in t.lower() else f"{t} #Shorts"
-        d = f"{sh.get('tiktok_caption', '')}\n\nVideo đầy đủ: https://youtu.be/{vid}\n{' '.join(seo.get('hashtags', []))}"
+        cap_tags = with_tags(sh.get('tiktok_caption', ''), seo.get('hashtags', []), 3)
+        d = f"{cap_tags}\n\nVideo đầy đủ: https://youtu.be/{vid}"
         sid = yt_upload(tok, Path(s["path"]), t, d, seo.get("yt_tags", [])[:15], privacy)
         out.append(f"YouTube Short {i + 1} ({privacy}): https://youtube.com/shorts/{sid}")
     return out
@@ -153,7 +155,7 @@ def facebook(res: dict, seo: dict) -> list[str]:
                                headers={"Authorization": f"OAuth {tok}", "offset": "0", "file_size": str(size)},
                                data=f, timeout=TIMEOUT)
         up.raise_for_status()
-        cap = strip_links(f"{sh.get('tiktok_caption') or s['title']} {' '.join(sh.get('tiktok_hashtags') or seo.get('hashtags', []))}")
+        cap = strip_links(with_tags(sh.get('tiktok_caption') or s['title'], sh.get('tiktok_hashtags') or seo.get('hashtags', [])))
         fin = requests.post(f"https://graph.facebook.com/{FB_VER}/{page}/video_reels", params={
             "access_token": tok, "video_id": vid, "upload_phase": "finish",
             "video_state": "PUBLISHED" if publish else "DRAFT", "description": cap[:2200]}, timeout=60)
@@ -191,7 +193,7 @@ def tiktok(res: dict, seo: dict) -> list[str]:
     out = []
     for i, s in enumerate(res["shorts"]):
         sh = (seo.get("shorts") or [])[i] if i < len(seo.get("shorts") or []) else {}
-        cap = f"{sh.get('tiktok_caption') or s['title']} {' '.join(sh.get('tiktok_hashtags') or seo.get('hashtags', []))}"[:2200]
+        cap = with_tags(sh.get('tiktok_caption') or s['title'], sh.get('tiktok_hashtags') or seo.get('hashtags', []))[:2200]
         size = Path(s["path"]).stat().st_size
         init = requests.post("https://open.tiktokapis.com/v2/post/publish/video/init/", headers=H, json={
             "post_info": {"title": cap, "privacy_level": privacy, "disable_comment": False, "disable_duet": False,

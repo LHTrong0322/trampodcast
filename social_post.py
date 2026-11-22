@@ -8,6 +8,7 @@ Khoá lấy từ GitHub Secrets (xem docs/social-setup.md). Không in khoá ra l
 from __future__ import annotations
 
 import argparse
+from hashtags import with_tags   # hashtag không trùng (Trọng 22/11)
 import json
 import os
 import subprocess
@@ -84,8 +85,8 @@ def main():
     seo = rel["seo"]
     title = a.title.strip() or (seo.get("yt_titles") or [""])[0]
     sh = seo.get("shorts") or [{}, {}]
-    cap = lambda i: (f"{(sh[i] if i < len(sh) else {}).get('tiktok_caption', '')} "
-                     f"{' '.join((sh[i] if i < len(sh) else {}).get('tiktok_hashtags') or seo.get('hashtags', []))}").strip()
+    cap = lambda i: with_tags((sh[i] if i < len(sh) else {}).get('tiktok_caption', ''),
+                              (sh[i] if i < len(sh) else {}).get('tiktok_hashtags') or seo.get('hashtags', []))
     yt_items = [x.strip() for x in a.youtube.split(",") if x.strip()]
     fb_items = [x.strip() for x in a.facebook.split(",") if x.strip()]
     report, long_id = [], None

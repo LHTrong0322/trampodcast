@@ -16,6 +16,7 @@ import requests
 import podcast as P
 import video as V
 import insight_render as R
+from hashtags import with_tags   # hashtag không trùng (Trọng 22/11)
 
 log = P.log
 
@@ -100,7 +101,27 @@ def seo_pack(gem, cfg, res: dict) -> dict:
         seo["yt_description"] = "\n".join(l for l in seo["yt_description"].split("\n") if not L._banned(l) or "x.com/" in l)
     if own:
         seo = strip_source(seo, plan)
-    return P.nodash(seo)
+    return P.nodash(clean_tags(seo))
+
+
+def clean_tags(seo: dict) -> dict:
+    """Chuẩn hoá hashtag trong gói SEO: caption không chứa hashtag, danh sách không trùng, tối đa 5."""
+    def uniq(xs, n):
+        out, seen = [], set()
+        for t in xs or []:
+            t = str(t).strip()
+            t = t if t.startswith("#") else "#" + t
+            if t.lower() not in seen and len(t) > 1:
+                seen.add(t.lower()); out.append(t)
+        return out[:n]
+    seo["hashtags"] = uniq(seo.get("hashtags"), 3)
+    for sh in seo.get("shorts") or []:
+        cap = sh.get("tiktok_caption") or ""
+        sh["tiktok_hashtags"] = uniq(re.findall(r"#[\wÀ-ỹ]+", cap) + list(sh.get("tiktok_hashtags") or []), 5)
+        sh["tiktok_caption"] = re.sub(r"\s*#[\wÀ-ỹ]+", "", cap).strip()
+        yt = sh.get("yt_title") or ""
+        sh["yt_title"] = (re.sub(r"\s*#[\wÀ-ỹ]+", "", yt).strip() + " #Shorts").strip()
+    return seo
 
 
 def strip_source(seo, plan: dict):
@@ -395,7 +416,7 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None) -> di
         tk = ["🎵 TIKTOK / SHORTS: caption từng video ngắn"]
         for i, sh in enumerate(seo["shorts"][: len(res["shorts"])]):
             tk += ["", f"Short {i + 1}", f"Shorts title: {sh.get('yt_title', '')}",
-                   f"TikTok: {sh.get('tiktok_caption', '')} {' '.join(sh.get('tiktok_hashtags', []))}"]
+                   f"TikTok: {with_tags(sh.get('tiktok_caption', ''), sh.get('tiktok_hashtags', []))}"]
         tg_text("\n".join(tk))
     try:   # đăng tự động (chỉ chạy khi SOCIAL_AUTOPOST=1 và có key), xem docs/social-setup.md
         import social_upload as SU

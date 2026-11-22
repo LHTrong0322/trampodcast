@@ -273,3 +273,4 @@ postfa.st/sizes/youtube/shorts.
 
 ## Video là sản phẩm của Trọng (own_source) (22/11)
 - Kịch bản có "own_source": true thì mô tả, caption, bình luận ghim, tiêu đề short trên MỌI mạng xã hội không nhắc tác giả/bài gốc (không handle, không link x.com của người khác, không dòng "Source ý tưởng gốc"). insight_publish.seo_pack tự xoá bằng strip_source. Khi tự viết file kế hoạch đăng (scripts/posts/*.json) cũng phải tuân theo.
+- Hashtag: caption không chứa hashtag, danh sách không trùng, tối đa 5 (YouTube 3). Mọi chỗ ghép caption dùng hashtags.with_tags; gói SEO chuẩn hoá bằng insight_publish.clean_tags (Trọng 22/11: caption bị spam hashtag trùng).
