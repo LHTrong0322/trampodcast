@@ -42,7 +42,7 @@
     "Phí thấp, tích luỹ rất lớn",
     "Giảm theo thị trường, nên giữ lâu"
    ],
-   "narration": "Đầu tiên, index fund là gì? Index fund, hay quỹ chỉ số, không cố chọn cổ phiếu ngon. Nó mua y hệt cả rổ năm trăm công ty lớn nhất nước Mỹ trong S&P 500. Không cần đội phân tích, nên phí cực thấp: quỹ active thường thu khoảng một phần trăm mỗi năm, nhiều index fund chỉ thu không phẩy không ba phần trăm. Nghe nhỏ, nhưng mười nghìn đô giữ ba mươi năm, phí một phần trăm ăn mất khoảng mười tám nghìn đô. Vì vậy không lạ khi SPIVA, báo cáo của S&P chuyên so quỹ active với chỉ số, cho thấy sau hai mươi năm, khoảng chín mươi bốn phần trăm quỹ active thua S&P 500. Đổi lại, thị trường giảm thì bạn cũng giảm theo. Nhưng giữ đủ lâu, cái rổ không ai chọn đó thắng gần hết chuyên gia.",
+   "narration": "Đầu tiên, index fund là gì? Index fund, hay quỹ chỉ số, không cố chọn cổ phiếu ngon. Nó mua cả rổ. Ví dụ năm trăm công ty lớn nhất nước Mỹ, gọi là S&P 500. Không cần đội phân tích, nên phí cực thấp: quỹ active thường thu khoảng một phần trăm mỗi năm, nhiều index fund chỉ thu không phẩy không ba phần trăm. Nghe nhỏ, nhưng mười nghìn đô giữ ba mươi năm, phí một phần trăm ăn mất khoảng mười tám nghìn đô. SPIVA là báo cáo của S&P so quỹ active với chỉ số. Sau hai mươi năm, tính tới 2025, khoảng chín mươi bốn phần trăm quỹ active thua S&P 500. Đổi lại, thị trường giảm thì bạn cũng giảm theo. Nhưng giữ đủ lâu, cái rổ không ai chọn đó thắng gần hết chuyên gia. Muốn bắt đầu: tìm quỹ ETF theo chỉ số, và xem phí trước tiên.",
    "beats": [
     {
      "at": "index fund là gì",
@@ -93,7 +93,7 @@
      "tone": "down"
     },
     {
-     "at": "vì vậy không lạ",
+     "at": "spiva là báo cáo",
      "type": "dots",
      "total": 10,
      "hit": 9,
@@ -118,6 +118,19 @@
      "at": "cái rổ không ai chọn đó",
      "type": "statement",
      "text": "Giữ đủ lâu: thắng ~94% chuyên gia"
+    },
+    {
+     "at": "muốn bắt đầu",
+     "type": "flow",
+     "label": "Bắt đầu ngay",
+     "steps": [
+      "Tìm ETF theo chỉ số",
+      "Xem phí trước tiên"
+     ],
+     "step_at": [
+      "tìm quỹ etf theo chỉ số",
+      "xem phí trước tiên"
+     ]
     }
    ],
    "quote": "",
@@ -300,7 +313,7 @@
  "short_hooks": {
   "0": "79% quỹ chuyên nghiệp thua một rổ không ai chọn?"
  },
- "short_cta": "Bạn có index fund chưa? Bình luận và theo dõi Smart Penguin Insights nhé!",
+ "short_cta": "Cái rổ hay 79% chuyên gia, bạn chọn bên nào? Bình luận và theo dõi kênh nhé!",
  "thumb_text": "INDEX FUND LÀ GÌ?",
  "thumb_stat": "79%",
  "thumb_points": [],
