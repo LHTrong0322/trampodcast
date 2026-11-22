@@ -156,6 +156,13 @@
      "text": "Phí cắn vào TOÀN BỘ tài sản, mỗi năm"
     },
     {
+     "at": "nó cắn vào toàn bộ số tiền",
+     "type": "bignum",
+     "value": "1%/năm",
+     "label": "Trừ trên TOÀN BỘ tài sản, không chỉ phần lãi",
+     "tone": "down"
+    },
+    {
      "at": "lãi chồng lên lãi",
      "type": "flow",
      "label": "Ví dụ minh hoạ: $10K, lãi 7%/năm",
