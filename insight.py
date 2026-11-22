@@ -423,6 +423,35 @@ def cook(out: Path, cfg: dict, gem, st: dict) -> dict:
 STANDARD_TAG = "20261120-1915"   # video chuẩn Trọng duyệt 21/11: chất lượng từ đây trở lên
 
 
+def two_pass_draft(src, tips, ic) -> dict:
+    """Lượt nháp: dựng giọng miễn phí, chấm, bot sửa hình, ghi kịch bản đã sửa cho lượt chính (INSIGHT_SCRIPT)."""
+    import insight_lab as L
+    import insight_render as R
+    import insight_publish as PB
+    import insight_improve as IM
+    main_voice = os.getenv("INSIGHT_VOICE", "")
+    approved = os.getenv("INSIGHT_SCRIPT", "").strip()
+    dv = ic.get("draft_voice", "vieneu:Hải Đăng")
+    log(f"══ LƯỢT 1 (nháp): giọng {dv} ══")
+    os.environ["INSIGHT_VOICE"] = dv
+    try:
+        lab = L.prepare(src, Path("lab_nhap"), notes=tips)
+        res = R.render(lab, Path("render_nhap"))
+        rv = PB.review_draft(lab, res, Path("render_nhap"))
+    finally:
+        os.environ["INSIGHT_VOICE"] = main_voice
+    # sửa trên kịch bản gốc (kịch bản duyệt còn giữ ô điền số {YTD:...}); AI tự viết thì lấy bản lượt 1
+    base = json.loads(Path(approved).read_text(encoding="utf-8")) if approved else json.loads((lab / "plan.json").read_text(encoding="utf-8"))
+    if not approved:
+        base.setdefault("own_source", (json.loads((lab / "plan.json").read_text(encoding="utf-8"))).get("own_source"))
+    new, changes = IM.improve(base, rv, locked=bool(approved))
+    fixed = Path("lab_nhap") / "kich-ban-da-sua.json"
+    fixed.write_text(json.dumps(new, ensure_ascii=False, indent=1), encoding="utf-8")
+    os.environ["INSIGHT_SCRIPT"] = str(fixed)   # lượt chính dựng đúng lời đọc lượt 1 + hình đã sửa
+    log(f"══ LƯỢT 2 (bản chính): giọng {main_voice or 'mặc định'}, {len(changes)} sửa hình ══")
+    return {"long": str(res["long"]), "review": rv, "changes": changes, "voice": dv.split(":")[-1]}
+
+
 def produce(out: Path, cfg: dict, st: dict, links: str = ""):
     """Quy trình chính thức (kiểu video 2): nguyên liệu → dựng Remotion → SEO + Release + Telegram → bot review."""
     import insight_lab as L
@@ -441,9 +470,18 @@ def produce(out: Path, cfg: dict, st: dict, links: str = ""):
     import insight_lessons as LS
     tips = LS.tips_for_script(out)
     log(f"   Học từ review + số liệu thật: {len(tips)} bài học")
+    draft = None
+    # Trọng 22/11: quy trình 2 lượt. Lượt 1 dựng bằng giọng miễn phí (VieNeu Hải Đăng) → bot review → bot sửa hình
+    # → lượt 2 dựng bằng giọng chính. Gửi Telegram cả 2 video để so sánh. Tắt bằng config insight.two_pass: false.
+    if ic.get("two_pass", True) and os.getenv("INSIGHT_TWO_PASS", "1") != "0":
+        try:
+            draft = two_pass_draft(src, tips, ic)
+        except Exception as ex:
+            log(f"   ! lượt nháp lỗi ({str(ex)[:200]}), dựng thẳng bản chính")
+            draft = None
     lab = L.prepare(src, Path("lab"), notes=tips)
     res = R.render(lab, Path("render_out"))
-    PB.publish(lab, res, Path("render_out"), data_dir=out)
+    PB.publish(lab, res, Path("render_out"), data_dir=out, draft=draft)
     for p in st["posts"]:
         if (links.strip() and p.get("url") and p["url"].split("?")[0] in links) or (not links.strip() and p in posts):
             p["used"] = True

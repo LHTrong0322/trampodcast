@@ -274,3 +274,9 @@ postfa.st/sizes/youtube/shorts.
 ## Video là sản phẩm của Trọng (own_source) (22/11)
 - Kịch bản có "own_source": true thì mô tả, caption, bình luận ghim, tiêu đề short trên MỌI mạng xã hội không nhắc tác giả/bài gốc (không handle, không link x.com của người khác, không dòng "Source ý tưởng gốc"). insight_publish.seo_pack tự xoá bằng strip_source. Khi tự viết file kế hoạch đăng (scripts/posts/*.json) cũng phải tuân theo.
 - Hashtag: caption không chứa hashtag, danh sách không trùng, tối đa 5 (YouTube 3). Mọi chỗ ghép caption dùng hashtags.with_tags; gói SEO chuẩn hoá bằng insight_publish.clean_tags (Trọng 22/11: caption bị spam hashtag trùng).
+
+## Quy trình 2 lượt (Trọng 22/11, mặc định cho mọi video)
+1. Lượt 1 (nháp): dựng bằng giọng miễn phí VieNeu "Hải Đăng" (config insight.draft_voice), KHÔNG tạo Release, KHÔNG gửi Telegram, KHÔNG đăng; bot review chấm bản nháp (insight_publish.review_draft).
+2. Bot sửa (insight_improve.improve): xử lý NGHIÊM TÚC TỪNG MỤC "Nên sửa", "Dễ mất người xem", "Mẹo kịch bản", bắt trả lời đủ mọi mục ("Đã sửa: ..." hoặc "Cần Trọng quyết: ..."), thiếu thì hỏi lại. Kịch bản Trọng duyệt: khoá lời đọc, chỉ sửa hình. Kịch bản máy viết: được sửa cả lời đọc. Bản sửa phải qua video_lint không tệ hơn.
+3. Lượt 2 (bản chính): dựng bằng giọng chính (Gemini Ludo) từ kịch bản đã sửa, gửi Telegram như cũ + video nháp + danh sách xử lý từng góp ý + bảng so điểm nháp → chính.
+Tắt: config insight.two_pass: false hoặc env INSIGHT_TWO_PASS=0. Job timeout 200 phút.

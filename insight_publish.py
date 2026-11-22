@@ -372,7 +372,18 @@ def tg_photo(path: Path, caption: str):
 
 
 # ---------------------------------------------------------------------------
-def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None) -> dict:
+def review_draft(lab: Path, res: dict, out: Path) -> dict:
+    """Lượt 1 (nháp giọng miễn phí): chỉ chấm, KHÔNG tạo Release, KHÔNG gửi Telegram, KHÔNG đăng."""
+    cfg = V.load_cfg()
+    gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))
+    thumb = thumbnail(res, out / f"thumbnail-{lab.name}-nhap.png")
+    log("⑧ Bot review bản nháp")
+    rv = review(gem, cfg, res, thumb) or {}
+    log(f"   Bản nháp: {rv.get('score')} điểm {rv.get('scores')}")
+    return rv
+
+
+def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, draft: dict | None = None) -> dict:
     cfg = V.load_cfg()
     gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))
     tag = lab.name
@@ -408,6 +419,13 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None) -> di
     for i, s in enumerate(res["shorts"]):
         sh = (seo.get("shorts") or [{}] * 9)[i] if i < len(seo.get("shorts") or []) else {}
         tg_video(s["path"], f"📱 Short {i + 1}: {sh.get('yt_title') or s['title']}")
+    if draft and draft.get("long") and Path(draft["long"]).exists():   # Trọng 22/11: gửi cả bản nháp để so khác biệt
+        drv = draft.get("review") or {}
+        tg_video(Path(draft["long"]), f"🧪 Bản NHÁP (giọng {draft.get('voice', 'Hải Đăng')}, trước khi bot sửa): {drv.get('score', '?')} điểm")
+        if draft.get("changes"):
+            msg = "🛠 BOT XỬ LÝ TỪNG GÓP Ý CỦA BẢN NHÁP:\n\n" + "\n".join(draft["changes"])
+            for k in range(0, len(msg), 3800):
+                tg_text(msg[k:k + 3800])
     yt = ("📺 YOUTUBE: copy dán khi đăng\n\nTIÊU ĐỀ (chọn 1):\n" + "\n".join(f"{i + 1}. {t}" for i, t in enumerate(seo.get("yt_titles", [])))
           + "\n\nMÔ TẢ:\n" + seo["yt_description"] + "\n\nTAGS:\n" + ", ".join(seo.get("yt_tags", []))
           + ("\n\nBÌNH LUẬN GHIM:\n" + seo["pinned_comment"] if seo.get("pinned_comment") else ""))
@@ -429,6 +447,10 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None) -> di
     rv = review(gem, cfg, res, thumb)
     if rv:
         tg_text(review_text(rv))
+        if draft and (draft.get("review") or {}).get("scores"):
+            a, b = draft["review"]["scores"], rv.get("scores") or {}
+            tg_text("📊 SO SÁNH nháp → bản chính\n" + f"Tổng: {draft['review'].get('score')} → {rv.get('score')}\n"
+                    + "\n".join(f"{k}: {a.get(k)} → {b.get(k)}" for k in b))
         if data_dir:  # lưu lại để lần sau viết kịch bản rút kinh nghiệm
             p = data_dir / "insight" / "reviews.json"
             p.parent.mkdir(parents=True, exist_ok=True)
