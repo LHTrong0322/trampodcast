@@ -1,0 +1,32 @@
+{
+ "tag": "20261121-1615",
+ "approved_by": "CHƯA DUYỆT GIỜ: Trọng 22/11 14:35 yêu cầu lên lịch Short 1 YouTube + Short 2 Facebook của video 1; chờ Trọng xác nhận giờ trước khi chạy",
+ "youtube": {
+  "item": "short1",
+  "publish_at": "2026-11-22T12:00:00Z",
+  "playlist": "Tư duy đầu tư crypto",
+  "title": "4 dấu hiệu nhận biết một đồng coin rác bạn nên tránh ngay #Shorts",
+  "description": "4 dấu hiệu nhận biết altcoin rác: định giá FDV ảo, không có revenue thật, token không gắn với lợi ích dự án, insider giấu số liệu. Bạn từng dính dự án nào có 1 trong 4 dấu hiệu này chưa? 👇\n\n▶ Xem bản đầy đủ (3 tiêu chí chọn altcoin hold dài hạn của Kyle): https://youtu.be/MBh0-ZsFOuE\n\n⚠️ Không phải lời khuyên đầu tư.\n🐧 Smart Penguin Insights · @Trong0322\n\n#Shorts #crypto #altcoin",
+  "tags": [
+   "altcoin",
+   "coin rác",
+   "dấu hiệu coin rác",
+   "fdv",
+   "tokenomics",
+   "crypto",
+   "đầu tư crypto",
+   "smart penguin insights"
+  ],
+  "thumb": "assets/posts/20261121-1615/short1-cover.jpg",
+  "endcard": "assets/posts/20261121-1615/endcard.jpg"
+ },
+ "facebook": {
+  "item": "short2",
+  "publish_unix": 1795352400,
+  "caption": "3 điều Kyle kiểm tra trước khi hold một đồng coin dài hạn: token gắn với lợi ích dự án, có revenue thật, ít token chờ unlock. Coin bạn đang hold qua được mấy điều? 👇\n\nXem bản đầy đủ trên YouTube: Smart Penguin Insights\n\nKhông phải lời khuyên đầu tư. #crypto #altcoin #dautu #tokenomics #smartpenguininsights",
+  "comment": "Bản đầy đủ 4 phút (3 tiêu chí chọn altcoin hold dài hạn) ở đây: https://youtu.be/MBh0-ZsFOuE",
+  "comment_at": "2026-11-22T13:05:00Z",
+  "thumb": "assets/posts/20261121-1615/short2-cover.jpg",
+  "endcard": "assets/posts/20261121-1615/endcard.jpg"
+ }
+}

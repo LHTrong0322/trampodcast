@@ -287,3 +287,4 @@ Tắt: config insight.two_pass: false hoặc env INSIGHT_TWO_PASS=0. Job timeout
 - Cổ phiếu (NVDA, AAPL, MSFT...) lấy logo công ty (insight_lab.STOCKS), chỉ số (VIX, S&P...) không tra CoinGecko (bị gắn nhầm logo token tên VIX). Nhắc Nvidia/Amazon/... trong lời đọc là tự có logo.
 - Bài cổ phiếu/vĩ mô: "lợi nhuận" = earnings (EPS, P/E), "tỷ lệ rủi ro so với lợi nhuận" = risk/reward; chỉ dự án crypto mới đổi lợi nhuận → revenue (insight_lab.fix_terms_plan).
 - Cổ phiếu/chỉ số dùng biểu đồ được (Trọng 22/11): giá lấy từ Yahoo Finance, dự phòng Stooq (insight_lab._stock_series); không lấy được thì bỏ hình đó, không dừng cả bản dựng.
+- Short có thẻ cuối "Xem bản đầy đủ" 3 giây (remotion EndCard, social_schedule.with_endcard) và bìa riêng cho từng short ("thumb"/"endcard" trong file kế hoạch đăng). Bìa short có hình dán theo chủ đề (short_covers._icon).

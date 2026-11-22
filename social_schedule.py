@@ -36,6 +36,18 @@ def _tg(msg: str):
         pass
 
 
+def with_endcard(path: Path, card: Path) -> Path:
+    """Trọng 22/11: cuối short có thẻ "Xem bản đầy đủ" 3 giây (ảnh tĩnh, mờ dần vào)."""
+    import subprocess
+    out = path.with_name(path.stem + "-endcard.mp4")
+    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(path), "-loop", "1", "-t", "3", "-i", str(card),
+                    "-f", "lavfi", "-t", "3", "-i", "anullsrc=r=48000:cl=stereo", "-filter_complex",
+                    "[1:v]scale=1080:1920,format=yuv420p,fps=30,fade=t=in:st=0:d=0.35[e];[0:v]fps=30,format=yuv420p[a];"
+                    "[a][0:a][e][2:a]concat=n=2:v=1:a=1[v][au]", "-map", "[v]", "-map", "[au]", "-c:v", "libx264",
+                    "-preset", "veryfast", "-crf", "20", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", str(out)], check=True)
+    return out
+
+
 def post(plan_path: Path):
     plan = json.loads(plan_path.read_text(encoding="utf-8"))
     rel = SP.fetch_release(plan["tag"], Path("rel"))
@@ -50,6 +62,8 @@ def post(plan_path: Path):
                             "defaultLanguage": "vi", "defaultAudioLanguage": "vi"},
                 "status": {"privacyStatus": "private", "publishAt": y["publish_at"], "selfDeclaredMadeForKids": False, "embeddable": True}}
         path = rel[y.get("item", "long")]
+        if y.get("endcard"):
+            path = with_endcard(path, Path(y["endcard"]))
         size = path.stat().st_size
         r = requests.post("https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status",
                           headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json; charset=UTF-8",
@@ -60,12 +74,14 @@ def post(plan_path: Path):
         up.raise_for_status()
         vid = up.json()["id"]
         st["yt_id"] = vid
-        if rel.get("thumb"):
-            st["thumb_ok"] = SU.yt_thumb(tok, vid, rel["thumb"])
+        th = Path(y["thumb"]) if y.get("thumb") else (rel.get("thumb") if y.get("item", "long") == "long" else None)
+        if th:   # short dùng bìa riêng của short, không dùng bìa video dài
+            st["thumb_ok"] = SU.yt_thumb(tok, vid, th)
         SP.yt_add(tok, pl, vid)
         report.append(f"YouTube: đã tải lên, tự công khai lúc {y['publish_at']} (giờ VN +7). Link: https://youtu.be/{vid}")
-    if y and st.get("yt_id") and not st.get("thumb_ok") and rel.get("thumb"):   # gắn lại ảnh bìa nếu lần trước bị chặn
-        st["thumb_ok"] = SU.yt_thumb(SU._yt_token(), st["yt_id"], rel["thumb"])
+    th = (Path(y["thumb"]) if y and y.get("thumb") else rel.get("thumb") if y and y.get("item", "long") == "long" else None)
+    if y and st.get("yt_id") and not st.get("thumb_ok") and th:   # gắn lại ảnh bìa nếu lần trước bị chặn
+        st["thumb_ok"] = SU.yt_thumb(SU._yt_token(), st["yt_id"], th)
         report.append("YouTube ảnh bìa: " + ("đã gắn" if st["thumb_ok"] else "vẫn bị chặn, kênh chưa xác minh xong"))
     fb = plan.get("facebook")
     if fb and not st.get("fb_id"):
@@ -74,6 +90,8 @@ def post(plan_path: Path):
         s0.raise_for_status()
         rid = s0.json()["video_id"]
         path = rel[fb.get("item", "short1")]
+        if fb.get("endcard"):
+            path = with_endcard(path, Path(fb["endcard"]))
         size = path.stat().st_size
         with open(path, "rb") as f:
             u = requests.post(f"https://rupload.facebook.com/video-upload/{FB}/{rid}",
@@ -85,6 +103,14 @@ def post(plan_path: Path):
         if not fin.ok:
             raise RuntimeError(f"Facebook đặt lịch lỗi: {fin.text[:300]}")
         st["fb_id"] = rid
+        if fb.get("thumb"):   # bìa riêng cho Reel
+            try:
+                with open(fb["thumb"], "rb") as fh:
+                    tr = requests.post(f"https://graph.facebook.com/{FB}/{rid}/thumbnails", params={"access_token": tok, "is_preferred": "true"},
+                                       files={"source": (Path(fb["thumb"]).name, fh, "image/jpeg")}, timeout=120)
+                report.append("Facebook bìa Reel: " + ("đã gắn" if tr.ok else f"lỗi {tr.status_code}"))
+            except Exception as ex:
+                report.append(f"Facebook bìa Reel lỗi: {ex}")
         when = datetime.fromtimestamp(fb["publish_unix"], timezone.utc).isoformat()
         report.append(f"Facebook Reel: đã đặt lịch đăng lúc {when} (giờ VN +7), id {rid}")
     st.setdefault("comments_done", [])

@@ -64,7 +64,7 @@ const Icon: React.FC<{kind: ThumbIcon; size: number; color: string}> = ({kind, s
 };
 
 // Hình dán: icon trong khối trắng viền dày, xoay nhẹ, bóng đổ (kiểu sticker), thay cho dấu "!" đỏ cũ
-const Sticker: React.FC<{kind: ThumbIcon; size: number; color: string; rotate?: number}> = ({kind, size, color, rotate = -8}) => (
+export const Sticker: React.FC<{kind: ThumbIcon; size: number; color: string; rotate?: number}> = ({kind, size, color, rotate = -8}) => (
   <div style={{width: size, height: size, borderRadius: size * 0.28, background: '#FFFFFF', border: `${size * 0.035}px solid #FFFFFF`,
     boxShadow: `0 0 0 ${size * 0.02}px ${C.line}, 0 ${size * 0.08}px ${size * 0.2}px rgba(40,50,110,0.22)`, transform: `rotate(${rotate}deg)`,
     display: 'flex', alignItems: 'center', justifyContent: 'center'}}>

@@ -18,6 +18,15 @@ import video as V
 ROOT = Path(__file__).resolve().parent
 
 
+def _icon(title: str) -> str:
+    import re
+    import insight_publish as IP
+    t = title.lower()
+    if re.search(r"rác|tránh|bẫy|cảnh báo|sai lầm", t):
+        return "down"
+    return next((k for k, pat in IP.ICON_RULES if re.search(pat, t)), "magnifier")
+
+
 def props_for(plan: dict, sec_idx: int, title: str, logos: dict | None = None) -> dict:
     s = plan["sections"][sec_idx]
     up = title.upper()
@@ -30,6 +39,7 @@ def props_for(plan: dict, sec_idx: int, title: str, logos: dict | None = None) -
             "text": P.nodash(V.en_money(title))[:60],
             "stat": "" if vs else P.nodash(V.en_money(s.get("key_stat", "")))[:10],
             "vs": vs,
+            "icon": _icon(title),
             "label": P.nodash(V.en_money(s.get("key_label", "")))[:40],
             # chỉ hiện ý liệt kê khi kịch bản ghi riêng cho ảnh bìa (bullet của phần thường không khớp tiêu đề short)
             "points": [P.nodash(V.en_money(b))[:34] for b in ((plan.get("short_cover_points") or {}).get(str(sec_idx)) or [])][:3],

@@ -1,12 +1,13 @@
 import React from 'react';
 import {AbsoluteFill, Img, staticFile} from 'remotion';
 import {AccentCtx, tone, C, FONT, useFonts} from './ui';
+import {Sticker, ThumbIcon} from './Thumb';
 
 // Ảnh bìa video ngắn 1080×1920 (Reels, Shorts, TikTok). Chữ chính nằm giữa màn để không bị
 // giao diện app che (trên 230px, dưới 440px), đọc được khi thu nhỏ trong lưới video của trang.
 export type ShortThumbProps = {text: string; stat?: string; label?: string; points?: string[]; accent?: string;
-  projectLogo?: string | null; brand: string; vs?: {label: string; value: string; tone?: string; logo?: string | null}[]};
-export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat, label, points = [], accent: acIn = '#4F5BD5', projectLogo, brand, vs = []}) => {
+  projectLogo?: string | null; brand: string; icon?: ThumbIcon; vs?: {label: string; value: string; tone?: string; logo?: string | null}[]};
+export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat, label, points = [], accent: acIn = '#4F5BD5', projectLogo, brand, vs = [], icon = 'none'}) => {
   const accent = tone(acIn);
   useFonts();
   const words = (text || '').toUpperCase().split(/\s+/).filter(Boolean);
@@ -60,6 +61,8 @@ export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat, label, points
         ) : null}
         {projectLogo ? <Img src={staticFile(projectLogo)} style={{position: 'absolute', right: 80, top: 230, width: 150, height: 150,
           borderRadius: '50%', boxShadow: `0 0 0 8px ${accent}44`}} /> : null}
+        {/* Trọng 22/11: thêm hình dán theo chủ đề cho bìa short đỡ trống, không rập khuôn */}
+        {icon !== 'none' && !vs.length ? <div style={{position: 'absolute', right: 80, top: solo ? 1150 : 1228}}><Sticker kind={icon} size={165} color={accent} rotate={-8} /></div> : null}
         <div style={{position: 'absolute', left: 70, bottom: solo ? 640 : 470, display: 'flex', alignItems: 'center', gap: 14, color: 'rgba(19,24,54,0.75)',
           fontWeight: 700, fontSize: 36}}>Xem bản đầy đủ trên YouTube · @Trong0322</div>
       </AbsoluteFill>

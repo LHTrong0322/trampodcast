@@ -97,7 +97,7 @@ def yt_upload(tok: str, path: Path, title: str, desc: str, tags: list[str], priv
 def yt_thumb(tok: str, vid: str, img: Path):
     with open(img, "rb") as f:
         r = requests.post(f"https://www.googleapis.com/upload/youtube/v3/thumbnails/set?videoId={vid}",
-                          headers={"Authorization": f"Bearer {tok}", "Content-Type": "image/png"}, data=f, timeout=120)
+                          headers={"Authorization": f"Bearer {tok}", "Content-Type": "image/jpeg" if str(img).lower().endswith((".jpg", ".jpeg")) else "image/png"}, data=f, timeout=120)
     if r.status_code >= 300:  # kênh chưa xác minh số điện thoại thì không được đặt ảnh bìa tuỳ chỉnh
         log(f"   ! YouTube ảnh bìa lỗi {r.status_code}: cần xác minh kênh (youtube.com/verify)")
         return False
