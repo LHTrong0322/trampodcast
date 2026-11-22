@@ -425,6 +425,12 @@ def coin_data(lab: Path, plan: dict, data: dict):
     order = [t for t in dict.fromkeys(list(need) + tick) if re.fullmatch(r"[A-Z0-9]{2,10}", t) and (t != "ENA" or plan.get("allow_ena"))]
     for t in order:
         if t in INDEXES:   # chỉ số (VIX, S&P...) không có logo coin: không tra CoinGecko (bản AI bubble bị gắn nhầm logo token tên VIX)
+            own = Path(__file__).parent / "assets" / "logos" / f"{'SPX' if t == 'S&P' else t}.png"   # logo Trọng gửi (S&P 500, 23/11)
+            if own.exists() and t in data["coins"]:
+                (lab / "logos").mkdir(exist_ok=True)
+                (lab / "logos" / f"{t}.png").write_bytes(own.read_bytes())
+                data["coins"][t].update({"logo": f"logos/{t}.png", "color": "#D6001C"})
+                log(f"   Logo chỉ số {t} (assets/logos)")
             continue
         if t in STOCKS:    # cổ phiếu (Trọng 22/11: nhắc NVDA phải có logo): lấy logo công ty, không tra CoinGecko
             lp = lab / "logos" / f"{t}.png"
