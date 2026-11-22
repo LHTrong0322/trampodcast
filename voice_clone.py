@@ -73,13 +73,13 @@ def download(file_id: str) -> Path:
 
 VOICE_NAMES = ["Mai Thảo", "Mai Linh"]  # theo thứ tự gửi: giọng gửi trước, giọng gửi sau
 VOICE_NAME = ""
-DEMO = ("Chào buổi sáng cả nhà, đây là Trạm Podcast Crypto.\n"
+DEMO = ("Chào buổi sáng cả nhà, đây là Trạm Podcast Crypto."
         "Tin nóng nhất sáng nay: Bitcoin tiếp tục lao dốc, có lúc chạm năm mươi lăm nghìn một trăm linh sáu đô trên sàn Coinbase, "
-        "mức thấp nhất kể từ tháng chín năm hai nghìn không trăm hai mươi bốn.\n"
+        "mức thấp nhất kể từ tháng chín năm hai nghìn không trăm hai mươi bốn."
         "Chỉ trong hai mươi bốn giờ, gần ba trăm bốn mươi bốn nghìn trader bị thanh lý, tổng giá trị khoảng hai phẩy ba tám tỷ đô, "
-        "và hơn chín mươi hai phần trăm trong số đó là lệnh long.\n"
+        "và hơn chín mươi hai phần trăm trong số đó là lệnh long."
         "Theo Arthur Hayes, crypto đang bị bán ra đầu tiên để bù margin call cho các khoản lỗ từ cổ phiếu công nghệ, "
-        "khi thị trường chuyển sang trạng thái risk-off.\n"
+        "khi thị trường chuyển sang trạng thái risk-off."
         "Điều cần để ý: thanh lý dây chuyền có thể tiếp tục gây áp lực giảm giá ngắn hạn, "
         "nên cả nhà hạn chế dùng đòn bẩy cao trong giai đoạn này nhé.")
 
@@ -121,17 +121,19 @@ def enroll_full(tts, ref: Path) -> dict:
     sim = unit @ mean
     # đoạn mẫu nhịp đọc: trong nửa giống giọng chung nhất, lấy đoạn tươi sáng và rõ tiếng nhất
     close = [i for i in np.argsort(-sim)[: max(1, (len(parts) + 1) // 2)]]
-    best = int(max(close, key=lambda i: parts[i][3] * parts[i][2]))
+    best = int(close[0])  # đoạn giống giọng chung nhất: đọc đều, rõ, ít cười hay ngập ngừng
     norm0 = float(np.linalg.norm(embs[best]))
     mean = (mean / (np.linalg.norm(mean) + 1e-8) * norm0).reshape(parts[0][0].shape).astype(parts[0][0].dtype)
-    print(f"   dùng dùng {len(parts)} đoạn 8 giây rõ tiếng nhất, đoạn mẫu nhịp đọc sáng nhất")
+    print(f"   dùng {len(parts)} đoạn 8 giây rõ tiếng nhất, mẫu nhịp đọc là đoạn đều giọng nhất")
     return {"speaker_emb": mean, "codes": parts[best][1]}
 
 
 def to_mp3(wav: np.ndarray, sr: int, path: Path, pitch: float = 1.0, tempo: float = 1.0):
     pcm = (np.clip(wav, -1, 1) * 32767).astype(np.int16).tobytes()
     # rõ chữ: đọc chậm nhẹ, nâng dải 2 đến 5 kHz (vùng phụ âm), giữ formant khi nâng tông để không bị giọng chuột
-    clear = "highpass=f=80,equalizer=f=3500:t=q:w=1.2:g=3,equalizer=f=250:t=q:w=1:g=-2"
+    # cắt thời gian chết: mọi khoảng lặng dài hơn 0,2 giây rút còn 0,12 giây
+    gaps = "silenceremove=start_periods=1:start_threshold=-42dB:stop_periods=-1:stop_duration=0.2:stop_threshold=-42dB:stop_silence=0.12"
+    clear = gaps + ",highpass=f=80,equalizer=f=3500:t=q:w=1.2:g=3,equalizer=f=250:t=q:w=1:g=-2"
     fx = [f"rubberband=pitch={pitch}:tempo={tempo}:formant=preserved:pitchq=quality,{clear},loudnorm=I=-16:TP=-1.5",
           f"atempo={tempo},{clear},loudnorm=I=-16:TP=-1.5"]
     for af in fx:
@@ -160,9 +162,10 @@ def main():
             ref = download(fid)
             voice = enroll_full(tts, ref)
             ref.unlink(missing_ok=True)
-            wav = tts.infer(text, voice=voice, max_chars=120, temperature=0.55, top_k=15)
+            wav = tts.infer(text, voice=voice, max_chars=256, silence_p=0.04, temperature=0.4, top_k=10,
+                            repetition_penalty=1.3)
             mp3 = OUT / f"{code}_{name.replace(' ', '_')}.mp3"
-            to_mp3(np.asarray(wav, dtype=np.float32), tts.sample_rate, mp3, tempo=0.95)
+            to_mp3(np.asarray(wav, dtype=np.float32), tts.sample_rate, mp3, tempo=1.08)
             AB.VS.send(mp3, f"{code} · Giọng {name} đọc thử tin podcast sáng nay (VieNeu, miễn phí)")
         except Exception as ex:
             print(f"   ! {code} lỗi: {ex}")
