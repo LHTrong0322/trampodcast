@@ -42,7 +42,7 @@
     "Phí thấp, tích luỹ rất lớn",
     "Giảm theo thị trường, nên giữ lâu"
    ],
-   "narration": "Đầu tiên, index fund là gì? Index fund, hay quỹ chỉ số, không cố chọn cổ phiếu ngon. Nó mua y hệt cả một rổ, ví dụ năm trăm công ty lớn nhất nước Mỹ trong S&P 500. Không cần đội phân tích đắt đỏ, nên phí cực thấp: quỹ active thường thu khoảng một phần trăm mỗi năm, nhiều index fund chỉ thu không phẩy không ba phần trăm. Kết quả thì sao? SPIVA, báo cáo của S&P Dow Jones chuyên so quỹ chủ động với chỉ số, cho thấy sau hai mươi năm, khoảng chín mươi bốn phần trăm quỹ active thua S&P 500. Nhưng index fund không phải phép màu: thị trường giảm thì bạn cũng giảm theo. Cách dùng đúng là DCA đều đặn và giữ thật lâu.",
+   "narration": "Đầu tiên, index fund là gì? Index fund, hay quỹ chỉ số, không cố chọn cổ phiếu ngon. Nó mua y hệt cả rổ năm trăm công ty lớn nhất nước Mỹ trong S&P 500. Không cần đội phân tích, nên phí cực thấp: quỹ active thường thu khoảng một phần trăm mỗi năm, nhiều index fund chỉ thu không phẩy không ba phần trăm. Nghe nhỏ, nhưng mười nghìn đô giữ ba mươi năm, phí một phần trăm ăn mất khoảng mười tám nghìn đô. Vì vậy không lạ khi SPIVA, báo cáo của S&P chuyên so quỹ active với chỉ số, cho thấy sau hai mươi năm, khoảng chín mươi bốn phần trăm quỹ active thua S&P 500. Đổi lại, thị trường giảm thì bạn cũng giảm theo. Nhưng giữ đủ lâu, cái rổ không ai chọn đó thắng gần hết chuyên gia.",
    "beats": [
     {
      "at": "index fund là gì",
@@ -68,16 +68,6 @@
        "label": "Nvidia",
        "value": "",
        "logo": "NVDA"
-      },
-      {
-       "label": "Amazon",
-       "value": "",
-       "logo": "AMZN"
-      },
-      {
-       "label": "Google",
-       "value": "",
-       "logo": "GOOGL"
       }
      ]
     },
@@ -96,7 +86,14 @@
      }
     },
     {
-     "at": "kết quả thì sao",
+     "at": "mười nghìn đô giữ ba mươi năm",
+     "type": "bignum",
+     "value": "-$18K",
+     "label": "$10K giữ 30 năm (lãi 7%/năm): mất vì phí 1%",
+     "tone": "down"
+    },
+    {
+     "at": "vì vậy không lạ",
      "type": "dots",
      "total": 10,
      "hit": 9,
@@ -111,16 +108,16 @@
      "hold": 3
     },
     {
-     "at": "không phải phép màu",
+     "at": "thị trường giảm thì",
      "type": "chart",
      "ticker": "SPX",
      "days": 365,
      "label": "S&P 500 một năm qua: có lúc giảm, bạn giảm theo"
     },
     {
-     "at": "dca đều đặn",
+     "at": "cái rổ không ai chọn đó",
      "type": "statement",
-     "text": "DCA đều đặn + giữ thật lâu"
+     "text": "Giữ đủ lâu: thắng ~94% chuyên gia"
     }
    ],
    "quote": "",
@@ -303,7 +300,7 @@
  "short_hooks": {
   "0": "79% quỹ chuyên nghiệp thua một rổ không ai chọn?"
  },
- "short_cta": "Theo dõi Smart Penguin Insights để học đầu tư từ số 0 nhé!",
+ "short_cta": "Bạn có index fund chưa? Bình luận và theo dõi Smart Penguin Insights nhé!",
  "thumb_text": "INDEX FUND LÀ GÌ?",
  "thumb_stat": "79%",
  "thumb_points": [],
