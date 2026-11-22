@@ -144,6 +144,23 @@ def strip_source(seo, plan: dict):
 # ---------------------------------------------------------------------------
 # ảnh bìa
 # ---------------------------------------------------------------------------
+ICON_RULES = [("crack", r"bubble|bong bóng|vỡ|sập|crash|nổ"), ("down", r"giảm|lỗ|bán tháo|dump|rơi|mất"),
+              ("up", r"tăng|pump|x\d|bùng nổ|đột phá"), ("hourglass", r"ngày|thời gian|chờ|sắp|khi nào|đếm ngược"),
+              ("flame", r"nóng|hot|fomo|cháy"), ("scale", r"so sánh|cân|hay là|vs"), ("magnifier", r"bí mật|sự thật|soi|vì sao|tại sao|\?")]
+
+
+def thumb_style(plan: dict, has_vs: bool, has_points: bool, has_stat: bool) -> tuple[str, str]:
+    """Trọng 22/11: ảnh bìa không rập khuôn. Chọn bố cục theo nội dung, xoay vòng theo tiêu đề; kịch bản có thể chỉ định thumb_style/thumb_icon."""
+    import hashlib
+    text = " ".join(str(plan.get(k, "")) for k in ("thumb_text", "title", "theme")).lower()
+    icon = plan.get("thumb_icon") or next((k for k, pat in ICON_RULES if re.search(pat, text)), "magnifier")
+    if plan.get("thumb_style"):
+        return plan["thumb_style"], icon
+    opts = ["vs"] if has_vs else ["stack", "classic"] if has_points else ["hero", "sticker", "classic"] if has_stat else ["sticker", "stack"]
+    k = int(hashlib.md5(text.encode()).hexdigest(), 16) % len(opts)
+    return opts[k], icon
+
+
 def thumbnail(res: dict, out: Path) -> Path | None:
     plan = res["plan"]
     proj = next((s.get("project") for s in res["scenes"] if s.get("project") and s["project"].get("logo")), None)
@@ -157,7 +174,10 @@ def thumbnail(res: dict, out: Path) -> Path | None:
              "tag": P.nodash(str((plan.get("thumb_tag") or ""))), "vs": [{**x, "logo": ((res.get("data") or {}).get("coins") or {}).get(str(x.get("logo", "")).upper(), {}).get("logo")}
                     for x in (plan.get("thumb_vs") or [])][:2],   # review 1615: dấu chấm than đỏ rối mắt, chỉ bật khi kịch bản yêu cầu
              "projectLogo": (proj or {}).get("logo"), "bg": None,
+             "style": "", "icon": "none",
              "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")}
+    props["style"], props["icon"] = thumb_style(plan, bool(props["vs"]), bool(props["points"]), bool(props["stat"]))
+    log(f"   Ảnh bìa: bố cục {props['style']}, hình dán {props['icon']}")
     try:
         R.run_remotion(props, out, frames="0")
         return out

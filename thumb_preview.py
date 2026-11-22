@@ -26,13 +26,20 @@ def main(script: str, fonts: str):
     R.prep_public(lab)
     out = Path("thumbs"); out.mkdir(exist_ok=True)
     for f in [x.strip() for x in fonts.split(",") if x.strip()]:
+        st = f.split(":", 1)[1] if f.startswith("style:") else ""   # "style:hero" = vẽ thử bố cục (phông bvp)
         props = {"comp": "Thumb", "width": 1280, "height": 720, "text": plan.get("thumb_text") or plan.get("title", ""),
                  "stat": plan.get("thumb_stat", ""), "accent": "#4F5BD5", "points": plan.get("thumb_points") or [],
                  "warn": False, "projectLogo": None, "bg": None, "brand": "Smart Penguin Insights", "font": f,
                  "tag": P.nodash(str((plan.get("thumb_tag") or ""))), "vs": [{**x, "logo": logos.get(str(x.get("logo", "")).upper())} for x in (plan.get("thumb_vs") or [])]}
-        p = out / f"thumb-{f}.png"
+        if st:
+            props["font"] = "bvp"
+            props["warn"] = bool(plan.get("thumb_warn"))
+            auto, icon = IP.thumb_style(plan, bool(props["vs"]), bool(props["points"]), bool(props["stat"]))
+            props["style"], props["icon"] = (auto if st == "auto" else st), icon
+        p = out / f"thumb-{f.replace(':', '-')}.png"
         R.run_remotion(props, p, frames="0")
-        IP.tg_photo(p, f"🖼 Ảnh bìa thử phông: {f}")
+        if not st:
+            IP.tg_photo(p, f"🖼 Ảnh bìa thử phông: {f}")
         print("đã vẽ", p)
     import os, subprocess
     repo = os.getenv("GITHUB_REPOSITORY")
