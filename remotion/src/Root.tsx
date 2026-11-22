@@ -1,6 +1,7 @@
 import React from 'react';
 import {Composition} from 'remotion';
 import {EndCard} from './EndCard';
+import {HookImpact} from './HookImpact';
 import {ShortThumb} from './ShortThumb';
 import {Insight, InsightProps} from './Insight';
 import {InsightShort} from './InsightShort';
@@ -42,6 +43,10 @@ export const Root: React.FC = () => (
     />
     <Composition id="Thumb" component={Thumb} width={1280} height={720} fps={30} durationInFrames={1}
       defaultProps={{text: '', stat: '', brand: 'Smart Penguin Insights'}} />
+    <Composition id="HookImpact" component={HookImpact} width={1920} height={1080} fps={30} durationInFrames={270}
+      defaultProps={{value: '-$6T', label: 'bốc hơi trong 45 ngày', tag: '45 NGÀY', qAt: 5.9, subAt: 7.4,
+        chips: [{text: 'Cổ phiếu Mỹ', s: 2.9}, {text: 'Vàng', s: 3.8}, {text: 'Crypto', s: 4.6}],
+        question: 'AI BUBBLE ĐÃ VỠ?', sub: 'Hay cú rũ trước cơ hội lớn?'}} />
     <Composition id="EndCard" component={EndCard} width={1080} height={1920} fps={30} durationInFrames={1}
       defaultProps={{title: "", thumb: null}} />
     <Composition id="ShortThumb" component={ShortThumb} width={1080} height={1920} fps={30} durationInFrames={1}
