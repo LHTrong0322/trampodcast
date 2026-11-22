@@ -49,8 +49,22 @@ const Bubble: React.FC<{size: number; crack: number; pop: number}> = ({size, cra
       </radialGradient>
     </defs>
     <circle cx="100" cy="100" r="88" fill="url(#bub)" stroke="#7C6CFF" strokeWidth="4" />
-    <ellipse cx="68" cy="58" rx="24" ry="13" fill="#FFFFFF" opacity="0.9" transform="rotate(-30 68 58)" />
-    <text x="100" y="122" textAnchor="middle" fontFamily={FONT} fontWeight={900} fontSize="50" fill="#4B3FD1">AI</text>
+    <ellipse cx="52" cy="92" rx="10" ry="22" fill="#FFFFFF" opacity="0.9" transform="rotate(-30 68 58)" />
+    {/* sticker AI: con chip có mạch nơ-ron + tia lấp lánh (Trọng 23/11: thay chữ AI bằng biểu tượng) */}
+    <g transform="translate(100 104) rotate(-8) scale(0.86)">
+      <rect x="-50" y="-50" width="100" height="100" rx="22" fill="#FFFFFF" stroke="#131836" strokeWidth="4" />
+      {[-26, -9, 9, 26].map((d) => <g key={d}>
+        <line x1={d} y1="-50" x2={d} y2="-62" stroke="#131836" strokeWidth="5" strokeLinecap="round" />
+        <line x1={d} y1="50" x2={d} y2="62" stroke="#131836" strokeWidth="5" strokeLinecap="round" />
+        <line x1="-50" y1={d} x2="-62" y2={d} stroke="#131836" strokeWidth="5" strokeLinecap="round" />
+        <line x1="50" y1={d} x2="62" y2={d} stroke="#131836" strokeWidth="5" strokeLinecap="round" />
+      </g>)}
+      <rect x="-32" y="-32" width="64" height="64" rx="12" fill="#7C6CFF" />
+      <path d="M-14 -16 L6 -4 L-10 14 M6 -4 L16 14" fill="none" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" opacity="0.85" />
+      {[[-14, -16], [6, -4], [-10, 14], [16, 14]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="5.5" fill="#FFFFFF" />)}
+    </g>
+    <path d="M58 46 Q60 58 72 60 Q60 62 58 74 Q56 62 44 60 Q56 58 58 46 Z" fill="#FFC83D" stroke="#131836" strokeWidth="2.5" />
+    <path d="M154 134 Q155 141 162 142 Q155 143 154 150 Q153 143 146 142 Q153 141 154 134 Z" fill="#FFC83D" stroke="#131836" strokeWidth="2" />
     <path d="M150 28 L138 52 L158 66 L146 84" fill="none" stroke={C.red} strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"
       strokeDasharray="90" strokeDashoffset={90 * (1 - crack)} />
     <path d="M158 66 L178 64" fill="none" stroke={C.red} strokeWidth="5" strokeLinecap="round" strokeDasharray="40" strokeDashoffset={40 * (1 - crack)} />
