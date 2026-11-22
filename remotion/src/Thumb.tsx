@@ -122,7 +122,7 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5
         fontSize: (len > 22 ? 70 : 84) * (cond ? 1.2 : 1), lineHeight: 1.3, color: C.ink}}>
         {words.map((w, i) => <span key={i} style={{color: hl(i)}}>{w}</span>)}
       </div>
-      {icon !== 'none' ? <div style={{position: 'absolute', right: 70, top: 120, opacity: 0.95}}><Sticker kind={icon} size={190} color={accent} rotate={10} /></div> : null}
+      {icon !== 'none' ? <div style={{position: 'absolute', right: warn ? 110 : 70, top: warn ? 215 : 120, opacity: 0.95}}><Sticker kind={icon} size={190} color={accent} rotate={10} /></div> : null}
       {stat ? <div style={{position: 'absolute', left: 56, bottom: 54, ...disp, fontSize: (stat.length > 6 ? 190 : 230) * (cond ? 1.15 : 1), lineHeight: 1,
         color: valueColor(stat), letterSpacing: -4, textShadow: '0 8px 0 rgba(19,24,54,0.08)'}}>{stat}</div> : null}
       {tag ? <div style={{position: 'absolute', right: 64, bottom: 90, padding: '12px 24px', borderRadius: 14, background: '#FFFFFF', border: `3px solid ${accent}`,
@@ -135,8 +135,8 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5
         fontSize: (len > 28 ? 72 : len > 18 ? 86 : 100) * (cond ? 1.2 : 1), lineHeight: 1.3, color: C.ink}}>
         {words.map((w, i) => <span key={i} style={{color: hl(i)}}>{w}</span>)}
       </div>
-      <div style={{position: 'absolute', right: 120, top: 120}}><Sticker kind={icon === 'none' ? 'magnifier' : icon} size={330} color={accent} rotate={-9} /></div>
-      {stat ? <div style={{position: 'absolute', right: 96, top: 470, padding: '8px 30px 8px 52px', background: '#FFFFFF', borderRadius: '14px 40px 40px 14px',
+      <div style={{position: 'absolute', right: warn ? 150 : 120, top: warn ? 165 : 120}}><Sticker kind={icon === 'none' ? 'magnifier' : icon} size={warn ? 290 : 330} color={accent} rotate={-9} /></div>
+      {stat ? <div style={{position: 'absolute', right: 96, top: warn ? 490 : 470, padding: '8px 30px 8px 52px', background: '#FFFFFF', borderRadius: '14px 40px 40px 14px',
         border: `4px solid ${C.ink}`, ...disp, fontSize: 76 * (cond ? 1.15 : 1), color: valueColor(stat), transform: 'rotate(6deg)',
         boxShadow: '0 12px 30px rgba(40,50,110,0.18)'}}>
         <span style={{position: 'absolute', left: 16, top: '50%', width: 18, height: 18, marginTop: -9, borderRadius: 99, background: C.bg, border: `3px solid ${C.ink}`}} />
@@ -160,8 +160,8 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5
             alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>{i + 1}</div>
           <div style={{fontWeight: 800, fontSize: 28, color: C.ink, lineHeight: 1.15}}>{p}</div></div>)}
       </div> : null}
-      {icon !== 'none' ? <div style={{position: 'absolute', right: 80, top: 120}}><Sticker kind={icon} size={230} color={accent} rotate={8} /></div> : null}
-      {stat ? <div style={{position: 'absolute', right: 80, top: 380, ...disp, fontSize: 110, color: valueColor(stat)}}>{stat}</div> : null}
+      {icon !== 'none' ? <div style={{position: 'absolute', right: warn ? 120 : 80, top: warn ? 190 : 120}}><Sticker kind={icon} size={warn ? 190 : 230} color={accent} rotate={8} /></div> : null}
+      {stat ? <div style={{position: 'absolute', right: 80, top: warn ? 400 : 380, ...disp, fontSize: 110, color: valueColor(stat)}}>{stat}</div> : null}
     </>;
   } else if (style === 'vs') {
     body = <>
@@ -198,7 +198,7 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5
         </div>)}
       </div> : projectLogo ? <Img src={staticFile(projectLogo)} style={{position: 'absolute', right: 110, top: 200, width: 300, height: 300, borderRadius: '50%',
         boxShadow: `0 0 0 10px ${accent}55, 0 18px 50px rgba(40,50,110,0.15)`}} /> : null}
-      {icon !== 'none' ? <div style={{position: 'absolute', right: points.length ? 410 : 90, top: points.length ? 96 : 90}}><Sticker kind={icon} size={150} color={accent} rotate={-10} /></div> : null}
+      {icon !== 'none' && !points.length && !projectLogo ? <div style={{position: 'absolute', right: warn ? 160 : 110, top: warn ? 230 : 180}}><Sticker kind={icon} size={260} color={accent} rotate={-10} /></div> : null}
       <div style={{position: 'absolute', left: 64, bottom: 56, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 14}}>
         {tag ? <div style={{padding: '10px 24px', borderRadius: 14, background: `${accent}18`, border: `2px solid ${accent}`, color: accent, fontWeight: 800, fontSize: 34}}>
           {tag.toUpperCase()}</div> : null}
