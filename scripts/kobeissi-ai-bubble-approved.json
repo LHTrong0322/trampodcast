@@ -151,7 +151,7 @@
      "type": "dots",
      "total": 13,
      "hit": 13,
-     "label": "13 quý liên tiếp lợi nhuận vượt dự báo"
+     "label": "13 quý liên tiếp earnings vượt dự báo"
     },
     {
      "at": "chưa bao giờ thị trường",
@@ -302,8 +302,8 @@
     {
      "at": "nvidia rơi bốn mươi phần trăm",
      "type": "bignum",
-     "value": "P/E 9x",
-     "label": "Nvidia -40% chỉ trong vài tuần",
+     "value": "-40%",
+     "label": "Nvidia chỉ trong vài tuần",
      "tone": "down"
     },
     {
@@ -324,7 +324,7 @@
      "type": "flow",
      "label": "Forward P/E 9x nghĩa là",
      "steps": [
-      "Giá = 9 lần lợi nhuận dự kiến",
+      "Giá = 9 lần earnings dự kiến",
       "Rẻ nhất nhóm S&P 500"
      ],
      "step_at": [

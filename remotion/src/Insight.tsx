@@ -157,10 +157,10 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null; data?: any}> = ({sc, p
         <div style={{flexBasis: '100%', height: 10, marginTop: 10, borderRadius: 99, background: ac, maxWidth: interpolate(t, [0.6, 1.6], [0, 420], clamp)}} />
       </div>
       {/* thẻ so sánh (kịch bản của Trọng) hoặc nguồn nhỏ gọn, chỉ ở màn 1 */}
-      {k < 1 && sc.hidePost && sc.beats?.length ? <div style={{position: 'absolute', right: 110, bottom: 70, opacity: interpolate(t, [1.2, 1.7], [0, 1], clamp) * (1 - k),
+      {k < 1 && sc.hidePost && sc.beats?.length ? <div style={{position: 'absolute', right: 110, bottom: 190, opacity: interpolate(t, [1.2, 1.7], [0, 1], clamp) * (1 - k),
         transform: `scale(${0.8 + 0.2 * interpolate(t, [1.2, 1.7], [0, 1], clamp)})`, transformOrigin: 'right bottom'}}>
         <BeatPanel beats={sc.beats.slice(0, 1)} t={Math.max(2, t)} sceneDur={sc.dur} data={data} w={760} h={330} /></div> : null}
-      {k < 1 && post && !sc.hidePost ? <div style={{position: 'absolute', left: 110, bottom: 80, display: 'flex', alignItems: 'center', gap: 14, opacity: (1 - k) * pop,
+      {k < 1 && post && !sc.hidePost ? <div style={{position: 'absolute', right: 110, top: 64, display: 'flex', alignItems: 'center', gap: 14, opacity: (1 - k) * pop,
         padding: '12px 22px', borderRadius: 99, background: '#FFFFFF', border: `1px solid ${C.line}`, boxShadow: '0 10px 26px rgba(40,50,110,0.1)'}}>
         {post.avatar ? <Img src={staticFile(post.avatar)} style={{width: 44, height: 44, borderRadius: 99}} /> : null}
         <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 24, color: C.muted}}>Ý tưởng từ <b style={{color: C.ink}}>@{post.handle}</b> trên 𝕏</div>
@@ -311,7 +311,7 @@ const OutroScene: React.FC<{sc: Scene; brandName: string}> = ({sc, brandName}) =
           fontFamily: FONT, fontWeight: 800, fontSize: 52, color: ac,
           opacity: interpolate(f - Math.round(fps * Math.max(2, sc.dur * 0.35)), [0, 14], [0, 1], clamp)}}>{sc.cta}</div> : null}
       </AbsoluteFill>
-      <div style={{position: 'absolute', right: 140, bottom: 300, opacity: btn, transform: `scale(${btn * pulse})`, fontFamily: FONT,
+      <div style={{position: 'absolute', right: 140, top: 140, opacity: btn, transform: `scale(${btn * pulse})`, fontFamily: FONT,
         padding: '24px 50px', borderRadius: 99, background: C.red, color: '#fff', fontWeight: 800, fontSize: 40}}>ĐĂNG KÝ · {brandName}</div>
     </AbsoluteFill>
   );

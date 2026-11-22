@@ -186,7 +186,7 @@ def beats_for(beats: list, words: list, dur: float, data: dict) -> list:
         if "logo" in b and nb.get("logo") is None:
             nb["logo"] = None
         if not nb.get("logo") and nb.get("type") in ("statement", "bignum", "question"):
-            nb["logo"] = mention_logo(words, s, coins)   # Trọng 22/11: nhắc tới dự án nào thì hiện logo dự án đó
+            nb["logo"] = mention_logo(words, s, coins, nb)   # Trọng 22/11: nhắc tới dự án nào thì hiện logo dự án đó
         out.append({**nb, "s": round(max(0.0, s), 2)})
     return settle_beats(out, dur)
 
@@ -216,16 +216,41 @@ def settle_beats(beats: list, dur: float) -> list:
     return out
 
 
-def mention_logo(words: list, s: float, coins: dict) -> str | None:
-    """Logo của dự án được nhắc trong câu đang đọc lúc hình bật lên (tên đầy đủ hoặc ticker)."""
+ALIAS = {"GOOGL": ["google", "alphabet"], "GOOG": ["google", "alphabet"], "AMZN": ["amazon"], "META": ["meta", "facebook"],
+         "MSFT": ["microsoft"], "NVDA": ["nvidia"], "AAPL": ["apple"], "TSLA": ["tesla"], "AMD": ["amd"]}
+COMPANY_WORDS = sorted({a for v in ALIAS.values() for a in v} | {"intel", "oracle", "anthropic", "openai", "tsmc", "broadcom"})
+
+
+def mention_logo(words: list, s: float, coins: dict, beat: dict | None = None) -> str | None:
+    """Logo của dự án mà chính hình này nói tới.
+    Ưu tiên chữ trên hình; hình nhắc từ 2 dự án trở lên thì không gắn logo đơn lẻ (vd CapEx của Amazon, Google, Meta, Microsoft).
+    Không có tên trên hình thì chỉ xét lời đọc ngay lúc hình bật lên, không nhìn ngược về câu trước
+    (lỗi 22/11: thẻ "Điều gì đã thay đổi" bị gắn logo Nvidia do câu trước nhắc Nvidia)."""
     names = {}
     for t, c in coins.items():
         if c.get("logo"):
             names[_norm(t)] = c["logo"]
             for part in str(c.get("name", "")).split():
-                if len(part) >= 4 and _norm(part) not in ("protocol", "network", "finance", "token", "labs"):
+                if len(part) >= 4 and _norm(part) not in ("protocol", "network", "finance", "token", "labs", "corporation", "inc", "platforms", "holdings"):
                     names[_norm(part)] = c["logo"]
-    near = [_norm(w["t"]) for w in words if s - 1.5 <= w["s"] <= s + 4.0]
+    for t, al in ALIAS.items():
+        if t in coins and coins[t].get("logo"):
+            for a in al:
+                names[a] = coins[t]["logo"]
+    if beat:
+        txt = " ".join(str(beat.get(k) or "") for k in ("text", "sub", "value", "label"))
+        if sum(1 for a in COMPANY_WORDS if re.search(rf"\b{a}\b", txt.lower())) >= 2:
+            return None   # nhiều công ty cùng lúc: không gắn logo một công ty
+        hit = []
+        for w in re.findall(r"[\w$]+", txt):
+            lg = names.get(_norm(w.lstrip("$")))
+            if lg and lg not in hit:
+                hit.append(lg)
+        if len(hit) == 1:
+            return hit[0]
+        if len(hit) > 1 or beat.get("type") == "statement":
+            return None   # thẻ câu chữ không tự nhận logo từ lời đọc xung quanh
+    near = [_norm(w["t"]) for w in words if s - 0.3 <= w["s"] <= s + 2.5]
     for w in near:
         if w in names:
             return names[w]
