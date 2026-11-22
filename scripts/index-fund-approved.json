@@ -89,7 +89,7 @@
      "at": "mười nghìn đô giữ ba mươi năm",
      "type": "bignum",
      "value": "-$18K",
-     "label": "$10K giữ 30 năm (lãi 7%/năm): mất vì phí 1%",
+     "label": "$10K, 30 năm: mất vì phí 1%",
      "tone": "down"
     },
     {
@@ -97,13 +97,13 @@
      "type": "dots",
      "total": 10,
      "hit": 9,
-     "label": "Gần 9/10 quỹ active thua S&P 500 sau 20 năm"
+     "label": "Gần 9/10 quỹ active thua"
     },
     {
      "at": "khoảng chín mươi bốn phần trăm",
      "type": "bignum",
      "value": "94%",
-     "label": "Quỹ active large-cap Mỹ thua S&P 500 sau 20 năm (SPIVA)",
+     "label": "Mỹ, 20 năm: quỹ active thua S&P 500",
      "tone": "down",
      "hold": 3
     },
