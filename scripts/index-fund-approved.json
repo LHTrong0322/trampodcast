@@ -144,7 +144,10 @@
     "name": "",
     "ticker": ""
    },
-   "visual_queries": [],
+   "visual_queries": [
+    "S&P 500 stock market chart",
+    "stock exchange trading floor"
+   ],
    "source_ids": [
     0
    ]
@@ -228,7 +231,10 @@
     "name": "",
     "ticker": ""
    },
-   "visual_queries": [],
+   "visual_queries": [
+    "compound interest savings growth",
+    "investment fee calculator"
+   ],
    "source_ids": [
     0
    ]
@@ -294,7 +300,10 @@
     "name": "",
     "ticker": ""
    },
-   "visual_queries": [],
+   "visual_queries": [
+    "Ho Chi Minh City Stock Exchange",
+    "Vietnam stock market board"
+   ],
    "source_ids": [
     0
    ]
@@ -318,5 +327,9 @@
  "thumb_stat": "79%",
  "thumb_points": [],
  "thumb_warn": false,
- "thumb_tag": "ĐẦU TƯ TỪ SỐ 0"
+ "thumb_tag": "ĐẦU TƯ TỪ SỐ 0",
+ "visual_queries": [
+  "stock market index fund investing",
+  "New York Stock Exchange Wall Street"
+ ]
 }

@@ -154,8 +154,9 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
   return (
     <Frame w={w} h={h} title={`${m?.name || sym} · ${days} ngày`}>
       <div style={{display: 'flex', alignItems: 'center', gap: 18, marginBottom: 10}}>
-        <Img src={staticFile(`logos/${m?.sym || sym}.png`)} style={{width: 52, height: 52, borderRadius: 99}} />
-        <div style={{color: C.ink, fontSize: 52, fontWeight: 800}}>{m ? money(m.price) : ''}</div>
+        {/* logo chỉ hiện khi thật sự có file (chỉ số như S&P 500 không có logo: bản index fund 23/11 lỗi 404 SPX.png) */}
+        {(coin ? coin.logo : mk) ? <Img src={staticFile(coin?.logo || `logos/${m?.sym || sym}.png`)} style={{width: 52, height: 52, borderRadius: 99}} /> : null}
+        <div style={{color: C.ink, fontSize: 52, fontWeight: 800}}>{m ? (coin?.index ? `${Math.round(m.price).toLocaleString('en-US')} điểm` : money(m.price)) : ''}</div>
         <div style={{color: col, fontSize: 40, fontWeight: 800}}>{chg >= 0 ? '+' : ''}{chg.toFixed(1)}%</div>
       </div>
       <svg width={W} height={H}>

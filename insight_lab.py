@@ -286,6 +286,7 @@ STOCKS = {"NVDA": "Nvidia", "AAPL": "Apple", "MSFT": "Microsoft", "GOOGL": "Goog
           "AMD": "AMD", "AVGO": "Broadcom", "TSM": "TSMC", "COIN": "Coinbase", "MSTR": "Strategy", "HOOD": "Robinhood", "CRCL": "Circle",
           "ORCL": "Oracle", "PLTR": "Palantir", "INTC": "Intel", "NFLX": "Netflix"}
 INDEXES = {"VIX", "SPX", "SPY", "QQQ", "NDX", "DXY", "DJI", "S&P"}
+INDEX_NAMES = {"SPX": "S&P 500", "S&P": "S&P 500", "NDX": "Nasdaq 100", "DJI": "Dow Jones", "VIX": "VIX", "DXY": "DXY"}
 NAME_TICKER = {"nvidia": "NVDA", "apple": "AAPL", "microsoft": "MSFT", "google": "GOOGL", "amazon": "AMZN", "tesla": "TSLA",
                "coinbase": "COIN", "microstrategy": "MSTR", "robinhood": "HOOD", "broadcom": "AVGO", "oracle": "ORCL", "palantir": "PLTR",
                "uniswap": "UNI", "hyperliquid": "HYPE", "aave": "AAVE", "ethena": "ENA", "solana": "SOL", "bitcoin": "BTC",
@@ -393,7 +394,8 @@ def coin_data(lab: Path, plan: dict, data: dict):
     for t in sorted(stock_need):
         ser = _stock_series(t, want.get(t, 30))
         if ser:
-            ent = data["coins"].setdefault(t, {"name": STOCKS.get(t, t), "logo": None, "color": "#4F5BD5", "stock": True})
+            ent = data["coins"].setdefault(t, {"name": STOCKS.get(t) or INDEX_NAMES.get(t, t), "logo": None, "color": "#4F5BD5", "stock": True,
+                                               "index": t in INDEXES})   # chỉ số: hiện điểm, không hiện $ (video index fund 23/11)
             ent.update({"price": ser[-1], "series": ser[:: max(1, len(ser) // 120)], "days": want.get(t, 30)})
             log(f"   Giá cổ phiếu/chỉ số {t}: {len(ser)} điểm")
     noprice = {t for t in set(STOCKS) | INDEXES if not (data["coins"].get(t) or {}).get("series")}
