@@ -41,10 +41,10 @@
     "Phí thấp, tích luỹ rất lớn",
     "Giảm theo thị trường, nên giữ lâu"
    ],
-   "narration": "Index fund, hay quỹ chỉ số, không cố chọn cổ phiếu ngon. Nó mua y hệt cả một rổ, ví dụ năm trăm công ty lớn nhất nước Mỹ trong S&P 500. Không cần đội phân tích đắt đỏ, nên phí cực thấp: quỹ active thường thu khoảng một phần trăm mỗi năm, nhiều index fund chỉ thu không phẩy không ba phần trăm. Kết quả thì sao? SPIVA, báo cáo của S&P Dow Jones chuyên so quỹ chủ động với chỉ số, cho thấy sau hai mươi năm, khoảng chín mươi bốn phần trăm quỹ active thua S&P 500. Nhưng index fund không phải phép màu: thị trường giảm thì bạn cũng giảm theo. Cách dùng đúng là DCA đều đặn và giữ thật lâu.",
+   "narration": "Đầu tiên, index fund là gì? Index fund, hay quỹ chỉ số, không cố chọn cổ phiếu ngon. Nó mua y hệt cả một rổ, ví dụ năm trăm công ty lớn nhất nước Mỹ trong S&P 500. Không cần đội phân tích đắt đỏ, nên phí cực thấp: quỹ active thường thu khoảng một phần trăm mỗi năm, nhiều index fund chỉ thu không phẩy không ba phần trăm. Kết quả thì sao? SPIVA, báo cáo của S&P Dow Jones chuyên so quỹ chủ động với chỉ số, cho thấy sau hai mươi năm, khoảng chín mươi bốn phần trăm quỹ active thua S&P 500. Nhưng index fund không phải phép màu: thị trường giảm thì bạn cũng giảm theo. Cách dùng đúng là DCA đều đặn và giữ thật lâu.",
    "beats": [
     {
-     "at": "index fund, hay quỹ chỉ số",
+     "at": "index fund là gì",
      "type": "statement",
      "text": "Không chọn lẻ, mua cả rổ"
     },
@@ -148,20 +148,20 @@
     "Cộng dồn theo lãi kép",
     "Xem phí đầu tiên"
    ],
-   "narration": "Phí một phần trăm nghe nhỏ, nhưng nó cắn vào toàn bộ số tiền của bạn mỗi năm, và cộng dồn theo lãi kép, tức lãi chồng lên lãi. Ví dụ bạn bỏ vào mười nghìn đô, thị trường tăng bảy phần trăm một năm, giữ ba mươi năm. Trả phí một phần trăm, bạn còn khoảng năm mươi bảy nghìn đô. Trả phí gần bằng không, bạn có khoảng bảy mươi lăm nghìn đô. Chênh mười tám nghìn đô, gần một phần tư số tiền cuối cùng, chỉ vì phí. Đó là lý do khi chọn quỹ, phí là thứ đầu tiên cần xem.",
+   "narration": "Điều thứ hai: phí. Phí một phần trăm nghe nhỏ, nhưng nó cắn vào toàn bộ số tiền của bạn mỗi năm, và cộng dồn theo lãi kép, tức lãi chồng lên lãi. Ví dụ bạn bỏ vào mười nghìn đô, thị trường tăng bảy phần trăm một năm, giữ ba mươi năm. Trả phí một phần trăm, bạn còn khoảng năm mươi bảy nghìn đô. Trả phí gần bằng không, bạn có khoảng bảy mươi lăm nghìn đô. Chênh mười tám nghìn đô, gần một phần tư số tiền cuối cùng, chỉ vì phí. Đó là lý do khi chọn quỹ, phí là thứ đầu tiên cần xem.",
    "beats": [
     {
-     "at": "phí một phần trăm nghe nhỏ",
+     "at": "điều thứ hai: phí",
      "type": "statement",
      "text": "Phí cắn vào TOÀN BỘ tài sản, mỗi năm"
     },
     {
      "at": "lãi chồng lên lãi",
      "type": "flow",
-     "label": "$10K, lãi 7%/năm: phí 1% cộng dồn",
+     "label": "Ví dụ minh hoạ: $10K, lãi 7%/năm",
      "steps": [
       "Năm 1: mất 1%",
-      "Năm 10: mất ~9%",
+      "Lãi chồng lên lãi",
       "Năm 30: mất ~24%"
      ],
      "step_at": [
@@ -225,10 +225,10 @@
     "Bám chỉ số sát tới đâu",
     "Thanh khoản đủ dễ mua bán"
    ],
-   "narration": "Ở Việt Nam, mọi người có thể tìm hiểu các quỹ ETF mô phỏng chỉ số VN30, tức rổ ba mươi cổ phiếu lớn nhất sàn HOSE, hoặc chỉ số VNDiamond, rổ cổ phiếu lớn gần hết room cho nhà đầu tư nước ngoài. Quỹ ETF được mua bán qua tài khoản chứng khoán y như một cổ phiếu. Trước khi mua, xem ba thứ: phí quản lý mỗi năm, quỹ bám chỉ số sát tới đâu, và thanh khoản có đủ để mua bán dễ dàng không.",
+   "narration": "Điều thứ ba: bắt đầu ở Việt Nam. Ở Việt Nam, mọi người có thể tìm hiểu các quỹ ETF mô phỏng chỉ số VN30, tức rổ ba mươi cổ phiếu lớn nhất sàn HOSE, Sở Giao dịch Chứng khoán TP.HCM, hoặc chỉ số VNDiamond, rổ cổ phiếu lớn gần hết room cho nhà đầu tư nước ngoài. Quỹ ETF được mua bán qua tài khoản chứng khoán y như một cổ phiếu. Trước khi mua, xem ba thứ: phí quản lý mỗi năm, quỹ bám chỉ số sát tới đâu, và thanh khoản có đủ để mua bán dễ dàng không.",
    "beats": [
     {
-     "at": "ở việt nam",
+     "at": "điều thứ ba",
      "type": "statement",
      "text": "Index fund ở Việt Nam: quỹ ETF chỉ số"
     },
@@ -302,11 +302,7 @@
  "short_cta": "Theo dõi Smart Penguin Insights để học đầu tư từ số 0 nhé!",
  "thumb_text": "INDEX FUND LÀ GÌ?",
  "thumb_stat": "79%",
- "thumb_points": [
-  "Mua cả rổ",
-  "Phí 0.03%/năm",
-  "Thắng 94% quỹ"
- ],
+ "thumb_points": [],
  "thumb_warn": false,
  "thumb_tag": "ĐẦU TƯ TỪ SỐ 0"
 }
