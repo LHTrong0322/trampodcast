@@ -389,16 +389,16 @@ def coin_data(lab: Path, plan: dict, data: dict):
     for sec in [plan] + list(plan.get("sections", [])):
         for b in sec.get("hook_beats" if sec is plan else "beats") or []:
             tks = [b.get("ticker")] if b.get("type") == "chart" else (b.get("tickers") or []) if b.get("type") == "race" else []
-            stock_need |= {str(x).lstrip("$").upper() for x in tks if x and str(x).lstrip("$").upper() in (set(STOCKS) | INDEXES)}
+            stock_need |= {str(x).lstrip("$").upper() for x in tks if x and str(x).lstrip("$").upper() in (set(STOCKS) | INDEXES | set(COMMOD))}
     stock_need |= {t for t in re.findall(r"\{YTDS?:([A-Z0-9&^.]+)", json.dumps(plan, ensure_ascii=False)) if t in set(STOCKS) | INDEXES}
     for t in sorted(stock_need):
         ser = _stock_series(t, want.get(t, 30))
         if ser:
-            ent = data["coins"].setdefault(t, {"name": STOCKS.get(t) or INDEX_NAMES.get(t, t), "logo": None, "color": "#4F5BD5", "stock": True,
+            ent = data["coins"].setdefault(t, {"name": STOCKS.get(t) or INDEX_NAMES.get(t) or COMMOD.get(t, t), "logo": None, "color": "#4F5BD5", "stock": True,
                                                "index": t in INDEXES})   # chỉ số: hiện điểm, không hiện $ (video index fund 23/11)
             ent.update({"price": ser[-1], "series": ser[:: max(1, len(ser) // 120)], "days": want.get(t, 30)})
             log(f"   Giá cổ phiếu/chỉ số {t}: {len(ser)} điểm")
-    noprice = {t for t in set(STOCKS) | INDEXES if not (data["coins"].get(t) or {}).get("series")}
+    noprice = {t for t in set(STOCKS) | INDEXES | set(COMMOD) if not (data["coins"].get(t) or {}).get("series")}
     for sec in [plan] + list(plan.get("sections", [])):
         key = "hook_beats" if sec is plan else "beats"
         keep = []
@@ -473,11 +473,30 @@ def coin_data(lab: Path, plan: dict, data: dict):
                 log(f"   ! giá {t} không lấy được")
         data["coins"][t] = entry
     miss = sorted(t for t in need if not (data["coins"].get(t) or {}).get("series"))
+    spoken = set(re.findall(r"\{YTDS?:([A-Z0-9&^.=]+)", json.dumps(plan, ensure_ascii=False)))
+    drop = set(miss) - spoken
+    if drop:   # biểu đồ/so sánh thiếu giá: bỏ hình đó, không dừng cả bản dựng (con số đọc trong lời thì vẫn bắt buộc)
+        for sec in [plan] + list(plan.get("sections", [])):
+            key = "hook_beats" if sec is plan else "beats"
+            if sec.get(key) is None:
+                continue
+            keep = []
+            for b in sec[key]:
+                tks = {str(x).lstrip("$").upper() for x in ([b.get("ticker")] if b.get("type") == "chart" else b.get("tickers") or [] if b.get("type") == "race" else []) if x}
+                if tks & drop:
+                    log(f"   ! bỏ hình {b.get('type')} '{b.get('at')}': không lấy được giá {', '.join(tks & drop)}")
+                    continue
+                keep.append(b)
+            sec[key] = keep
+        miss = sorted(set(miss) & spoken)
     if miss:
         raise RuntimeError(f"Thiếu giá thật của {', '.join(miss)} (CoinGecko không trả), dừng dựng để không xuất video thiếu số liệu")
 
 
 YAHOO = {"S&P": "^GSPC", "SPX": "^GSPC", "VIX": "^VIX", "NDX": "^NDX", "DXY": "DX-Y.NYB", "DJI": "^DJI"}
+# hàng hoá (giá dầu, vàng...): Yahoo có, CoinGecko không (lỗi 23/11: bot thêm biểu đồ CL=F làm dừng bản dựng)
+COMMOD = {"CL=F": "Dầu WTI", "BZ=F": "Dầu Brent", "GC=F": "Vàng", "SI=F": "Bạc", "OIL": "Dầu WTI", "WTI": "Dầu WTI", "GOLD": "Vàng", "XAU": "Vàng"}
+YAHOO.update({"OIL": "CL=F", "WTI": "CL=F", "GOLD": "GC=F", "XAU": "GC=F"})
 
 
 def _btc_weekly() -> list:

@@ -236,11 +236,21 @@
      "sub": "Cấm AI = nhường cuộc đua cho Trung Quốc"
     },
     {
+     "at": "hai fed vẫn giữ tay cứng",
+     "type": "statement",
+     "text": "Fed vẫn giữ tay cứng"
+    },
+    {
      "at": "lạm phát đã nằm trên",
      "type": "bignum",
      "value": "67 tháng",
      "label": "Lạm phát Mỹ nằm trên mục tiêu 2%",
      "tone": "down"
+    },
+    {
+     "at": "xây ai vốn đã đắt",
+     "type": "statement",
+     "text": "Lãi suất cao: xây AI càng đắt hơn"
     },
     {
      "at": "điểm sáng giá dầu",
@@ -323,6 +333,12 @@
      "logo": "NVDA"
     },
     {
+     "at": "một trong những mã rẻ nhất",
+     "type": "statement",
+     "text": "Một trong những mã rẻ nhất S&P 500",
+     "logo": "NVDA"
+    },
+    {
      "at": "cả nhóm công nghệ",
      "type": "statement",
      "text": "P/E ngành công nghệ thấp nhất từ 3/2020"
@@ -340,8 +356,12 @@
       "value": "Không tin",
       "tone": "down"
      },
-     "sub": "Dư địa cho bất ngờ tích cực",
-     "hold": 4
+     "hold": 2
+    },
+    {
+     "at": "chính sự hoài nghi này",
+     "type": "statement",
+     "text": "Hoài nghi càng lớn, dư địa bất ngờ tích cực càng nhiều"
     }
    ],
    "narration": "Đây là tín hiệu mình thấy đáng chú ý nhất. Nvidia rơi bốn mươi phần trăm chỉ trong vài tuần. Hai cú sốc liền nhau: Nvidia mất Jensen Huang, người dẫn dắt cuộc đua AI. Còn AMD bị một bên bán khống cáo buộc buôn lậu chip sang Trung Quốc, cáo buộc còn xa mới được chứng minh. Kết quả: forward P/E của Nvidia chỉ còn chín lần, tức giá cổ phiếu bằng chín lần earnings dự kiến. Một trong những mã rẻ nhất S&P 500. Cả nhóm công nghệ cũng rẻ nhất kể từ tháng ba năm 2020. Trong khi đó, Nvidia vẫn dự báo khoảng bảy trăm năm mươi tỷ đô revenue cho năm tài chính 2028. Thị trường không tin con số đó. Và theo Kobeissi, chính sự hoài nghi này để lại rất nhiều dư địa cho bất ngờ tích cực.",
@@ -372,10 +392,14 @@
    ],
    "beats": [
     {
+     "at": "còn câu hỏi anh em crypto",
+     "type": "statement",
+     "text": "Vì sao vàng và crypto cũng rơi?"
+    },
+    {
      "at": "câu trả lời là thanh khoản",
      "type": "statement",
-     "text": "Vì sao vàng và crypto cũng rơi?",
-     "sub": "Câu trả lời: thanh khoản"
+     "text": "Câu trả lời: thanh khoản"
     },
     {
      "at": "vix chỉ số đo",
@@ -402,6 +426,11 @@
       "value": "$100B"
      },
      "sub": "Dòng tiền bị hút khỏi thị trường"
+    },
+    {
+     "at": "các quỹ phòng hộ rút ròng",
+     "type": "statement",
+     "text": "Quỹ phòng hộ rút ròng mạnh nhất hơn 10 năm"
     },
     {
      "at": "cổ phiếu vàng crypto đều bị bán",
