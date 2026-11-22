@@ -8,12 +8,12 @@
   "handle": "Trong0322",
   "url": "https://www.spglobal.com/spdji/en/spiva/article/spiva-us-year-end-2025/",
   "title": "SPIVA U.S. Scorecard (S&P Dow Jones Indices)",
-  "text": "SPIVA U.S. Year-End 2025: 79% of all active large-cap U.S. equity funds underperformed the S&P 500 in 2025. Over a 20-year horizon, about 90% or more of U.S. large-cap funds underperformed the S&P 500 (around 94%). The S&P 500 tracks 500 of the largest U.S. companies. Active funds often charge about 1% per year; many index funds charge about 0.03% per year. With a 7% yearly return over 30 years, a 1% yearly fee takes about 24% of the final amount. Vietnam: ETF tracking VN30 (30 largest stocks on HOSE) and VNDiamond."
+  "text": "SPIVA (S&P Dow Jones Indices report comparing active funds with indexes), U.S. Year-End 2025: 79% of all active large-cap U.S. equity funds underperformed the S&P 500 in 2025. Over 20 years, about 94% of U.S. large-cap active funds underperformed the S&P 500. The S&P 500 tracks 500 of the largest U.S. companies. Active funds often charge about 1% per year; many index funds charge about 0.03% per year. Example: $10K invested once, 7% per year, held 30 years: with a 1% yearly fee about $57K; with near 0 fee about $75K; difference about $18K, close to 1/4 of the final amount. Warren Buffett, Berkshire Hathaway 2013 shareholder letter: told the trustee to put 90% of the cash left for his wife into a very low-cost S&P 500 index fund. Vietnam: ETFs tracking VN30 (30 largest stocks on HOSE) and VNDiamond (large stocks near the foreign ownership limit)."
  },
  "hook_screen": "79% QUỸ CHUYÊN NGHIỆP THUA MỘT RỔ CỔ PHIẾU",
  "hook_stat": "79%",
  "hook_label": "quỹ active large-cap Mỹ thua S&P 500 năm 2025",
- "hook": "Năm 2025, bảy mươi chín phần trăm quỹ do chuyên gia chọn cổ phiếu ở Mỹ thua một rổ cổ phiếu không cần ai chọn. Rổ đó gọi là index fund.",
+ "hook": "Năm 2025, bảy mươi chín phần trăm quỹ do chuyên gia quản lý ở Mỹ thua một rổ cổ phiếu không cần ai chọn. Rổ đó là index fund, và hôm nay bạn sẽ biết cách bắt đầu ở Việt Nam.",
  "hook_beats": [
   {
    "at": "bảy mươi chín phần trăm",
@@ -23,13 +23,13 @@
    "tone": "down"
   },
   {
-   "at": "rổ đó gọi là index fund",
+   "at": "rổ đó là index fund",
    "type": "statement",
    "text": "Index fund: mua cả rổ, không chọn lẻ"
   }
  ],
- "intro": "Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Hôm nay là một bài học đầu tư từ số 0: index fund, cách đầu tư mà Warren Buffett khuyên phần lớn người bình thường nên dùng.",
- "agenda_label": "ĐẦU TƯ TỪ SỐ 0",
+ "intro": "Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Index fund cũng là thứ Warren Buffett dặn dùng cho chính số tiền ông để lại cho vợ. Hôm nay có ba điều: index fund là gì, vì sao phí nhỏ lại quyết định thắng thua, và cách bắt đầu ở Việt Nam.",
+ "agenda_label": "3 ĐIỀU CẦN BIẾT",
  "sections": [
   {
    "heading": "Index fund là gì, vì sao thắng?",
@@ -41,7 +41,7 @@
     "Phí thấp, tích luỹ rất lớn",
     "Giảm theo thị trường, nên giữ lâu"
    ],
-   "narration": "Index fund, hay quỹ chỉ số, không cố chọn cổ phiếu ngon. Nó mua y hệt cả một rổ, ví dụ năm trăm công ty lớn nhất nước Mỹ trong S&P 500. Không cần đội phân tích đắt đỏ, nên phí cực thấp. Quỹ active thường thu khoảng một phần trăm mỗi năm, nhiều index fund chỉ thu không phẩy không ba phần trăm. Nghe nhỏ, nhưng qua ba mươi năm, khoản phí một phần trăm có thể ăn mất gần một phần tư số tiền cuối cùng của bạn. Còn xét hai mươi năm, theo dữ liệu SPIVA, cứ mười quỹ active thì khoảng chín quỹ thua S&P 500. Nhưng index fund không phải phép màu: thị trường giảm thì bạn cũng giảm theo. Cách dùng đúng là DCA đều đặn và giữ thật lâu.",
+   "narration": "Index fund, hay quỹ chỉ số, không cố chọn cổ phiếu ngon. Nó mua y hệt cả một rổ, ví dụ năm trăm công ty lớn nhất nước Mỹ trong S&P 500. Không cần đội phân tích đắt đỏ, nên phí cực thấp: quỹ active thường thu khoảng một phần trăm mỗi năm, nhiều index fund chỉ thu không phẩy không ba phần trăm. Kết quả thì sao? SPIVA, báo cáo của S&P Dow Jones chuyên so quỹ chủ động với chỉ số, cho thấy sau hai mươi năm, khoảng chín mươi bốn phần trăm quỹ active thua S&P 500. Nhưng index fund không phải phép màu: thị trường giảm thì bạn cũng giảm theo. Cách dùng đúng là DCA đều đặn và giữ thật lâu.",
    "beats": [
     {
      "at": "index fund, hay quỹ chỉ số",
@@ -95,19 +95,19 @@
      }
     },
     {
-     "at": "qua ba mươi năm",
-     "type": "bignum",
-     "value": "-24%",
-     "label": "Phí 1%/năm ăn mất sau 30 năm (giả định lãi 7%/năm)",
-     "tone": "down",
-     "hold": 4
-    },
-    {
-     "at": "còn xét hai mươi năm",
+     "at": "kết quả thì sao",
      "type": "dots",
      "total": 10,
      "hit": 9,
-     "label": "9/10 quỹ active thua S&P 500 sau 20 năm (SPIVA)"
+     "label": "Gần 9/10 quỹ active thua S&P 500 sau 20 năm"
+    },
+    {
+     "at": "khoảng chín mươi bốn phần trăm",
+     "type": "bignum",
+     "value": "94%",
+     "label": "Quỹ active large-cap Mỹ thua S&P 500 sau 20 năm (SPIVA)",
+     "tone": "down",
+     "hold": 3
     },
     {
      "at": "không phải phép màu",
@@ -139,6 +139,83 @@
    ]
   },
   {
+   "heading": "Phí nhỏ, ăn mất gần 1/4",
+   "edu": true,
+   "key_stat": "-$18K",
+   "key_label": "mất vì phí 1%/năm sau 30 năm",
+   "bullets": [
+    "Phí cắn vào toàn bộ tài sản",
+    "Cộng dồn theo lãi kép",
+    "Xem phí đầu tiên"
+   ],
+   "narration": "Phí một phần trăm nghe nhỏ, nhưng nó cắn vào toàn bộ số tiền của bạn mỗi năm, và cộng dồn theo lãi kép, tức lãi chồng lên lãi. Ví dụ bạn bỏ vào mười nghìn đô, thị trường tăng bảy phần trăm một năm, giữ ba mươi năm. Trả phí một phần trăm, bạn còn khoảng năm mươi bảy nghìn đô. Trả phí gần bằng không, bạn có khoảng bảy mươi lăm nghìn đô. Chênh mười tám nghìn đô, gần một phần tư số tiền cuối cùng, chỉ vì phí. Đó là lý do khi chọn quỹ, phí là thứ đầu tiên cần xem.",
+   "beats": [
+    {
+     "at": "phí một phần trăm nghe nhỏ",
+     "type": "statement",
+     "text": "Phí cắn vào TOÀN BỘ tài sản, mỗi năm"
+    },
+    {
+     "at": "lãi chồng lên lãi",
+     "type": "flow",
+     "label": "$10K, lãi 7%/năm: phí 1% cộng dồn",
+     "steps": [
+      "Năm 1: mất 1%",
+      "Năm 10: mất ~9%",
+      "Năm 30: mất ~24%"
+     ],
+     "step_at": [
+      "lãi chồng lên lãi",
+      "ví dụ bạn bỏ vào",
+      "giữ ba mươi năm"
+     ]
+    },
+    {
+     "at": "trả phí một phần trăm",
+     "type": "versus",
+     "left": {
+      "label": "Phí 1%/năm, sau 30 năm",
+      "value": "~$57K",
+      "tone": "down"
+     },
+     "right": {
+      "label": "Phí gần 0, sau 30 năm",
+      "value": "~$75K",
+      "tone": "up"
+     },
+     "hold": 4
+    },
+    {
+     "at": "chênh mười tám nghìn đô",
+     "type": "bignum",
+     "value": "-$18K",
+     "label": "Gần 1/4 số tiền cuối cùng mất vì phí",
+     "tone": "down",
+     "music": 2
+    },
+    {
+     "at": "phí là thứ đầu tiên",
+     "type": "statement",
+     "text": "Chọn quỹ: xem phí đầu tiên"
+    }
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  },
+  {
    "heading": "Bắt đầu ở Việt Nam",
    "edu": true,
    "key_stat": "VN30",
@@ -148,7 +225,7 @@
     "Bám chỉ số sát tới đâu",
     "Thanh khoản đủ dễ mua bán"
    ],
-   "narration": "Ở Việt Nam, mọi người có thể tìm hiểu các quỹ ETF mô phỏng chỉ số VN30, tức rổ ba mươi cổ phiếu lớn nhất sàn HOSE, hoặc chỉ số VNDiamond. Quỹ ETF được mua bán qua tài khoản chứng khoán y như một cổ phiếu. Trước khi mua, xem ba thứ: phí quản lý mỗi năm, quỹ bám chỉ số sát tới đâu, và thanh khoản có đủ để mua bán dễ dàng không.",
+   "narration": "Ở Việt Nam, mọi người có thể tìm hiểu các quỹ ETF mô phỏng chỉ số VN30, tức rổ ba mươi cổ phiếu lớn nhất sàn HOSE, hoặc chỉ số VNDiamond, rổ cổ phiếu lớn gần hết room cho nhà đầu tư nước ngoài. Quỹ ETF được mua bán qua tài khoản chứng khoán y như một cổ phiếu. Trước khi mua, xem ba thứ: phí quản lý mỗi năm, quỹ bám chỉ số sát tới đâu, và thanh khoản có đủ để mua bán dễ dàng không.",
    "beats": [
     {
      "at": "ở việt nam",
@@ -160,6 +237,12 @@
      "type": "bignum",
      "value": "VN30",
      "label": "Rổ 30 cổ phiếu lớn nhất sàn HOSE"
+    },
+    {
+     "at": "chỉ số vndiamond",
+     "type": "bignum",
+     "value": "VNDiamond",
+     "label": "Cổ phiếu lớn gần hết room ngoại"
     },
     {
      "at": "y như một cổ phiếu",
@@ -199,18 +282,22 @@
    ]
   }
  ],
- "outro": "Tóm lại, index fund là cách mua cả thị trường với phí rất thấp, thắng nhờ thời gian chứ không nhờ đoán đúng. Đây là nội dung giáo dục, không phải lời khuyên đầu tư. Theo dõi Smart Penguin Insights để học đầu tư từ số 0 nhé.",
+ "outro": "Tóm lại ba điều: index fund là mua cả rổ, phí thấp thắng nhờ lãi kép, và ở Việt Nam có thể bắt đầu với quỹ ETF chỉ số. Đây là nội dung giáo dục, không phải lời khuyên đầu tư. Bình luận cho mình biết: bạn sẽ tìm hiểu ETF theo VN30 hay VNDiamond trước?",
  "outro_points": [
   "Mua cả rổ, không chọn lẻ",
-  "Phí thấp thắng dài hạn",
-  "DCA và giữ thật lâu"
+  "Phí thấp thắng nhờ lãi kép",
+  "Bắt đầu với ETF chỉ số"
  ],
- "outro_cta": "BẠN ĐÃ CÓ INDEX FUND CHƯA?",
+ "outro_cta": "VN30 HAY VNDIAMOND? BÌNH LUẬN NHÉ",
  "shorts": [
-  0
+  0,
+  1,
+  2
  ],
  "short_hooks": {
-  "0": "79% quỹ chuyên nghiệp thua một rổ không ai chọn?"
+  "0": "79% quỹ chuyên nghiệp thua một rổ không ai chọn?",
+  "1": "Phí 1% một năm ăn mất 18 nghìn đô?",
+  "2": "ETF VN30 là gì mà ai cũng nhắc tới?"
  },
  "short_cta": "Theo dõi Smart Penguin Insights để học đầu tư từ số 0 nhé!",
  "thumb_text": "INDEX FUND LÀ GÌ?",
@@ -218,7 +305,7 @@
  "thumb_points": [
   "Mua cả rổ",
   "Phí 0.03%/năm",
-  "Thắng 9/10 quỹ"
+  "Thắng 94% quỹ"
  ],
  "thumb_warn": false,
  "thumb_tag": "ĐẦU TƯ TỪ SỐ 0"
