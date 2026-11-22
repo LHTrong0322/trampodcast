@@ -53,6 +53,14 @@ def download(file_id: str) -> Path:
     return ref
 
 
+DEMO = ("Chào anh em, Trọng đây. Hôm nay mình nói nhanh về một thứ mà retail hay bỏ qua: lịch unlock. "
+        "Một token có thể có sản phẩm tốt, cộng đồng mạnh, nhưng nếu tháng sau có một đợt unlock lớn cho VC và team, "
+        "thì áp lực bán gần như chắc chắn sẽ tới. Ví dụ, một dự án có FDV một tỷ đô, nhưng lượng token đang lưu hành "
+        "chỉ khoảng mười lăm phần trăm. Nghĩa là còn tới tám mươi lăm phần trăm nguồn cung đang chờ ra thị trường. "
+        "Ngược lại, dự án nào dùng revenue thật để buyback token, thì đó là lực mua đều đặn, không phụ thuộc vào narrative. "
+        "Nên trước khi xuống tiền, anh em hãy tự hỏi hai câu: ai sắp được unlock, và ai đang thật sự mua. "
+        "Trả lời được hai câu đó là anh em đã đi trước phần lớn thị trường rồi.")
+
 WIN = 8.0  # VieNeu chỉ nhận tối đa 8 giây mỗi lần tham chiếu
 
 
@@ -102,7 +110,7 @@ def main():
     from vieneu import Vieneu
     tts = Vieneu()
     voice = enroll_full(tts, ref)
-    text = AB.speakable(AB.HOOK + " " + AB.BODY)
+    text = AB.speakable(DEMO)
     variants = [
         ("D", "Giọng Trọng nhân bản, tự nhiên", dict(temperature=0.8)),
         ("E", "Giọng Trọng nhân bản, đọc chắc và đều hơn", dict(temperature=0.5)),
