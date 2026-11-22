@@ -270,3 +270,6 @@ postfa.st/sizes/youtube/shorts.
 - Phần có `"edu": true` (giảng kiến thức/khái niệm quan trọng) đọc chậm hơn 5% (config insight.edu_speed = 0.95). Các phần khác giữ nguyên tốc độ như video 2.
 - Danh sách video đã đánh số: scripts/posts/VIDEOS.md (video 1 = Kyle, video 2 = Kaffchad).
 - Số giá trong kịch bản dùng ô điền tự động: {YTD:HYPE} (trị tuyệt đối % từ 1/1, làm tròn 5), {YTDS:HYPE} (có dấu), {DATE} (ngày dựng). insight_lab.live_numbers điền bằng giá thật lúc dựng, nên lời đọc, biểu đồ, ảnh bìa, short luôn cùng một bộ số (review 22/11 trừ điểm vì 3 bộ số khác nhau). Biểu đồ ghi rõ "tới dd/mm".
+
+## Video là sản phẩm của Trọng (own_source) (22/11)
+- Kịch bản có "own_source": true thì mô tả, caption, bình luận ghim, tiêu đề short trên MỌI mạng xã hội không nhắc tác giả/bài gốc (không handle, không link x.com của người khác, không dòng "Source ý tưởng gốc"). insight_publish.seo_pack tự xoá bằng strip_source. Khi tự viết file kế hoạch đăng (scripts/posts/*.json) cũng phải tuân theo.

@@ -37,8 +37,7 @@ SEO_PROMPT = """Video dài ({minutes:.1f} phút): "{title}"
 Chủ đề: {theme}
 Các ý chính:
 {points}
-Nguồn ý tưởng: @{handle}
-Video ngắn (9:16) cắt từ các ý: {shorts}
+{source_line}Video ngắn (9:16) cắt từ các ý: {shorts}
 
 Trả JSON:
 {{
@@ -57,12 +56,15 @@ def seo_pack(gem, cfg, res: dict) -> dict:
     plan = res["plan"]
     ic = cfg.get("insight") or {}
     post = (plan.get("posts") or [{}])[0]
+    # Trọng 22/11: video own_source là SẢN PHẨM CỦA TRỌNG: mô tả trên mọi mạng xã hội không nhắc tác giả/bài gốc
+    own = bool(plan.get("own_source"))
     pts = "\n".join(f"- {s['heading']}: {'; '.join(s.get('bullets') or [])}" for s in plan["sections"])
     sh = ", ".join(s["title"] for s in res["shorts"]) or "không có"
     try:
         seo = V.llm_json(gem, cfg, SEO_SYSTEM.format(brand=ic.get("brand", "Smart Penguin Insights")),
                          SEO_PROMPT.format(minutes=res["duration"] / 60, title=plan.get("title", ""), theme=plan.get("theme", ""),
-                                           points=pts, handle=post.get("handle", ""), shorts=sh))
+                                           points=pts, shorts=sh,
+                                           source_line="" if own else f"Nguồn ý tưởng: @{post.get('handle', '')}\n"))
     except Exception as ex:
         log(f"   ! SEO lỗi: {ex}")
         seo = {"yt_titles": [plan.get("title", "")], "yt_intro": plan.get("description", ""), "yt_tags": [], "hashtags": ["#crypto"]}
@@ -73,7 +75,7 @@ def seo_pack(gem, cfg, res: dict) -> dict:
     desc = (seo.get("yt_intro", "") + "\n\n"
             + ("Trong video:\n" + "\n".join(f"✅ {x}" for x in seo.get("yt_takeaways", [])) + "\n\n" if seo.get("yt_takeaways") else "")
             + "⏱ Chương:\n" + chapters + "\n\n"
-            + "📌 Source (ý tưởng gốc, đã diễn giải lại):\n" + src + "\n"
+            + ("" if own else "📌 Source (ý tưởng gốc, đã diễn giải lại):\n" + src + "\n")
             + "📊 Dữ liệu thị trường: CoinGecko, alternative.me\n"
             + (f"🖼 Ảnh: {credits}\n" if credits else "")
             + "\n⚠️ Không phải lời khuyên đầu tư. Hãy tự nghiên cứu (DYOR) trước khi xuống tiền.\n"
@@ -96,7 +98,25 @@ def seo_pack(gem, cfg, res: dict) -> dict:
     seo["shorts"] = [{kk: ("" if L._banned(vv) else vv) for kk, vv in sh.items()} for sh in seo.get("shorts") or [] if isinstance(sh, dict)]
     if L._banned(seo.get("yt_description", "")):
         seo["yt_description"] = "\n".join(l for l in seo["yt_description"].split("\n") if not L._banned(l) or "x.com/" in l)
+    if own:
+        seo = strip_source(seo, plan)
     return P.nodash(seo)
+
+
+def strip_source(seo, plan: dict):
+    """Xoá mọi nhắc tới tác giả/bài gốc (handle, link x.com) khỏi gói SEO: mô tả, caption, bình luận, tag."""
+    keys = {k for p in plan.get("posts") or [] for k in (p.get("handle", ""), p.get("url", "")) if k}
+    def bad(t: str) -> bool:
+        return any(k.lower() in t.lower() for k in keys) or ("x.com/" in t and "Trong0322" not in t)
+    def clean(x):
+        if isinstance(x, dict):
+            return {k: clean(v) for k, v in x.items()}
+        if isinstance(x, list):
+            return [clean(v) for v in x if not (isinstance(v, str) and bad(v))]
+        if isinstance(x, str):
+            return "\n".join(l for l in x.split("\n") if not bad(l) and "ý tưởng gốc" not in l.lower())
+        return x
+    return clean(seo)
 
 
 # ---------------------------------------------------------------------------
