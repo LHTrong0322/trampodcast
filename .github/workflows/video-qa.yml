@@ -30,6 +30,6 @@ jobs:
       - name: Tải video
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release download "${{ github.event.inputs.tag }}" -p "*16x9.mp4" -O video.mp4
+        run: gh release download "${{ github.event.inputs.tag }}" -p "*[0-9]-16x9.mp4" -O video.mp4
       - name: Nghe lại và tìm chỗ lặp
         run: python tts_qa.py video.mp4 ${{ github.event.inputs.script }}
