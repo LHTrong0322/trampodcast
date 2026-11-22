@@ -460,8 +460,13 @@ def produce(out: Path, cfg: dict, st: dict, links: str = ""):
     import insight_publish as PB
     ic = cfg.get("insight") or {}
     posts = [p for p in st["posts"] if not p.get("used")][: int(ic.get("max_posts", 8))]
+    edu = os.getenv("INSIGHT_SCRIPT", "").strip()
+    edu = bool(edu) and bool(json.loads(Path(edu).read_text(encoding="utf-8")).get("source_post"))
     if links.strip():
         src = links
+    elif edu:   # video giáo dục tự viết (Trọng 22/11): chỉ cần kịch bản đã duyệt có "source_post", không cần link X
+        src = ""
+        posts = []
     elif posts:
         src = posts
     else:

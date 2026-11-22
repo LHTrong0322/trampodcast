@@ -719,6 +719,10 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     if approved:
         plan = P.nodash(json.loads(Path(approved).read_text(encoding="utf-8")))
         log(f"   Dùng kịch bản đã duyệt: {approved} ({len(plan.get('sections', []))} phần)")
+        # Trọng 22/11: video giáo dục tự viết, không có bài X gốc → nguồn số liệu ghi trong kịch bản ("source_post")
+        if not posts and plan.get("source_post"):
+            posts = [plan["source_post"]]
+            log(f"   Không có link X, dùng nguồn số liệu trong kịch bản: {posts[0].get('url', '')}")
     for attempt in range(0 if approved else 3):
         plan = P.nodash(V.llm_json(gem, cfg, system, prompt))
         top = {k: plan.get(k) for k in ("title", "hook", "hook_stat", "intro", "thumb_text", "thumb_stat")}
