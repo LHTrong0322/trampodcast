@@ -7,6 +7,7 @@ import base64
 import json
 import os
 import re
+import shutil
 import subprocess
 from datetime import datetime
 from pathlib import Path
@@ -399,6 +400,15 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, draft
     for s, c in zip(res["shorts"], covers):
         s["cover"] = str(c) if c else None
     files = [res["long"]] + [s["path"] for s in res["shorts"]] + ([thumb] if thumb else []) + [c for c in covers if c] + [out / f"seo-{tag}.json"]
+    if draft and draft.get("long") and Path(draft["long"]).exists():   # Trọng 22/11: bản nháp cũng là bản dựng thật, lưu kèm để tải về
+        nh = out / f"smart-penguin-{tag}-nhap-haidang-16x9.mp4"
+        shutil.copy(draft["long"], nh)
+        files.append(nh)
+        for j, sp in enumerate(draft.get("shorts") or []):
+            if Path(sp).exists():
+                q = out / f"smart-penguin-{tag}-nhap-haidang-short{j + 1}-9x16.mp4"
+                shutil.copy(sp, q)
+                files.append(q)
     url = ""
     repo = os.getenv("GITHUB_REPOSITORY")
     if repo and os.getenv("GH_TOKEN"):

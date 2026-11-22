@@ -449,7 +449,8 @@ def two_pass_draft(src, tips, ic) -> dict:
     fixed.write_text(json.dumps(new, ensure_ascii=False, indent=1), encoding="utf-8")
     os.environ["INSIGHT_SCRIPT"] = str(fixed)   # lượt chính dựng đúng lời đọc lượt 1 + hình đã sửa
     log(f"══ LƯỢT 2 (bản chính): giọng {main_voice or 'mặc định'}, {len(changes)} sửa hình ══")
-    return {"long": str(res["long"]), "review": rv, "changes": changes, "voice": dv.split(":")[-1]}
+    return {"long": str(res["long"]), "shorts": [str(s["path"]) for s in res.get("shorts") or []],
+            "review": rv, "changes": changes, "voice": dv.split(":")[-1]}
 
 
 def produce(out: Path, cfg: dict, st: dict, links: str = ""):
