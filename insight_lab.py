@@ -368,8 +368,21 @@ def coin_data(lab: Path, plan: dict, data: dict):
     # Trọng 22/11: bản 0427 bị CoinGecko chặn vì gọi quá nhiều (thêm logo cho mọi tên dự án) → hook ra "?%", biểu đồ trống.
     # Giờ: coin CẦN SỐ (biểu đồ, so sánh, ô điền {YTD}) lấy trước, gọi lại khi bị chặn; coin chỉ cần logo thì không lấy giá;
     # thiếu số cần thiết thì DỪNG dựng, không bao giờ xuất video thiếu dữ liệu.
-    # cổ phiếu/chỉ số (SPY, NVDA, VIX...) không có giá trên CoinGecko: bỏ biểu đồ của chúng thay vì dừng cả bản dựng (video 3 lượt 2 chết vì SPY)
-    noprice = set(STOCKS) | INDEXES
+    # cổ phiếu/chỉ số (NVDA, SPY, VIX...) không có trên CoinGecko → lấy giá từ Yahoo Finance/Stooq (Trọng 22/11: cổ phiếu dùng chart cũng được).
+    # Lấy không được thì bỏ hình đó (ghi log) thay vì dừng cả bản dựng.
+    stock_need = set()
+    for sec in [plan] + list(plan.get("sections", [])):
+        for b in sec.get("hook_beats" if sec is plan else "beats") or []:
+            tks = [b.get("ticker")] if b.get("type") == "chart" else (b.get("tickers") or []) if b.get("type") == "race" else []
+            stock_need |= {str(x).lstrip("$").upper() for x in tks if x and str(x).lstrip("$").upper() in (set(STOCKS) | INDEXES)}
+    stock_need |= {t for t in re.findall(r"\{YTDS?:([A-Z0-9&^.]+)", json.dumps(plan, ensure_ascii=False)) if t in set(STOCKS) | INDEXES}
+    for t in sorted(stock_need):
+        ser = _stock_series(t, want.get(t, 30))
+        if ser:
+            ent = data["coins"].setdefault(t, {"name": STOCKS.get(t, t), "logo": None, "color": "#4F5BD5", "stock": True})
+            ent.update({"price": ser[-1], "series": ser[:: max(1, len(ser) // 120)], "days": want.get(t, 30)})
+            log(f"   Giá cổ phiếu/chỉ số {t}: {len(ser)} điểm")
+    noprice = {t for t in set(STOCKS) | INDEXES if not (data["coins"].get(t) or {}).get("series")}
     for sec in [plan] + list(plan.get("sections", [])):
         key = "hook_beats" if sec is plan else "beats"
         keep = []
@@ -409,7 +422,8 @@ def coin_data(lab: Path, plan: dict, data: dict):
                 except Exception:
                     pass
             if lp.exists():
-                data["coins"][t] = {"name": STOCKS[t], "logo": f"logos/{t}.png", "color": brand_color(lp), "stock": True}
+                data["coins"].setdefault(t, {"name": STOCKS[t], "stock": True})
+                data["coins"][t].update({"logo": f"logos/{t}.png", "color": brand_color(lp)})
                 log(f"   Logo cổ phiếu {t}")
             else:
                 log(f"   ! không lấy được logo cổ phiếu {t}")
@@ -439,6 +453,33 @@ def coin_data(lab: Path, plan: dict, data: dict):
     miss = sorted(t for t in need if not (data["coins"].get(t) or {}).get("series"))
     if miss:
         raise RuntimeError(f"Thiếu giá thật của {', '.join(miss)} (CoinGecko không trả), dừng dựng để không xuất video thiếu số liệu")
+
+
+YAHOO = {"S&P": "^GSPC", "SPX": "^GSPC", "VIX": "^VIX", "NDX": "^NDX", "DXY": "DX-Y.NYB", "DJI": "^DJI"}
+
+
+def _stock_series(t: str, days: int) -> list:
+    """Giá đóng cửa ngày của cổ phiếu/chỉ số: Yahoo Finance, dự phòng Stooq. Trả [] nếu không lấy được."""
+    sym = YAHOO.get(t, t)
+    rng = "1y" if days > 185 else "6mo" if days > 95 else "3mo" if days > 35 else "1mo"
+    try:
+        r = requests.get(f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}", params={"range": rng, "interval": "1d"},
+                         headers={"User-Agent": "Mozilla/5.0"}, timeout=30)
+        res = (r.json().get("chart") or {}).get("result") or []
+        closes = [x for x in ((res[0].get("indicators") or {}).get("quote") or [{}])[0].get("close") or [] if x] if res else []
+        if len(closes) >= 10:
+            return closes[-max(10, int(days * 5 / 7)):]
+    except Exception as ex:
+        log(f"   ! Yahoo {t}: {ex}")
+    try:
+        st = {"^GSPC": "^spx", "^VIX": "^vix", "^NDX": "^ndx"}.get(sym, sym.lower() + ".us")
+        txt = requests.get("https://stooq.com/q/d/l/", params={"s": st, "i": "d"}, timeout=30).text
+        closes = [float(l.split(",")[4]) for l in txt.strip().splitlines()[1:] if l.count(",") >= 4]
+        if len(closes) >= 10:
+            return closes[-max(10, int(days * 5 / 7)):]
+    except Exception as ex:
+        log(f"   ! Stooq {t}: {ex}")
+    return []
 
 
 def _cg(url: str, params: dict | None = None):

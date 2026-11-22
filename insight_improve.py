@@ -34,7 +34,7 @@ Luật bắt buộc (Trọng đã nhắc, không tái phạm):
 - Kiểu beat: bignum, versus, dots, flow, logos, race, chart, matrix, statement. KHÔNG dùng "question".
 - Tối đa 8 giây lời đọc (khoảng 26 chữ) phải có hình mới; không 2 beat liền nhau cùng kiểu; thẻ chữ (statement) không quá 40% số beat.
 - Số liệu trên hình phải đúng với lời đọc; số giá từ đầu năm dùng ô điền {{YTD:TICKER}} / {{YTDS:TICKER}} như kịch bản đang có.
-- Hình "chart" và "race" CHỈ dùng cho coin crypto (giá lấy từ CoinGecko). Cổ phiếu, chỉ số (NVDA, SPY, S&P, VIX, Nasdaq...) không có biểu đồ: dùng bignum/versus với số trong lời đọc.
+- Hình "chart" và "race" dùng được cho coin crypto lẫn cổ phiếu/chỉ số (NVDA, SPY, S&P, VIX...): ghi đúng ticker, "days" theo giai đoạn lời đọc nói.
 - Nhắc dự án nào thì gắn logo dự án đó ("logo": "TICKER"). Nền luôn trắng sạch, không thêm màu nền.
 - Lời đọc nói "N thứ/điều/bước" thì flow có đúng N steps; outro_points đúng số câu hook hứa.
 - Kết quả so sánh quan trọng có thể thêm "music": 2.5 (giọng nghỉ, nhạc nền dâng) hoặc "hold": giây (giữ hình lâu hơn).

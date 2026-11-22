@@ -286,3 +286,4 @@ Tắt: config insight.two_pass: false hoặc env INSIGHT_TWO_PASS=0. Job timeout
 - Không còn vòng tròn chữ bị cắt ("45 n", "CapE", "Nvid"): không có logo thì ticker ngắn hiện nhãn đủ chữ, còn lại không vẽ.
 - Cổ phiếu (NVDA, AAPL, MSFT...) lấy logo công ty (insight_lab.STOCKS), chỉ số (VIX, S&P...) không tra CoinGecko (bị gắn nhầm logo token tên VIX). Nhắc Nvidia/Amazon/... trong lời đọc là tự có logo.
 - Bài cổ phiếu/vĩ mô: "lợi nhuận" = earnings (EPS, P/E), "tỷ lệ rủi ro so với lợi nhuận" = risk/reward; chỉ dự án crypto mới đổi lợi nhuận → revenue (insight_lab.fix_terms_plan).
+- Cổ phiếu/chỉ số dùng biểu đồ được (Trọng 22/11): giá lấy từ Yahoo Finance, dự phòng Stooq (insight_lab._stock_series); không lấy được thì bỏ hình đó, không dừng cả bản dựng.
