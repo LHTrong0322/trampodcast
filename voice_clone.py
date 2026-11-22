@@ -1,4 +1,4 @@
-"""Nhân bản giọng Thảo (bạn của Trọng) bằng VieNeu (miễn phí, chạy trên máy GitHub).
+"""Nhân bản giọng Mai Thảo và Mai Linh (đã đồng ý) bằng VieNeu (miễn phí, chạy trên máy GitHub).
 
 Lấy tin nhắn giọng nói / file âm thanh mới nhất gửi cho bot Telegram,
 dùng TOÀN BỘ bản thu làm giọng mẫu, đọc thử đoạn kịch bản mẫu (giống voice_ab.py) rồi gửi lại Telegram.
@@ -22,6 +22,23 @@ OUT = Path("samples")
 OUT.mkdir(exist_ok=True)
 
 
+def latest_voices(n: int = 2):
+    """n file giọng mới nhất, xếp theo thứ tự gửi (cũ trước, mới sau)."""
+    res = requests.get(f"{API}/getUpdates", params={"timeout": 0}, timeout=60).json()
+    found = []
+    for up in res.get("result", []):
+        m = up.get("message") or {}
+        if str((m.get("chat") or {}).get("id")) != OWNER:
+            continue
+        doc = m.get("document") or {}
+        f = (m.get("voice") or m.get("audio") or m.get("video_note") or m.get("video")
+             or (doc if str(doc.get("mime_type", "")).startswith(("audio", "video")) else None))
+        if f:
+            found.append((m.get("date", 0), f["file_id"]))
+    found.sort()
+    return [fid for _, fid in found[-n:]]
+
+
 def latest_voice():
     res = requests.get(f"{API}/getUpdates", params={"timeout": 0}, timeout=60).json()
     best = None
@@ -40,6 +57,7 @@ def latest_voice():
 def download(file_id: str) -> Path:
     path = requests.get(f"{API}/getFile", params={"file_id": file_id}, timeout=60).json()["result"]["file_path"]
     raw = OUT / ("ref_raw" + Path(path).suffix)
+    ref = OUT / "ref.wav"
     raw.write_bytes(requests.get(f"https://api.telegram.org/file/bot{TOKEN}/{path}", timeout=120).content)
     ref = OUT / "ref.wav"
     # lấy TOÀN BỘ bản thu: bỏ các khoảng lặng dài, chuẩn âm lượng, mono 24kHz
@@ -53,14 +71,17 @@ def download(file_id: str) -> Path:
     return ref
 
 
-VOICE_NAME = "Thảo"
-DEMO = ("Hello cả nhà, Thảo đây! Hôm nay mình cùng học một khái niệm siêu quan trọng nha: unlock token.\n"
-        "Hiểu đơn giản, unlock là lúc lượng token bị khoá của team và VC được mở ra, và họ có thể bán.\n"
-        "Ví dụ nè: một dự án có FDV một tỷ đô, nhưng token đang lưu hành chỉ khoảng mười lăm phần trăm.\n"
-        "Vậy là còn tới tám mươi lăm phần trăm nguồn cung đang xếp hàng chờ ra thị trường đó.\n"
-        "Còn buyback thì ngược lại. Dự án lấy revenue thật để mua lại token, tạo ra lực mua đều đặn.\n"
-        "Nên trước khi xuống tiền, cả nhà nhớ tự hỏi hai câu nha: ai sắp được unlock, và ai đang thật sự mua?\n"
-        "Trả lời được hai câu này là cả nhà đã khôn hơn phần lớn thị trường rồi đó. Hẹn gặp lại nha!")
+VOICE_NAMES = ["Mai Thảo", "Mai Linh"]  # theo thứ tự gửi: giọng gửi trước, giọng gửi sau
+VOICE_NAME = ""
+DEMO = ("Chào buổi sáng cả nhà, đây là Trạm Podcast Crypto.\n"
+        "Tin nóng nhất sáng nay: Bitcoin tiếp tục lao dốc, có lúc chạm năm mươi lăm nghìn một trăm linh sáu đô trên sàn Coinbase, "
+        "mức thấp nhất kể từ tháng chín năm hai nghìn không trăm hai mươi bốn.\n"
+        "Chỉ trong hai mươi bốn giờ, gần ba trăm bốn mươi bốn nghìn trader bị thanh lý, tổng giá trị khoảng hai phẩy ba tám tỷ đô, "
+        "và hơn chín mươi hai phần trăm trong số đó là lệnh long.\n"
+        "Theo Arthur Hayes, crypto đang bị bán ra đầu tiên để bù margin call cho các khoản lỗ từ cổ phiếu công nghệ, "
+        "khi thị trường chuyển sang trạng thái risk-off.\n"
+        "Điều cần để ý: thanh lý dây chuyền có thể tiếp tục gây áp lực giảm giá ngắn hạn, "
+        "nên cả nhà hạn chế dùng đòn bẩy cao trong giai đoạn này nhé.")
 
 WIN = 8.0  # VieNeu chỉ nhận tối đa 8 giây mỗi lần tham chiếu
 
@@ -103,7 +124,7 @@ def enroll_full(tts, ref: Path) -> dict:
     best = int(max(close, key=lambda i: parts[i][3] * parts[i][2]))
     norm0 = float(np.linalg.norm(embs[best]))
     mean = (mean / (np.linalg.norm(mean) + 1e-8) * norm0).reshape(parts[0][0].shape).astype(parts[0][0].dtype)
-    print(f"Giọng {VOICE_NAME}: dùng {len(parts)} đoạn 8 giây rõ tiếng nhất, đoạn mẫu nhịp đọc sáng nhất")
+    print(f"   dùng dùng {len(parts)} đoạn 8 giây rõ tiếng nhất, đoạn mẫu nhịp đọc sáng nhất")
     return {"speaker_emb": mean, "codes": parts[best][1]}
 
 
@@ -123,31 +144,28 @@ def to_mp3(wav: np.ndarray, sr: int, path: Path, pitch: float = 1.0, tempo: floa
 
 
 def main():
-    fid = latest_voice()
-    if not fid:
+    global VOICE_NAME
+    fids = latest_voices(len(VOICE_NAMES))
+    if len(fids) < len(VOICE_NAMES):
         requests.post(f"{API}/sendMessage", timeout=30, data={"chat_id": OWNER, "text":
-                      "Mình chưa thấy file giọng nào trong 24 giờ qua. Bạn gửi lại tin nhắn thoại hoặc file mp3/m4a giúp mình nhé."})
-        sys.exit("Không tìm thấy giọng mẫu")
-    ref = download(fid)
-
+                      f"Mình chỉ thấy {len(fids)} file giọng trong 24 giờ qua, cần {len(VOICE_NAMES)}. Bạn gửi lại giúp mình nhé."})
+        sys.exit("Thiếu giọng mẫu")
     from vieneu import Vieneu
     tts = Vieneu()
-    voice = enroll_full(tts, ref)
     text = AB.speakable(DEMO)
-    variants = [
-        ("F", f"Giọng {VOICE_NAME}, KOL educate, rõ chữ", dict(temperature=0.55, top_k=15), 1.0),
-        ("G", f"Giọng {VOICE_NAME}, KOL educate, cute hơn, rõ chữ", dict(temperature=0.55, top_k=15), 1.05),
-    ]
-    for code, name, kw, pitch in variants:
+    for code, (name, fid) in zip("XY", zip(VOICE_NAMES, fids)):
+        VOICE_NAME = name
         print(code, name)
         try:
-            wav = tts.infer(text, voice=voice, max_chars=120, **kw)
-            mp3 = OUT / f"{code}_thao_clone.mp3"
-            to_mp3(np.asarray(wav, dtype=np.float32), tts.sample_rate, mp3, pitch=pitch, tempo=0.93)
-            AB.VS.send(mp3, f"{code} · {name} (VieNeu, miễn phí)")
+            ref = download(fid)
+            voice = enroll_full(tts, ref)
+            ref.unlink(missing_ok=True)
+            wav = tts.infer(text, voice=voice, max_chars=120, temperature=0.55, top_k=15)
+            mp3 = OUT / f"{code}_{name.replace(' ', '_')}.mp3"
+            to_mp3(np.asarray(wav, dtype=np.float32), tts.sample_rate, mp3, tempo=0.95)
+            AB.VS.send(mp3, f"{code} · Giọng {name} đọc thử tin podcast sáng nay (VieNeu, miễn phí)")
         except Exception as ex:
             print(f"   ! {code} lỗi: {ex}")
-    ref.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
