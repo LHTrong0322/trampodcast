@@ -152,7 +152,7 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
   const chg = ((series[series.length - 1] / series[0] - 1) * 100);
   const last = pts[n - 1];
   return (
-    <Frame w={w} h={h} title={`${m?.name || sym} · ${days} ngày`}>
+    <Frame w={w} h={h} title={`${m?.name || sym} · ${days} ngày`} sub={coin?.stock ? 'Dữ liệu thật · Yahoo Finance' : undefined}>
       <div style={{display: 'flex', alignItems: 'center', gap: 18, marginBottom: 10}}>
         {/* logo chỉ hiện khi thật sự có file (chỉ số như S&P 500 không có logo: bản index fund 23/11 lỗi 404 SPX.png) */}
         {(coin ? coin.logo : mk) ? <Img src={staticFile(coin?.logo || `logos/${m?.sym || sym}.png`)} style={{width: 52, height: 52, borderRadius: 99}} /> : null}
@@ -167,7 +167,7 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
       </svg>
       {/* review 1915: giá giảm mà không chú thích dễ gây tâm lý tiêu cực, nên luôn ghi rõ bối cảnh */}
       <div style={{marginTop: 10, fontSize: Math.max(20, Math.round(w / 40)), fontWeight: 600, color: C.muted, lineHeight: 1.3}}>
-        {up ? `Dữ liệu thật CoinGecko, ${days} ngày gần nhất` : `Giá ${days} ngày đang điều chỉnh. Video bàn về giá trị dài hạn, không phải tín hiệu mua bán`}
+        {up ? `Dữ liệu thật ${coin?.stock ? 'Yahoo Finance' : 'CoinGecko'}, ${days} ngày gần nhất` : `Giá ${days} ngày đang điều chỉnh. Video bàn về giá trị dài hạn, không phải tín hiệu mua bán`}
       </div>
     </Frame>
   );
