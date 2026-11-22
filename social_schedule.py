@@ -48,12 +48,27 @@ def with_endcard(path: Path, card: Path) -> Path:
     return out
 
 
+def yt_existing(tok: str, title: str) -> str | None:
+    """Tìm video cùng tiêu đề trong 15 video tải lên gần nhất (kể cả riêng tư/hẹn giờ)."""
+    ch = requests.get("https://www.googleapis.com/youtube/v3/channels", params={"part": "contentDetails", "mine": "true"},
+                      headers={"Authorization": f"Bearer {tok}"}, timeout=60).json()
+    try:
+        up = ch["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+    except (KeyError, IndexError):
+        return None
+    r = requests.get("https://www.googleapis.com/youtube/v3/playlistItems", params={"part": "snippet", "playlistId": up, "maxResults": 15},
+                     headers={"Authorization": f"Bearer {tok}"}, timeout=60).json()
+    return next((i["snippet"]["resourceId"]["videoId"] for i in r.get("items", []) if i["snippet"]["title"] == title), None)
+
+
 def post(plan_path: Path):
     plan = json.loads(plan_path.read_text(encoding="utf-8"))
     rel = SP.fetch_release(plan["tag"], Path("rel"))
     st = json.loads(_state_path(plan_path).read_text(encoding="utf-8")) if _state_path(plan_path).exists() else {}
     report = []
+    save = lambda: _state_path(plan_path).write_text(json.dumps(st, ensure_ascii=False, indent=1), encoding="utf-8")
     y = plan.get("youtube")
+    same = None
     if y and not st.get("yt_id"):
         tok = SU._yt_token()
         pl = SP.yt_playlist(tok, y.get("playlist", ""))
@@ -61,6 +76,12 @@ def post(plan_path: Path):
         meta = {"snippet": {"title": y["title"][:100], "description": desc[:4900], "tags": y.get("tags", []), "categoryId": "27",
                             "defaultLanguage": "vi", "defaultAudioLanguage": "vi"},
                 "status": {"privacyStatus": "private", "publishAt": y["publish_at"], "selfDeclaredMadeForKids": False, "embeddable": True}}
+        same = yt_existing(tok, y["title"][:100])
+    if y and not st.get("yt_id") and same:   # lần chạy trước đã tải lên nhưng chưa kịp lưu trạng thái: dùng lại, không tải trùng
+        st["yt_id"] = same
+        save()
+        report.append(f"YouTube: đã có sẵn từ lần chạy trước, lịch {y['publish_at']}. Link: https://youtu.be/{same}")
+    if y and not st.get("yt_id"):
         path = rel[y.get("item", "long")]
         if y.get("endcard"):
             path = with_endcard(path, Path(y["endcard"]))
@@ -74,6 +95,7 @@ def post(plan_path: Path):
         up.raise_for_status()
         vid = up.json()["id"]
         st["yt_id"] = vid
+        save()
         th = Path(y["thumb"]) if y.get("thumb") else (rel.get("thumb") if y.get("item", "long") == "long" else None)
         if th:   # short dùng bìa riêng của short, không dùng bìa video dài
             st["thumb_ok"] = SU.yt_thumb(tok, vid, th)
@@ -103,6 +125,7 @@ def post(plan_path: Path):
         if not fin.ok:
             raise RuntimeError(f"Facebook đặt lịch lỗi: {fin.text[:300]}")
         st["fb_id"] = rid
+        save()
         if fb.get("thumb"):   # bìa riêng cho Reel
             try:
                 with open(fb["thumb"], "rb") as fh:

@@ -27,7 +27,7 @@ def fetch_release(tag: str, out: Path) -> dict:
     subprocess.run(["gh", "release", "download", f"insight-{tag}", "-R", repo, "-D", str(out), "--clobber"], check=True)
     f = {p.name: p for p in out.iterdir()}
     pick = lambda key: next((p for n, p in f.items() if key in n), None)
-    return {"long": pick("-16x9.mp4"), "short1": pick("short1"), "short2": pick("short2"),
+    return {"long": pick("-16x9.mp4"), "short1": pick("short1-9x16.mp4"), "short2": pick("short2-9x16.mp4"),
             "thumb": pick("thumbnail"), "seo": json.loads(pick("seo-").read_text(encoding="utf-8"))}
 
 
