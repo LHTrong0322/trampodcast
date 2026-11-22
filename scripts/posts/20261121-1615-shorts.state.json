@@ -2,7 +2,9 @@
  "yt_id": "ScgdI1yseRw",
  "thumb_ok": true,
  "fb_id": "2028807134377134",
- "comments_done": [],
+ "comments_done": [
+  "facebook"
+ ],
  "fb_caption_clean": true,
  "asr_removed": true
 }
