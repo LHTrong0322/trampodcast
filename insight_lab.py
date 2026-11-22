@@ -368,8 +368,24 @@ def coin_data(lab: Path, plan: dict, data: dict):
     # Trọng 22/11: bản 0427 bị CoinGecko chặn vì gọi quá nhiều (thêm logo cho mọi tên dự án) → hook ra "?%", biểu đồ trống.
     # Giờ: coin CẦN SỐ (biểu đồ, so sánh, ô điền {YTD}) lấy trước, gọi lại khi bị chặn; coin chỉ cần logo thì không lấy giá;
     # thiếu số cần thiết thì DỪNG dựng, không bao giờ xuất video thiếu dữ liệu.
+    # cổ phiếu/chỉ số (SPY, NVDA, VIX...) không có giá trên CoinGecko: bỏ biểu đồ của chúng thay vì dừng cả bản dựng (video 3 lượt 2 chết vì SPY)
+    noprice = set(STOCKS) | INDEXES
+    for sec in [plan] + list(plan.get("sections", [])):
+        key = "hook_beats" if sec is plan else "beats"
+        keep = []
+        for b in sec.get(key) or []:
+            tks = {str(x).lstrip("$").upper() for x in ([b.get("ticker")] if b.get("type") == "chart" else b.get("tickers") or [] if b.get("type") == "race" else []) if x}
+            if tks & noprice:
+                log(f"   ! bỏ hình {b.get('type')} '{b.get('at')}': {', '.join(tks & noprice)} là cổ phiếu/chỉ số, không có giá CoinGecko")
+                continue
+            keep.append(b)
+        if sec.get(key) is not None:
+            sec[key] = keep
+    for t in list(want):
+        if t in noprice:
+            want.pop(t)
     raw = json.dumps(plan, ensure_ascii=False)
-    need = set(want) | set(re.findall(r"\{YTDS?:([A-Z0-9]+)", raw))
+    need = (set(want) | set(re.findall(r"\{YTDS?:([A-Z0-9]+)", raw))) - noprice
     for x in plan.get("thumb_vs") or []:
         if x.get("logo"):
             need.add(str(x["logo"]).lstrip("$").upper())
