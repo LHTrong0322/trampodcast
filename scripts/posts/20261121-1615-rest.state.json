@@ -3,5 +3,9 @@
  "thumb_ok": true,
  "fb_id": "29948040958122034",
  "fb_caption_clean": true,
- "comments_done": []
+ "comments_done": [
+  "youtube",
+  "facebook"
+ ],
+ "asr_removed": true
 }
