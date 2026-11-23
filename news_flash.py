@@ -495,7 +495,8 @@ def gate(state: Path, store: Path) -> str:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("mode", choices=["pick", "poll", "build", "gate", "topic"])
+    ap.add_argument("mode", choices=["pick", "poll", "build", "gate", "topic", "revise"])
+    ap.add_argument("--note", default="")
     ap.add_argument("--brief", default="")
     ap.add_argument("--out", default="public")
     ap.add_argument("--id", default="")
@@ -517,6 +518,14 @@ def main():
         return output("build", "")
     if a.mode == "pick":
         pick(out, cfg)
+        return output("build", "")
+    if a.mode == "revise":   # góp ý dài của Trọng gửi qua phiên code (giống /sua trên Telegram)
+        st = load_state(out)
+        d = st["drafts"][a.id]
+        d["status"] = "revise"
+        d.setdefault("notes", []).append(a.note or os.getenv("NF_NOTE", ""))
+        save_state(out, st)
+        revise_all(out, cfg)
         return output("build", "")
     if a.mode == "topic":
         topic(out, cfg, Path(a.brief))
