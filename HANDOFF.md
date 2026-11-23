@@ -45,10 +45,12 @@
   (insight_lab._PERSON_HINT + video_lint chặn): video không đưa ảnh người thật lấy từ mạng. Mỗi short tin nóng 2 đến 4 ảnh.
 - Bố cục InsightShort: thẻ tự dời xuống khi tiêu đề dài (không đè chữ). Dòng nguồn: tin nóng ghi "Nguồn: <báo>" (plan.source_label), video
   của Trọng không ghi "Source: @Trong0322". Phụ đề và thẻ chữ chia dòng cân (text-wrap: balance) nên không còn chữ mồ côi.
-- SOÁT HÌNH TRƯỚC KHI DỰNG (preflight.py, Trọng 24/11): mỗi short chụp sẵn khung bìa, tiêu đề, từng thẻ hình (lúc đã hiện xong) và khung
-  kết, Claude (claude -p, công cụ Read) nhìn từng ảnh bắt lỗi font, chữ tràn/cắt/bị đè, chữ mồ côi, lệch hàng, thẻ trống. Có lỗi thì Claude
-  sửa CHỮ trên thẻ (không đổi số, loại thẻ, mốc giờ), bot chụp lại soát lại, tối đa 2 vòng, rồi mới dựng thật. Kết quả gửi Telegram
-  "🔎 Soát hình trước khi dựng". Thiếu token Claude hoặc PREFLIGHT=0 thì bỏ qua; bước này lỗi thì vẫn dựng tiếp như cũ.
+- BOT REVIEW XEM TRƯỚC, TRƯỚC KHI DỰNG (preflight.py, Trọng 24/11 "đẩy review lên sớm lúc xong ảnh + kịch bản"): mỗi short chụp sẵn
+  khung bìa, tiêu đề, từng thẻ (lúc hiện xong), khung đều mỗi ~3 giây, khung kết, kèm lời đọc đúng giây đó. Claude chấm bằng ĐÚNG tiêu chí
+  bot review sau dựng (trình bày, font, chữ đè/tràn/mồ côi, khớp lời, không khẳng định quá lời đọc, versus phải 2 số, nhịp ≤ ~5 giây,
+  biểu đồ đúng lúc, 2 giây đầu) và trả lệnh sửa: đổi chữ thẻ, đổi tiêu đề ≤ 46, dời mốc giờ, bỏ thẻ, đổi thành thẻ chữ, thêm thẻ
+  chữ/số/ảnh kho (số mới phải có trong lời đọc, ảnh không theo tên người). Áp, chụp lại, chấm lại, tối đa 2 vòng sửa, rồi mới dựng.
+  Telegram nhận "🔎 Bot review xem trước" kèm điểm dự kiến trước → sau. Lời đọc không đổi ở bước này. Thiếu token/PREFLIGHT=0 thì bỏ qua.
 - Ảnh bìa tin nóng: dùng thumb_text + thumb_stat Trọng chọn, dòng dưới "Tin nóng · @Trong0322" (không "Xem bản đầy đủ trên YouTube").
   Không cắt cứng 60 ký tự nữa (từng mất dấu %). Ảnh gửi Telegram dạng JPEG nhẹ (PNG 1MB bị Telegram Desktop kẹt).
 

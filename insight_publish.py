@@ -581,10 +581,11 @@ def preflight_text(res: dict) -> str:
         pre = s.get("preflight") or {}
         if pre.get("skipped") or pre.get("ok") is None and not pre.get("error"):
             continue
+        sc = (f" · điểm dự kiến {pre.get('score_before')} → {pre.get('score')}" if pre.get("score_before") is not None else "")
         if pre.get("ok"):
-            rows.append(f"Short {j + 1}: ổn sau {pre.get('rounds', 1)} vòng soát")
+            rows.append(f"Short {j + 1}: ổn sau {pre.get('rounds', 1)} vòng{sc}")
         else:
-            rows.append(f"Short {j + 1}: còn {len(pre.get('issues') or [])} lỗi trình bày"
+            rows.append(f"Short {j + 1}: còn {len(pre.get('issues') or [])} lỗi sau {pre.get('rounds', 0)} vòng{sc}"
                         + "".join(f"\n  • {x.get('problem', '')}" for x in (pre.get("issues") or [])[:5])
                         + (f"\n  (soát lỗi: {pre['error']})" if pre.get("error") else ""))
-    return ("🔎 Soát hình trước khi dựng\n" + "\n".join(rows)) if rows else ""
+    return ("🔎 Bot review xem trước (trước khi dựng)\n" + "\n".join(rows)) if rows else ""
