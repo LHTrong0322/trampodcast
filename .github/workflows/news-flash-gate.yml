@@ -32,9 +32,13 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           R="${{ github.repository }}"
+          # Bỏ qua run "queued" quá 2 tiếng (run ma không có job, lỗi GitHub 23/11 làm chặn mãi)
+          CUT=$(date -u -d '-2 hours' +%Y-%m-%dT%H:%M:%SZ)
           for f in podcast.yml insight.yml news-flash.yml video-weekly.yml; do
             for s in in_progress queued; do
-              if [ -n "$(gh run list -R "$R" --workflow "$f" --status $s --json databaseId -q '.[].databaseId')" ]; then
+              N=$(gh api "repos/$R/actions/workflows/$f/runs?status=$s&per_page=20" \
+                    -q "[.workflow_runs[] | select(\"$s\" == \"in_progress\" or .created_at > \"$CUT\")] | length")
+              if [ "${N:-0}" != "0" ]; then
                 echo "Đang có $f ($s), đợi lượt sau."; exit 0
               fi
             done
