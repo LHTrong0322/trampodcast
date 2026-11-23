@@ -8,7 +8,7 @@ import social_post as SP  # noqa: E402
 
 def test_bo_qua_ban_nhap(tmp_path, monkeypatch):
     names = ["x-nhap-haidang-16x9.mp4", "x-16x9.mp4", "x-nhap-haidang-short1-9x16.mp4", "x-short1-9x16.mp4",
-             "x-short2-9x16.mp4", "thumbnail-x.png", "seo-x.json"]
+             "x-short2-9x16.mp4", "x-short5-9x16.mp4", "thumbnail-x.png", "seo-x.json"]
 
     def fake_run(*a, **k):
         for n in names:
@@ -18,3 +18,4 @@ def test_bo_qua_ban_nhap(tmp_path, monkeypatch):
     rel = SP.fetch_release("x", tmp_path)
     assert rel["long"].name == "x-16x9.mp4"
     assert rel["short1"].name == "x-short1-9x16.mp4"
+    assert rel["short5"].name == "x-short5-9x16.mp4"

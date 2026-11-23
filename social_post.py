@@ -28,8 +28,9 @@ def fetch_release(tag: str, out: Path) -> dict:
     f = {p.name: p for p in out.iterdir()}
     # bản nháp (giọng dự phòng) cũng có đuôi -16x9.mp4 / short1-9x16.mp4: luôn lấy bản chính, bỏ file "-nhap-"
     pick = lambda key: next((p for n, p in sorted(f.items()) if key in n and "-nhap-" not in n), None)
-    return {"long": pick("-16x9.mp4"), "short1": pick("short1-9x16.mp4"), "short2": pick("short2-9x16.mp4"),
-            "thumb": pick("thumbnail"), "seo": json.loads(pick("seo-").read_text(encoding="utf-8"))}
+    out = {"long": pick("-16x9.mp4"), "thumb": pick("thumbnail"), "seo": json.loads(pick("seo-").read_text(encoding="utf-8"))}
+    out.update({f"short{i}": pick(f"short{i}-9x16.mp4") for i in range(1, 6)})   # video mới có tới 5 short
+    return out
 
 
 def yt_playlist(tok: str, title: str) -> str | None:
