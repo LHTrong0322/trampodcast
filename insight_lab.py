@@ -862,6 +862,25 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
         prompt += NEWS_PROMPT.format()
     min_secs = 1 if news else 3
 
+    def write(sys_: str, pr: str) -> dict:
+        """Tin nóng cần nhanh (23/11 Gemini quá tải 503 cả 40 phút): Claude viết trước, Gemini dự phòng.
+        Video insight dài giữ nguyên Gemini viết."""
+        if news and (os.getenv("CLAUDE_CODE_OAUTH_TOKEN") or os.getenv("ANTHROPIC_API_KEY")):
+            try:
+                import script_review as SR
+                old_m = os.environ.get("SCRIPT_REVIEW_MODEL")
+                os.environ["SCRIPT_REVIEW_MODEL"] = os.getenv("NEWS_WRITER_MODEL", "sonnet")
+                try:
+                    return SR.run_claude(sys_ + "\n\n" + pr)
+                finally:
+                    if old_m is None:
+                        os.environ.pop("SCRIPT_REVIEW_MODEL", None)
+                    else:
+                        os.environ["SCRIPT_REVIEW_MODEL"] = old_m
+            except Exception as ex:
+                log(f"   ! Claude viết kịch bản lỗi, chuyển sang Gemini: {str(ex)[:200]}")
+        return V.llm_json(gem, cfg, sys_, pr)
+
     def as_news(pl: dict) -> dict:
         if news:
             pl["sections"] = [x for x in pl.get("sections", []) if x.get("narration")][:1]
@@ -881,7 +900,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
             posts = [plan["source_post"]]
             log(f"   Không có link X, dùng nguồn số liệu trong kịch bản: {posts[0].get('url', '')}")
     for attempt in range(0 if approved else 3):
-        plan = as_news(P.nodash(V.llm_json(gem, cfg, system, prompt)))
+        plan = as_news(P.nodash(write(system, prompt)))
         top = {k: plan.get(k) for k in ("title", "hook", "hook_stat", "intro", "thumb_text", "thumb_stat")}
         n_ok = len([s for s in plan.get("sections", []) if s.get("narration") and not _banned(s)])
         if not _banned(top) and n_ok >= min_secs:
@@ -906,7 +925,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
                 break
             fix = prompt + "\nBản trước bị chấm " + str(rv.get("score")) + "/10. Sửa ĐÚNG các điểm sau:\n" + \
                 "\n".join(f"- {x}" for x in rv.get("fixes", []))
-            plan = as_news(P.nodash(V.llm_json(gem, cfg, system, fix)))
+            plan = as_news(P.nodash(write(system, fix)))
         plan["script_score"] = rv.get("score")
         plan["script_review"] = {k: rv.get(k) for k in ("score", "scores", "nhan_xet", "pass")}
     plan = scrub_plan(plan)
