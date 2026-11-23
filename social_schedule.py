@@ -43,6 +43,44 @@ def long_url(tag: str, posts: Path = Path("scripts/posts")) -> str | None:
     return None
 
 
+def tiktok_caption(plan: dict) -> str | None:
+    """Caption TikTok cho short: lấy plan["tiktok"]["caption"], không có thì dùng caption Reel Facebook (đã sạch link)."""
+    tt = plan.get("tiktok") or {}
+    if tt.get("caption"):
+        return SU.strip_links(tt["caption"])[:2200]
+    fb = plan.get("facebook") or {}
+    if fb.get("caption") and str(fb.get("item", "")).startswith("short"):
+        return SU.strip_links(fb["caption"])[:2200]
+    return None
+
+
+def tiktok_handoff(plan: dict, rel: dict, st: dict) -> str | None:
+    """Trọng 23/11: TikTok chưa đăng tự động được (app chưa qua kiểm duyệt). Máy gửi sẵn qua Telegram
+    file short + caption + giờ đăng; Trọng mở TikTok, đăng hoặc hẹn giờ trong app."""
+    if st.get("tiktok_sent"):
+        return None
+    item = next((c.get("item") for c in (plan.get("facebook") or {}, plan.get("youtube") or {})
+                 if str(c.get("item", "")).startswith("short")), None)
+    cap = tiktok_caption(plan)
+    if not item or not cap or not rel.get(item):
+        return None
+    fb, y = plan.get("facebook") or {}, plan.get("youtube") or {}
+    if fb.get("publish_unix"):
+        when = datetime.fromtimestamp(fb["publish_unix"], timezone.utc)
+    else:
+        when = datetime.fromisoformat(y["publish_at"].replace("Z", "+00:00"))
+    vn = when.astimezone(timezone(timedelta(hours=7)))
+    thu = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"][vn.weekday()]
+    try:
+        import insight_publish as PB
+        PB.tg_video(Path(rel[item]), f"🎵 TIKTOK: đăng {thu} {vn:%d/%m} lúc {vn:%H:%M}. Tải video này, caption ở tin nhắn tiếp theo.")
+        PB.tg_text(cap)
+    except Exception as ex:
+        return f"TikTok: gửi Telegram lỗi {str(ex)[:120]}"
+    st["tiktok_sent"] = True
+    return f"TikTok: đã gửi video + caption qua Telegram, Trọng đăng {thu} {vn:%d/%m} {vn:%H:%M}"
+
+
 def short_comment(plan: dict, posts: Path = Path("scripts/posts")) -> dict | None:
     """Trọng 23/11: short đăng lên YouTube LUÔN phải có bình luận. Kế hoạch không ghi thì máy tự tạo:
     câu hỏi kéo thảo luận + link bản đầy đủ, đăng 5 phút sau giờ công khai."""
@@ -193,6 +231,9 @@ def post(plan_path: Path):
                 report.append(f"Facebook bìa Reel lỗi: {ex}")
         when = datetime.fromtimestamp(fb["publish_unix"], timezone.utc).isoformat()
         report.append(f"Facebook Reel: đã đặt lịch đăng lúc {when} (giờ VN +7), id {rid}")
+    line = tiktok_handoff(plan, rel, st)
+    if line:
+        report.append(line)
     st.setdefault("comments_done", [])
     _state_path(plan_path).write_text(json.dumps(st, ensure_ascii=False, indent=1), encoding="utf-8")
     for line in report:
