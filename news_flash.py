@@ -382,8 +382,10 @@ def on_update(out: Path, cfg: dict, up: dict) -> bool:
         d = _find(st, mid.group(1) if mid else "", reply_id)
         note = (mid.group(2) if mid else rest).strip()
         act = {"/duyet": "ok", "/duyệt": "ok", "/bo": "no", "/bỏ": "no"}.get(cmd, "edit")
-    elif reply_id and text:
-        d = _find(st, msg_id=reply_id)
+    elif text and (reply_id or not re.search(r"https?://|^/", text)):
+        # Trọng 23/11: sau khi bấm "Sửa" anh gõ góp ý thành tin thường (không reply) nên bot bỏ qua.
+        # Giờ: reply vào tin kịch bản, HOẶC tin chữ thường không có link khi đang có kịch bản chờ duyệt, đều tính là góp ý.
+        d = _find(st, msg_id=reply_id) if reply_id else _find(st)
         if not d:
             return False
         low = text.lower().strip(" .!")
@@ -423,6 +425,8 @@ def revise_all(out: Path, cfg: dict):
         old = json.loads((out / d["script"]).read_text(encoding="utf-8"))
         sec = (old.get("sections") or [{}])[0]
         notes = [f"Chủ kênh góp ý bản trước (BẮT BUỘC làm theo): {n}" for n in d.get("notes", [])]
+        notes.append("CHỈ sửa đúng những phần chủ kênh nêu, giữ NGUYÊN từng chữ các phần còn lại của bản trước "
+                     "(câu mở, lời đọc, hình, tiêu đề, ảnh bìa) nếu góp ý không nhắc tới.")
         notes.append("Bản trước: câu mở \"" + str((old.get("short_hooks") or {}).get("0", "")) + "\"; lời đọc \"" + sec.get("narration", "") + "\"")
         try:
             plan = write_script(d["post"], d["id"], notes)
@@ -557,6 +561,12 @@ def main():
         d = st["drafts"][a.id]
         plan = json.loads(Path(a.script).read_text(encoding="utf-8"))
         save_script(out, a.id, plan)
+        if os.getenv("NF_APPROVE") == "1":   # Trọng đã nói rõ "cook video" trong chat: duyệt luôn, dựng ngay
+            d.update(status="approved", approved=now_vn().isoformat(), version=d.get("version", 1) + 1)
+            save_state(out, st)
+            say(f"✅ Đã cập nhật kịch bản {a.id} theo bản Trọng sửa (tiêu đề, ảnh bìa). Bot bắt đầu dựng short giọng Hải Đăng, "
+                "khoảng 20 đến 40 phút sẽ gửi video.", reply_to=d.get("msg_id"))
+            return output("build", a.id)
         d.update(status="waiting", version=d.get("version", 1) + 1)
         send_draft(out, d)
         save_state(out, st)

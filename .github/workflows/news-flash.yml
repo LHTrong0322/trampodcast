@@ -21,6 +21,10 @@ on:
         description: "mode revise: góp ý của Trọng để viết lại"
         required: false
         default: ""
+      approve:
+        description: "mode setscript: 1 = Trọng đã duyệt trong chat, dựng luôn"
+        required: false
+        default: ""
       brief:
         description: "mode topic: đường dẫn file tóm tắt chủ đề trong repo (vd scripts/flash-briefs/nvda.json)"
         required: false
@@ -87,6 +91,7 @@ jobs:
         env:
           IN_NOTE: ${{ github.event.inputs.note }}
           IN_ID: ${{ github.event.inputs.id }}
+          NF_APPROVE: ${{ github.event.inputs.approve }}
         run: |
           MODE="${{ github.event.inputs.mode }}"
           [ "${{ github.event_name }}" = "schedule" ] && MODE=pick
