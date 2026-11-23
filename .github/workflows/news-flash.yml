@@ -10,9 +10,13 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "pick = lọc tin ngay · poll = đọc lệnh duyệt trên Telegram rồi dựng bản đã duyệt"
+        description: "pick = lọc tin ngay · poll = đọc lệnh duyệt trên Telegram rồi dựng bản đã duyệt · topic = viết kịch bản theo chủ đề Trọng chọn (cần brief)"
         required: false
         default: "poll"
+      brief:
+        description: "mode topic: đường dẫn file tóm tắt chủ đề trong repo (vd scripts/flash-briefs/nvda.json)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -75,7 +79,11 @@ jobs:
         run: |
           MODE="${{ github.event.inputs.mode }}"
           [ "${{ github.event_name }}" = "schedule" ] && MODE=pick
-          python news_flash.py "${MODE:-poll}" --out public
+          if [ "$MODE" = "topic" ]; then
+            python news_flash.py topic --out public --brief "${{ github.event.inputs.brief }}"
+          else
+            python news_flash.py "${MODE:-poll}" --out public
+          fi
 
       - name: Cài ffmpeg + giọng Hải Đăng
         if: steps.nf.outputs.build != ''

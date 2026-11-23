@@ -308,6 +308,27 @@ def pick(out: Path, cfg: dict):
     log(f"✓ Đã gửi kịch bản {did} lên Telegram, chờ duyệt")
 
 
+def topic(out: Path, cfg: dict, brief: Path):
+    """Trọng chỉ định chủ đề (vd "cook short NVDA ngay"): bỏ qua bước lọc/chấm tin và giới hạn mỗi ngày,
+    nhưng vẫn viết kịch bản, Claude chấm >= 8, gửi Telegram CHỜ DUYỆT như tin tự lọc."""
+    b = json.loads(brief.read_text(encoding="utf-8"))
+    st = load_state(out)
+    setup_commands(st)
+    did = now_vn().strftime("%d%m%H%M")
+    post = {"author": b.get("sources_name", "tổng hợp"), "handle": "", "url": (b.get("sources") or [""])[0],
+            "title": b.get("title", ""), "text": b["text"][:9000]}
+    log(f"③ Viết kịch bản short theo chủ đề Trọng chọn: {b.get('story', '')}")
+    plan = write_script(post, did, b.get("notes"))
+    d = {"id": did, "status": "waiting", "created": now_vn().isoformat(), "story": b.get("story", ""),
+         "why": b.get("why", "Trọng chỉ định"), "importance": b.get("importance", "?"), "viral": b.get("viral", "?"),
+         "sources": b.get("sources", []), "post": post, "manual": True,
+         "script": str(Path(save_script(out, did, plan)).relative_to(out))}
+    st["drafts"][did] = d
+    send_draft(out, d)
+    save_state(out, st)
+    log(f"✓ Đã gửi kịch bản {did} lên Telegram, chờ duyệt")
+
+
 # ---------------------------------------------------------------------------
 # 2. LỆNH DUYỆT TRÊN TELEGRAM (insight.inbox gọi cho từng tin nhắn)
 # ---------------------------------------------------------------------------
@@ -464,7 +485,8 @@ def gate(state: Path, store: Path) -> str:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("mode", choices=["pick", "poll", "build", "gate"])
+    ap.add_argument("mode", choices=["pick", "poll", "build", "gate", "topic"])
+    ap.add_argument("--brief", default="")
     ap.add_argument("--out", default="public")
     ap.add_argument("--id", default="")
     ap.add_argument("--state", default="")
@@ -485,6 +507,9 @@ def main():
         return output("build", "")
     if a.mode == "pick":
         pick(out, cfg)
+        return output("build", "")
+    if a.mode == "topic":
+        topic(out, cfg, Path(a.brief))
         return output("build", "")
     if a.mode == "poll":
         return output("build", poll(out, cfg))
