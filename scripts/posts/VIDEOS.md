@@ -8,3 +8,5 @@
 | Video 4 | Index fund: vì sao 79% chuyên gia thua? (giọng Ludo, biểu đồ S&P 500 30 năm +773.8%) | insight-20261123-1718 (bản chính, KHÔNG dùng file -nhap-haidang-). 1 video dài + 2 short | scripts/index-fund-approved.json | Trọng chốt 23/11 23:04. Chưa đặt lịch, Trọng sẽ set sau. Gói SEO trong Release còn thô, soạn lại sạch trước khi đăng |
 
 Khi Trọng nói "đăng video N" thì tra bảng này để lấy đúng bản dựng.
+
+TikTok (vidIQ, đã lên lịch 23/11): Video 1 Short 2 T3 24/11 10:00; Video 3 Short 4 T4 25/11 18:30, Short 1 T5 26/11 18:30, Short 5 T2 30/11 18:30, Short 2 T3 1/12 18:30, Short 3 T4 2/12 18:30; Video 2 Short 1 T7 28/11 19:00, Short 2 CN 29/11 19:00.

@@ -120,6 +120,11 @@
   TIKTOK (Trọng 23/11): chưa đăng tự động (app TikTok chưa qua audit thì chỉ đăng riêng tư). Khi đặt lịch một short,
   social_schedule.tiktok_handoff gửi Telegram file short + caption (plan["tiktok"]["caption"], không có thì lấy caption Reel)
   + giờ đăng; Trọng tự bấm đăng/hẹn giờ trong app TikTok. Chạy lại plan cũ thì chỉ gửi phần TikTok còn thiếu (cờ tiktok_sent).
+  CẬP NHẬT 23/11 23:56: TikTok đã nối vidIQ (account _000rBMsglcGS3J4706N717ICAW4au_F7cIu). Claude đặt lịch TikTok bằng
+  công cụ vidIQ (vidiq_video_upload từ link raw nhánh tiktok-upload, rồi draft + publish): cùng giờ với Reel Facebook,
+  caption = caption Reel + dòng "Xem bản đầy đủ trên YouTube: Smart Penguin Insights", KHÔNG link, KHÔNG bình luận,
+  công khai, cho bình luận, đồng ý điều khoản nhạc, BẬT nhãn AI. Trọng duyệt sẵn: caption giống Reel là được đăng.
+  Gửi tay qua Telegram đã tắt (TIKTOK_TELEGRAM = False).
   Đăng ngay chọn lọc: social-post.yml (youtube/facebook = long, short1, short2). Mô tả luôn có Telegram https://t.me/SmartPanda0322
   Kênh YouTube id UC2tX8_Z9beionA0HVu6q4Gw (đã xác minh, ảnh bìa tự gắn được). 3 playlist đã tạo.
   Phụ đề tự động YouTube: Trọng muốn GỠ (đè lên phụ đề trong video). social_schedule.py tự gỡ track asr sau khi đăng;

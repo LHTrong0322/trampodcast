@@ -43,6 +43,10 @@ def long_url(tag: str, posts: Path = Path("scripts/posts")) -> str | None:
     return None
 
 
+# Trọng 23/11 23:56: TikTok đã nối vidIQ, Claude đặt lịch TikTok qua vidIQ (cùng giờ, caption Reel). Tắt gửi tay qua Telegram.
+TIKTOK_TELEGRAM = False
+
+
 def tiktok_caption(plan: dict) -> str | None:
     """Caption TikTok cho short: lấy plan["tiktok"]["caption"], không có thì dùng caption Reel Facebook (đã sạch link)."""
     tt = plan.get("tiktok") or {}
@@ -57,7 +61,7 @@ def tiktok_caption(plan: dict) -> str | None:
 def tiktok_handoff(plan: dict, rel: dict, st: dict) -> str | None:
     """Trọng 23/11: TikTok chưa đăng tự động được (app chưa qua kiểm duyệt). Máy gửi sẵn qua Telegram
     file short + caption + giờ đăng; Trọng mở TikTok, đăng hoặc hẹn giờ trong app."""
-    if st.get("tiktok_sent"):
+    if not TIKTOK_TELEGRAM or st.get("tiktok_sent"):
         return None
     item = next((c.get("item") for c in (plan.get("facebook") or {}, plan.get("youtube") or {})
                  if str(c.get("item", "")).startswith("short")), None)

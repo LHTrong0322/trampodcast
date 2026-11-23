@@ -14,7 +14,13 @@ def test_caption_lay_tu_reel_va_bo_link():
     assert S.tiktok_caption({"facebook": {"item": "long", "caption": "x"}}) is None
 
 
+def test_tat_gui_telegram_mac_dinh(tmp_path):
+    plan = {"facebook": {"item": "short4", "publish_unix": 1795606200, "caption": "x"}}
+    assert S.tiktok_handoff(plan, {"short4": tmp_path / "a.mp4"}, {}) is None
+
+
 def test_gui_mot_lan_dung_gio_vn(monkeypatch, tmp_path):
+    monkeypatch.setattr(S, "TIKTOK_TELEGRAM", True)
     sent = []
     monkeypatch.setattr(PB, "tg_video", lambda p, c: sent.append(c))
     monkeypatch.setattr(PB, "tg_text", lambda t: sent.append(t))
