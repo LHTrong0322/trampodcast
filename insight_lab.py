@@ -583,8 +583,18 @@ def _stock_series(t: str, days: int) -> list:
         r = requests.get(f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}", params={"range": rng, "interval": step},
                          headers={"User-Agent": "Mozilla/5.0"}, timeout=30)
         res = (r.json().get("chart") or {}).get("result") or []
+        if res and days > 400:
+            # Lỗi 23/11: range=max của Yahoo trả giá QUÝ, cắt theo số điểm ra 42 năm mà biểu đồ ghi "30 năm" (+3714%).
+            # Cắt theo NGÀY THẬT trong timestamp để số năm và % tăng đúng với nhãn.
+            import time as _t
+            ts = res[0].get("timestamp") or []
+            cl = ((res[0].get("indicators") or {}).get("quote") or [{}])[0].get("close") or []
+            since = _t.time() - days * 86400
+            closes = [c for t_, c in zip(ts, cl) if c and t_ >= since]
+            if len(closes) >= 10:
+                return closes
         closes = [x for x in ((res[0].get("indicators") or {}).get("quote") or [{}])[0].get("close") or [] if x] if res else []
-        if len(closes) >= 10:
+        if len(closes) >= 10 and days <= 400:
             return closes[-max(10, int(days * per)):]
     except Exception as ex:
         log(f"   ! Yahoo {t}: {ex}")
