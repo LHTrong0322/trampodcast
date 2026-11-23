@@ -54,48 +54,33 @@
      ]
     },
     {
-     "at": "lúc này đa số sẽ hỏi",
+     "at": "đa số sẽ hỏi",
      "type": "statement",
-     "text": "Còn tin xấu nào nữa không?",
+     "text": "Còn tin xấu nào nữa?",
      "sub": "Câu hỏi của đám đông"
     },
     {
-     "at": "nhưng tin xấu thì",
-     "type": "statement",
-     "text": "Tin xấu thì lúc nào cũng có"
-    },
-    {
-     "at": "kobeissi hỏi hai câu khác",
+     "at": "kobeissi hỏi khác",
      "type": "flow",
      "label": "2 câu hỏi đúng",
      "steps": [
-      "Lý do dòng tiền vào AI đã bị phá vỡ?",
+      "Lý do mua AI đã gãy chưa?",
       "Giá đã phản ánh bao nhiêu nỗi sợ?"
      ],
      "step_at": [
-      "một lý do",
-      "hai giá hiện tại"
+      "lý do mua ai",
+      "và giá đã phản ánh"
      ],
-     "hold": 1.5
+     "hold": 1
     },
     {
-     "at": "nếu lý do vẫn còn",
-     "type": "flow",
-     "label": "Nếu cả hai cùng đúng",
-     "steps": [
-      "Lý do mua vẫn còn",
-      "Giá đã rẻ hơn",
-      "Cơ hội, không phải rủi ro"
-     ],
-     "step_at": [
-      "nếu lý do vẫn còn",
-      "mà giá đã rẻ đi",
-      "thì đó là cơ hội"
-     ],
+     "at": "lý do còn giá rẻ hơn",
+     "type": "statement",
+     "text": "Lý do còn + giá rẻ hơn = cơ hội",
      "hold": 1.5
     }
    ],
-   "narration": "Ba mươi mốt phiên liên tiếp, cổ phiếu Mỹ mất trung bình hai trăm hai mươi lăm tỷ đô mỗi ngày. Từ đỉnh ngày sáu tháng mười, S&P 500 mất sáu nghìn tỷ đô vốn hoá. Bốn mươi lăm ngày đó có đủ thứ: chiến tranh Iran, lo ngại CapEx của AI, Fed tháng mười, bầu cử giữa kỳ, rồi lùm xùm ở Nvidia. Lúc này, đa số sẽ hỏi: còn tin xấu nào nữa không? Nhưng tin xấu thì lúc nào cũng có. Kobeissi hỏi hai câu khác. Một: lý do khiến dòng tiền đổ vào AI đã bị phá vỡ chưa? Hai: giá hiện tại đã phản ánh bao nhiêu phần nỗi sợ rồi? Nếu lý do vẫn còn, mà giá đã rẻ đi, thì đó là cơ hội, không phải rủi ro. Bốn tín hiệu tiếp theo trả lời đúng hai câu này.",
+   "narration": "Ba mươi mốt phiên liên tiếp, cổ phiếu Mỹ mất trung bình hai trăm hai mươi lăm tỷ đô mỗi ngày. Từ đỉnh ngày sáu tháng mười, S&P 500 mất sáu nghìn tỷ đô vốn hoá. Bốn mươi lăm ngày đó có đủ thứ: chiến tranh Iran, lo ngại CapEx của AI, Fed tháng mười, bầu cử giữa kỳ, rồi lùm xùm ở Nvidia. Đa số sẽ hỏi: còn tin xấu nào nữa? Kobeissi hỏi khác: lý do mua AI đã gãy chưa, và giá đã phản ánh bao nhiêu nỗi sợ? Lý do còn, giá rẻ hơn, đó là cơ hội.",
    "quote": "",
    "data": {
     "type": "none",
