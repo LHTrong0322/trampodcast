@@ -720,21 +720,22 @@ def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
         raw = outdir / f"{i:02d}.raw.wav"
         # Trọng chốt 21/11: nghe lại từng đoạn trước khi dựng, lặp/thiếu/thừa thì đọc lại (tối đa 4 lần)
         for attempt in range(4):
-            say = txt
-            # log 23/11: hook "Bitcoin về năm mươi lăm nghìn đô. Crypto chết rồi..." bị Gemini đọc lặp câu đầu 4/4 lần.
-            # Từ lần đọc lại: câu đầu ngắn thì nối sang câu sau bằng dấu phẩy (chữ giữ nguyên, chỉ đổi chỗ ngắt)
-            if (attempt or i == 0) and re.match(r"^[^.!?\n]{3,60}[.!]\s+\S", say):
-                say = re.sub(r"^([^.!?\n]{3,60})[.!]\s+(\S)", lambda m: m.group(1) + ", " + m.group(2).lower(), say, count=1)
-            pcm = V.tts_once(gem, cfg, say)
+            pcm = V.tts_once(gem, cfg, txt)
             sec = len(pcm) / (P.SAMPLE_RATE * 2)
-            if sec > len(txt.split()) / 150 * 60 * 1.35:
-                why = f"dài bất thường {sec:.0f}s"
-            else:
-                V.pcm_to_wav(pcm, raw)
-                ok, why = tts_qa.check(str(raw), txt)
-                if ok:
-                    log(f"   ✓ đoạn {i}: {why}")
-                    break
+            V.pcm_to_wav(pcm, raw)
+            ok, why = tts_qa.check(str(raw), txt)
+            if not ok and ("lặp" in why or "thừa" in why):
+                # đo 23/11: Gemini đọc cả đoạn 2 lần liền. Cắt bỏ lần thứ 2 rồi nghe lại, khỏi tốn thêm lượt đọc
+                cut = tts_qa.double_cut(str(raw))
+                if cut:
+                    V.pcm_to_wav(pcm[: int(cut * P.SAMPLE_RATE) * 2], raw)
+                    ok, why2 = tts_qa.check(str(raw), txt)
+                    why = f"cắt lần đọc thừa ở giây {cut}: {why2}" if ok else why
+            if ok and len(open(raw, "rb").read()) / (P.SAMPLE_RATE * 2) > len(txt.split()) / 150 * 60 * 1.35:
+                ok, why = False, "dài bất thường"
+            if ok:
+                log(f"   ✓ đoạn {i}: {why}")
+                break
             log(f"   ! đoạn {i} lỗi ({why}), đọc lại lần {attempt + 2}")
             time.sleep(10)
         else:

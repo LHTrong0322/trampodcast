@@ -70,6 +70,21 @@ def check(path: str, text: str) -> tuple[bool, str]:
     return True, f"ổn (giống {sim:.0%}, độ dài {ratio:.0%})"
 
 
+def double_cut(path: str) -> float | None:
+    """Gemini đôi khi đọc CẢ đoạn 2 lần liền (đo 23/11: hook 8s thành 16s, nửa sau giống hệt nửa đầu).
+    Tìm chỗ bản nghe bắt đầu lại từ đầu, trả về giây nên cắt (giữa 2 lần đọc). Không thấy thì None."""
+    segs = transcribe(path)
+    if len(segs) < 2:
+        return None
+    head = words(segs[0][2])[:5]
+    if len(head) < 3:
+        return None
+    for k in range(1, len(segs)):
+        if segs[k][0] > 1.5 and words(segs[k][2])[:len(head)] == head:
+            return round((segs[k - 1][1] + segs[k][0]) / 2, 2)
+    return None
+
+
 def check_video(path: str, script_json: str | None = None) -> list[str]:
     """Nghe cả video, liệt kê chỗ lặp kèm thời điểm."""
     segs = transcribe(path)
