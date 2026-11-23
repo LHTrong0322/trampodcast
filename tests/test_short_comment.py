@@ -28,3 +28,12 @@ def test_short_chua_co_video_dai_van_co_binh_luan(tmp_path):
 def test_khong_ghi_de_binh_luan_co_san_va_bo_qua_video_dai(tmp_path):
     assert S.short_comment({"tag": "T", "youtube": {"item": "short1", "publish_at": "2026-11-23T13:40:00Z", "comment": "x"}}, tmp_path) is None
     assert S.short_comment({"tag": "T", "youtube": {"item": "long", "publish_at": "2026-11-23T13:40:00Z"}}, tmp_path) is None
+
+
+def test_short_lay_link_video_dai_cung_ma(tmp_path):
+    _w(tmp_path / "v.json", {"tag": "T9", "youtube": {"item": "long"}})
+    _w(tmp_path / "v.state.json", {"yt_id": "AAA"})
+    _w(tmp_path / "v-s1.json", {"tag": "T9", "youtube": {"item": "short1"}})
+    _w(tmp_path / "v-s1.state.json", {"yt_id": "BBB"})
+    assert S.long_url("T9", tmp_path) == "https://youtu.be/AAA"
+    assert S.long_url("KHAC", tmp_path) is None

@@ -100,6 +100,11 @@ def post(plan_path: Path):
     if y and not st.get("yt_id"):
         tok = SU._yt_token()
         pl = SP.yt_playlist(tok, y.get("playlist", ""))
+        if "{LONG_URL}" in y["description"]:   # short: link bản đầy đủ lấy từ video dài cùng mã (phải đăng video dài trước)
+            lu = long_url(plan["tag"])
+            if not lu:
+                raise RuntimeError("Chưa có video dài YouTube cùng mã, đặt lịch video dài trước rồi mới đặt short")
+            y = {**y, "description": y["description"].replace("{LONG_URL}", lu)}
         desc = y["description"].replace("{PLAYLIST_URL}", f"https://www.youtube.com/playlist?list={pl}" if pl else "")
         meta = {"snippet": {"title": y["title"][:100], "description": desc[:4900], "tags": y.get("tags", []), "categoryId": "27",
                             "defaultLanguage": "vi", "defaultAudioLanguage": "vi"},
@@ -217,6 +222,8 @@ def comments():
             if datetime.fromisoformat(c["comment_at"].replace("Z", "+00:00")) > now:
                 continue
             text = c["comment"].replace("{YT_URL}", yt_url)
+            if "{LONG_URL}" in text:
+                text = text.replace("{LONG_URL}", long_url(plan.get("tag", "")) or yt_url)
             if key == "facebook" and SU.TELEGRAM not in text:   # link Telegram chỉ nằm ở bình luận Facebook
                 text += f"\n💬 Telegram: {SU.TELEGRAM}"
             ok, err = False, ""

@@ -1,0 +1,34 @@
+{
+ "tag": "20261122-0609",
+ "approved_by": "Trọng 23/11 22:25 (VN): lịch short cố định 19:00, T7 28/11",
+ "long_url_from": "20261122-0609",
+ "youtube": {
+  "item": "short1",
+  "publish_at": "2026-11-28T12:00:00Z",
+  "playlist": "Shorts insight",
+  "title": "Vì sao HYPE tăng 150% còn AAVE giảm 35%? #Shorts",
+  "description": "Cùng là DeFi top đầu, cùng có revenue. Khác biệt nằm ở chỗ bao nhiêu % revenue quay về token qua buyback. Coin bạn đang hold thuộc nhóm nào?\n\n▶ Xem bản đầy đủ: {LONG_URL}\n\n⚠️ Không phải lời khuyên đầu tư.\n🐧 Smart Penguin Insights · @Trong0322\n\n#Shorts #crypto #dautu",
+  "tags": [
+   "đầu tư altcoin",
+   "tokenomics",
+   "buyback",
+   "hyperliquid",
+   "aave",
+   "uniswap",
+   "altcoin",
+   "crypto",
+   "smart penguin insights"
+  ],
+  "thumb": "assets/posts/20261122-0609/short1-cover.jpg",
+  "comment": "Coin bạn đang hold có buyback từ revenue không? Comment tên coin bên dưới 👇\n▶ Xem bản đầy đủ: {LONG_URL}",
+  "comment_at": "2026-11-28T12:05:00Z"
+ },
+ "facebook": {
+  "item": "short1",
+  "publish_unix": 1795867200,
+  "caption": "Cùng là DeFi top đầu, cùng có revenue, nhưng HYPE tăng 150% còn AAVE giảm 35% 🐧 Khác biệt nằm ở chỗ bao nhiêu % revenue quay về token. Coin bạn đang hold thuộc nhóm nào? 👇\n\nKhông phải lời khuyên đầu tư.\n#crypto #altcoin #tokenomics #hyperliquid #smartpenguininsights",
+  "thumb": "assets/posts/20261122-0609/short1-cover.jpg",
+  "comment": "▶ Bản đầy đủ trên YouTube: {LONG_URL}",
+  "comment_at": "2026-11-28T12:05:00Z"
+ }
+}
