@@ -29,6 +29,8 @@ def words(t: str) -> list[str]:
     import vi_num   # bản nghe lại hay ghi số bằng chữ số: đổi sang chữ để so với lời đọc (23/11)
     t = vi_num.say_numbers(t.replace('%', ' phần trăm')).lower()
     t = re.sub(r"\[[^\]]*\]", " ", t)
+    # "một nghìn lẻ sáu mươi" (lời đọc) và "một nghìn không trăm sáu mươi" (Whisper) là cùng một số
+    t = re.sub(r"\b(nghìn|ngàn) lẻ (\w+ mươi)", r"\1 không trăm \2", t)
     return re.findall(r"[0-9a-zà-ỹđ]+", t)
 
 
@@ -48,7 +50,11 @@ def repeats(heard: list[str], script: list[str], n: int = 4) -> list[str]:
     def grams(w):
         return Counter(" ".join(w[i:i + n]) for i in range(len(w) - n + 1))
     h, s = grams(heard), grams(script)
-    return [g for g, c in h.items() if c > s.get(g, 0) and c >= 2]
+    # log 23/11 (video 100y, phần chu kỳ 4 năm): Whisper ghi "chu kỳ" thành "chuukki", "một nghìn lẻ" thành "một nghìn không trăm",
+    # nên cụm lặp HỢP LỆ trong kịch bản bị tính là đọc lặp, 4/4 lần. Chỉ tính cụm mà mọi chữ đều có trong kịch bản;
+    # đọc lặp thật vẫn bị bắt qua các cụm viết đúng và qua kiểm tra độ dài (đọc thừa).
+    vocab = set(script)
+    return [g for g, c in h.items() if c > s.get(g, 0) and c >= 2 and all(w in vocab for w in g.split())]
 
 
 def check(path: str, text: str) -> tuple[bool, str]:
