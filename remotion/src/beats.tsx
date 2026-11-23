@@ -70,7 +70,7 @@ const BigNum: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
           <path d={b.tone === 'up' ? 'M4 17 L12 6 L20 17 Z' : 'M4 7 L12 18 L20 7 Z'} fill={toneColor(b.tone)} /></svg> : null}
         <CountUp value={b.value || ''} size={(b.value || '').length > 7 ? Math.max(64, Math.min(96, Math.floor((w - 340) / ((b.value || '').length * 0.62)))) : (b.value || '').length > 5 ? 120 : 150} delay={2} color={toneColor(b.tone)} />
         </div>
-        <div style={{fontSize: 38, fontWeight: 700, color: C.muted, maxWidth: b.logo ? w - 300 : w - 110, lineHeight: 1.22}}>{lab}</div>
+        <div style={{fontSize: 38, fontWeight: 700, color: C.muted, maxWidth: b.logo ? w - 300 : w - 110, lineHeight: 1.22, textWrap: 'balance'} as React.CSSProperties}>{lab}</div>
       </div>
     </div>
     <SourceLine text={src} />
@@ -258,8 +258,8 @@ const Photo: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
       boxShadow: '0 20px 56px rgba(40,50,110,0.14)', background: C.panel, fontFamily: FONT}}>
       {b.src ? <Img src={staticFile(b.src)} style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${z})`}} /> : null}
       {b.label ? <div style={{position: 'absolute', left: 0, right: 0, bottom: 0, padding: '60px 36px 28px',
-        background: 'linear-gradient(transparent, rgba(15,20,45,0.82))', color: '#FFFFFF', fontSize: 44, fontWeight: 800, lineHeight: 1.15,
-        opacity: interpolate(f, [4, 14], [0, 1], clamp)}}>{b.label}</div> : null}
+        background: 'linear-gradient(rgba(15,20,45,0), rgba(15,20,45,0.92) 45%)', color: '#FFFFFF', fontSize: 44, fontWeight: 800, lineHeight: 1.15,
+        textWrap: 'balance', textShadow: '0 2px 8px rgba(0,0,0,0.45)', opacity: interpolate(f, [4, 14], [0, 1], clamp)} as React.CSSProperties}>{b.label}</div> : null}
     </div>
   );
 };

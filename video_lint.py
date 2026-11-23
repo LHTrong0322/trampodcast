@@ -116,7 +116,7 @@ def lint(plan: dict) -> list[str]:
             if (b - a) / WPS > gap_max:
                 seg = " ".join(w[a:a + 6])
                 bad.append(f"Phần {k}: từ '{seg}...' có {(b - a) / WPS:.0f} giây không đổi hình (tối đa {gap_max:.0f} giây), thêm 1 hình số liệu, ảnh hoặc ví dụ.")
-        for b in beats:
+        for b in beats[:-1]:   # Trọng 24/11: câu hỏi mời comment ở thẻ CUỐI thì được (review muốn thẻ ?, không dùng thẻ trích dẫn)
             if b.get("type") == "question":
                 bad.append(f"Phần {k}: thẻ câu hỏi '{b.get('text', '')}' không có dữ liệu (review 22/11 trừ điểm), thay bằng số liệu, biểu đồ hoặc logo kèm số.")
         for n, (i, b) in enumerate(an):

@@ -315,6 +315,8 @@ def review(gem, cfg, res: dict, thumb: Path | None) -> dict:
     prompt += (f"\n\nTHÔNG TIN THÊM (đo bằng máy): video đổi hình {changes} lần, tức khoảng {changes / max(1, dur / 60):.0f} lần mỗi phút "
                "(chuẩn kênh: từ 8 lần/phút là nhịp tốt). Khung hình chỉ là ảnh tĩnh nên hãy chấm nhịp độ dựa trên số lần đổi hình này "
                "và độ khác nhau giữa các khung, không chỉ dựa trên vài ảnh.\nLời đang đọc ở từng khung (để chấm dữ liệu có đúng ý lời đọc không):\n" + timeline)
+    if plan.get("news"):   # Trọng 24/11: tin nóng chỉ giao short, bản 16:9 không dùng: đừng trừ điểm vì nó
+        prompt += ("\n\nTIN NÓNG: chỉ short0 được giao cho người xem. BỎ QUA các khung long_* khi chấm và khi liệt kê can_sua.")
     if short_first:
         prompt += ("\n\nLƯU Ý QUAN TRỌNG: đây là video SHORT-FIRST. Sản phẩm chính là short0 (10 khung short0_*), video dài chỉ là bản phụ. "
                    "Chấm theo chuẩn video ngắn 9:16: hook 1 đến 2 giây, một ý chính, nhịp đổi hình 3 đến 6 giây, chữ đọc được trên điện thoại, "

@@ -42,7 +42,11 @@ CHẤM THEO ĐÚNG TIÊU CHÍ BOT REVIEW SAU DỰNG, ghi mọi lỗi vào "issue
    chữ mồ côi ở dòng cuối; 2 số trong thẻ so sánh không thẳng hàng, số dính chữ VS; thẻ trống hoặc gần trống; ảnh mờ vỡ.
 2. Khớp lời: chữ/số trên hình phải khớp lời đang đọc lúc đó; con số trên hình mà lời đọc không nhắc thì sai.
 3. Không khẳng định mạnh hơn lời đọc/nguồn (vd lời đọc "nhận ý kiến từ chính phủ" mà thẻ ghi "Chính phủ đứng sau").
-4. Thẻ so sánh (versus) phải là 2 CON SỐ so được với nhau, không phải 2 chữ giống nhau.
+4. Thẻ so sánh (versus) phải là 2 CON SỐ, không phải 2 chữ giống nhau. So 2 đại lượng khác loại để nêu NGHỊCH LÝ
+   (vd revenue kỷ lục vs giá giảm) là HỢP LỆ và rất đáng giữ. Chú thích nhỏ (note, sub) được ghi số liệu nguồn kèm theo
+   dù lời đọc không đọc ra, miễn không mâu thuẫn lời đọc.
+   ĐỪNG bỏ hay biến thẻ dữ liệu tốt thành thẻ chữ chỉ vì lệch chút ít; ưu tiên sửa chữ, dời giờ. Bỏ thẻ chỉ khi nó sai hoặc vô nghĩa.
+   Câu hỏi cuối video dùng thẻ question (dấu ?), không dùng thẻ trích dẫn.
 5. Nhịp: không thẻ nào đứng yên quá khoảng 5 giây; biểu đồ phải hiện đủ lúc lời đọc nhắc tới nó.
 6. 2 giây đầu (khung bìa + tiêu đề) phải đủ gây tò mò, tiêu đề ≤ 46 ký tự, tối đa 2 dòng, có con số.
 
@@ -50,7 +54,9 @@ LỆNH SỬA ("fixes", áp theo thứ tự). KHÔNG đổi lời đọc. Con s�
 - {{"i": n, "label"/"text"/"sub"/"note": "...", "left_label"/"right_label"/"left_note"/"right_note": "..."}}: đổi chữ trên thẻ n
 - {{"i": n, "s": giây}}: dời thẻ n sang giây khác (khớp lúc lời đọc nhắc tới)
 - {{"i": n, "drop": true}}: bỏ thẻ n
+- {{"i": n, "value": "..."}}: đổi số/chữ to của thẻ bignum (số mới phải có trong lời đọc, vd lời "chưa đầy 2 tuần" → "< 2 tuần")
 - {{"i": n, "to_statement": "câu ngắn ≤ 50 ký tự"}}: đổi thẻ n thành thẻ chữ
+- {{"i": n, "to_question": "câu hỏi ngắn ≤ 50 ký tự"}}: đổi thẻ n thành thẻ câu hỏi
 - {{"add": {{"s": giây, "type": "statement|bignum|question|photo", "text": "...", "value": "...", "label": "...", "query": "2-4 từ tiếng Anh cảnh/đồ vật, KHÔNG tên người"}}}}: thêm thẻ
 Trả về DUY NHẤT JSON:
 {{"score": điểm dự kiến 1-10 nếu dựng NGUYÊN TRẠNG,
@@ -185,6 +191,13 @@ def _apply(props: dict, rv: dict, narration: str) -> int:
             drop.add(i)
             n += 1
             continue
+        if fx.get("to_question"):
+            beats[i] = {"type": "question", "s": b.get("s", 0), "text": P.nodash(str(fx["to_question"]))[:60], "sub": b.get("sub", "")}
+            n += 1
+            continue
+        if fx.get("value") and b.get("type") == "bignum" and _nums_ok(fx["value"], narration):
+            b["value"] = P.nodash(str(fx["value"]))[:14]
+            n += 1
         if fx.get("to_statement"):
             beats[i] = {"type": "statement", "s": b.get("s", 0), "text": P.nodash(str(fx["to_statement"]))[:60]}
             n += 1
