@@ -46,8 +46,12 @@ const BigNum: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => (
     <div style={{display: 'flex', alignItems: 'center', gap: 34}}>
       {b.logo ? <Logo src={b.logo} size={150} label={b.label} /> : null}
       <div style={{display: 'flex', flexDirection: 'column', gap: 12}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: 18}}>
+        {b.tone === 'up' || b.tone === 'down' ? <svg width="54" height="54" viewBox="0 0 24 24" style={{flexShrink: 0}}>
+          <path d={b.tone === 'up' ? 'M4 17 L12 6 L20 17 Z' : 'M4 7 L12 18 L20 7 Z'} fill={toneColor(b.tone)} /></svg> : null}
         <CountUp value={b.value || ''} size={(b.value || '').length > 7 ? Math.max(64, Math.min(96, Math.floor((w - 340) / ((b.value || '').length * 0.62)))) : (b.value || '').length > 5 ? 120 : 150} delay={2} color={toneColor(b.tone)} />
-        <div style={{fontSize: 34, fontWeight: 700, color: C.muted, maxWidth: w - 300, lineHeight: 1.2}}>{b.label}</div>
+        </div>
+        <div style={{fontSize: 38, fontWeight: 700, color: C.muted, maxWidth: w - 300, lineHeight: 1.22}}>{b.label}</div>
       </div>
     </div>
   </Card>

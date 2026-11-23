@@ -168,6 +168,19 @@ def hook_impact(hi: dict, words: list, dur: float) -> dict:
             "qAt": q, "subAt": sub if sub is not None else q + 1.2, "tone": hi.get("tone", "down")}
 
 
+def sign_tone(x: dict) -> dict:
+    """Màu số theo dấu (Trọng 23/11: +356% phải xanh, không để đỏ): số tăng (+) xanh, số giảm (-) đỏ.
+    Muốn giữ màu riêng thì đặt "tone_lock": true."""
+    if not isinstance(x, dict) or x.get("tone_lock"):
+        return x
+    v = str(x.get("value") or "").strip().lstrip("~≈").strip()
+    if v[:1] == "+":
+        x = {**x, "tone": "up"}
+    elif v[:1] in "-−" and len(v) > 1:
+        x = {**x, "tone": "down"}
+    return x
+
+
 def beats_for(beats: list, words: list, dur: float, data: dict) -> list:
     """Gắn mỗi nhịp hình vào ĐÚNG lúc giọng đọc nói cụm từ "at" (Trọng 21/11: hình phải khớp lời)."""
     ws = [_norm(w["t"]) for w in words]
@@ -201,10 +214,10 @@ def beats_for(beats: list, words: list, dur: float, data: dict) -> list:
                 pos = hit
                 st.append(round(words[hit]["s"] - (s or 0), 2))
             nb["step_s"] = st
-        nb = logo(nb)
+        nb = logo(sign_tone(nb))
         for side in ("left", "right"):
             if side in nb:
-                nb[side] = logo(nb[side])
+                nb[side] = logo(sign_tone(nb[side]))
         if "items" in nb:
             nb["items"] = [logo(x) for x in nb["items"]]
         if "cols" in nb:

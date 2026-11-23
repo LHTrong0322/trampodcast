@@ -1,0 +1,577 @@
+{
+ "title": "-$6T trong 45 ngày: bong bóng AI vỡ thật, hay cơ hội mua?",
+ "description": "Thị trường Mỹ mất 6 nghìn tỷ đô trong 45 ngày, cổ phiếu, vàng, crypto cùng đỏ. Dựa trên phân tích của The Kobeissi Letter, video đi qua 5 tín hiệu để trả lời: bong bóng AI đã vỡ, hay đây là cú rũ trước một cơ hội lớn?",
+ "theme": "Phân tích vĩ mô",
+ "hook_screen": "-$6T TRONG 45 NGÀY. AI BUBBLE ĐÃ VỠ?",
+ "hook_stat": "",
+ "hook_label": "",
+ "hook": "Sáu nghìn tỷ đô bốc hơi chỉ trong bốn mươi lăm ngày. Cổ phiếu Mỹ đỏ. Vàng đỏ. Crypto cũng đỏ. Vậy bong bóng AI đã vỡ thật, hay đây là cú rũ trước một cơ hội lớn?",
+ "hook_beats": [],
+ "intro": "Điều lạ là, cùng lúc đó, earnings của S&P 500 lại tăng mạnh nhất bốn năm. Vậy thị trường đang sợ sai chỗ, hay mình đang bỏ lỡ điều gì? The Kobeissi Letter, một trong những tài khoản vĩ mô lớn nhất trên X, trả lời bằng năm tín hiệu. Tín hiệu số bốn khá bất ngờ: cổ phiếu AI hot nhất thế giới giờ lại nằm trong nhóm rẻ nhất S&P 500. Đây là Smart Penguin Insights, vào việc luôn.",
+ "agenda_label": "5 TÍN HIỆU",
+ "own_source": false,
+ "sections": [
+  {
+   "heading": "Tin xấu đã vào giá",
+   "key_stat": "-$6T",
+   "key_label": "vốn hoá mất từ 6/10",
+   "bullets": [
+    "-$225B mỗi ngày, 31 phiên",
+    "-$6T kể từ đỉnh 6/10",
+    "Hỏi đúng câu hỏi"
+   ],
+   "beats": [
+    {
+     "at": "ba mươi mốt phiên liên tiếp",
+     "type": "bignum",
+     "value": "-$225B/ngày",
+     "label": "31 phiên liên tiếp, cổ phiếu Mỹ"
+    },
+    {
+     "at": "từ đỉnh ngày sáu",
+     "type": "chart",
+     "ticker": "SPY",
+     "days": 45,
+     "label": "S&P 500 từ đỉnh 6/10"
+    },
+    {
+     "at": "bốn mươi lăm ngày đó",
+     "type": "flow",
+     "label": "45 ngày, 5 cú sốc",
+     "steps": [
+      "Chiến tranh Iran",
+      "Lo ngại AI CapEx",
+      "Fed tháng 10",
+      "Bầu cử giữa kỳ",
+      "Lùm xùm Nvidia"
+     ],
+     "step_at": [
+      "chiến tranh iran",
+      "lo ngại capex",
+      "fed tháng mười",
+      "bầu cử giữa kỳ",
+      "lùm xùm ở nvidia"
+     ]
+    },
+    {
+     "at": "lúc này đa số sẽ hỏi",
+     "type": "statement",
+     "text": "Còn tin xấu nào nữa không?",
+     "sub": "Câu hỏi của đám đông"
+    },
+    {
+     "at": "nhưng tin xấu thì",
+     "type": "statement",
+     "text": "Tin xấu thì lúc nào cũng có"
+    },
+    {
+     "at": "kobeissi hỏi hai câu khác",
+     "type": "flow",
+     "label": "2 câu hỏi đúng",
+     "steps": [
+      "Lý do dòng tiền vào AI đã bị phá vỡ?",
+      "Giá đã phản ánh bao nhiêu nỗi sợ?"
+     ],
+     "step_at": [
+      "một lý do",
+      "hai giá hiện tại"
+     ],
+     "hold": 1.5
+    },
+    {
+     "at": "nếu lý do vẫn còn",
+     "type": "flow",
+     "label": "Nếu cả hai cùng đúng",
+     "steps": [
+      "Lý do mua vẫn còn",
+      "Giá đã rẻ hơn",
+      "Cơ hội, không phải rủi ro"
+     ],
+     "step_at": [
+      "nếu lý do vẫn còn",
+      "mà giá đã rẻ đi",
+      "thì đó là cơ hội"
+     ],
+     "hold": 1.5
+    }
+   ],
+   "narration": "Ba mươi mốt phiên liên tiếp, cổ phiếu Mỹ mất trung bình hai trăm hai mươi lăm tỷ đô mỗi ngày. Từ đỉnh ngày sáu tháng mười, S&P 500 mất sáu nghìn tỷ đô vốn hoá. Bốn mươi lăm ngày đó có đủ thứ: chiến tranh Iran, lo ngại CapEx của AI, Fed tháng mười, bầu cử giữa kỳ, rồi lùm xùm ở Nvidia. Lúc này, đa số sẽ hỏi: còn tin xấu nào nữa không? Nhưng tin xấu thì lúc nào cũng có. Kobeissi hỏi hai câu khác. Một: lý do khiến dòng tiền đổ vào AI đã bị phá vỡ chưa? Hai: giá hiện tại đã phản ánh bao nhiêu phần nỗi sợ rồi? Nếu lý do vẫn còn, mà giá đã rẻ đi, thì đó là cơ hội, không phải rủi ro. Bốn tín hiệu tiếp theo trả lời đúng hai câu này.",
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Big Tech tiêu khủng, nhưng kiếm còn khủng hơn",
+   "key_stat": "$201.9B",
+   "key_label": "CapEx quý 3, kỷ lục",
+   "bullets": [
+    "CapEx kỷ lục $201.9B",
+    "EPS +31.9% YoY",
+    "13 quý vượt dự báo"
+   ],
+   "beats": [
+    {
+     "at": "cú bán tháo bắt đầu",
+     "type": "statement",
+     "text": "Cú bán tháo bắt đầu từ AI CapEx"
+    },
+    {
+     "at": "amazon google meta và microsoft",
+     "type": "logos",
+     "label": "CapEx quý 3: $201.9B, kỷ lục",
+     "items": [
+      {
+       "logo": "AMZN",
+       "label": "Amazon"
+      },
+      {
+       "logo": "GOOGL",
+       "label": "Google"
+      },
+      {
+       "logo": "META",
+       "label": "Meta"
+      },
+      {
+       "logo": "MSFT",
+       "label": "Microsoft"
+      }
+     ]
+    },
+    {
+     "at": "tăng ba trăm năm mươi sáu",
+     "type": "bignum",
+     "value": "+356%",
+     "label": "CapEx so với đầu 2024, gấp hơn 4,5 lần",
+     "tone": "up"
+    },
+    {
+     "at": "thị trường sợ chi",
+     "type": "flow",
+     "label": "Nỗi sợ của thị trường",
+     "steps": [
+      "CapEx kỷ lục",
+      "Free Cash Flow bị bào mòn",
+      "Lo ngại có thật"
+     ],
+     "step_at": [
+      "thị trường sợ chi",
+      "bào mòn free cash flow",
+      "kobeissi thừa nhận"
+     ]
+    },
+    {
+     "at": "earnings trên mỗi cổ phiếu",
+     "type": "bignum",
+     "value": "EPS +31.9%",
+     "label": "S&P 500 quý 3, mạnh nhất ít nhất 4 năm",
+     "tone": "up"
+    },
+    {
+     "at": "mười ba quý liên tiếp",
+     "type": "dots",
+     "total": 13,
+     "hit": 13,
+     "label": "13 quý liên tiếp earnings vượt dự báo"
+    },
+    {
+     "at": "thị trường đang sợ nhất",
+     "type": "versus",
+     "left": {
+      "label": "CapEx từ đầu 2024",
+      "value": "+356%",
+      "tone": "up"
+     },
+     "right": {
+      "label": "EPS S&P 500 YoY",
+      "value": "+31.9%",
+      "tone": "up"
+     },
+     "sub": "Sợ nhất đúng lúc kiếm tiền giỏi nhất",
+     "hold": 5
+    },
+    {
+     "at": "vậy lý do thứ nhất",
+     "type": "statement",
+     "text": "Lý do mua AI: vẫn còn nguyên",
+     "sub": "Nhưng sao giá vẫn rơi?"
+    }
+   ],
+   "narration": "Cú bán tháo bắt đầu từ CapEx, tức tiền Big Tech đổ vào hạ tầng AI. Riêng quý ba, Amazon, Google, Meta và Microsoft chi hai trăm lẻ một phẩy chín tỷ đô. Kỷ lục mọi thời đại. Tăng ba trăm năm mươi sáu phần trăm so với đầu năm 2024, tức gấp hơn bốn lần rưỡi. Thị trường sợ chi kiểu này sẽ bào mòn Free Cash Flow, tức dòng tiền tự do. Kobeissi thừa nhận nỗi sợ đó có thật. Nhưng nhìn sang phía earnings. Earnings trên mỗi cổ phiếu của S&P 500 quý này tăng ba mươi mốt phẩy chín phần trăm. Mạnh nhất ít nhất bốn năm. Mười ba quý liên tiếp vượt dự báo. Thị trường đang sợ nhất, đúng lúc doanh nghiệp kiếm tiền giỏi nhất. Vậy lý do thứ nhất vẫn còn nguyên. Nhưng số liệu tốt như vậy, sao giá vẫn rơi?",
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Lưới đỡ mất, nhưng Fed có thể sớm nới tay",
+   "key_stat": "67 tháng",
+   "key_label": "lạm phát trên 2%",
+   "bullets": [
+    "Mất lưới đỡ chính trị",
+    "Lo ngại cấm AI bị thổi phồng",
+    "Dầu giảm, Fed có cửa nới tay"
+   ],
+   "beats": [
+    {
+     "at": "có hai lý do vĩ mô",
+     "type": "flow",
+     "label": "2 lý do vĩ mô",
+     "steps": [
+      "Mất Trump Put",
+      "Fed giữ tay cứng"
+     ],
+     "step_at": [
+      "một đảng dân chủ",
+      "hai fed vẫn giữ"
+     ]
+    },
+    {
+     "at": "thị trường mất trump put",
+     "type": "statement",
+     "text": "Trump Put: thị trường xấu là ông Trump ra tay đỡ",
+     "sub": "Giờ lưới đỡ đã mất"
+    },
+    {
+     "at": "kèm theo đó là",
+     "type": "versus",
+     "left": {
+      "label": "Thị trường lo",
+      "value": "Cấm AI",
+      "tone": "down"
+     },
+     "right": {
+      "label": "Kobeissi",
+      "value": "Thổi phồng",
+      "tone": "up"
+     },
+     "sub": "Cấm AI = nhường cuộc đua cho Trung Quốc"
+    },
+    {
+     "at": "cấm ai chẳng khác gì",
+     "type": "statement",
+     "text": "Cấm AI = nhường cuộc đua cho Trung Quốc"
+    },
+    {
+     "at": "hai fed vẫn giữ tay cứng",
+     "type": "statement",
+     "text": "Fed vẫn giữ tay cứng"
+    },
+    {
+     "at": "lạm phát đã nằm trên",
+     "type": "bignum",
+     "value": "67 tháng",
+     "label": "Lạm phát Mỹ nằm trên mục tiêu 2%",
+     "tone": "down"
+    },
+    {
+     "at": "xây ai vốn đã đắt",
+     "type": "statement",
+     "text": "Lãi suất cao: xây AI càng đắt hơn"
+    },
+    {
+     "at": "điểm sáng giá dầu",
+     "type": "bignum",
+     "value": "-22%",
+     "label": "Giá dầu trong tháng này, điểm sáng",
+     "tone": "up"
+    },
+    {
+     "at": "dầu giảm thì",
+     "type": "flow",
+     "label": "Kịch bản tích cực",
+     "steps": [
+      "Dầu giảm",
+      "Lạm phát hạ nhiệt",
+      "Fed nới tay giữa 2027"
+     ],
+     "step_at": [
+      "dầu giảm thì",
+      "lạm phát hạ nhiệt",
+      "fed có cửa"
+     ]
+    }
+   ],
+   "narration": "Có hai lý do vĩ mô. Một: đảng Dân chủ thắng lớn bầu cử giữa kỳ. Thị trường mất Trump Put, tức niềm tin rằng hễ thị trường xấu là ông Trump sẽ ra tay đỡ. Kèm theo đó là nỗi lo AI bị cấm. Nhưng Kobeissi cho rằng nỗi lo này bị thổi phồng: cấm AI chẳng khác gì Mỹ nhường cuộc đua cho Trung Quốc. Hai: Fed vẫn giữ tay cứng, vì lạm phát đã nằm trên mục tiêu hai phần trăm suốt sáu mươi bảy tháng liên tiếp. Xây AI vốn đã đắt, lãi suất cao làm nó đắt hơn. Điểm sáng: giá dầu giảm khoảng hai mươi hai phần trăm trong tháng này. Dầu giảm thì lạm phát hạ nhiệt, và Fed có cửa nới tay vào giữa năm 2027. Và tín hiệu tiếp theo là thứ nhiều người đang bỏ qua nhất.",
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Nvidia: từ hot nhất thành rẻ nhất",
+   "key_stat": "9x",
+   "key_label": "Forward P/E của Nvidia",
+   "emphasis": "TÍN HIỆU NGƯỜI TA BỎ QUA",
+   "bullets": [
+    "NVDA -40% trong vài tuần",
+    "Forward P/E chỉ 9x",
+    "Revenue dự báo ~$750B FY2028"
+   ],
+   "beats": [
+    {
+     "at": "nvidia rơi bốn mươi phần trăm",
+     "type": "bignum",
+     "value": "-40%",
+     "label": "Nvidia chỉ trong vài tuần",
+     "tone": "down",
+     "logo": "NVDA"
+    },
+    {
+     "at": "hai cú sốc liền nhau",
+     "type": "flow",
+     "label": "2 cú sốc ngành chip",
+     "steps": [
+      "Nvidia mất Jensen Huang",
+      "AMD bị cáo buộc buôn lậu chip"
+     ],
+     "step_at": [
+      "nvidia mất jensen",
+      "còn amd bị"
+     ]
+    },
+    {
+     "at": "kết quả forward",
+     "type": "bignum",
+     "value": "P/E 9x",
+     "label": "Forward P/E Nvidia, giá = 9 lần earnings dự kiến",
+     "tone": "up",
+     "logo": "NVDA"
+    },
+    {
+     "at": "một trong những mã rẻ nhất",
+     "type": "statement",
+     "text": "Một trong những mã rẻ nhất S&P 500",
+     "logo": "NVDA"
+    },
+    {
+     "at": "cả nhóm công nghệ",
+     "type": "statement",
+     "text": "P/E ngành công nghệ thấp nhất từ 3/2020"
+    },
+    {
+     "at": "trong khi đó nvidia",
+     "type": "bignum",
+     "value": "~$750B",
+     "label": "Revenue Nvidia tự dự báo cho FY2028",
+     "logo": "NVDA",
+     "tone": "up"
+    },
+    {
+     "at": "thị trường không tin",
+     "type": "versus",
+     "left": {
+      "label": "Nvidia dự báo FY2028",
+      "value": "~$750B",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Thị trường",
+      "value": "Không tin",
+      "tone": "down"
+     },
+     "hold": 2
+    },
+    {
+     "at": "chính sự hoài nghi này",
+     "type": "statement",
+     "text": "Hoài nghi càng lớn, dư địa bất ngờ tích cực càng nhiều"
+    },
+    {
+     "at": "còn câu hỏi lớn nhất",
+     "type": "statement",
+     "text": "Tín hiệu cuối: câu hỏi lớn nhất của anh em crypto"
+    }
+   ],
+   "narration": "Nvidia rơi bốn mươi phần trăm chỉ trong vài tuần. Hai cú sốc liền nhau: Nvidia mất Jensen Huang, người dẫn dắt cuộc đua AI. Còn AMD bị một bên bán khống cáo buộc buôn lậu chip sang Trung Quốc, cáo buộc còn xa mới được chứng minh. Kết quả: forward P/E của Nvidia chỉ còn chín lần, tức giá cổ phiếu bằng chín lần earnings dự kiến. Một trong những mã rẻ nhất S&P 500. Cả nhóm công nghệ cũng rẻ nhất kể từ tháng ba năm 2020. Trong khi đó, Nvidia vẫn dự báo khoảng bảy trăm năm mươi tỷ đô revenue cho năm tài chính 2028. Thị trường không tin con số đó. Và theo Kobeissi, chính sự hoài nghi này để lại rất nhiều dư địa cho bất ngờ tích cực. Còn câu hỏi lớn nhất với anh em crypto, nằm ở tín hiệu cuối.",
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Thanh khoản bị hút cạn, rồi sẽ quay lại",
+   "key_stat": "+100%",
+   "key_label": "VIX từ đáy tháng 10",
+   "bullets": [
+    "VIX +100% từ đáy",
+    "Anthropic IPO hơn $100B",
+    "Bán vì cần tiền mặt"
+   ],
+   "beats": [
+    {
+     "at": "vì sao vàng và crypto",
+     "type": "statement",
+     "text": "Vì sao vàng và crypto cũng rơi?"
+    },
+    {
+     "at": "câu trả lời là thanh khoản",
+     "type": "statement",
+     "text": "Câu trả lời: thanh khoản"
+    },
+    {
+     "at": "vix chỉ số đo",
+     "type": "chart",
+     "ticker": "VIX",
+     "days": 45,
+     "label": "VIX, chỉ số sợ hãi"
+    },
+    {
+     "at": "cùng lúc anthropic",
+     "type": "bignum",
+     "value": "$100B+",
+     "label": "Anthropic IPO, lớn nhất lịch sử"
+    },
+    {
+     "at": "tổ chức đặt mua",
+     "type": "versus",
+     "left": {
+      "label": "Tổ chức",
+      "value": "$400B"
+     },
+     "right": {
+      "label": "Retail",
+      "value": "$100B"
+     },
+     "sub": "Dòng tiền bị hút khỏi thị trường"
+    },
+    {
+     "at": "các quỹ phòng hộ rút ròng",
+     "type": "statement",
+     "text": "Quỹ phòng hộ rút ròng mạnh nhất hơn 10 năm"
+    },
+    {
+     "at": "cổ phiếu vàng crypto đều bị bán",
+     "type": "chart",
+     "ticker": "BTC",
+     "days": 45,
+     "label": "BTC 45 ngày qua: crypto bị bán theo"
+    },
+    {
+     "at": "bán vì cần tiền mặt",
+     "type": "statement",
+     "text": "Bán vì cần tiền mặt, không phải vì tài sản xấu đi",
+     "hold": 2
+    }
+   ],
+   "narration": "Vì sao vàng và crypto cũng rơi theo cổ phiếu, dù chẳng liên quan AI? Câu trả lời là thanh khoản. VIX, chỉ số đo nỗi sợ, đã tăng hơn gấp đôi từ đáy tháng mười. Cùng lúc, Anthropic IPO huy động hơn một trăm tỷ đô. Đây là thương vụ IPO lớn nhất lịch sử. Tổ chức đặt mua tới bốn trăm tỷ đô. Retail thêm một trăm tỷ nữa. Một lượng tiền khổng lồ bị hút khỏi thị trường. Các quỹ phòng hộ rút ròng mạnh nhất hơn mười năm. Kobeissi gọi đây là cuộc tháo chạy ra cửa. Cổ phiếu, vàng, crypto đều bị bán, không phân biệt tốt xấu. Bán vì cần tiền mặt, không phải vì tài sản xấu đi. Khi thanh khoản quay lại, thị trường sẽ ổn định.",
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "visual_queries": [],
+   "source_ids": [
+    0
+   ]
+  }
+ ],
+ "outro": "Vậy bong bóng AI đã vỡ chưa? Câu trả lời của Kobeissi là chưa. Đây là một đợt điều chỉnh. Kể cả S&P 500 giảm thêm mười phần trăm, vẫn là điều chỉnh lành mạnh. Thị trường đang định giá kịch bản xấu nhất. Kobeissi cũng nói rõ: chưa chắc đã chạm đáy, biến động còn cao. Nhưng tỷ lệ risk/reward đang ngày càng hấp dẫn. Ba thứ nên theo dõi tiếp: VIX có hạ nhiệt không, giá dầu có giảm tiếp không, và dòng tiền quỹ có quay lại không. Đây là góc nhìn của Kobeissi, không phải lời khuyên đầu tư. Còn bạn, bong bóng vỡ hay cơ hội mua? Bình luận cho mình biết nhé.",
+ "outro_points": [
+  "Tin xấu đã vào giá",
+  "Earnings vẫn tăng",
+  "Fed có thể nới tay",
+  "Cổ phiếu tốt đang rẻ",
+  "Thanh khoản sẽ quay lại"
+ ],
+ "outro_cta": "BÌNH LUẬN: BONG BÓNG VỠ HAY CƠ HỘI MUA?",
+ "shorts": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "short_hooks": {
+  "0": "Mỗi ngày bốc hơi 225 tỷ đô, suốt 31 phiên liền",
+  "1": "Big Tech đốt 200 tỷ đô/quý, earnings vẫn mạnh nhất 4 năm",
+  "2": "Lưới đỡ của ông Trump vừa biến mất?",
+  "3": "Cổ phiếu AI hot nhất giờ rẻ nhất S&P 500?",
+  "4": "Vì sao crypto rơi dù chẳng liên quan AI?"
+ },
+ "thumb_text": "AI BUBBLE ĐÃ VỠ?",
+ "thumb_stat": "-$6T",
+ "thumb_points": [
+  "Tin xấu đã vào giá",
+  "Nvidia P/E 9x",
+  "Thanh khoản sắp quay lại"
+ ],
+ "thumb_warn": true,
+ "thumb_tag": "45 NGÀY",
+ "hook_impact": {
+  "value": "-$6T",
+  "label": "bốc hơi trong 45 ngày",
+  "tag": "45 NGÀY",
+  "chips": [
+   {
+    "text": "Cổ phiếu Mỹ",
+    "at": "cổ phiếu mỹ đỏ"
+   },
+   {
+    "text": "Vàng",
+    "at": "vàng đỏ"
+   },
+   {
+    "text": "Crypto",
+    "at": "crypto cũng đỏ"
+   }
+  ],
+  "question": "AI BUBBLE ĐÃ VỠ?",
+  "sub": "Hay cú rũ trước cơ hội lớn?",
+  "q_at": "vậy bong bóng ai",
+  "sub_at": "hay đây là cú rũ",
+  "tone": "down"
+ },
+ "approved_by": "Trọng 23/11 13:00 VN: áp dụng góp ý bot, viết lại câu hỏi phần 1 sâu hơn, số tăng hiện màu xanh"
+}
