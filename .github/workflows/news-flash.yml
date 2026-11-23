@@ -36,7 +36,7 @@ concurrency:
 jobs:
   flash:
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    timeout-minutes: 200
     env:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       INSIGHT_GEMINI_API_KEY: ${{ secrets.INSIGHT_GEMINI_API_KEY }}
@@ -90,7 +90,9 @@ jobs:
         run: |
           MODE="${{ github.event.inputs.mode }}"
           [ "${{ github.event_name }}" = "schedule" ] && MODE=pick
-          if [ "$MODE" = "revise" ]; then
+          if [ "$MODE" = "setscript" ]; then
+            python news_flash.py setscript --out public --id "$IN_ID" --script "${{ github.event.inputs.brief }}"
+          elif [ "$MODE" = "revise" ]; then
             NF_NOTE="$IN_NOTE" python news_flash.py revise --out public --id "$IN_ID"
           elif [ "$MODE" = "topic" ]; then
             python news_flash.py topic --out public --brief "${{ github.event.inputs.brief }}"

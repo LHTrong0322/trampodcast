@@ -478,6 +478,38 @@ def poll(out: Path, cfg: dict) -> str:
     return ready[0]["id"] if ready else ""
 
 
+def wait_reply(out: Path, cfg: dict) -> str:
+    """Trọng 23/11: lịch 15 phút của GitHub gần như không chạy nên bấm duyệt/góp ý rất lag.
+    Giờ sau khi gửi kịch bản, run này ở lại đọc Telegram vài giây một lần (tối đa NF_WAIT_MIN phút):
+    duyệt → trả mã để dựng ngay trong run này; góp ý → viết lại và gửi lại; bỏ → dừng.
+    Không chờ quanh giờ podcast (4:30 đến 5:45 VN) để không giữ chỗ của podcast."""
+    import time
+    import insight as I
+    h = now_vn().hour + now_vn().minute / 60
+    if 4.5 <= h <= 5.75:
+        return ""
+    end = time.time() + 60 * float(os.getenv("NF_WAIT_MIN", "30"))
+    log(f"⏳ Chờ Trọng trả lời trên Telegram (tối đa {os.getenv('NF_WAIT_MIN', '30')} phút)")
+    while time.time() < end:
+        st = load_state(out)
+        ready = [x for x in st["drafts"].values() if x.get("status") == "approved"]
+        if ready:
+            return sorted(ready, key=lambda x: x.get("approved", ""))[0]["id"]
+        if any(x.get("status") == "revise" for x in st["drafts"].values()):
+            revise_all(out, cfg)
+            end = max(end, time.time() + 60 * 15)   # vừa gửi bản mới: chờ thêm
+            continue
+        if not any(x.get("status") == "waiting" for x in st["drafts"].values()):
+            return ""
+        try:
+            I.inbox(out, cfg)
+        except Exception as ex:
+            log(f"   ! đọc Telegram lỗi: {str(ex)[:150]}")
+        time.sleep(6)
+    log("   Hết giờ chờ, lượt kiểm tra mỗi tiếng sẽ xử lý tiếp khi Trọng trả lời")
+    return ""
+
+
 def gate(state: Path, store: Path) -> str:
     """Chạy 15 phút/lần (rất nhẹ): chỉ gọi poll khi có kịch bản đang chờ VÀ có tin nhắn mới, hoặc có bản đã duyệt."""
     st = json.loads(state.read_text(encoding="utf-8")) if state.exists() and state.stat().st_size else {}
@@ -495,7 +527,8 @@ def gate(state: Path, store: Path) -> str:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("mode", choices=["pick", "poll", "build", "gate", "topic", "revise"])
+    ap.add_argument("mode", choices=["pick", "poll", "build", "gate", "topic", "revise", "setscript"])
+    ap.add_argument("--script", default="")
     ap.add_argument("--note", default="")
     ap.add_argument("--brief", default="")
     ap.add_argument("--out", default="public")
@@ -518,7 +551,17 @@ def main():
         return output("build", "")
     if a.mode == "pick":
         pick(out, cfg)
-        return output("build", "")
+        return output("build", wait_reply(out, cfg))
+    if a.mode == "setscript":   # Trọng tự sửa kịch bản trong chat và duyệt luôn: ghi đè kịch bản rồi dựng ngay
+        st = load_state(out)
+        d = st["drafts"][a.id]
+        plan = json.loads(Path(a.script).read_text(encoding="utf-8"))
+        save_script(out, a.id, plan)
+        d.update(status="approved", approved=now_vn().isoformat(), version=d.get("version", 1) + 1)
+        save_state(out, st)
+        say(f"✅ Đã cập nhật kịch bản {a.id} theo bản Trọng sửa và duyệt. Bot bắt đầu dựng short (giọng Hải Đăng).",
+            reply_to=d.get("msg_id"))
+        return output("build", a.id)
     if a.mode == "revise":   # góp ý dài của Trọng gửi qua phiên code (giống /sua trên Telegram)
         st = load_state(out)
         d = st["drafts"][a.id]
@@ -526,12 +569,12 @@ def main():
         d.setdefault("notes", []).append(a.note or os.getenv("NF_NOTE", ""))
         save_state(out, st)
         revise_all(out, cfg)
-        return output("build", "")
+        return output("build", wait_reply(out, cfg))
     if a.mode == "topic":
         topic(out, cfg, Path(a.brief))
-        return output("build", "")
+        return output("build", wait_reply(out, cfg))
     if a.mode == "poll":
-        return output("build", poll(out, cfg))
+        return output("build", poll(out, cfg) or wait_reply(out, cfg))
     build(out, cfg, a.id)
 
 

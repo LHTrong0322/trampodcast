@@ -1,11 +1,13 @@
-name: Tin nóng, canh lệnh duyệt Telegram (15 phút/lần)
+name: Tin nóng, canh lệnh duyệt Telegram (dự phòng mỗi tiếng)
 
 # Rất nhẹ: chỉ gọi news-flash.yml (mode poll) khi có kịch bản đang chờ VÀ Trọng vừa nhắn/bấm nút,
 # hoặc có bản đã duyệt chưa dựng. Không ghi dữ liệu. Có việc khác đang chạy (podcast, insight...) thì đợi lượt sau,
 # để không chen hàng làm mất lượt chạy podcast.
 on:
   schedule:
-    - cron: "4,19,34,49 * * * *"
+    # Trọng 23/11: 15 phút/lần tốn phút GitHub mà GitHub cũng hay bỏ lượt. Giờ run gửi kịch bản tự chờ trả lời 30 phút,
+    # lượt này chỉ là dự phòng mỗi tiếng.
+    - cron: "41 * * * *"
   workflow_dispatch:
 
 permissions:
