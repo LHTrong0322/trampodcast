@@ -1,6 +1,6 @@
 {
  "title": "Index fund: vì sao 79% chuyên gia thua?",
- "description": "Bài học đầu tư từ số 0: index fund (quỹ chỉ số) là gì, vì sao nó là cách đầu tư dài hạn an toàn bậc nhất cho người mới, sức mạnh của lãi kép khi giữ lâu, và cách bắt đầu với quỹ ETF chỉ số ở Việt Nam.",
+ "description": "Bài học đầu tư từ số 0: index fund (quỹ chỉ số) là gì, vì sao nó là cách đầu tư dài hạn an toàn bậc nhất cho người mới, sức mạnh của lãi kép khi giữ lâu ($10K mỗi năm thành khoảng $1.6M sau 30 năm), và cách bắt đầu với quỹ ETF chỉ số ở Việt Nam.",
  "theme": "Đầu tư từ số 0",
  "own_source": true,
  "source_post": {
@@ -8,12 +8,12 @@
   "handle": "Trong0322",
   "url": "https://www.spglobal.com/spdji/en/spiva/article/spiva-us-year-end-2025/",
   "title": "SPIVA U.S. Scorecard; Fidelity, S&P 500 average return",
-  "text": "SPIVA (S&P Dow Jones Indices): 79% of active large-cap U.S. equity funds underperformed the S&P 500 in 2025; over 20 years about 94% underperformed. S&P 500: 500 of the largest U.S. companies. Since 1957 the S&P 500 returned about 10% per year on average with dividends reinvested (Fidelity, SmartAsset, Motley Fool). 2008: the S&P 500 fell about 37%, then recovered to new highs. Example at 10% per year for 30 years: $100K invested every year, $3M put in, about $16M at the end (16.4x), more than 80% from compounding; $1K every year becomes about $164K. Warren Buffett, Berkshire Hathaway 2013 letter: 90% of the cash left for his wife into a very low-cost S&P 500 index fund. Vietnam: ETFs tracking VN30 (30 largest stocks on HOSE) and VNDiamond (large stocks near the foreign ownership limit)."
+  "text": "SPIVA (S&P Dow Jones Indices): 79% of active large-cap U.S. equity funds underperformed the S&P 500 in 2025; over 20 years about 94% underperformed. S&P 500: 500 of the largest U.S. companies. Since 1957 the S&P 500 returned about 10% per year on average with dividends reinvested (Fidelity, SmartAsset, Motley Fool). 2008: the S&P 500 fell about 37%, then recovered to new highs. Example at 10% per year for 30 years: $10K invested every year, $300K put in, about $1.6M at the end, more than 80% from compounding. Warren Buffett, Berkshire Hathaway 2013 letter: 90% of the cash left for his wife into a very low-cost S&P 500 index fund. Vietnam: ETFs tracking VN30 (30 largest stocks on HOSE) and VNDiamond (large stocks near the foreign ownership limit). VN30 launched 6/2/2012 closing at 447.47 points (VCSC, Tuổi Trẻ); 11/11/2026 close 1,855.27 points (Finhay): about 10% per year price return, excluding dividends."
  },
  "hook_screen": "79% QUỸ CHUYÊN NGHIỆP THUA MỘT RỔ CỔ PHIẾU",
  "hook_stat": "79%",
  "hook_label": "quỹ active Mỹ thua S&P 500 năm 2025",
- "hook": "Năm 2025, 79% quỹ do chuyên gia quản lý ở Mỹ thua một rổ cổ phiếu không cần ai chọn. Rổ đó là index fund, và giữ nó đủ lâu, $1K mỗi năm có thể thành hơn $160K.",
+ "hook": "Năm 2025, 79% quỹ do chuyên gia quản lý ở Mỹ thua một rổ cổ phiếu không cần ai chọn. Rổ đó là index fund, và giữ nó đủ lâu, $10K mỗi năm có thể thành hơn $1.6M.",
  "hook_beats": [
   {
    "at": "79%",
@@ -23,10 +23,10 @@
    "tone": "down"
   },
   {
-   "at": "$1K mỗi năm",
+   "at": "$10K mỗi năm",
    "type": "bignum",
-   "value": "$1K → $164K",
-   "label": "Mỗi năm $1K, sau 30 năm (lãi 10%/năm)",
+   "value": "$10K → $1.6M",
+   "label": "Mỗi năm $10K, sau 30 năm (lãi 10%/năm)",
    "tone": "up"
   }
  ],
@@ -105,8 +105,10 @@
     },
     {
      "at": "không đặt cược vào riêng ai",
-     "type": "statement",
-     "text": "1 công ty sập, cả rổ vẫn đứng"
+     "type": "dots",
+     "total": 10,
+     "hit": 1,
+     "label": "1 công ty sập: chỉ là 1 mẩu nhỏ trong rổ"
     },
     {
      "at": "vì không cần đội phân tích",
@@ -143,7 +145,7 @@
     "Lãi kép làm phần việc nặng",
     "Không cần giỏi phân tích"
    ],
-   "narration": "Điều thứ hai: sức mạnh khi giữ dài hạn. Tính từ năm 1957, S&P 500 tăng trung bình khoảng 10% mỗi năm. Có năm giảm sâu, như năm 2008 giảm khoảng 37%, nhưng thị trường đã hồi phục và lập đỉnh mới. Điều hay nhất: bạn không cần giỏi phân tích, không cần canh bảng điện. Ví dụ, mỗi năm bạn đều đặn bỏ $100K vào index fund, lãi trung bình 10% một năm. Sau 30 năm, bạn bỏ ra tổng cộng $3M, nhưng tài khoản có thể lên khoảng $16M. Hơn 80% số đó đến từ lãi kép, tức lãi chồng lên lãi. Số nhỏ hơn cũng vậy: $1K mỗi năm thành khoảng $164K. Đây là số liệu quá khứ, không phải lời hứa cho tương lai, nhưng nó cho thấy thời gian là đồng minh lớn nhất của người mới.",
+   "narration": "Điều thứ hai: sức mạnh khi giữ dài hạn. Tính từ năm 1957, S&P 500 tăng trung bình khoảng 10% mỗi năm, tính cả cổ tức tái đầu tư. Có năm giảm sâu, như năm 2008 giảm khoảng 37%, nhưng thị trường đã hồi phục và lập đỉnh mới. Điều hay nhất: bạn không cần giỏi phân tích, không cần canh bảng điện. Ví dụ, mỗi năm bạn chỉ cần bỏ đều $10K vào index fund, lãi trung bình 10% một năm. Sau 30 năm, bạn bỏ ra tổng cộng $300K, nhưng tài khoản có thể lên khoảng $1.6M. Hơn 80% số đó đến từ lãi kép, tức lãi chồng lên lãi. Đây là số liệu quá khứ, không phải lời hứa cho tương lai. Nhưng nếu bạn tin nền kinh tế sẽ tiếp tục phát triển, thì index fund là lựa chọn tối ưu nhất để đi cùng nó.",
    "beats": [
     {
      "at": "sức mạnh khi giữ dài hạn",
@@ -177,9 +179,9 @@
      "text": "Không cần giỏi phân tích, không cần canh bảng"
     },
     {
-     "at": "mỗi năm bạn đều đặn",
+     "at": "bỏ đều $10K",
      "type": "bignum",
-     "value": "$100K/năm",
+     "value": "$10K/năm",
      "label": "Bỏ đều mỗi năm, lãi trung bình 10%",
      "tone": "up"
     },
@@ -188,12 +190,12 @@
      "type": "versus",
      "left": {
       "label": "Bạn bỏ ra (30 năm)",
-      "value": "$3M",
+      "value": "$300K",
       "tone": "down"
      },
      "right": {
       "label": "Tài khoản",
-      "value": "~$16M",
+      "value": "~$1.6M",
       "tone": "up"
      },
      "hold": 4,
@@ -207,16 +209,9 @@
      "label": "Hơn 80% tài sản đến từ lãi kép"
     },
     {
-     "at": "$1K mỗi năm",
-     "type": "bignum",
-     "value": "$164K",
-     "label": "$1K mỗi năm, sau 30 năm",
-     "tone": "up"
-    },
-    {
-     "at": "thời gian là đồng minh",
+     "at": "nếu bạn tin nền kinh tế",
      "type": "statement",
-     "text": "Thời gian là đồng minh lớn nhất"
+     "text": "Tin kinh tế tăng trưởng? Index fund là lựa chọn tối ưu"
     }
    ],
    "visual_queries": [
@@ -248,7 +243,7 @@
     "Mua bán như cổ phiếu",
     "Xem 3 thứ trước khi mua"
    ],
-   "narration": "Điều thứ ba: bắt đầu ở Việt Nam. Ở Việt Nam, mọi người có thể tìm hiểu các quỹ ETF mô phỏng chỉ số VN30, tức rổ 30 cổ phiếu lớn nhất sàn HOSE, Sở Giao dịch Chứng khoán TP.HCM, hoặc chỉ số VNDiamond, rổ cổ phiếu lớn gần hết room cho nhà đầu tư nước ngoài. Quỹ ETF được mua bán qua tài khoản chứng khoán y như một cổ phiếu. Trước khi mua, xem 3 thứ: quỹ bám chỉ số sát tới đâu, thanh khoản có đủ để mua bán dễ dàng không, và phí quản lý mỗi năm. Rồi bỏ tiền đều đặn mỗi tháng, và để thời gian làm phần còn lại.",
+   "narration": "Điều thứ ba: bắt đầu ở Việt Nam. Ở Việt Nam, mọi người có thể tìm hiểu các quỹ ETF mô phỏng chỉ số VN30, tức rổ 30 cổ phiếu lớn nhất sàn HOSE, Sở Giao dịch Chứng khoán TP.HCM, hoặc chỉ số VNDiamond, rổ cổ phiếu lớn gần hết room cho nhà đầu tư nước ngoài. Từ ngày ra đời năm 2012 tới nay, VN30 tăng trung bình khoảng 10% mỗi năm, chưa tính cổ tức. Quỹ ETF được mua bán qua tài khoản chứng khoán y như một cổ phiếu. Trước khi mua, xem 3 thứ: quỹ bám chỉ số sát tới đâu, thanh khoản có đủ để mua bán dễ dàng không, và phí quản lý mỗi năm. Rồi bỏ tiền đều đặn mỗi tháng, và để thời gian làm phần còn lại.",
    "beats": [
     {
      "at": "điều thứ ba",
@@ -266,6 +261,27 @@
      "type": "bignum",
      "value": "VNDiamond",
      "label": "Cổ phiếu lớn gần hết room ngoại"
+    },
+    {
+     "at": "từ ngày ra đời năm 2012",
+     "type": "versus",
+     "left": {
+      "label": "VN30 năm 2012",
+      "value": "447 điểm",
+      "tone": "down"
+     },
+     "right": {
+      "label": "VN30 11/2026",
+      "value": "1,855 điểm",
+      "tone": "up"
+     }
+    },
+    {
+     "at": "khoảng 10% mỗi năm, chưa tính cổ tức",
+     "type": "bignum",
+     "value": "~10%/năm",
+     "label": "VN30 trung bình từ 2012 (chưa tính cổ tức)",
+     "tone": "up"
     },
     {
      "at": "y như một cổ phiếu",
@@ -326,10 +342,10 @@
  ],
  "short_hooks": {
   "0": "Index fund là gì mà 79% chuyên gia thua nó?",
-  "1": "$1K mỗi năm thành $164K?"
+  "1": "$10K mỗi năm thành $1.6M?"
  },
  "short_cta": "Bạn sẽ bắt đầu với bao nhiêu? Bình luận và theo dõi kênh nhé!",
- "thumb_text": "$1K THÀNH $164K",
+ "thumb_text": "$10K/NĂM THÀNH $1.6M",
  "thumb_stat": "10%/NĂM",
  "thumb_points": [],
  "thumb_warn": false,
