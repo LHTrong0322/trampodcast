@@ -106,6 +106,30 @@ def post(plan_path: Path):
         st["thumb_ok"] = SU.yt_thumb(SU._yt_token(), st["yt_id"], th)
         report.append("YouTube ảnh bìa: " + ("đã gắn" if st["thumb_ok"] else "vẫn bị chặn, kênh chưa xác minh xong"))
     fb = plan.get("facebook")
+    if fb and not st.get("fb_id") and fb.get("item") == "long":   # video dài 16:9: video thường của Trang, hẹn giờ công khai
+        page, tok = os.environ["FB_PAGE_ID"].strip(), os.environ["FB_PAGE_TOKEN"].strip()
+        with open(rel["long"], "rb") as f:
+            r = requests.post(f"https://graph-video.facebook.com/{FB}/{page}/videos", data={
+                "access_token": tok, "title": fb.get("title", "")[:250], "description": SU.strip_links(fb["caption"])[:5000],
+                "published": "false", "scheduled_publish_time": str(fb["publish_unix"])},
+                files={"source": ("video.mp4", f, "video/mp4")}, timeout=900)
+        if not r.ok:
+            raise RuntimeError(f"Facebook video dài đặt lịch lỗi: {r.text[:300]}")
+        st["fb_id"] = r.json().get("id", "")
+        st["fb_caption_clean"] = True
+        save()
+        th = Path(fb["thumb"]) if fb.get("thumb") else rel.get("thumb")
+        if th:
+            try:
+                with open(th, "rb") as fh:
+                    mime = "image/png" if str(th).endswith(".png") else "image/jpeg"
+                    tr = requests.post(f"https://graph.facebook.com/{FB}/{st['fb_id']}/thumbnails", params={"access_token": tok, "is_preferred": "true"},
+                                       files={"source": (Path(th).name, fh, mime)}, timeout=120)
+                report.append("Facebook ảnh bìa video dài: " + ("đã gắn" if tr.ok else f"lỗi {tr.status_code}"))
+            except Exception as ex:
+                report.append(f"Facebook ảnh bìa lỗi: {ex}")
+        when = datetime.fromtimestamp(fb["publish_unix"], timezone.utc).isoformat()
+        report.append(f"Facebook video dài: đã đặt lịch đăng lúc {when} (giờ VN +7), id {st['fb_id']}")
     if fb and not st.get("fb_id"):
         page, tok = os.environ["FB_PAGE_ID"].strip(), os.environ["FB_PAGE_TOKEN"].strip()
         s0 = requests.post(f"https://graph.facebook.com/{FB}/{page}/video_reels", json={"upload_phase": "start", "access_token": tok}, timeout=60)
