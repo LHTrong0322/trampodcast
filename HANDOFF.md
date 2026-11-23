@@ -271,6 +271,11 @@ postfa.st/sizes/youtube/shorts.
 - Ảnh bìa YouTube: số to hơn khoảng 20%, nhãn phụ `thumb_tag` màu nhấn.
 
 ## LỖI ĐÃ BỊ TRỌNG NHẮC, KHÔNG ĐƯỢC TÁI PHẠM (22/11)
+
+- Trọng 23/11 ("sao chính còn thua bản nháp?"): CỬA CHẶN CHẤT LƯỢNG. Mọi lượt chấm đều chấm 2 lần lấy trung bình (1 lần lệch ±0,5 đến 1).
+  Bản chính phải chấm lại và không được thua bản nháp (tổng thấp hơn, hoặc một mục tụt từ 1 điểm). Thua thì bot sửa thêm 1 vòng
+  theo góp ý của chính bản đó, dựng lại, chọn bản điểm cao nhất, báo kết quả ở mục "🚦 CỬA CHẶN" trên Telegram. Code: insight.quality_gate.
+- Trọng 23/11: số tăng (+) luôn màu xanh, số giảm (-) màu đỏ (insight_render.sign_tone); mũi tên chỉ hiện khi số có dấu.
 1. KHÔNG BAO GIỜ để im lặng trơn (nghe như video mất tiếng). Muốn giữ hình lâu: `"hold": giây` chỉ kéo dài HÌNH. Muốn giọng nghỉ cho người xem thấm: `"music": giây` (2-3 giây) trên beat, giọng nghỉ sau câu đó và NHẠC NỀN DÂNG LÊN (Trọng 22/11 cho phép). Mốc chữ được dời đúng khoảng nghỉ nên hình vẫn khớp lời; video ngắn không chèn nghỉ.
 2. Hình đang chạy hiệu ứng không được biến mất giữa chừng: mỗi kiểu hình có thời gian tối thiểu (MIN_BEAT: race 5.5s, chart 4s, versus 3.5s...). Hình phụ không đủ chỗ thì bị bỏ, không cắt hình trước.
 3. Thời gian dựng được phép dài hơn, chất lượng và giá trị cho người xem là trên hết. Không vội.

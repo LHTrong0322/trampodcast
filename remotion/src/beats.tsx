@@ -121,8 +121,8 @@ const Flow: React.FC<{b: Beat; w: number; h: number; t: number; dur: number}> = 
   }
   return (
     <Card w={w} h={h} pad={34}>
-      {b.label ? <div style={{fontSize: 28, fontWeight: 800, color: C.muted, marginBottom: 18, letterSpacing: 1}}>{b.label}</div> : null}
-      <div style={{display: 'flex', flexDirection: 'column', gap: 14}}>
+      {b.label ? <div style={{fontSize: 34, fontWeight: 800, color: C.muted, marginBottom: 18, letterSpacing: 1}}>{b.label}</div> : null}
+      <div style={{display: 'flex', flexDirection: 'column', gap: steps.length > 3 ? 12 : 20}}>
         {steps.map((s, i) => {
           const on = i <= cur;
           return (
@@ -130,7 +130,7 @@ const Flow: React.FC<{b: Beat; w: number; h: number; t: number; dur: number}> = 
               transform: `translateX(${i === cur ? 10 : 0}px)`}}>
               <div style={{width: 54, height: 54, borderRadius: 16, background: i === cur ? ac : `${ac}22`, color: i === cur ? '#fff' : ac,
                 fontWeight: 800, fontSize: 26, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>{i + 1}</div>
-              <div style={{fontSize: i === cur ? 40 : 34, fontWeight: i === cur ? 800 : 600, color: C.ink}}>{s}</div>
+              <div style={{fontSize: steps.length > 3 ? (i === cur ? 44 : 38) : (i === cur ? 52 : 44), fontWeight: i === cur ? 800 : 600, color: C.ink, lineHeight: 1.15}}>{s}</div>
             </div>
           );
         })}
@@ -149,9 +149,9 @@ const Statement: React.FC<{b: Beat; w: number; h: number; question?: boolean}> =
       {b.logo ? <div style={{position: 'absolute', right: 44, top: 40}}><Logo src={b.logo} size={96} /></div> : null}
       {question ? <div style={{fontSize: 120, fontWeight: 900, color: ac, lineHeight: 0.8, marginBottom: 10}}>?</div>
         : <div style={{fontSize: 120, fontWeight: 900, color: `${ac}55`, lineHeight: 0.6, marginBottom: 10}}>“</div>}
-      <div style={{fontSize: (b.text || '').length > 40 ? 52 : 64, fontWeight: 800, color: C.ink, lineHeight: 1.18,
+      <div style={{fontSize: (b.text || '').length > 40 ? 60 : 74, fontWeight: 800, color: C.ink, lineHeight: 1.18,
         transform: `scale(${interpolate(s, [0, 1], [0.92, 1])})`, opacity: s, transformOrigin: 'left center'}}>{b.text}</div>
-      {b.sub ? <div style={{fontSize: 28, fontWeight: 600, color: C.muted, marginTop: 22}}>{b.sub}</div> : null}
+      {b.sub ? <div style={{fontSize: 34, fontWeight: 600, color: C.muted, marginTop: 22}}>{b.sub}</div> : null}
     </Card>
   );
 };

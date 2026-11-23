@@ -400,18 +400,34 @@ def tg_photo(path: Path, caption: str):
 
 
 # ---------------------------------------------------------------------------
-def review_draft(lab: Path, res: dict, out: Path) -> dict:
-    """Lượt 1 (nháp giọng miễn phí): chỉ chấm, KHÔNG tạo Release, KHÔNG gửi Telegram, KHÔNG đăng."""
+def review_avg(gem, cfg, res: dict, thumb: Path | None, n: int = 2) -> dict:
+    """Chấm n lần rồi lấy trung bình (Trọng 23/11: điểm 1 lần chấm lệch ±0,5 đến 1, nháp 6.8 → chính 6.6 là do nhiễu một phần).
+    Góp ý lấy từ lần chấm khắt khe hơn (điểm thấp hơn) để không bỏ sót lỗi."""
+    runs = [r for r in (review(gem, cfg, res, thumb) for _ in range(n)) if r and r.get("scores")]
+    if not runs:
+        return {}
+    base = dict(min(runs, key=lambda r: float(r.get("score") or 0)))
+    keys = {k for r in runs for k in r["scores"]}
+    base["scores"] = {k: round(sum(float(r["scores"].get(k, 0)) for r in runs if k in r["scores"])
+                               / max(1, sum(1 for r in runs if k in r["scores"])) * 2) / 2 for k in keys}
+    base["score"] = round(sum(float(r.get("score") or 0) for r in runs) / len(runs), 2)
+    base["runs"] = [r.get("score") for r in runs]
+    return base
+
+
+def review_draft(lab: Path, res: dict, out: Path, label: str = "Bản nháp") -> dict:
+    """Chấm một bản dựng: chỉ chấm, KHÔNG tạo Release, KHÔNG gửi Telegram, KHÔNG đăng."""
     cfg = V.load_cfg()
     gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))
-    thumb = thumbnail(res, out / f"thumbnail-{lab.name}-nhap.png")
-    log("⑧ Bot review bản nháp")
-    rv = review(gem, cfg, res, thumb) or {}
-    log(f"   Bản nháp: {rv.get('score')} điểm {rv.get('scores')}")
+    thumb = thumbnail(res, out / f"thumbnail-{lab.name}-cham.png")
+    log(f"⑧ Bot review {label.lower()} (chấm 2 lần lấy trung bình)")
+    rv = review_avg(gem, cfg, res, thumb) or {}
+    log(f"   {label}: {rv.get('score')} điểm (các lần chấm {rv.get('runs')}) {rv.get('scores')}")
     return rv
 
 
-def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, draft: dict | None = None) -> dict:
+def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, draft: dict | None = None, rv: dict | None = None,
+            gate: list | None = None) -> dict:
     cfg = V.load_cfg()
     gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))
     tag = lab.name
@@ -482,8 +498,11 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, draft
             tg_text("📤 ĐĂNG TỰ ĐỘNG\n" + "\n".join(posted))
     except Exception as ex:
         log(f"   ! đăng tự động lỗi: {ex}")
-    log("⑧ Bot review")
-    rv = review(gem, cfg, res, thumb)
+    if not rv:
+        log("⑧ Bot review")
+        rv = review_avg(gem, cfg, res, thumb)
+    if gate:   # các lượt chấm của cửa chặn chất lượng
+        tg_text("🚦 CỬA CHẶN CHẤT LƯỢNG (bản chính không được thua bản nháp)\n" + "\n".join(gate))
     if rv:
         tg_text(review_text(rv))
         if draft and (draft.get("review") or {}).get("scores"):

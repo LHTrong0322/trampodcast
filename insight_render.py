@@ -398,13 +398,14 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
             chapters.append((sc["from"], "Mở đầu"))
             scenes.append({**base, "type": "intro", "title": V.en_money(plan.get("title", "")), "theme": plan.get("theme", ""),
                            "points": [V.en_money(s["heading"]) for s in secs][:6], "agendaLabel": P.nodash(plan.get("agenda_label", "")),
-                           "hidePost": bool(plan.get("own_source")),
-                           "stat": "" if plan.get("own_source") and plan.get("hook_beats") else V.en_money(P.nodash(str(plan.get("thumb_stat") or plan.get("hook_stat") or "")))[:10],
+                           # review 23/11: intro_beats = thẻ đối lập ngay màn đầu (vd -$6T vs EPS mạnh nhất 4 năm) thay cho số lặp lại hook
+                           "hidePost": bool(plan.get("own_source") or plan.get("intro_beats")),
+                           "stat": "" if (plan.get("own_source") and plan.get("hook_beats")) or plan.get("intro_beats") else V.en_money(P.nodash(str(plan.get("thumb_stat") or plan.get("hook_stat") or "")))[:10],
                            "statLabel": P.nodash(str(plan.get("thumb_tag") or "")).upper()[:24],
                            # từ khoá tô màu trong tiêu đề = các chữ của chữ ảnh bìa (không tô bừa chữ "hội", "từ")
                            "hl": [re.sub(r"[^\w$%]", "", w.lower()) for w in str(plan.get("thumb_text") or "").split() if len(w) > 1],
                            # review 22/11: lúc chào màn hình không được trống → giữ lại thẻ so sánh của hook ở bên phải
-                           "beats": [{**b, "s": 0.0} for b in beats_for([x for x in (plan.get("hook_beats") or []) if x.get("type") in ("versus", "race", "bignum")][:1],
+                           "beats": [{**b, "s": 0.0} for b in beats_for(plan.get("intro_beats") or [x for x in (plan.get("hook_beats") or []) if x.get("type") in ("versus", "race", "bignum")][:1],
                                                                          sc["words"], sc["dur"], data)][:1],
                            "images": [f"img/{x}" for x in imgs.get("intro", [])][:1]})
         elif k == "outro":

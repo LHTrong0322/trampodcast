@@ -432,6 +432,60 @@ def cook(out: Path, cfg: dict, gem, st: dict) -> dict:
 STANDARD_TAG = "20261120-1915"   # video chuẩn Trọng duyệt 21/11: chất lượng từ đây trở lên
 
 
+def worse(a: dict, b: dict) -> list:
+    """Những điểm mà bản b thua bản a: tổng thấp hơn, hoặc một mục tụt từ 1 điểm trở lên."""
+    out = []
+    if float(b.get("score") or 0) < float(a.get("score") or 0):
+        out.append(f"tổng {a.get('score')} → {b.get('score')}")
+    for k, v in (a.get("scores") or {}).items():
+        w = (b.get("scores") or {}).get(k)
+        if w is not None and float(w) <= float(v) - 1:
+            out.append(f"{k} {v} → {w}")
+    return out
+
+
+def quality_gate(src, tips, draft: dict, lab, res):
+    """Trọng 23/11 ("sao chính còn thua bản nháp?"): bản chính phải chấm lại (2 lần, lấy trung bình).
+    Thua bản nháp thì bot sửa tiếp theo góp ý của chính bản đó, dựng lại (giọng đã đọc dùng lại, không tốn lượt),
+    rồi chọn bản điểm cao nhất. Tối đa 1 vòng sửa thêm."""
+    import insight_lab as L
+    import insight_render as R
+    import insight_publish as PB
+    import insight_improve as IM
+    d = draft["review"]
+    rv = PB.review_draft(lab, res, Path("render_out"), label="Bản chính")
+    gate = [f"Nháp: {d.get('score')} · Bản chính: {rv.get('score')} (các lần chấm {rv.get('runs')})"]
+    bad = worse(d, rv)
+    if not bad:
+        gate.append("✅ Bản chính không thua bản nháp")
+        return lab, res, rv, gate
+    log(f"🚦 Bản chính thua bản nháp ({'; '.join(bad)}), bot sửa thêm 1 vòng")
+    gate.append("⚠️ Bản chính thua: " + "; ".join(bad) + ". Bot sửa thêm 1 vòng theo góp ý của bản chính")
+    try:
+        cur = os.getenv("INSIGHT_SCRIPT", "").strip()
+        base = json.loads(Path(cur).read_text(encoding="utf-8")) if cur else json.loads((lab / "plan.json").read_text(encoding="utf-8"))
+        new, changes = IM.improve(base, rv, locked=bool(cur))
+        fx = Path("lab_sua") / "kich-ban-sua-vong-2.json"
+        fx.parent.mkdir(exist_ok=True)
+        fx.write_text(json.dumps(new, ensure_ascii=False, indent=1), encoding="utf-8")
+        os.environ["INSIGHT_SCRIPT"] = str(fx)
+        lab2 = L.prepare(src, Path("lab_sua"), notes=tips)
+        res2 = R.render(lab2, Path("render_sua"))
+        rv2 = PB.review_draft(lab2, res2, Path("render_sua"), label="Bản sửa vòng 2")
+        gate.append(f"Bản sửa vòng 2: {rv2.get('score')} (các lần chấm {rv2.get('runs')}), {len(changes)} sửa")
+        if float(rv2.get("score") or 0) > float(rv.get("score") or 0):
+            # đưa file ra đúng thư mục render_out để Release/Telegram dùng như bình thường
+            gate.append("➡️ Chọn bản sửa vòng 2")
+            return lab2, res2, rv2, gate
+        gate.append("➡️ Giữ bản chính (vòng 2 không tốt hơn)")
+    except Exception as ex:
+        log(f"   ! vòng sửa thêm lỗi: {str(ex)[:200]}")
+        gate.append(f"! vòng sửa thêm lỗi: {str(ex)[:120]}")
+    if worse(d, rv):
+        gate.append("❗ Vẫn thua bản nháp sau khi sửa, Trọng nên chọn giữa 2 bản (cả 2 đều gửi kèm)")
+    return lab, res, rv, gate
+
+
 def two_pass_draft(src, tips, ic) -> dict:
     """Lượt nháp: dựng giọng miễn phí, chấm, bot sửa hình, ghi kịch bản đã sửa cho lượt chính (INSIGHT_SCRIPT)."""
     import insight_lab as L
@@ -496,7 +550,10 @@ def produce(out: Path, cfg: dict, st: dict, links: str = ""):
             draft = None
     lab = L.prepare(src, Path("lab"), notes=tips)
     res = R.render(lab, Path("render_out"))
-    PB.publish(lab, res, Path("render_out"), data_dir=out, draft=draft)
+    rv, gate = None, None
+    if draft and (draft.get("review") or {}).get("score"):
+        lab, res, rv, gate = quality_gate(src, tips, draft, lab, res)
+    PB.publish(lab, res, Path("render_out"), data_dir=out, draft=draft, rv=rv, gate=gate)
     for p in st["posts"]:
         if (links.strip() and p.get("url") and p["url"].split("?")[0] in links) or (not links.strip() and p in posts):
             p["used"] = True

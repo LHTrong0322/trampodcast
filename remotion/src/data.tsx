@@ -167,7 +167,7 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
       </svg>
       {/* review 1915: giá giảm mà không chú thích dễ gây tâm lý tiêu cực, nên luôn ghi rõ bối cảnh */}
       <div style={{marginTop: 10, fontSize: Math.max(20, Math.round(w / 40)), fontWeight: 600, color: C.muted, lineHeight: 1.3}}>
-        {up ? `Dữ liệu thật ${coin?.stock ? 'Yahoo Finance' : 'CoinGecko'}, ${days} ngày gần nhất` : `Giá ${days} ngày đang điều chỉnh. Video bàn về giá trị dài hạn, không phải tín hiệu mua bán`}
+        {up ? `Dữ liệu thật ${coin?.stock ? 'Yahoo Finance' : 'CoinGecko'}, ${days} ngày gần nhất` : `Dữ liệu thật ${coin?.stock ? 'Yahoo Finance' : 'CoinGecko'}, ${days} ngày. Không phải tín hiệu mua bán`}
       </div>
     </Frame>
   );

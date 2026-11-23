@@ -35,8 +35,8 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
           <RevealWords text={props.shortTitle || sc.heading || ''} size={(props.shortTitle || sc.heading || '').length > 45 ? 54 : 62} delay={4} stagger={3} maxWidth={860}
             highlight={[sc.project?.name || ''].filter(Boolean)} />
         </div>
-        {/* review 22/11: màn dọc cần chữ số to hơn → vẽ thẻ 840x560 rồi phóng 1,14 lần cho chữ to theo */}
-        <div style={{position: 'absolute', top: 590, left: 60, transform: 'scale(1.143)', transformOrigin: 'top left'}}>
+        {/* review 23/11: thẻ phóng 1,25 lần gần kín ngang màn, phụ đề hạ thấp (khoảng 1480 đến 1530) để không che thẻ, vẫn trên vùng nút TikTok */}
+        <div style={{position: 'absolute', top: 560, left: 15, transform: 'scale(1.25)', transformOrigin: 'top left'}}>
           {sc.beats?.length ? <BeatPanel beats={sc.beats} t={f / 30} sceneDur={sc.dur} data={props.data} w={840} h={560} />
             : hasData ? <DataPanel spec={sc.data!} data={props.data} w={860} h={500} />
             : <QuoteCard post={props.post} quote={sc.quote || sc.heading || ''} w={860} h={500} />}
@@ -44,7 +44,7 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
         {sc.keyStat && !sc.beats?.length ? <div style={{position: 'absolute', top: 1215, left: 70, display: 'flex', alignItems: 'center', gap: 24}}>
           <CountUp value={sc.keyStat} size={72} delay={20} /><div style={{fontFamily: FONT, color: C.muted, fontSize: 30, fontWeight: 600, maxWidth: 480}}>{sc.keyLabel}</div>
         </div> : null}
-        <Captions words={sc.words} bottom={560} size={56} maxWidth={940} perChunk={5} />
+        <Captions words={sc.words} bottom={390} size={56} maxWidth={940} perChunk={5} />
         {cover && f < 40 ? <AbsoluteFill style={{opacity: interpolate(f, [26, 40], [1, 0], clamp)}}><ShortThumb {...cover} /></AbsoluteFill> : null}
         <div style={{position: 'absolute', left: 0, bottom: 0, height: 8, width: (f / durationInFrames) * width, background: ac}} />
         {cta && f >= cta.from * 30 ? <EndCard text={cta.text} t={f - cta.from * 30} /> : null}

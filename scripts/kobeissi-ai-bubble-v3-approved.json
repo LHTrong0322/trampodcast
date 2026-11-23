@@ -463,7 +463,8 @@
       "label": "Retail",
       "value": "$100B"
      },
-     "sub": "Dòng tiền bị hút khỏi thị trường"
+     "sub": "Anthropic IPO, lớn nhất lịch sử: dòng tiền bị hút khỏi thị trường",
+     "label": null
     },
     {
      "at": "các quỹ phòng hộ rút ròng",
@@ -558,5 +559,20 @@
   "sub_at": "hay đây là cú rũ",
   "tone": "down"
  },
- "approved_by": "Trọng 23/11 13:00 VN: áp dụng góp ý bot, viết lại câu hỏi phần 1 sâu hơn, số tăng hiện màu xanh"
+ "approved_by": "Trọng 23/11 13:00 VN: áp dụng góp ý bot, viết lại câu hỏi phần 1 sâu hơn, số tăng hiện màu xanh",
+ "intro_beats": [
+  {
+   "at": "điều lạ là",
+   "type": "versus",
+   "left": {
+    "label": "Vốn hoá S&P 500",
+    "value": "-$6T"
+   },
+   "right": {
+    "label": "EPS quý 3, mạnh nhất 4 năm",
+    "value": "+31.9%"
+   },
+   "sub": "Thị trường đang sợ sai chỗ?"
+  }
+ ]
 }
