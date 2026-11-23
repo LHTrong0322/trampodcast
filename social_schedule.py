@@ -28,6 +28,34 @@ def _state_path(plan_path: Path) -> Path:
     return plan_path.with_name(plan_path.stem + ".state.json")
 
 
+def long_url(tag: str, posts: Path = Path("scripts/posts")) -> str | None:
+    """Link video dài YouTube cùng mã video (tìm trong các file kế hoạch đã đăng)."""
+    for pp in sorted(posts.glob("*.json")):
+        if pp.name.endswith(".state.json") or not _state_path(pp).exists():
+            continue
+        try:
+            pl = json.loads(pp.read_text(encoding="utf-8"))
+            st = json.loads(_state_path(pp).read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if pl.get("tag") == tag and (pl.get("youtube") or {}).get("item", "long") == "long" and st.get("yt_id"):
+            return f"https://youtu.be/{st['yt_id']}"
+    return None
+
+
+def short_comment(plan: dict, posts: Path = Path("scripts/posts")) -> dict | None:
+    """Trọng 23/11: short đăng lên YouTube LUÔN phải có bình luận. Kế hoạch không ghi thì máy tự tạo:
+    câu hỏi kéo thảo luận + link bản đầy đủ, đăng 5 phút sau giờ công khai."""
+    y = plan.get("youtube") or {}
+    if not y.get("item", "long").startswith("short") or y.get("comment"):
+        return None
+    url = long_url(plan.get("tag", ""), posts)
+    text = "Bạn thấy điều nào khó áp dụng nhất? Comment cho mình biết nhé 👇"
+    text += f"\n▶ Xem bản đầy đủ: {url}" if url else "\n▶ Bản đầy đủ có trên kênh Smart Penguin Insights"
+    at = datetime.fromisoformat(y["publish_at"].replace("Z", "+00:00")) + timedelta(minutes=5)
+    return {"comment": text, "comment_at": at.strftime("%Y-%m-%dT%H:%M:%SZ")}
+
+
 def _tg(msg: str):
     try:
         import insight_publish as PB
@@ -182,6 +210,8 @@ def comments():
         yt_url = f"https://youtu.be/{st['yt_id']}" if st.get("yt_id") else "kênh YouTube Smart Penguin Insights"
         for key in ("youtube", "facebook"):
             c = plan.get(key) or {}
+            if key == "youtube" and plan.get("youtube"):
+                c = {**c, **(short_comment(plan) or {})}
             if not c.get("comment") or key in done:
                 continue
             if datetime.fromisoformat(c["comment_at"].replace("Z", "+00:00")) > now:

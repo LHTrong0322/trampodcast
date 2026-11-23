@@ -110,6 +110,9 @@
   Đăng theo lịch: file kế hoạch scripts/posts/<tag>.json (tiêu đề, mô tả, tags, giờ đăng, bình luận) rồi dispatch
   social-schedule.yml với plan=<file>. YouTube dùng Lên lịch chính thức (publishAt), Facebook Reel video_state=SCHEDULED.
   Bình luận tự đăng mỗi giờ phút 07 khi tới giờ, Trọng tự ghim (API không ghim được). Trạng thái ở <tag>.state.json.
+  SHORT LUÔN CÓ BÌNH LUẬN (Trọng 23/11): kế hoạch YouTube short không ghi "comment" thì social_schedule.short_comment tự tạo
+  (câu hỏi + link video dài cùng tag), đăng 5 phút sau giờ công khai; social_post đăng short công khai cũng tự bình luận.
+  Viết kế hoạch vẫn nên ghi "comment" riêng cho từng short (câu hỏi hợp nội dung + link bản đầy đủ).
   Đăng ngay chọn lọc: social-post.yml (youtube/facebook = long, short1, short2). Mô tả luôn có Telegram https://t.me/SmartPanda0322
   Kênh YouTube id UC2tX8_Z9beionA0HVu6q4Gw (đã xác minh, ảnh bìa tự gắn được). 3 playlist đã tạo.
   Phụ đề tự động YouTube: Trọng muốn GỠ (đè lên phụ đề trong video). social_schedule.py tự gỡ track asr sau khi đăng;

@@ -108,6 +108,15 @@ def main():
                     sid = SU.yt_upload(tok, rel[k], t, d, seo.get("yt_tags", [])[:15], a.privacy)
                     yt_add(tok, pl_short, sid)
                     report.append(f"YouTube Short {i + 1} ({a.privacy}): https://youtube.com/shorts/{sid}")
+                    if a.privacy == "public":   # Trọng 23/11: short luôn có bình luận
+                        import social_schedule as SS
+                        url = f"https://youtu.be/{long_id}" if long_id else SS.long_url(a.tag)
+                        txt = "Bạn thấy điều nào khó áp dụng nhất? Comment cho mình biết nhé 👇"
+                        txt += f"\n▶ Xem bản đầy đủ: {url}" if url else "\n▶ Bản đầy đủ có trên kênh Smart Penguin Insights"
+                        r = requests.post("https://www.googleapis.com/youtube/v3/commentThreads", params={"part": "snippet"},
+                                          headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json"}, timeout=60,
+                                          data=json.dumps({"snippet": {"videoId": sid, "topLevelComment": {"snippet": {"textOriginal": txt}}}}))
+                        report.append(f"   bình luận short: {'OK, nhớ ghim' if r.ok else 'lỗi ' + r.text[:120]}")
         except Exception as ex:
             report.append(f"YouTube LỖI: {str(ex)[:200]}")
     if fb_items:
