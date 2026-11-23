@@ -29,6 +29,10 @@
   đang có podcast/insight/news-flash chạy thì đợi lượt sau (cùng concurrency group "podcast", tránh đè mất lượt podcast).
 - Dựng sau khi duyệt: giọng VieNeu "Hải Đăng" (không 2 lượt, không Ludo), short 9:16 theo khung Smart Penguin Insights, CTA cuối
   news_flash.short_cta. insight_publish.publish_news chỉ gửi short + ảnh bìa + caption + bot review, KHÔNG tự đăng. Review lưu insight/news-reviews.json.
+- Cập nhật 23/11 tối: lịch gate 15 phút gần như không chạy (GitHub bỏ lượt, có lúc lỗi billing) nên duyệt rất lag. Giờ run nào gửi kịch bản
+  (pick, topic, revise, setscript, poll) tự ở lại đọc Telegram tối đa NF_WAIT_MIN=30 phút: duyệt thì dựng ngay trong run đó, góp ý thì viết lại.
+  Gate giảm còn mỗi tiếng (dự phòng). Claude chấm tin và viết kịch bản tin nóng trước, Gemini dự phòng.
+  Mode: topic (Trọng chỉ định chủ đề, brief trong scripts/flash-briefs/), revise (góp ý dài), setscript (Trọng tự sửa kịch bản, gửi lại chờ duyệt).
 - Trạng thái: podcast-data flash/state.json (drafts: waiting, revise, approved, building, built, failed, rejected, expired), kịch bản flash/scripts/<mã>.json.
 
 ## BỘ LỌC GIÁO DỤC (TRỌNG CHỐT 23:22 NGÀY 21/11)

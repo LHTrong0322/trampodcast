@@ -552,16 +552,15 @@ def main():
     if a.mode == "pick":
         pick(out, cfg)
         return output("build", wait_reply(out, cfg))
-    if a.mode == "setscript":   # Trọng tự sửa kịch bản trong chat và duyệt luôn: ghi đè kịch bản rồi dựng ngay
+    if a.mode == "setscript":   # Trọng tự sửa kịch bản trong chat: ghi đè kịch bản, gửi lại Telegram chờ bấm duyệt
         st = load_state(out)
         d = st["drafts"][a.id]
         plan = json.loads(Path(a.script).read_text(encoding="utf-8"))
         save_script(out, a.id, plan)
-        d.update(status="approved", approved=now_vn().isoformat(), version=d.get("version", 1) + 1)
+        d.update(status="waiting", version=d.get("version", 1) + 1)
+        send_draft(out, d)
         save_state(out, st)
-        say(f"✅ Đã cập nhật kịch bản {a.id} theo bản Trọng sửa và duyệt. Bot bắt đầu dựng short (giọng Hải Đăng).",
-            reply_to=d.get("msg_id"))
-        return output("build", a.id)
+        return output("build", wait_reply(out, cfg))
     if a.mode == "revise":   # góp ý dài của Trọng gửi qua phiên code (giống /sua trên Telegram)
         st = load_state(out)
         d = st["drafts"][a.id]
