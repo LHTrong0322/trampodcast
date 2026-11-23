@@ -5,6 +5,17 @@
 
 
 
+## 🎨 SOÁT TRÌNH BÀY TRƯỚC KHI HOÀN THIỆN (TRỌNG CHỐT 15:05 NGÀY 23/11: "lỗi font, lỗi dựng nhiều, chữ xấu, không thẳng hàng")
+- `video_lint.layout_issues`: nhãn so sánh tối đa 26 ký tự, số so sánh tối đa 11, chú thích thẻ số 60, thẻ chữ 56, bước sơ đồ 24, chú thích chấm 48.
+  Lỗi trình bày được đưa vào `insight_improve` như góp ý "[Lỗi trình bày]" nên bot tự sửa trước khi dựng bản chính.
+- Bot review (REVIEW_PROMPT) có mục SOÁT TRÌNH BÀY BẮT BUỘC: chữ đè, tràn, lỗi font, ngắt dòng giữa cụm, số không thẳng hàng,
+  nguồn viết liền, từ mồ côi, chữ lệch lời đọc, biểu đồ biến mất sớm. Có lỗi thì hinh_anh_ro_rang tối đa 6, cửa chặn chất lượng tự sửa thêm vòng.
+- Khuôn hình: nguồn số liệu ("Nguồn: ...", hoặc trường "source") hiện chữ nhỏ dòng riêng cuối thẻ; thẻ so sánh 2 bên cùng cỡ nhãn,
+  cùng chiều cao khung nhãn nên 2 số luôn thẳng hàng; nhãn dài xuống dòng ở dấu phẩy.
+- Biểu đồ cổ phiếu/chỉ số nhiều năm: beat chart thêm "years": 30 (giá tháng Yahoo), tiêu đề ghi "30 năm".
+- Kịch bản viết CHỮ SỐ (phụ đề hiện "9" không phải "chín"); giọng đọc tự đổi số sang chữ (vi_num.py); S&P 500 đọc "ét en pi năm trăm".
+- Giọng chính Ludo@kol: giọng Bắc chuẩn Hà Nội, nghiêm túc (Trọng 23/11). Ô voice khi dispatch để trống.
+
 ## ⚡ TIN NÓNG 4 TIẾNG + DỪNG VIDEO TUẦN (TRỌNG CHỐT 00:28 NGÀY 23/11)
 - DỪNG video tổng hợp tuần: video-weekly.yml bỏ lịch (chỉ còn bấm tay), podcast.yml bỏ bước "làm sẵn đoạn video của ngày", sources.yaml video.enabled: false.
 - Tin nóng (news_flash.py, sources.yaml news_flash): news-flash.yml chạy 03:17, 07:17, 11:17, 15:17, 19:17, 23:17 giờ VN, gom tin cùng nguồn podcast,

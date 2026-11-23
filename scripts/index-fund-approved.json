@@ -19,8 +19,9 @@
    "at": "79%",
    "type": "bignum",
    "value": "79%",
-   "label": "Quỹ chuyên gia thua một cái rổ không ai chọn (SPIVA 2025)",
-   "tone": "down"
+   "label": "quỹ chuyên gia Mỹ thua S&P 500 năm 2025",
+   "tone": "down",
+   "source": "SPIVA 2025 (S&P Dow Jones Indices)"
   },
   {
    "at": "$10K mỗi năm",
@@ -168,15 +169,16 @@
      "at": "năm 2008 giảm",
      "type": "bignum",
      "value": "-37%",
-     "label": "Năm 2008, rồi hồi phục và lập đỉnh mới",
+     "label": "Năm 2008, rồi hồi phục",
      "tone": "down"
     },
     {
      "at": "hồi phục và lập đỉnh mới",
      "type": "chart",
      "ticker": "SPX",
-     "days": 365,
-     "label": "S&P 500 một năm qua (dữ liệu thật)"
+     "label": "S&P 500 30 năm: giảm sâu rồi lập đỉnh mới",
+     "years": 30,
+     "hold": 4
     },
     {
      "at": "không cần giỏi phân tích",

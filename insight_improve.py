@@ -78,6 +78,9 @@ def improve(plan: dict, rv: dict, locked: bool = True) -> tuple[dict, list[str]]
     plan = base_plan(plan)
     fixes = ([f"[Nên sửa] {x}" for x in as_list(rv.get("can_sua"))] + [f"[Dễ mất người xem] {x}" for x in as_list(rv.get("retention_risk"))]
              + [f"[Mẹo kịch bản] {x}" for x in as_list(rv.get("script_tips"))])
+    # Trọng 23/11: lỗi trình bày máy tự soát (nhãn dài, nguồn viết liền...) cũng phải sửa trước khi dựng bản chính
+    beats = list(plan.get("hook_beats") or []) + [b for s in plan.get("sections") or [] for b in s.get("beats") or []]
+    fixes += [f"[Lỗi trình bày] {x}" for x in VL.layout_issues(beats)]
     if not fixes:
         return plan, []
     listing = "\n".join(f"{i + 1}. {x}" for i, x in enumerate(fixes))

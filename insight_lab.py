@@ -370,6 +370,9 @@ def coin_data(lab: Path, plan: dict, data: dict):
     for b in [b for s in plan.get("sections", []) for b in (s.get("beats") or [])] + (plan.get("hook_beats") or []):
         if b.get("type") == "chart" and b.get("ticker") and b.get("days"):
             want[str(b["ticker"]).lstrip("$").upper()] = _days(b.get("days"))
+        # Trọng 23/11: lời đọc nói "từ 1957 tăng 10%/năm" mà biểu đồ chỉ 1 năm là lệch. Cổ phiếu/chỉ số được vẽ nhiều năm ("years": 30)
+        if b.get("type") == "chart" and b.get("ticker") and b.get("years"):
+            want[str(b["ticker"]).lstrip("$").upper()] = max(400, min(100, int(b["years"])) * 365)
         for x in [b, b.get("left") or {}, b.get("right") or {}] + list(b.get("items") or []) + list(b.get("cols") or []):   # logo coin trong nhịp hình
             if x.get("logo"):
                 tick.append(str(x["logo"]).lstrip("$").upper())
@@ -573,19 +576,25 @@ def _stock_series(t: str, days: int) -> list:
     """Giá đóng cửa ngày của cổ phiếu/chỉ số: Yahoo Finance, dự phòng Stooq. Trả [] nếu không lấy được."""
     sym = YAHOO.get(t, t)
     rng = "1y" if days > 185 else "6mo" if days > 95 else "3mo" if days > 35 else "1mo"
+    step, per = "1d", 5 / 7
+    if days > 400:   # nhiều năm: lấy giá tháng (Trọng 23/11, biểu đồ S&P 500 dài hạn)
+        rng, step, per = ("max" if days > 7300 else "10y" if days > 1830 else "5y"), "1mo", 1 / 30.4
     try:
-        r = requests.get(f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}", params={"range": rng, "interval": "1d"},
+        r = requests.get(f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}", params={"range": rng, "interval": step},
                          headers={"User-Agent": "Mozilla/5.0"}, timeout=30)
         res = (r.json().get("chart") or {}).get("result") or []
         closes = [x for x in ((res[0].get("indicators") or {}).get("quote") or [{}])[0].get("close") or [] if x] if res else []
         if len(closes) >= 10:
-            return closes[-max(10, int(days * 5 / 7)):]
+            return closes[-max(10, int(days * per)):]
     except Exception as ex:
         log(f"   ! Yahoo {t}: {ex}")
     try:
         st = {"^GSPC": "^spx", "^VIX": "^vix", "^NDX": "^ndx"}.get(sym, sym.lower() + ".us")
         txt = requests.get("https://stooq.com/q/d/l/", params={"s": st, "i": "d"}, timeout=30).text
         closes = [float(l.split(",")[4]) for l in txt.strip().splitlines()[1:] if l.count(",") >= 4]
+        if days > 400:
+            closes = closes[-int(days * 5 / 7):][::21]
+            return closes if len(closes) >= 10 else []
         if len(closes) >= 10:
             return closes[-max(10, int(days * 5 / 7)):]
     except Exception as ex:

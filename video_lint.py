@@ -45,6 +45,43 @@ def _anchors(words: list[str], beats: list[dict]) -> list[tuple[int, dict]]:
     return sorted(out, key=lambda x: x[0])
 
 
+# Trọng 23/11: "lỗi font, lỗi dựng nhiều, chữ xấu, không thẳng hàng, nguồn viết liền". Luật trình bày soát TRƯỚC khi dựng,
+# để bot sửa kịch bản (insight_improve) tự sửa luôn, không đợi Trọng phát hiện.
+LIMITS = {"vs_label": 26, "vs_value": 11, "bignum_label": 60, "statement": 56, "flow_step": 24, "dots_label": 48}
+
+
+def layout_issues(beats: list) -> list[str]:
+    bad = []
+    for b in beats:
+        t, at = b.get("type"), b.get("at", "")
+        lab = str(b.get("label") or "")
+        if re.search(r"\bnguồn\s*:|\bsource\s*:", lab, re.I) and t not in ("bignum", "dots"):
+            bad.append(f"Hình '{at}': nguồn viết liền trong chú thích '{lab[:40]}...'. Tách ra trường \"source\" (hiện chữ nhỏ dòng riêng).")
+        if t == "versus":
+            for side in ("left", "right"):
+                x = b.get(side) or {}
+                if len(str(x.get("label", ""))) > LIMITS["vs_label"]:
+                    bad.append(f"Hình so sánh '{at}': nhãn {side} '{x.get('label')}' dài {len(str(x.get('label')))} ký tự (tối đa {LIMITS['vs_label']}), viết gọn lại.")
+                if len(str(x.get("value", ""))) > LIMITS["vs_value"]:
+                    bad.append(f"Hình so sánh '{at}': số {side} '{x.get('value')}' quá dài (tối đa {LIMITS['vs_value']} ký tự), số to sẽ bị co nhỏ.")
+        if t == "bignum" and len(splitless(lab)) > LIMITS["bignum_label"]:
+            bad.append(f"Thẻ số '{at}': chú thích dài {len(lab)} ký tự (tối đa {LIMITS['bignum_label']}), rút gọn, nguồn để trường \"source\".")
+        if t == "statement" and len(str(b.get("text", ""))) > LIMITS["statement"]:
+            bad.append(f"Thẻ chữ '{at}': {len(str(b.get('text')))} ký tự (tối đa {LIMITS['statement']}), câu dài xuống dòng xấu.")
+        if t == "flow":
+            for st in b.get("steps") or []:
+                if len(str(st)) > LIMITS["flow_step"]:
+                    bad.append(f"Hình các bước '{at}': bước '{st}' dài quá {LIMITS['flow_step']} ký tự.")
+        if t == "dots" and len(splitless(lab)) > LIMITS["dots_label"]:
+            bad.append(f"Hình chấm '{at}': chú thích dài quá {LIMITS['dots_label']} ký tự.")
+    return bad
+
+
+def splitless(lab: str) -> str:
+    """Chú thích đã bỏ phần nguồn (khuôn hình tự tách 'Nguồn: ...' xuống dòng nhỏ)."""
+    return re.split(r"[.,;]?\s*(?:Nguồn|Source)\s*:", lab, flags=re.I)[0].strip()
+
+
 def lint(plan: dict) -> list[str]:
     bad: list[str] = []
     secs = plan.get("sections") or []
@@ -82,6 +119,7 @@ def lint(plan: dict) -> list[str]:
                 bad.append(f"Phần {k}: lời đọc nói '{m.group(0)}' nhưng không có hình nào hiện đủ {n} ý.")
     if not any(b.get("type") in ("chart", "race", "wma") for b in all_beats):
         bad.append("Cả video chưa có biểu đồ giá nào. Thêm ít nhất 1 hình 'race' hoặc 'chart' (giá thật của coin đang nói tới).")
+    bad += layout_issues(all_beats)
     types = [b.get("type") for b in all_beats]
     if types and max(types.count(t) for t in set(types)) > max(4, len(types) * 0.4):
         bad.append("Một kiểu hình lặp quá nhiều, đổi bớt sang kiểu khác (versus, chart, dots, flow, logos).")

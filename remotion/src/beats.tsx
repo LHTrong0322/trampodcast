@@ -19,6 +19,22 @@ export type Beat = {
   cols?: {label: string; logo?: string | null}[]; rows?: {label: string; marks: string[]}[];
 };
 
+// Trọng 23/11: nguồn số liệu ghi nhỏ ở dòng riêng phía dưới, không viết liền vào chú thích ("... năm 2025. Nguồn: SPIVA ...")
+export const splitSource = (label?: string, src?: string): [string, string] => {
+  const t = String(label || '').trim();
+  if (src) return [t, src];
+  const m = t.match(/^(.*?)[.,;]?\s*(?:Nguồn|Source)\s*:\s*(.+)$/i);
+  if (m) return [m[1].trim(), m[2].replace(/^\((.*)\)$/, '$1').trim()];
+  const p = t.match(/^(.*\S)\s*\(([^()]*(?:SPIVA|Yahoo|CoinGecko|S&P Dow|Fidelity|Bloomberg|Reuters|Finhay|HOSE|DefiLlama|Glassnode)[^()]*)\)$/i);
+  if (p) return [p[1].trim(), p[2].trim()];
+  return [t, ''];
+};
+
+const SourceLine: React.FC<{text: string}> = ({text}) => text ? (
+  <div style={{position: 'absolute', left: 40, right: 40, bottom: 18, fontSize: 22, fontWeight: 600, color: `${C.muted}AA`,
+    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>Nguồn: {text}</div>
+) : null;
+
 const toneColor = (t?: string) => (t === 'down' ? C.red : t === 'up' ? C.green : C.ink);
 
 // Trọng 22/11: VĨNH VIỄN chỉ dùng nền sạch (trắng). Không thẻ nền màu đậm/gradient.
@@ -41,7 +57,9 @@ const Logo: React.FC<{src?: string | null; size: number; label?: string}> = ({sr
     : null;
 };
 
-const BigNum: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => (
+const BigNum: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
+  const [lab, src] = splitSource(b.label, (b as any).source);
+  return (
   <Card w={w} h={h}>
     <div style={{display: 'flex', alignItems: 'center', gap: 34}}>
       {b.logo ? <Logo src={b.logo} size={150} label={b.label} /> : null}
@@ -51,11 +69,13 @@ const BigNum: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => (
           <path d={b.tone === 'up' ? 'M4 17 L12 6 L20 17 Z' : 'M4 7 L12 18 L20 7 Z'} fill={toneColor(b.tone)} /></svg> : null}
         <CountUp value={b.value || ''} size={(b.value || '').length > 7 ? Math.max(64, Math.min(96, Math.floor((w - 340) / ((b.value || '').length * 0.62)))) : (b.value || '').length > 5 ? 120 : 150} delay={2} color={toneColor(b.tone)} />
         </div>
-        <div style={{fontSize: 38, fontWeight: 700, color: C.muted, maxWidth: w - 300, lineHeight: 1.22}}>{b.label}</div>
+        <div style={{fontSize: 38, fontWeight: 700, color: C.muted, maxWidth: b.logo ? w - 300 : w - 110, lineHeight: 1.22}}>{lab}</div>
       </div>
     </div>
+    <SourceLine text={src} />
   </Card>
-);
+  );
+};
 
 // cỡ chữ giá trị 2 bên: chữ dài thì co lại cho vừa nửa thẻ (lỗi 23/11: "Điều gì đã vào giá?" tràn mép)
 const fitVs = (v: string, w: number) => Math.max(44, Math.min(96, Math.floor(((w - 160) / 2) / (Math.max(1, v.length) * 0.56))));
@@ -63,23 +83,38 @@ const fitVs = (v: string, w: number) => Math.max(44, Math.min(96, Math.floor(((w
 const Versus: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
+  const half = (w - 160) / 2;
+  const labs = [b.left?.label || '', b.right?.label || ''];
+  // cỡ nhãn chung: vừa 2 dòng trong nửa thẻ cho nhãn dài nhất
+  const lbFs = Math.max(26, Math.min(40, Math.floor((half - 20) * 2 / (Math.max(1, ...labs.map((l) => l.length)) * 0.56))));
+  // cỡ số chung cho 2 bên (theo số dài hơn) để 2 số cân nhau
+  const valFs = Math.min(fitVs(String(b.left?.value ?? ''), w), fitVs(String(b.right?.value ?? ''), w));
+  const anyLogo = !!(b.left?.logo || b.right?.logo);
+  // nhãn dài: xuống dòng ở dấu phẩy ("Sau 30 năm, / lãi 10%/năm"), không để máy tự ngắt giữa cụm ("lãi / 10%/năm")
+  const nice = (l: string) => {
+    const m = l.length * lbFs * 0.56 > half - 20 ? l.match(/^(.+?,)\s+(.+)$/) : null;
+    return m ? <><span>{m[1]}</span><span style={{whiteSpace: 'nowrap'}}>{m[2]}</span></> : <span>{l}</span>;
+  };
   const side = (x: Side | undefined, i: number) => {
     if (!x) return null;
     const s = spring({frame: f - 2 - i * 3, fps, config: {damping: 14}});   // review 22/11: hai bên hiện gần như cùng lúc
     return (
-      <div style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, opacity: s,
+      <div style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: 14, opacity: s,
         transform: `translateY(${(1 - s) * 40}px)`}}>
-        <Logo src={x.logo} size={130} label={x.label} />
-        <div style={{fontSize: 40, fontWeight: 800, color: C.ink}}>{x.label}</div>
-        <CountUp value={x.value} size={fitVs(String(x.value ?? ''), w)} delay={4 + i * 3} color={toneColor(x.tone)} />
+        {anyLogo ? <div style={{height: 130, display: 'flex', alignItems: 'center'}}><Logo src={x.logo} size={130} label={x.label} /></div> : null}
+        {/* Trọng 23/11 "chữ xấu, không thẳng hàng": nhãn 2 bên cùng cỡ chữ, cùng chiều cao khung (tối đa 2 dòng, căn giữa),
+            nên 2 con số luôn nằm trên cùng một hàng */}
+        <div style={{height: lbFs * 1.25 * 2, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center', textAlign: 'center',
+          fontSize: lbFs, lineHeight: 1.25, fontWeight: 800, color: C.ink, maxWidth: half - 20, overflow: 'hidden'}}>{nice(x.label)}</div>
+        <CountUp value={x.value} size={valFs} delay={4 + i * 3} color={toneColor(x.tone)} />
       </div>
     );
   };
   return (
     <Card w={w} h={h}>
-      <div style={{display: 'flex', alignItems: 'center'}}>
+      <div style={{display: 'flex', alignItems: 'flex-start'}}>
         {side(b.left, 0)}
-        <div style={{fontSize: 46, fontWeight: 800, color: C.muted}}>VS</div>
+        <div style={{fontSize: 46, fontWeight: 800, color: C.muted, alignSelf: 'flex-end', marginBottom: valFs * 0.25}}>VS</div>
         {side(b.right, 1)}
       </div>
       {b.sub ? <div style={{textAlign: 'center', marginTop: 22, fontSize: 26, fontWeight: 600, color: C.muted}}>{b.sub}</div> : null}
@@ -104,8 +139,9 @@ const Dots: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
       </div>
       <div style={{display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 18, marginTop: 30}}>
         <div style={{fontSize: 92, fontWeight: 800, color: ac}}>{hit}/{total}</div>
-        <div style={{fontSize: 30, fontWeight: 700, color: C.muted, maxWidth: w - 330, lineHeight: 1.2}}>{b.label}</div>
+        <div style={{fontSize: 30, fontWeight: 700, color: C.muted, maxWidth: w - 330, lineHeight: 1.2}}>{splitSource(b.label, (b as any).source)[0]}</div>
       </div>
+      <SourceLine text={splitSource(b.label, (b as any).source)[1]} />
     </Card>
   );
 };

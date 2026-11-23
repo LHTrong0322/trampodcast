@@ -140,6 +140,7 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
   const m = coin ? {sym, name: coin.name, price: coin.price} : mk;
   const series: number[] = coin?.series || (sym === 'BTC' && data?.btc_90d?.length ? data.btc_90d : mk?.spark || []);
   const days = coin ? coin.days : sym === 'BTC' && data?.btc_90d ? 90 : 7;
+  const span = days > 730 ? `${Math.round(days / 365)} năm` : `${days} ngày`;   // biểu đồ nhiều năm ghi "30 năm" (23/11)
   const p = useP(4, 50);
   const W = w - 72, H = h - 250;
   if (!series.length) return <Frame w={w} h={h} title={sym}><div /></Frame>;
@@ -152,7 +153,7 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
   const chg = ((series[series.length - 1] / series[0] - 1) * 100);
   const last = pts[n - 1];
   return (
-    <Frame w={w} h={h} title={`${m?.name || sym} · ${days} ngày`} sub={coin?.stock ? 'Dữ liệu thật · Yahoo Finance' : undefined}>
+    <Frame w={w} h={h} title={`${m?.name || sym} · ${span}`} sub={coin?.stock ? 'Dữ liệu thật · Yahoo Finance' : undefined}>
       <div style={{display: 'flex', alignItems: 'center', gap: 18, marginBottom: 10}}>
         {/* logo chỉ hiện khi thật sự có file (chỉ số như S&P 500 không có logo: bản index fund 23/11 lỗi 404 SPX.png) */}
         {(coin ? coin.logo : mk) ? <Img src={staticFile(coin?.logo || `logos/${m?.sym || sym}.png`)} style={{width: 52, height: 52, borderRadius: 99}} /> : null}
@@ -167,7 +168,7 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
       </svg>
       {/* review 1915: giá giảm mà không chú thích dễ gây tâm lý tiêu cực, nên luôn ghi rõ bối cảnh */}
       <div style={{marginTop: 10, fontSize: Math.max(20, Math.round(w / 40)), fontWeight: 600, color: C.muted, lineHeight: 1.3}}>
-        {up ? `Dữ liệu thật ${coin?.stock ? 'Yahoo Finance' : 'CoinGecko'}, ${days} ngày gần nhất` : `Dữ liệu thật ${coin?.stock ? 'Yahoo Finance' : 'CoinGecko'}, ${days} ngày. Không phải tín hiệu mua bán`}
+        {up ? `Dữ liệu thật ${coin?.stock ? 'Yahoo Finance' : 'CoinGecko'}, ${span} gần nhất` : `Dữ liệu thật ${coin?.stock ? 'Yahoo Finance' : 'CoinGecko'}, ${span}. Không phải tín hiệu mua bán`}
       </div>
     </Frame>
   );

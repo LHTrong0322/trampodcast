@@ -202,7 +202,12 @@ Trả JSON:
   "can_sua": ["3-6 việc cần sửa, mỗi việc nêu rõ ở đâu (giây/khung) và sửa thế nào"],
   "script_tips": ["2-3 mẹo cho LỜI ĐỌC lần sau (hook, độ dài, cách kể), sẽ được đưa thẳng vào hướng dẫn viết kịch bản"],
   "retention_risk": "đoạn nào dễ làm người xem bỏ đi và vì sao"
-}}"""
+}}
+SOÁT TRÌNH BÀY BẮT BUỘC (Trọng 23/11, lỗi nào cũng phải ghi vào can_sua, ghi rõ khung nào, và trừ điểm hinh_anh_ro_rang
+xuống tối đa 6 nếu có dù chỉ 1 lỗi): chữ đè lên nhau; chữ tràn hoặc bị cắt mép; lỗi font (ô vuông, mất dấu tiếng Việt);
+nhãn bị máy tự ngắt dòng giữa cụm (vd "lãi / 10%/năm"); 2 con số trong thẻ so sánh không thẳng hàng; nguồn số liệu viết liền
+trong chú thích thay vì dòng nhỏ riêng; một từ mồ côi đứng một mình ở dòng cuối; chữ trên hình không khớp lời đọc lúc đó;
+biểu đồ biến mất trước khi vẽ xong."""
 
 
 def scene_changes(video: Path, thr: float = 0.06) -> int:
