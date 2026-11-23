@@ -39,9 +39,10 @@ STYLE = {
     "sg": ("Ludo, host of a premium Vietnamese business podcast. Deep, warm, composed and confident. Educated urban "
            "Saigon accent, polished and modern, no countryside coloring. Measured pace, about 160 words per minute, "
            "steady intonation. English crypto terms pronounced naturally in English."),
-    "kol": ("Ludo, a successful young Vietnamese crypto KOL talking to his community. Confident, charismatic, "
-            "energetic but controlled, a hint of a smile. Polished urban Saigon accent, never rural, never salesy. "
-            "About 170 words per minute. English crypto terms pronounced naturally in English. Project and token names "
+    # Trọng 23/11: giọng KOL phải giọng Bắc chuẩn, nghiêm túc hơn, không nhại giọng miền Tây/miền Nam
+    "kol": ("Ludo, a respected young Vietnamese finance and crypto KOL. Confident, credible and serious, calm authority, "
+            "never playful, never salesy. Standard Northern Vietnamese (Hanoi) accent, crisp and polished, "
+            "absolutely no Southern or Mekong accent. About 165 words per minute, firm sentence endings. English crypto terms pronounced naturally in English. Project and token names "
             "(Aave, Hype, Uni, Virtual, Ena...) are read smoothly as ONE word, never spelled out letter by letter."),
 }
 

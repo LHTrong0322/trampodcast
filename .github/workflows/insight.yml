@@ -12,9 +12,9 @@ on:
         required: false
         default: ""
       voice:
-        description: "Giọng đọc (vd gemini:Ludo)"
+        description: "Giọng đọc (để trống = giọng chính Ludo KOL giọng Bắc; vd gemini:Ludo@kol)"
         required: false
-        default: "gemini:Ludo"
+        default: ""
       autopost:
         description: "Tự đăng lên YouTube/Facebook sau khi dựng (true/false). Mặc định false: chỉ dựng để Trọng xem trước"
         required: false

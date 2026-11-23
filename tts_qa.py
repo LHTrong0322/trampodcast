@@ -26,7 +26,8 @@ def _model():
 
 
 def words(t: str) -> list[str]:
-    t = t.lower()
+    import vi_num   # bản nghe lại hay ghi số bằng chữ số: đổi sang chữ để so với lời đọc (23/11)
+    t = vi_num.say_numbers(t.replace('%', ' phần trăm')).lower()
     t = re.sub(r"\[[^\]]*\]", " ", t)
     return re.findall(r"[0-9a-zà-ỹđ]+", t)
 

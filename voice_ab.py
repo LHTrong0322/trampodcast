@@ -44,6 +44,8 @@ def speakable(t: str) -> str:
     t = re.sub(r"\$(\d+(?:[.,]\d+)?)\s*([KMBT])\b", lambda m: f"{m.group(1).replace('.', ',')} {UNIT[m.group(2)]} đô", t)
     t = re.sub(r"\$(\d[\d.,]*)", r"\1 đô", t)
     t = re.sub(r"(\d+(?:[.,]\d+)?)\s*%", r"\1 phần trăm", t)
+    import vi_num   # Trọng 23/11: kịch bản viết chữ số (phụ đề hiện "9"), giọng đọc đổi sang chữ; S&P 500 đọc "ét en pi năm trăm"
+    t = vi_num.say_numbers(t)
     t = t.replace("&", " and ").replace("→", ", ").replace("/", " trên ")
     t = re.sub(r"\$?\b[A-Z][A-Z0-9]{2,}\b", _name, t)
     for k, v in PRON.items():   # tên dự án máy hay đọc vấp: viết theo cách đọc liền

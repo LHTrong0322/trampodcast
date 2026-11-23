@@ -678,8 +678,9 @@ def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
     cfg["podcast"]["tts_provider"] = prov
     if prov == "vieneu":
         cfg.setdefault("vieneu", {})["voice"] = name
+        import voice_ab as VA   # chuẩn hoá số, tiền, S&P 500 như giọng Gemini (Trọng 23/11)
         for i, t in enumerate(parts):
-            V.pcm_to_wav(V.tts_once(None, cfg, t), outdir / f"{i:02d}.wav")
+            V.pcm_to_wav(V.tts_once(None, cfg, VA.speakable(t)), outdir / f"{i:02d}.wav")
         return True
     key = os.getenv("INSIGHT_GEMINI_API_KEY", "")
     if not key and os.getenv("ALLOW_MAIN_KEY") != "1":
@@ -730,7 +731,7 @@ def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
                 why = f"dài bất thường {sec:.0f}s"
             else:
                 V.pcm_to_wav(pcm, raw)
-                ok, why = tts_qa.check(str(raw), t)
+                ok, why = tts_qa.check(str(raw), txt)
                 if ok:
                     log(f"   ✓ đoạn {i}: {why}")
                     break

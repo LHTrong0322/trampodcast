@@ -119,6 +119,9 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null; data?: any}> = ({sc, p
   const pop = useSpring(2, 14);
   const water = (sc as any).stat || '';
   const words = (sc.title || '').split(/\s+/).filter(Boolean);
+  // Trọng 23/11 "dựng xấu": tiêu đề dài ở cỡ 112 vỡ 4 dòng, gạch chân lạc chỗ. Tiêu đề càng dài chữ càng nhỏ, tối đa 3 dòng
+  const titleLen = words.join(' ').length;
+  const titleFs = titleLen > 44 ? 80 : titleLen > 32 ? 94 : 112;
   const cardW = Math.min(330, (1700 - (pts.length - 1) * 22) / Math.max(1, pts.length));
   const per = Math.max(0.5, (sc.dur - agendaAt - 0.8) / Math.max(1, pts.length));
   return (
@@ -154,7 +157,7 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null; data?: any}> = ({sc, p
           const s = interpolate(t - 0.35 - i * 0.07, [0, 0.35], [0, 1], clamp);
           const key = w.toLowerCase().replace(/[^\p{L}\p{N}$%]/gu, '');
           const hot = ((sc as any).hl || []).includes(key);
-          return <span key={i} style={{fontFamily: FONT, fontWeight: 900, fontSize: 112, lineHeight: 1.28, paddingTop: 10, color: hot ? ac : C.ink,
+          return <span key={i} style={{fontFamily: FONT, fontWeight: 900, fontSize: titleFs, lineHeight: 1.22, paddingTop: 10, color: hot ? ac : C.ink,
             opacity: s, transform: `translateY(${(1 - s) * 40}px)`, display: 'inline-block'}}>{w}</span>;
         })}
         <div style={{flexBasis: '100%', height: 10, marginTop: 10, borderRadius: 99, background: ac, maxWidth: interpolate(t, [0.6, 1.6], [0, 420], clamp)}} />
