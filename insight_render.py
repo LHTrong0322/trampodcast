@@ -234,7 +234,7 @@ def beats_for(beats: list, words: list, dur: float, data: dict) -> list:
 # Mỗi kiểu hình có thời gian tối thiểu đủ để chạy xong hiệu ứng và để người xem đọc; "hold" kéo dài thêm.
 # Tuyệt đối KHÔNG chèn khoảng lặng vào giọng đọc để giữ hình (Trọng 22/11: nghe như video bị mất tiếng).
 MIN_BEAT = {"matrix": 4.5, "race": 5.5, "chart": 4.0, "versus": 3.5, "flow": 4.0, "dots": 3.0, "bignum": 2.6, "logos": 2.4,
-            "statement": 2.4, "question": 2.0}
+            "statement": 2.4, "question": 2.0, "photo": 2.6}
 
 
 def settle_beats(beats: list, dur: float) -> list:
@@ -496,7 +496,9 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
         sprops = {"fps": 30, "width": 1080, "height": 1920, "audio": f"short{n}.wav", "duration": round(len(a) / SR / 2, 3),
                   "scenes": [{**sc, "from": 0, "dur": round(len(a) / SR / 2, 3), "words": w, "beats": bts}],
                   "data": data, "brand": brand, "post": pinfo,
-                  "shortTitle": V.en_money(str(shr.get(str(i)) or shr.get(i) or sc["heading"]))}
+                  "shortTitle": V.en_money(str(plan.get("short_title") or shr.get(str(i)) or shr.get(i) or sc["heading"]))}
+        if plan.get("news"):   # Trọng 24/11: tin nóng ghi nguồn tin thật thay vì "Source: @Trong0322"
+            sprops["sourceLabel"] = P.nodash(str(plan.get("source_label") or (plan.get("source_post") or {}).get("author") or ""))[:60]
         if cta_pcm:
             sprops["cta"] = {"text": V.en_money(text.get("short_cta", "")), "from": round(len(body) / SR / 2 + 0.2, 3)}
         try:   # Trọng 22/11: giây đầu của short chính là ảnh bìa (TikTok/Reels lấy khung đầu làm bìa, người lướt thấy ngay số liệu)

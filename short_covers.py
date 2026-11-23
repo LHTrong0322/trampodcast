@@ -35,9 +35,16 @@ def props_for(plan: dict, sec_idx: int, title: str, logos: dict | None = None) -
           if str(x.get("label", "")).upper() in up]
     if len(vs) < 2:
         vs = []
-    return {"comp": "ShortThumb", "width": 1080, "height": 1920,
-            "text": P.nodash(V.en_money(title))[:60],
-            "stat": "" if vs else P.nodash(V.en_money(s.get("key_stat", "")))[:10],
+    news = bool(plan.get("news"))
+    if news and plan.get("thumb_text"):   # Trọng 24/11: tin nóng dùng đúng chữ ảnh bìa Trọng chọn, không lấy câu mở
+        title = plan["thumb_text"]
+    text = P.nodash(V.en_money(title))
+    if len(text) > 60:   # lỗi 24/11: cắt cứng 60 ký tự làm mất "%" ("HƠN 30"), giờ cắt ở ranh giới từ
+        text = text[:60].rsplit(" ", 1)[0]
+    stat = (plan.get("thumb_stat") if news else "") or s.get("key_stat", "")
+    return {"comp": "ShortThumb", "width": 1080, "height": 1920, "news": news,
+            "text": text,
+            "stat": "" if vs else P.nodash(V.en_money(stat))[:10],
             "vs": vs,
             "icon": _icon(title),
             "label": P.nodash(V.en_money(s.get("key_label", "")))[:40],

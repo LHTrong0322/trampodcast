@@ -6,8 +6,8 @@ import {Sticker, ThumbIcon} from './Thumb';
 // Ảnh bìa video ngắn 1080×1920 (Reels, Shorts, TikTok). Chữ chính nằm giữa màn để không bị
 // giao diện app che (trên 230px, dưới 440px), đọc được khi thu nhỏ trong lưới video của trang.
 export type ShortThumbProps = {text: string; stat?: string; label?: string; points?: string[]; accent?: string;
-  projectLogo?: string | null; brand: string; icon?: ThumbIcon; vs?: {label: string; value: string; tone?: string; logo?: string | null}[]};
-export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat, label, points = [], accent: acIn = '#4F5BD5', projectLogo, brand, vs = [], icon = 'none'}) => {
+  projectLogo?: string | null; brand: string; icon?: ThumbIcon; news?: boolean; vs?: {label: string; value: string; tone?: string; logo?: string | null}[]};
+export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat, label, points = [], accent: acIn = '#4F5BD5', projectLogo, brand, vs = [], icon = 'none', news = false}) => {
   const accent = tone(acIn);
   useFonts();
   const words = (text || '').toUpperCase().split(/\s+/).filter(Boolean);
@@ -64,7 +64,7 @@ export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat, label, points
         {/* Trọng 22/11: thêm hình dán theo chủ đề cho bìa short đỡ trống, không rập khuôn */}
         {icon !== 'none' && !vs.length ? <div style={{position: 'absolute', right: 80, top: solo ? 1150 : 1228}}><Sticker kind={icon} size={165} color={accent} rotate={-8} /></div> : null}
         <div style={{position: 'absolute', left: 70, bottom: solo ? 640 : 470, display: 'flex', alignItems: 'center', gap: 14, color: 'rgba(19,24,54,0.75)',
-          fontWeight: 700, fontSize: 36}}>Xem bản đầy đủ trên YouTube · @Trong0322</div>
+          fontWeight: 700, fontSize: 36}}>{news ? 'Tin nóng · @Trong0322' : 'Xem bản đầy đủ trên YouTube · @Trong0322'}</div>
       </AbsoluteFill>
     </AccentCtx.Provider>
   );

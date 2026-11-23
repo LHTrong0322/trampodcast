@@ -18,6 +18,15 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
   const hasData = !!(sc.data && sc.data.type && sc.data.type !== 'none');
   const cover = (props as any).cover;
   const cta = (props as any).cta as {text: string; from: number} | undefined;
+  // Trọng 24/11 "tiêu đề bị thẻ đè": ước số dòng tiêu đề rồi đẩy thẻ xuống (và thu thẻ lại) cho khỏi chồng chữ
+  const title = props.shortTitle || sc.heading || '';
+  const tSize = title.length > 45 ? 50 : title.length > 30 ? 56 : 62;
+  const tLines = Math.max(1, Math.ceil((title.length * tSize * 0.56) / 860));
+  const titleBottom = 230 + 60 + 24 + (sc.project?.name ? 44 + 24 : 0) + tLines * tSize * 1.22;
+  const cardTop = Math.max(560, Math.ceil(titleBottom + 40));
+  const cardH = Math.max(440, 560 - Math.round((cardTop - 560) / 1.25));
+  const srcLabel = (props as any).sourceLabel as string | undefined;
+  const ownSrc = !sc.source || /trong0322/i.test(sc.source);
   return (
     <AccentCtx.Provider value={tone(ac)}>
       <AbsoluteFill style={{background: C.bg}}>
@@ -28,16 +37,17 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
             <Img src={staticFile('logo.png')} style={{width: 60, height: 60, borderRadius: 99}} />
             <div style={{fontFamily: FONT}}>
               <div style={{fontWeight: 800, color: C.ink, fontSize: 28, letterSpacing: 2}}>{(props.brand.name || '').toUpperCase()}</div>
-              <div style={{color: C.muted, fontWeight: 600, fontSize: 22}}>@Trong0322{sc.source ? <> · Source: <span style={{color: C.ink}}>{sc.source}</span></> : null}</div>
+              <div style={{color: C.muted, fontWeight: 600, fontSize: 22}}>@Trong0322{srcLabel ? <> · Nguồn: <span style={{color: C.ink}}>{srcLabel}</span></>
+                : !ownSrc ? <> · Source: <span style={{color: C.ink}}>{sc.source}</span></> : null}</div>
             </div>
           </div>
           <div style={{display: 'flex', gap: 12, flexWrap: 'wrap'}}>{sc.project?.name ? <Chip text={sc.project.name} size={26} /> : null}</div>
-          <RevealWords text={props.shortTitle || sc.heading || ''} size={(props.shortTitle || sc.heading || '').length > 45 ? 54 : 62} delay={4} stagger={3} maxWidth={860}
+          <RevealWords text={title} size={tSize} delay={4} stagger={3} maxWidth={860}
             highlight={[sc.project?.name || ''].filter(Boolean)} />
         </div>
         {/* review 23/11: thẻ phóng 1,25 lần gần kín ngang màn, phụ đề hạ thấp (khoảng 1480 đến 1530) để không che thẻ, vẫn trên vùng nút TikTok */}
-        <div style={{position: 'absolute', top: 560, left: 15, transform: 'scale(1.25)', transformOrigin: 'top left'}}>
-          {sc.beats?.length ? <BeatPanel beats={sc.beats} t={f / 30} sceneDur={sc.dur} data={props.data} w={840} h={560} />
+        <div style={{position: 'absolute', top: cardTop, left: 15, transform: 'scale(1.25)', transformOrigin: 'top left'}}>
+          {sc.beats?.length ? <BeatPanel beats={sc.beats} t={f / 30} sceneDur={sc.dur} data={props.data} w={840} h={cardH} />
             : hasData ? <DataPanel spec={sc.data!} data={props.data} w={860} h={500} />
             : <QuoteCard post={props.post} quote={sc.quote || sc.heading || ''} w={860} h={500} />}
         </div>

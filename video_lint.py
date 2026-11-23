@@ -58,6 +58,13 @@ def layout_issues(beats: list) -> list[str]:
         if re.search(r"\bnguồn\s*:|\bsource\s*:", lab, re.I) and t not in ("bignum", "dots"):
             bad.append(f"Hình '{at}': nguồn viết liền trong chú thích '{lab[:40]}...'. Tách ra trường \"source\" (hiện chữ nhỏ dòng riêng).")
         if t == "versus":
+            # Trọng 24/11: "SEC: Đang điều tra VS California: Đang điều tra" là VS vô nghĩa; so sánh phải là 2 con số
+            vals = [str((b.get(sd) or {}).get("value", "")) for sd in ("left", "right")]
+            if not all(re.search(r"\d", v) for v in vals):
+                bad.append(f"Hình so sánh '{at}': giá trị '{vals[0]}' / '{vals[1]}' không phải con số, VS vô nghĩa. Dùng thẻ chữ hoặc 2 số thật.")
+            ls = [len(str((b.get(sd) or {}).get("label", ""))) for sd in ("left", "right")]
+            if max(ls) > 16 and min(ls) <= 16:
+                bad.append(f"Hình so sánh '{at}': nhãn 2 bên lệch độ dài ({ls[0]} và {ls[1]} ký tự) nên lệch dòng, viết cả 2 nhãn ≤ 16 ký tự.")
             for side in ("left", "right"):
                 x = b.get(side) or {}
                 if len(str(x.get("label", ""))) > LIMITS["vs_label"]:
@@ -72,6 +79,10 @@ def layout_issues(beats: list) -> list[str]:
             for st in b.get("steps") or []:
                 if len(str(st)) > LIMITS["flow_step"]:
                     bad.append(f"Hình các bước '{at}': bước '{st}' dài quá {LIMITS['flow_step']} ký tự.")
+        if t == "photo" and re.search(r"\b(jensen|huang|trump|musk|powell|saylor|vitalik|biden|gensler|bessent)\b", str(b.get("query", "")), re.I):
+            bad.append(f"Ảnh '{at}': từ khoá '{b.get('query')}' có tên người thật, video không dùng ảnh người thật lấy từ mạng. Đổi sang cảnh/đồ vật chung.")
+        if t == "statement" and str(b.get("text", "")).rstrip().endswith("?"):
+            pass
         if t == "dots" and len(splitless(lab)) > LIMITS["dots_label"]:
             bad.append(f"Hình chấm '{at}': chú thích dài quá {LIMITS['dots_label']} ký tự.")
     return bad
@@ -100,10 +111,11 @@ def lint(plan: dict) -> list[str]:
         marks = [0] + [i for i, _ in an] + [len(w)]
         if an[0][0] > 12:
             bad.append(f"Phần {k}: {an[0][0] / WPS:.0f} giây đầu chưa có hình, cho hình đầu tiên hiện ngay câu đầu.")
+        gap_max = 5.5 if plan.get("format") == "short" else 8.4   # Trọng 24/11: short đổi hình 3 đến 5 giây như video đã duyệt
         for a, b in zip(marks[1:], marks[2:]):
-            if (b - a) / WPS > 8.4:
+            if (b - a) / WPS > gap_max:
                 seg = " ".join(w[a:a + 6])
-                bad.append(f"Phần {k}: từ '{seg}...' có {(b - a) / WPS:.0f} giây không đổi hình (tối đa 8 giây), thêm 1 hình số liệu hoặc ví dụ.")
+                bad.append(f"Phần {k}: từ '{seg}...' có {(b - a) / WPS:.0f} giây không đổi hình (tối đa {gap_max:.0f} giây), thêm 1 hình số liệu, ảnh hoặc ví dụ.")
         for b in beats:
             if b.get("type") == "question":
                 bad.append(f"Phần {k}: thẻ câu hỏi '{b.get('text', '')}' không có dữ liệu (review 22/11 trừ điểm), thay bằng số liệu, biểu đồ hoặc logo kèm số.")
@@ -142,8 +154,12 @@ def lint(plan: dict) -> list[str]:
     for key, h in (plan.get("short_hooks") or {}).items():
         if not re.search(r"\d|\?", h):
             bad.append(f"Tiêu đề short phần {int(key) + 1} '{h}' không có con số hay câu hỏi, khó gây tò mò.")
-        if len(h) > 60:
-            bad.append(f"Tiêu đề short phần {int(key) + 1} dài {len(h)} ký tự, nên dưới 60.")
+        # Trọng 24/11 (short NVDA): tiêu đề 61 ký tự tràn 3 dòng, bị thẻ đè. Video đã duyệt (video 3, 4) đều ≤ 46 ký tự.
+        if len(h) > 46:
+            bad.append(f"Tiêu đề short phần {int(key) + 1} dài {len(h)} ký tự, tối đa 46 (2 dòng), video đã duyệt đều 25 đến 46.")
+    st = plan.get("short_title") or ""
+    if st and len(st) > 46:
+        bad.append(f"short_title dài {len(st)} ký tự, tối đa 46 (2 dòng).")
     return bad
 
 

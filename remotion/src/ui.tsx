@@ -229,7 +229,7 @@ export const Captions: React.FC<{words: Word[]; bottom: number; size: number; ma
     <div style={{position: 'absolute', left: 0, right: 0, bottom, display: 'flex', justifyContent: 'center'}}>
       <div style={{maxWidth, textAlign: 'center', fontFamily: FONT, fontWeight: 700, fontSize: size, lineHeight: 1.25,
         color: '#FFFFFF', opacity: op, padding: '12px 30px', borderRadius: 16, background: 'rgba(19,24,54,0.9)',
-        textShadow: 'none'}}>
+        textShadow: 'none', textWrap: 'balance'} as React.CSSProperties}>
         {c.map((w, i) => <span key={i} style={{color: isKey(w.t) ? '#FFD166' : '#FFFFFF'}}>{w.t}{i < c.length - 1 ? ' ' : ''}</span>)}
       </div>
     </div>

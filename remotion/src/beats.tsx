@@ -5,10 +5,11 @@ import {DataPanel} from './data';
 
 // Trọng 21/11: "hình phải ăn khớp lời đọc, sáng tạo hơn". Mỗi phần chia thành nhiều "beat" (nhịp hình),
 // mỗi beat bật lên ĐÚNG lúc giọng đọc nói tới cụm từ đó (s = giây trong cảnh), đổi kiểu hình liên tục.
-export type Side = {label: string; value: string; logo?: string | null; tone?: 'up' | 'down' | 'flat'};
+export type Side = {label: string; value: string; logo?: string | null; tone?: 'up' | 'down' | 'flat'; note?: string};
 export type Beat = {
   s: number;
-  type: 'bignum' | 'versus' | 'dots' | 'flow' | 'statement' | 'chart' | 'logos' | 'question' | 'race' | 'matrix' | 'wma';
+  type: 'bignum' | 'versus' | 'dots' | 'flow' | 'statement' | 'chart' | 'logos' | 'question' | 'race' | 'matrix' | 'wma' | 'photo';
+  src?: string;
   value?: string; label?: string; logo?: string | null; tone?: 'up' | 'down' | 'flat';
   left?: Side; right?: Side;
   total?: number; hit?: number;
@@ -78,7 +79,8 @@ const BigNum: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
 };
 
 // cỡ chữ giá trị 2 bên: chữ dài thì co lại cho vừa nửa thẻ (lỗi 23/11: "Điều gì đã vào giá?" tràn mép)
-const fitVs = (v: string, w: number) => Math.max(44, Math.min(96, Math.floor(((w - 160) / 2) / (Math.max(1, v.length) * 0.56))));
+// Trọng 24/11: "$115.8B" dính sát chữ VS: số phải nằm gọn trong nửa thẻ, chừa lề 40px mỗi bên
+const fitVs = (v: string, w: number) => Math.max(44, Math.min(88, Math.floor(((w - 200) / 2 - 40) / (Math.max(1, v.length) * 0.62))));
 
 const Versus: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
   const f = useCurrentFrame();
@@ -90,6 +92,7 @@ const Versus: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
   // cỡ số chung cho 2 bên (theo số dài hơn) để 2 số cân nhau
   const valFs = Math.min(fitVs(String(b.left?.value ?? ''), w), fitVs(String(b.right?.value ?? ''), w));
   const anyLogo = !!(b.left?.logo || b.right?.logo);
+  const anyNote = !!(b.left?.note || b.right?.note);
   // nhãn dài: xuống dòng ở dấu phẩy ("Sau 30 năm, / lãi 10%/năm"), không để máy tự ngắt giữa cụm ("lãi / 10%/năm")
   const nice = (l: string) => {
     const m = l.length * lbFs * 0.56 > half - 20 ? l.match(/^(.+?,)\s+(.+)$/) : null;
@@ -107,6 +110,9 @@ const Versus: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
         <div style={{height: lbFs * 1.25 * 2, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center', textAlign: 'center',
           fontSize: lbFs, lineHeight: 1.25, fontWeight: 800, color: C.ink, maxWidth: half - 20, overflow: 'hidden'}}>{nice(x.label)}</div>
         <CountUp value={x.value} size={valFs} delay={4 + i * 3} color={toneColor(x.tone)} />
+        {/* Trọng 24/11: số % nhỏ dưới số lớn (vd "+103% so với cùng kỳ"); 2 bên cùng chiều cao nên vẫn thẳng hàng */}
+        {anyNote ? <div style={{height: 40, fontSize: 28, fontWeight: 700, color: x.note ? toneColor(x.tone) : 'transparent', whiteSpace: 'nowrap',
+          opacity: interpolate(f - 14 - i * 3, [0, 10], [0, 1], clamp)}}>{x.note || '.'}</div> : null}
       </div>
     );
   };
@@ -114,7 +120,7 @@ const Versus: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
     <Card w={w} h={h}>
       <div style={{display: 'flex', alignItems: 'flex-start'}}>
         {side(b.left, 0)}
-        <div style={{fontSize: 46, fontWeight: 800, color: C.muted, alignSelf: 'flex-end', marginBottom: valFs * 0.25}}>VS</div>
+        <div style={{fontSize: 38, fontWeight: 800, color: C.muted, alignSelf: 'flex-end', margin: `0 20px ${valFs * 0.3 + (anyNote ? 40 : 0)}px`}}>VS</div>
         {side(b.right, 1)}
       </div>
       {b.sub ? <div style={{textAlign: 'center', marginTop: 22, fontSize: 26, fontWeight: 600, color: C.muted}}>{b.sub}</div> : null}
@@ -185,8 +191,9 @@ const Statement: React.FC<{b: Beat; w: number; h: number; question?: boolean}> =
       {b.logo ? <div style={{position: 'absolute', right: 44, top: 40}}><Logo src={b.logo} size={96} /></div> : null}
       {question ? <div style={{fontSize: 120, fontWeight: 900, color: ac, lineHeight: 0.8, marginBottom: 10}}>?</div>
         : <div style={{fontSize: 120, fontWeight: 900, color: `${ac}55`, lineHeight: 0.6, marginBottom: 10}}>“</div>}
-      <div style={{fontSize: (b.text || '').length > 40 ? 60 : 74, fontWeight: 800, color: C.ink, lineHeight: 1.18,
-        transform: `scale(${interpolate(s, [0, 1], [0.92, 1])})`, opacity: s, transformOrigin: 'left center'}}>{b.text}</div>
+      {/* Trọng 24/11: chữ mồ côi ("quốc / gia"): chia dòng cân nhau */}
+      <div style={{fontSize: (b.text || '').length > 40 ? 60 : 74, fontWeight: 800, color: C.ink, lineHeight: 1.18, textWrap: 'balance',
+        transform: `scale(${interpolate(s, [0, 1], [0.92, 1])})`, opacity: s, transformOrigin: 'left center'} as React.CSSProperties}>{b.text}</div>
       {b.sub ? <div style={{fontSize: 34, fontWeight: 600, color: C.muted, marginTop: 22}}>{b.sub}</div> : null}
     </Card>
   );
@@ -241,6 +248,22 @@ const Matrix: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
   );
 };
 
+// Trọng 24/11 "thêm nhiều ảnh hơn": ảnh kho (Pixabay/Pexels, không ảnh người thật có tên) phủ kín thẻ, zoom chậm, chú thích dưới
+const Photo: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
+  const f = useCurrentFrame();
+  const ac = useAccent();
+  const z = interpolate(f, [0, 150], [1.04, 1.14], clamp);
+  return (
+    <div style={{width: w, height: h, borderRadius: 28, overflow: 'hidden', position: 'relative', borderTop: `5px solid ${ac}`,
+      boxShadow: '0 20px 56px rgba(40,50,110,0.14)', background: C.panel, fontFamily: FONT}}>
+      {b.src ? <Img src={staticFile(b.src)} style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${z})`}} /> : null}
+      {b.label ? <div style={{position: 'absolute', left: 0, right: 0, bottom: 0, padding: '60px 36px 28px',
+        background: 'linear-gradient(transparent, rgba(15,20,45,0.82))', color: '#FFFFFF', fontSize: 44, fontWeight: 800, lineHeight: 1.15,
+        opacity: interpolate(f, [4, 14], [0, 1], clamp)}}>{b.label}</div> : null}
+    </div>
+  );
+};
+
 // Chọn beat đang chạy theo thời gian t (giây trong cảnh)
 export const BeatPanel: React.FC<{beats: Beat[]; t: number; sceneDur: number; data: any; w: number; h: number}> = ({beats, t, sceneDur, data, w, h}) => {
   const {fps} = useVideoConfig();
@@ -255,6 +278,7 @@ export const BeatPanel: React.FC<{beats: Beat[]; t: number; sceneDur: number; da
   const body = (() => {
     switch (b.type) {
       case 'bignum': return <BigNum b={b} w={w} h={h} />;
+      case 'photo': return b.src ? <Photo b={b} w={w} h={h} /> : <Statement b={{...b, text: b.label || ''}} w={w} h={h} />;
       case 'versus': return <Versus b={b} w={w} h={h} />;
       case 'dots': return <Dots b={b} w={w} h={h} />;
       case 'flow': return <Flow b={b} w={w} h={h} t={Math.max(0, local)} dur={end - b.s} />;

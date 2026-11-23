@@ -35,6 +35,19 @@
   Mode: topic (Trọng chỉ định chủ đề, brief trong scripts/flash-briefs/), revise (góp ý dài), setscript (Trọng tự sửa kịch bản, gửi lại chờ duyệt).
 - Trạng thái: podcast-data flash/state.json (drafts: waiting, revise, approved, building, built, failed, rejected, expired), kịch bản flash/scripts/<mã>.json.
 
+## KHUNG CHUẨN SHORT, RÚT TỪ VIDEO ĐÃ DUYỆT 2, 3, 4 (TRỌNG 24/11, SAU SHORT NVDA REVIEW 5/10)
+- Tiêu đề short (short_title / short_hooks) ≤ 46 ký tự, tối đa 2 dòng, có con số. Video đã duyệt: 25 đến 46. video_lint chặn > 46.
+- Đổi hình mỗi 3 đến 5 giây (video_lint: short tối đa 5.5 giây không đổi hình). Mỗi con số trong lời đọc có đúng 1 thẻ hiện cùng lúc.
+- Thẻ versus: 2 bên là 2 CON SỐ (không "Đang điều tra" vs "Đang điều tra"), nhãn ngắn ≤ 16 ký tự cùng 1 dòng, thêm "note" nhỏ dưới số
+  (vd "+103% so với cùng kỳ") và "sub" 1 câu giải thích. Số to tự co cho không dính chữ VS.
+- Thẻ chữ không khẳng định mạnh hơn nguồn ("Chính phủ Mỹ đứng sau Nvidia" bị review trừ điểm, đổi thành trích đúng lời).
+- Thẻ "photo" (mới 24/11): ảnh từ Pixabay, Pexels, Wikimedia, Openverse theo từ khoá cảnh/đồ vật. KHÔNG tìm ảnh theo tên người thật
+  (insight_lab._PERSON_HINT + video_lint chặn): video không đưa ảnh người thật lấy từ mạng. Mỗi short tin nóng 2 đến 4 ảnh.
+- Bố cục InsightShort: thẻ tự dời xuống khi tiêu đề dài (không đè chữ). Dòng nguồn: tin nóng ghi "Nguồn: <báo>" (plan.source_label), video
+  của Trọng không ghi "Source: @Trong0322". Phụ đề và thẻ chữ chia dòng cân (text-wrap: balance) nên không còn chữ mồ côi.
+- Ảnh bìa tin nóng: dùng thumb_text + thumb_stat Trọng chọn, dòng dưới "Tin nóng · @Trong0322" (không "Xem bản đầy đủ trên YouTube").
+  Không cắt cứng 60 ký tự nữa (từng mất dấu %). Ảnh gửi Telegram dạng JPEG nhẹ (PNG 1MB bị Telegram Desktop kẹt).
+
 ## BỘ LỌC GIÁO DỤC (TRỌNG CHỐT 23:22 NGÀY 21/11)
 - Nội dung video phải mang tính giáo dục nhiều hơn. Tên riêng lạ (vd DWF Labs, Assistance Fund) giải thích 1 câu lần đầu.
 - So sánh 2 dự án phải có con số của CẢ HAI (vd Hyperliquid dùng khoảng 97 đến 99% phí để buyback HYPE, Aave 50 triệu đô một năm, khoảng 1/3 revenue).

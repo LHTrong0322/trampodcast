@@ -74,7 +74,11 @@ quan trọng vừa xảy ra, đăng TikTok/Shorts/Reels. Viết ĐÚNG 1 phần 
   → vì sao quan trọng (bối cảnh 1-2 câu, giải thích nửa câu nếu tên lạ) → ảnh hưởng tới nhà đầu tư/ giá coin liên quan
   → 1 câu kết hỏi ý kiến người xem để bình luận. KHÔNG dự đoán giá, KHÔNG hô mua bán, KHÔNG phóng đại quá mức tin gốc.
 - Nêu nguồn tin bằng tên báo/kênh trong lời đọc nếu cần (vd "theo CoinDesk"), KHÔNG nhắc @handle nào; số liệu CHỈ lấy từ tin nguồn, không bịa.
-- beats: 5-7 beats, cứ khoảng 5 giây một beat; ưu tiên bignum có số thật của tin, logo dự án/coin, chart giá coin liên quan (days 7).
+- beats: 9-13 beats, cứ khoảng 3 đến 4 giây đổi một hình; ưu tiên bignum có số thật của tin, logo dự án/coin, chart giá liên quan.
+  Thêm 2-3 beat {{"type": "photo", "query": "2-4 từ tiếng Anh chung, KHÔNG tên người (vd 'computer chip closeup', 'stock market red screen', 'data center servers')", "label": "chú thích ngắn ≤ 40 ký tự"}}.
+  Thẻ versus: nhãn 2 bên ngắn (≤ 16 ký tự, cùng 1 dòng), thêm "note" nhỏ dưới số (vd "+103% so với cùng kỳ") nếu nguồn có số đó.
+  Mỗi con số trong lời đọc có đúng 1 thẻ hiện cùng lúc; thẻ chữ không khẳng định mạnh hơn nguồn.
+- short_title: tiêu đề hiện trên đầu short, ≤ 44 ký tự (tối đa 2 dòng), có con số.
 - hook, intro, outro giữ thật ngắn (intro 1 câu, outro 1 câu "không phải lời khuyên đầu tư"); chúng chỉ dùng cho bản 16:9 phụ.
 - title ≤ 70 ký tự kiểu tin nóng, có con số; thumb_text ≤ 24 ký tự; thumb_tag "TIN NÓNG".
 """
@@ -691,6 +695,44 @@ def save_images(lab: Path, plan: dict, gem=None, cfg=None):
             plan["images"] = {k: [] for k in plan["images"]}
 
 
+# Trọng 24/11 "thêm nhiều ảnh hơn": thẻ "photo" lấy ảnh từ Pixabay, Pexels, Wikimedia, Openverse (nhiều nguồn cho đa dạng),
+# nhưng KHÔNG tìm theo tên người thật: video không đưa ảnh người thật lấy từ mạng (chặn ở _PERSON_HINT và video_lint).
+_PERSON_HINT = re.compile(r"\b(jensen|huang|trump|musk|powell|saylor|cz|vitalik|buterin|biden|gensler|bessent)\b", re.I)
+
+
+def photo_beats(lab: Path, plan: dict):
+    img = lab / "img"
+    img.mkdir(parents=True, exist_ok=True)
+    k = 0
+    for sec in plan.get("sections", []):
+        for b in sec.get("beats") or []:
+            if b.get("type") != "photo" or b.get("src"):
+                continue
+            q = str(b.get("query") or "").strip()
+            if not q or _PERSON_HINT.search(q):
+                log(f"   ! bỏ ảnh '{q}': không tìm ảnh theo tên người thật")
+                b.update(type="statement", text=b.get("label") or "")
+                continue
+            res = None
+            for ori in ("landscape", "portrait"):
+                res = (V.search_pixabay(q, ori) or V.search_pexels(q, ori)
+                       or V.search_wikimedia(q, ori) or V.search_openverse(q, ori))
+                if res:
+                    break
+            if not res:
+                log(f"   ! không tìm được ảnh kho cho '{q}', đổi thành thẻ chữ")
+                b.update(type="statement", text=b.get("label") or "")
+                continue
+            im, cred = res
+            fn = f"photo_{k}.jpg"
+            im.convert("RGB").save(img / fn, quality=90)
+            b["src"] = f"img/{fn}"
+            plan.setdefault("image_credits", {})[fn] = cred
+            k += 1
+    if k:
+        log(f"   Ảnh kho cho thẻ hình: {k} ảnh")
+
+
 def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
     prov, name = voice.split(":", 1)
     outdir.mkdir(parents=True, exist_ok=True)
@@ -952,6 +994,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     plan = live_numbers(plan, md)   # Trọng 22/11: hook, biểu đồ, ảnh bìa, short dùng CÙNG một bộ số giá thật
     (lab / "data.json").write_text(json.dumps(md, ensure_ascii=False), encoding="utf-8")
     save_images(lab, plan, gem, cfg)
+    photo_beats(lab, plan)
     parts = [("hook", plan.get("hook", "")), ("intro", plan.get("intro", ""))]
     parts += [(f"s{k}", s["narration"]) for k, s in enumerate(plan["sections"])]
     parts += [("outro", plan.get("outro", ""))]
