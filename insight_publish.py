@@ -389,9 +389,24 @@ def tg_video(path: Path, caption: str):
         log(f"   ! Telegram sendVideo lỗi: {r.text[:200]}")
 
 
+def _photo_jpg(path: Path) -> Path:
+    """Trọng 24/11: ảnh bìa PNG ~1MB bị Telegram Desktop kẹt ở ô mờ không tải được.
+    Gửi bản JPEG (nhẹ khoảng 5 đến 10 lần) cho Telegram; file PNG gốc vẫn giữ trong release để đăng."""
+    try:
+        if path.suffix.lower() == ".png" and path.stat().st_size > 300_000:
+            from PIL import Image
+            out = path.with_name(path.stem + "-tg.jpg")
+            Image.open(path).convert("RGB").save(out, "JPEG", quality=90, optimize=True, progressive=True)
+            return out
+    except Exception as e:
+        log(f"   ! đổi ảnh sang JPEG lỗi, gửi bản gốc: {e}")
+    return path
+
+
 def tg_photo(path: Path, caption: str):
     api, chat = _tg()
     if api and path and path.exists():
+        path = _photo_jpg(path)
         for i in range(3):
             try:
                 with open(path, "rb") as f:
