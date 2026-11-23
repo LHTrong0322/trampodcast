@@ -45,6 +45,10 @@
   (insight_lab._PERSON_HINT + video_lint chặn): video không đưa ảnh người thật lấy từ mạng. Mỗi short tin nóng 2 đến 4 ảnh.
 - Bố cục InsightShort: thẻ tự dời xuống khi tiêu đề dài (không đè chữ). Dòng nguồn: tin nóng ghi "Nguồn: <báo>" (plan.source_label), video
   của Trọng không ghi "Source: @Trong0322". Phụ đề và thẻ chữ chia dòng cân (text-wrap: balance) nên không còn chữ mồ côi.
+- SOÁT HÌNH TRƯỚC KHI DỰNG (preflight.py, Trọng 24/11): mỗi short chụp sẵn khung bìa, tiêu đề, từng thẻ hình (lúc đã hiện xong) và khung
+  kết, Claude (claude -p, công cụ Read) nhìn từng ảnh bắt lỗi font, chữ tràn/cắt/bị đè, chữ mồ côi, lệch hàng, thẻ trống. Có lỗi thì Claude
+  sửa CHỮ trên thẻ (không đổi số, loại thẻ, mốc giờ), bot chụp lại soát lại, tối đa 2 vòng, rồi mới dựng thật. Kết quả gửi Telegram
+  "🔎 Soát hình trước khi dựng". Thiếu token Claude hoặc PREFLIGHT=0 thì bỏ qua; bước này lỗi thì vẫn dựng tiếp như cũ.
 - Ảnh bìa tin nóng: dùng thumb_text + thumb_stat Trọng chọn, dòng dưới "Tin nóng · @Trong0322" (không "Xem bản đầy đủ trên YouTube").
   Không cắt cứng 60 ký tự nữa (từng mất dấu %). Ảnh gửi Telegram dạng JPEG nhẹ (PNG 1MB bị Telegram Desktop kẹt).
 

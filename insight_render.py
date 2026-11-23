@@ -509,8 +509,11 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
             log(f"   ! khung bìa đầu short lỗi: {ex}")
         sp = out_dir / f"smart-penguin-{tag}-short{n + 1}-9x16.mp4"
         log(f"Dựng video ngắn {n + 1} · {len(a) / SR / 2:.0f}s")
+        _guard(sprops)
+        import preflight as PF   # Trọng 24/11: soát hình bằng mắt (Claude) trước khi dựng, tự sửa chữ trên thẻ nếu xấu
+        pre = PF.check_short(sprops, out_dir / f"preflight{n + 1}")
         run_remotion(_guard(sprops), sp)
-        res["shorts"].append({"path": sp, "section": i, "title": sprops["shortTitle"]})
+        res["shorts"].append({"path": sp, "section": i, "title": sprops["shortTitle"], "preflight": pre})
     return res
 
 

@@ -494,6 +494,8 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, draft
     for i, s in enumerate(res["shorts"]):
         sh = (seo.get("shorts") or [{}] * 9)[i] if i < len(seo.get("shorts") or []) else {}
         tg_video(s["path"], f"📱 Short {i + 1}: {sh.get('yt_title') or s['title']}")
+    if preflight_text(res):
+        tg_text(preflight_text(res))
     if draft and draft.get("long") and Path(draft["long"]).exists():   # Trọng 22/11: gửi cả bản nháp để so khác biệt
         drv = draft.get("review") or {}
         tg_video(Path(draft["long"]), f"🧪 Bản NHÁP (giọng {draft.get('voice', 'Hải Đăng')}, trước khi bot sửa): {drv.get('score', '?')} điểm")
@@ -558,6 +560,8 @@ def publish_news(gem, cfg, res, seo, covers, url, data_dir, tag) -> dict:
         tg_text("🎵 CAPTION copy dán khi đăng\n\n"
                 f"Shorts title: {sh.get('yt_title', '')}\n\n"
                 f"TikTok/Reels: {with_tags(sh.get('tiktok_caption', ''), sh.get('tiktok_hashtags', []))}")
+    if preflight_text(res):
+        tg_text(preflight_text(res))
     log("⑧ Bot review")
     rv = review(gem, cfg, res, None)
     if rv:
@@ -569,3 +573,18 @@ def publish_news(gem, cfg, res, seo, covers, url, data_dir, tag) -> dict:
             arr.append({"tag": tag, "at": datetime.now(P.VN_TZ).isoformat(timespec="minutes"), **rv})
             p.write_text(json.dumps(arr[-30:], ensure_ascii=False, indent=1), encoding="utf-8")
     return {"release": url, "seo": seo, "review": rv, "thumb": None}
+
+def preflight_text(res: dict) -> str:
+    """Báo kết quả soát hình trước khi dựng (preflight.py) cho Trọng."""
+    rows = []
+    for j, s in enumerate(res.get("shorts") or []):
+        pre = s.get("preflight") or {}
+        if pre.get("skipped") or pre.get("ok") is None and not pre.get("error"):
+            continue
+        if pre.get("ok"):
+            rows.append(f"Short {j + 1}: ổn sau {pre.get('rounds', 1)} vòng soát")
+        else:
+            rows.append(f"Short {j + 1}: còn {len(pre.get('issues') or [])} lỗi trình bày"
+                        + "".join(f"\n  • {x.get('problem', '')}" for x in (pre.get("issues") or [])[:5])
+                        + (f"\n  (soát lỗi: {pre['error']})" if pre.get("error") else ""))
+    return ("🔎 Soát hình trước khi dựng\n" + "\n".join(rows)) if rows else ""
