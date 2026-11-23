@@ -1,0 +1,42 @@
+name: "Kiểm tra giá cổ phiếu, chỉ số, hàng hoá (không đăng gì)"
+
+# Tra giá thật trước khi viết kịch bản: biểu đồ trong video phải khớp số trong lời đọc.
+on:
+  workflow_dispatch:
+    inputs:
+      tickers:
+        description: "Mã cách nhau bởi dấu phẩy, vd NVDA,OIL,VIX,SPX"
+        required: true
+      days:
+        description: "Số ngày nhìn lại"
+        required: false
+        default: "45"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests feedparser pyyaml beautifulsoup4 pillow numpy
+      - name: Lấy giá
+        env:
+          TICKERS: ${{ github.event.inputs.tickers }}
+          DAYS: ${{ github.event.inputs.days }}
+        run: |
+          python -c "
+          import os, insight_lab as L
+          days = int(os.environ['DAYS'])
+          for t in [x.strip().upper() for x in os.environ['TICKERS'].split(',') if x.strip()]:
+              s = L._stock_series(t, days)
+              if not s:
+                  print('PRICE', t, 'KHONG CO GIA'); continue
+              hi = max(s); lo = min(s)
+              print('PRICE', t, 'n=%d dau=%.2f cuoi=%.2f doi=%+.1f%% tu_dinh=%+.1f%% tu_day=%+.1f%%' % (len(s), s[0], s[-1], (s[-1]/s[0]-1)*100, (s[-1]/hi-1)*100, (s[-1]/lo-1)*100))
+          "
