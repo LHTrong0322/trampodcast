@@ -195,7 +195,17 @@ def done_list(st: dict) -> str:
 def judge(gem, cfg: dict, st: dict, items: list[dict]) -> dict:
     listing = "\n".join(f"[{i}] ({it['source']}, {it['time'].astimezone(P.VN_TZ):%H:%M}) {it['title']}\n{P.clean_text(it.get('text', ''), 400)}"
                         for i, it in enumerate(items))
-    j = V.llm_json(gem, cfg, JUDGE_SYSTEM, JUDGE_PROMPT.format(done=done_list(st), items=listing))
+    pr = JUDGE_PROMPT.format(done=done_list(st), items=listing)
+    j = None
+    if os.getenv("CLAUDE_CODE_OAUTH_TOKEN") or os.getenv("ANTHROPIC_API_KEY"):
+        try:   # 23/11: Gemini quá tải 503 cả 40 phút, Claude chấm trước cho nhanh, Gemini dự phòng
+            import script_review as SR
+            j = SR.run_claude(JUDGE_SYSTEM + "\n\n" + pr)
+            j["by"] = "claude"
+        except Exception as ex:
+            log(f"   ! Claude chấm tin lỗi, chuyển sang Gemini: {str(ex)[:200]}")
+    if j is None:
+        j = V.llm_json(gem, cfg, JUDGE_SYSTEM, pr)
     try:
         j["pick"] = int(j.get("pick", -1))
     except (TypeError, ValueError):
@@ -287,7 +297,7 @@ def pick(out: Path, cfg: dict):
                                   if isinstance(i, int) and 0 <= i < len(items) and i != j["pick"]][:4]
     text = "\n\n".join(f"Nguồn: {g['source']} ({g['time'].astimezone(P.VN_TZ):%H:%M %d/%m} giờ VN)\n{g['title']}\n{g.get('text', '')}"
                        for g in group)
-    c = claude_confirm(st, j, text)
+    c = None if j.get("by") == "claude" else claude_confirm(st, j, text)   # Claude đã chấm thì khỏi xác nhận lại
     if c is not None:
         log(f"   Claude: {'ĐỒNG Ý' if c.get('ok') else 'TỪ CHỐI'} · {c.get('why', '')}")
         if not c.get("ok"):
