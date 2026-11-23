@@ -495,7 +495,7 @@ def coin_data(lab: Path, plan: dict, data: dict):
 
 YAHOO = {"S&P": "^GSPC", "SPX": "^GSPC", "VIX": "^VIX", "NDX": "^NDX", "DXY": "DX-Y.NYB", "DJI": "^DJI"}
 # hàng hoá (giá dầu, vàng...): Yahoo có, CoinGecko không (lỗi 23/11: bot thêm biểu đồ CL=F làm dừng bản dựng)
-COMMOD = {"CL=F": "Dầu WTI", "BZ=F": "Dầu Brent", "GC=F": "Vàng", "SI=F": "Bạc", "OIL": "Dầu WTI", "WTI": "Dầu WTI", "GOLD": "Vàng", "XAU": "Vàng"}
+COMMOD = {"USO": "Quỹ dầu USO", "UNG": "Quỹ khí đốt UNG", "GLD": "Quỹ vàng GLD", "SLV": "Quỹ bạc SLV", "CL=F": "Dầu WTI", "BZ=F": "Dầu Brent", "GC=F": "Vàng", "SI=F": "Bạc", "OIL": "Dầu WTI", "WTI": "Dầu WTI", "GOLD": "Vàng", "XAU": "Vàng"}
 YAHOO.update({"OIL": "CL=F", "WTI": "CL=F", "GOLD": "GC=F", "XAU": "GC=F"})
 
 
@@ -615,7 +615,10 @@ _CG_INFO: dict = {}
 def _cg_search(t: str):
     if t not in _CG_INFO:
         js = _cg("https://api.coingecko.com/api/v3/search", {"query": t}) or {}
-        _CG_INFO[t] = next((c for c in js.get("coins", [])[:8] if c.get("symbol", "").upper() == t and c.get("market_cap_rank")), None)
+        # bỏ token "cổ phiếu hoá" trùng mã cổ phiếu/ETF (lỗi 23/11: USO ra "United States Oil Fund, Robinhood Token" sai giá)
+        fake = re.compile(r"tokeni[sz]ed|robinhood|xstock|ondo|backed|\bstock\b|\bfund\b|\betf\b", re.I)
+        _CG_INFO[t] = next((c for c in js.get("coins", [])[:8] if c.get("symbol", "").upper() == t and c.get("market_cap_rank")
+                            and not fake.search(str(c.get("name", "")))), None)
     return _CG_INFO[t]
 
 

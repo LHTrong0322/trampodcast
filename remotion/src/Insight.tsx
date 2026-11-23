@@ -148,7 +148,8 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null; data?: any}> = ({sc, p
       {/* tiêu đề tập: lớn giữa màn → thu nhỏ lên trái */}
       <div style={{position: 'absolute', left: 110, width: water || (sc.hidePost && sc.beats?.length) ? 980 : 1700, top: interpolate(k, [0, 1], [330, 200]),
         display: 'flex', flexWrap: 'wrap', columnGap: 24, rowGap: 4, transformOrigin: 'left top',
-        transform: `scale(${interpolate(k, [0, 1], [1, water ? 0.56 : 0.62])})`}}>
+        opacity: 1 - interpolate(k, [0, 0.6], [0, 1], clamp),
+        transform: `scale(${interpolate(k, [0, 1], [1, 0.8])})`}}>
         {words.map((w, i) => {
           const s = interpolate(t - 0.35 - i * 0.07, [0, 0.35], [0, 1], clamp);
           const key = w.toLowerCase().replace(/[^\p{L}\p{N}$%]/gu, '');
@@ -158,6 +159,10 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null; data?: any}> = ({sc, p
         })}
         <div style={{flexBasis: '100%', height: 10, marginTop: 10, borderRadius: 99, background: ac, maxWidth: interpolate(t, [0.6, 1.6], [0, 420], clamp)}} />
       </div>
+      {/* màn 2: tiêu đề gọn 1 đến 2 dòng, rộng hết màn (lỗi 23/11: tiêu đề dài thu nhỏ vẫn 4 dòng, đè nhãn chương) */}
+      {k > 0 ? <div style={{position: 'absolute', left: 110, right: 110, top: 200, opacity: interpolate(k, [0.4, 1], [0, 1], clamp),
+        fontFamily: FONT, fontWeight: 900, fontSize: words.join(' ').length > 60 ? 50 : 60, lineHeight: 1.2, color: C.ink,
+        transform: `translateY(${interpolate(k, [0.4, 1], [24, 0], clamp)}px)`}}>{words.join(' ')}</div> : null}
       {/* thẻ so sánh (kịch bản của Trọng) hoặc nguồn nhỏ gọn, chỉ ở màn 1 */}
       {k < 1 && sc.hidePost && sc.beats?.length ? <div style={{position: 'absolute', right: 110, bottom: 190, opacity: interpolate(t, [1.2, 1.7], [0, 1], clamp) * (1 - k),
         transform: `scale(${0.8 + 0.2 * interpolate(t, [1.2, 1.7], [0, 1], clamp)})`, transformOrigin: 'right bottom'}}>

@@ -53,6 +53,9 @@ const BigNum: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => (
   </Card>
 );
 
+// cỡ chữ giá trị 2 bên: chữ dài thì co lại cho vừa nửa thẻ (lỗi 23/11: "Điều gì đã vào giá?" tràn mép)
+const fitVs = (v: string, w: number) => Math.max(44, Math.min(96, Math.floor(((w - 160) / 2) / (Math.max(1, v.length) * 0.56))));
+
 const Versus: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -64,7 +67,7 @@ const Versus: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
         transform: `translateY(${(1 - s) * 40}px)`}}>
         <Logo src={x.logo} size={130} label={x.label} />
         <div style={{fontSize: 40, fontWeight: 800, color: C.ink}}>{x.label}</div>
-        <CountUp value={x.value} size={96} delay={4 + i * 3} color={toneColor(x.tone)} />
+        <CountUp value={x.value} size={fitVs(String(x.value ?? ''), w)} delay={4 + i * 3} color={toneColor(x.tone)} />
       </div>
     );
   };
