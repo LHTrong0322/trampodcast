@@ -1,0 +1,22 @@
+{
+  "title": "Jensen Huang trở lại ghế CEO Nvidia, NVDA bay gần 30%",
+  "story": "HĐQT Nvidia nhất trí đưa Jensen Huang trở lại làm CEO ngày 23/11, chưa đầy 2 tuần sau khi ông từ chức; NVDA tăng khoảng 29 đến 30%",
+  "why": "Trọng chỉ định. Cú quay xe lớn nhất của cổ phiếu AI lớn nhất thế giới, tin mới nhất trong ngày",
+  "importance": 10,
+  "viral": 10,
+  "sources_name": "NVIDIA (thông cáo chính thức), CNN, AP, Yahoo Finance",
+  "sources": [
+    "https://nvidianews.nvidia.com/news/nvidia-board-reinstates-jensen-huang-as-president-ceo-and-board-director",
+    "https://www.cnn.com/2026/11/23/tech/nvidia-reinstates-jensen-huang-ceo",
+    "https://www.pbs.org/newshour/nation/nvidia-board-unanimously-reinstates-jensen-huang-as-ceo-and-chairman",
+    "https://finance.yahoo.com/technology/article/nvidia-reinstates-jensen-huang-as-ceo-stock-rockets-141145439.html"
+  ],
+  "notes": [
+    "Chủ đề do Trọng chỉ định: short tin nóng 'Jensen Huang trở lại Nvidia'. Đây là cổ phiếu, không phải coin: dùng biểu đồ giá cổ phiếu NVDA (beat type chart, ticker NVDA, days 60) để thấy cú sập rồi cú bật.",
+    "Mạch kể: chưa đầy 2 tuần, từ chức (12/11) → cổ phiếu mất khoảng 48% từ đỉnh, tuần tệ nhất từ 2008 → Trump kêu gọi đưa ông về, HĐQT ban đầu từ chối → hôm nay HĐQT bỏ phiếu NHẤT TRÍ đưa ông trở lại, NVDA tăng khoảng 30%.",
+    "Góc nhìn cho người xem crypto: NVDA là thước đo tâm lý AI và risk on, nhưng KHÔNG khẳng định crypto sẽ tăng theo, không dự đoán giá, không hô mua bán. Nhắc ngắn: các cuộc điều tra (SEC, California) vẫn chưa kết thúc.",
+    "Chỉ dùng số liệu trong nguồn. Về lý do ông rời ghế: chỉ nói 'sau bê bối đời tư', không thêm chi tiết.",
+    "Câu kết hỏi người xem: cú bật 30% này là khởi đầu sóng mới hay chỉ là nhịp hồi?"
+  ],
+  "text": "Nguồn: thông cáo NVIDIA, CNN, AP (PBS), Yahoo Finance, ngày 23/11/2026\n\n- Thứ Hai 23/11/2026: HĐQT Nvidia thông báo Jensen Huang được phục chức Chủ tịch (President), CEO và thành viên HĐQT, có hiệu lực ngay. HĐQT bỏ phiếu NHẤT TRÍ sau nhiều buổi trao đổi với ông Huang, và có nhận ý kiến từ 'cấp cao của chính phủ Mỹ'.\n- Chủ tịch HĐQT Harvey C. Jones: 'HĐQT tin Jensen là người phù hợp để lãnh đạo NVIDIA, việc phục chức là vì lợi ích tốt nhất của cổ đông, nhân viên, đối tác và khách hàng'.\n- Đây là cú quay xe bất ngờ: chỉ ít lâu trước đó HĐQT còn từ chối lời đề nghị quay lại của ông Huang (AP).\n- Jensen Huang nói ông 'vinh dự' được trở lại, nhận trách nhiệm 'với sự khiêm tốn lớn nhất và cam kết mới', và 'nóng lòng quay lại làm việc'.\n- Colette Kress, CEO tạm quyền, quay về vai trò CFO.\n- Tổng thống Trump nói chính phủ liên bang 'không có lý do để tin' việc ông Huang trở lại gây rủi ro an ninh quốc gia. Trước đó Trump đã công khai kêu gọi HĐQT đưa ông Huang về.\n- Bối cảnh: Jensen Huang, người đồng sáng lập và làm CEO Nvidia từ năm 1993, từ chức ngày 12/11/2026 sau bê bối đời tư. Chưa đầy 2 tuần sau ông đã trở lại.\n- Giá cổ phiếu: CNN đưa tin NVDA tăng khoảng 29% premarket sau tin phục chức; Yahoo Finance: NVDA tăng hơn 30% sau tin này. Trước đó, tuần trước NVDA giảm khoảng 23%, tuần tệ nhất kể từ 2008, đóng cửa thứ Sáu 20/11 ở $125.53. Đỉnh đóng cửa kỷ lục là $239.24 (6/10/2026), tức đã có lúc mất khoảng 48% từ đỉnh.\n- Kinh doanh vẫn rất mạnh: quý gần nhất revenue kỷ lục $115.8B, dự phóng quý sau khoảng $130B.\n- Rủi ro còn lại: SEC và Tổng chưởng lý California vẫn đang điều tra Nvidia (gồm cả việc chip AI có lọt sang Trung Quốc không); chưa cuộc điều tra nào kết luận Nvidia vi phạm pháp luật."
+}
