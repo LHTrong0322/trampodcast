@@ -25,3 +25,7 @@ def test_review_avg_averages(monkeypatch):
     monkeypatch.setattr(PB, "review", lambda *a, **k: next(seq))
     rv = PB.review_avg(None, None, {}, None, n=2)
     assert rv["score"] == 6.5 and rv["scores"]["a"] == 6.5 and rv["can_sua"] == ["y"] and rv["runs"] == [7.0, 6.0]
+
+
+def test_below_target():
+    assert insight.below({"scores": {"a": 7, "b": 6.5, "c": 8}}) == ["b 6.5"]

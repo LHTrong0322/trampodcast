@@ -444,6 +444,14 @@ def worse(a: dict, b: dict) -> list:
     return out
 
 
+TARGET = 7.0   # Trọng: mọi mục (nhịp độ, phụ đề, dữ liệu, ảnh bìa, short...) phải đạt ít nhất 7/10
+
+
+def below(rv: dict) -> list:
+    """Các mục chấm dưới chuẩn TARGET."""
+    return [f"{k} {v}" for k, v in (rv.get("scores") or {}).items() if float(v) < TARGET]
+
+
 def quality_gate(src, tips, draft: dict, lab, res):
     """Trọng 23/11 ("sao chính còn thua bản nháp?"): bản chính phải chấm lại (2 lần, lấy trung bình).
     Thua bản nháp thì bot sửa tiếp theo góp ý của chính bản đó, dựng lại (giọng đã đọc dùng lại, không tốn lượt),
@@ -456,11 +464,13 @@ def quality_gate(src, tips, draft: dict, lab, res):
     rv = PB.review_draft(lab, res, Path("render_out"), label="Bản chính")
     gate = [f"Nháp: {d.get('score')} · Bản chính: {rv.get('score')} (các lần chấm {rv.get('runs')})"]
     bad = worse(d, rv)
-    if not bad:
-        gate.append("✅ Bản chính không thua bản nháp")
+    low = below(rv)
+    if not bad and not low:
+        gate.append(f"✅ Bản chính không thua bản nháp và mọi mục đạt từ {TARGET} trở lên")
         return lab, res, rv, gate
-    log(f"🚦 Bản chính thua bản nháp ({'; '.join(bad)}), bot sửa thêm 1 vòng")
-    gate.append("⚠️ Bản chính thua: " + "; ".join(bad) + ". Bot sửa thêm 1 vòng theo góp ý của bản chính")
+    why = (["thua nháp: " + "; ".join(bad)] if bad else []) + (["dưới chuẩn " + str(TARGET) + ": " + "; ".join(low)] if low else [])
+    log(f"🚦 Bản chính chưa đạt ({' | '.join(why)}), bot sửa thêm 1 vòng")
+    gate.append("⚠️ Chưa đạt: " + " | ".join(why) + ". Bot sửa thêm 1 vòng theo góp ý của bản chính")
     try:
         cur = os.getenv("INSIGHT_SCRIPT", "").strip()
         base = json.loads(Path(cur).read_text(encoding="utf-8")) if cur else json.loads((lab / "plan.json").read_text(encoding="utf-8"))
@@ -483,6 +493,8 @@ def quality_gate(src, tips, draft: dict, lab, res):
         gate.append(f"! vòng sửa thêm lỗi: {str(ex)[:120]}")
     if worse(d, rv):
         gate.append("❗ Vẫn thua bản nháp sau khi sửa, Trọng nên chọn giữa 2 bản (cả 2 đều gửi kèm)")
+    if below(rv):
+        gate.append("❗ Còn mục dưới chuẩn: " + "; ".join(below(rv)) + " (thường do khuôn dựng, xem góp ý để sửa code)")
     return lab, res, rv, gate
 
 
