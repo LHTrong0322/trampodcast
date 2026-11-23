@@ -261,7 +261,10 @@ def comments():
                 print("FACEBOOK CAPTION lỗi:", str(ex)[:150])
         # Trọng 21/11: gỡ phụ đề tự động của YouTube (đè lên phụ đề có sẵn trong video). YouTube tạo nó vài phút
         # đến vài giờ sau khi đăng, nên cứ mỗi lần chạy thì thử lại cho tới khi gỡ được (tối đa 48 giờ).
-        if st.get("yt_id") and not st.get("asr_removed"):
+        pub0 = (plan.get("youtube") or {}).get("publish_at", "")
+        chua_cong_khai = bool(pub0) and now < datetime.fromisoformat(pub0.replace("Z", "+00:00"))
+        # chưa tới giờ công khai thì chưa có phụ đề tự động: bỏ qua cho đỡ tốn quota YouTube (mỗi lần hỏi 50 điểm)
+        if st.get("yt_id") and not st.get("asr_removed") and not chua_cong_khai:
             try:
                 tok = SU._yt_token()
                 H = {"Authorization": f"Bearer {tok}"}
