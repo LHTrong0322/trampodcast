@@ -13,7 +13,7 @@
  "hook_screen": "79% QUỸ CHUYÊN NGHIỆP THUA MỘT RỔ CỔ PHIẾU",
  "hook_stat": "79%",
  "hook_label": "quỹ active Mỹ thua S&P 500 năm 2025",
- "hook": "Năm 2025, 79% quỹ do chuyên gia quản lý ở Mỹ thua một rổ cổ phiếu không cần ai chọn. Rổ đó là index fund, và giữ nó đủ lâu, $10K mỗi năm có thể thành hơn $1.6M.",
+ "hook": "79% chuyên gia ở Mỹ vừa thua một rổ cổ phiếu không ai chọn, trong năm 2025. Bạn có tin $10K mỗi năm có thể thành hơn $1.6M nhờ đúng cái rổ đó?",
  "hook_beats": [
   {
    "at": "79%",
@@ -47,7 +47,7 @@
     "Rổ tự làm mới, tự động",
     "Một công ty sập, rổ vẫn đứng"
    ],
-   "narration": "Đầu tiên, index fund là gì, và vì sao nó được xem là cách đầu tư dài hạn an toàn bậc nhất cho người mới? Index fund, hay quỹ chỉ số, không cố chọn cổ phiếu ngon. Nó mua cả rổ theo một chỉ số. Ví dụ S&P 500, rổ 500 công ty lớn nhất nước Mỹ như Apple, Microsoft, Nvidia. Mua 1 phần quỹ, bạn sở hữu 1 mẩu nhỏ của cả 500 công ty. Công ty nào yếu đi sẽ bị loại khỏi rổ, công ty mạnh lên được thêm vào, hoàn toàn tự động. Không đặt cược vào riêng ai, nên 1 công ty phá sản cũng không kéo sập khoản đầu tư của bạn. Và vì không cần đội phân tích tốn kém, phí của index fund rất thấp.",
+   "narration": "Đầu tiên, index fund là gì? Và vì sao nó được xem là cách đầu tư dài hạn an toàn bậc nhất cho người mới? Index fund, hay quỹ chỉ số, không cố chọn cổ phiếu ngon. Nó mua cả rổ theo một chỉ số. Ví dụ S&P 500, rổ 500 công ty lớn nhất nước Mỹ như Apple, Microsoft, Nvidia. Mua 1 phần quỹ, bạn sở hữu 1 mẩu nhỏ của cả 500 công ty. Công ty nào yếu đi sẽ bị loại khỏi rổ, công ty mạnh lên được thêm vào, hoàn toàn tự động. Không đặt cược vào riêng ai, nên 1 công ty phá sản cũng không kéo sập khoản đầu tư của bạn. Và vì không cần đội phân tích tốn kém, phí của index fund rất thấp. Vậy bạn không cần tự chọn cổ phiếu, chỉ cần mua đúng quỹ theo rổ.",
    "beats": [
     {
      "at": "index fund là gì",
@@ -114,6 +114,11 @@
      "at": "vì không cần đội phân tích",
      "type": "statement",
      "text": "Không cần đội phân tích: phí rất thấp"
+    },
+    {
+     "at": "chỉ cần mua đúng quỹ",
+     "type": "statement",
+     "text": "Không cần chọn cổ phiếu: mua đúng quỹ theo rổ"
     }
    ],
    "visual_queries": [
@@ -145,7 +150,7 @@
     "Lãi kép làm phần việc nặng",
     "Không cần giỏi phân tích"
    ],
-   "narration": "Điều thứ hai: sức mạnh khi giữ dài hạn. Tính từ năm 1957, S&P 500 tăng trung bình khoảng 10% mỗi năm, tính cả cổ tức tái đầu tư. Có năm giảm sâu, như năm 2008 giảm khoảng 37%, nhưng thị trường đã hồi phục và lập đỉnh mới. Điều hay nhất: bạn không cần giỏi phân tích, không cần canh bảng điện. Ví dụ, mỗi năm bạn chỉ cần bỏ đều $10K vào index fund, lãi trung bình 10% một năm. Sau 30 năm, bạn bỏ ra tổng cộng $300K, nhưng tài khoản có thể lên khoảng $1.6M. Hơn 80% số đó đến từ lãi kép, tức lãi chồng lên lãi. Đây là số liệu quá khứ, không phải lời hứa cho tương lai. Nhưng nếu bạn tin nền kinh tế sẽ tiếp tục phát triển, thì index fund là lựa chọn tối ưu nhất để đi cùng nó.",
+   "narration": "Điều thứ hai: sức mạnh khi giữ dài hạn. Tính từ năm 1957, S&P 500 tăng trung bình khoảng 10% mỗi năm, tính cả cổ tức tái đầu tư. Có năm giảm sâu, như năm 2008 giảm khoảng 37%, nhưng thị trường đã hồi phục và lập đỉnh mới. Điều hay nhất: bạn không cần giỏi phân tích, không cần canh bảng điện. Ví dụ, mỗi năm bạn bỏ đều $10K, lãi trung bình 10%. Sau 30 năm, bạn bỏ ra tổng cộng $300K, nhưng tài khoản có thể lên khoảng $1.6M. Hơn 80% số đó đến từ lãi kép, tức lãi chồng lên lãi. Đây là số liệu quá khứ, không phải lời hứa cho tương lai. Nhưng nếu bạn tin nền kinh tế sẽ tiếp tục phát triển, thì index fund là lựa chọn tối ưu nhất để đi cùng nó.",
    "beats": [
     {
      "at": "sức mạnh khi giữ dài hạn",
@@ -209,6 +214,13 @@
      "label": "Hơn 80% tài sản đến từ lãi kép"
     },
     {
+     "at": "số liệu quá khứ",
+     "type": "bignum",
+     "value": "1957 → 2026",
+     "label": "Số liệu quá khứ, không phải lời hứa",
+     "tone": "up"
+    },
+    {
      "at": "nếu bạn tin nền kinh tế",
      "type": "statement",
      "text": "Tin kinh tế tăng trưởng? Index fund là lựa chọn tối ưu"
@@ -243,7 +255,7 @@
     "Mua bán như cổ phiếu",
     "Xem 3 thứ trước khi mua"
    ],
-   "narration": "Điều thứ ba: bắt đầu ở Việt Nam. Ở Việt Nam, mọi người có thể tìm hiểu các quỹ ETF mô phỏng chỉ số VN30, tức rổ 30 cổ phiếu lớn nhất sàn HOSE, Sở Giao dịch Chứng khoán TP.HCM, hoặc chỉ số VNDiamond, rổ cổ phiếu lớn gần hết room cho nhà đầu tư nước ngoài. Từ ngày ra đời năm 2012 tới nay, VN30 tăng trung bình khoảng 10% mỗi năm, chưa tính cổ tức. Quỹ ETF được mua bán qua tài khoản chứng khoán y như một cổ phiếu. Trước khi mua, xem 3 thứ: quỹ bám chỉ số sát tới đâu, thanh khoản có đủ để mua bán dễ dàng không, và phí quản lý mỗi năm. Rồi bỏ tiền đều đặn mỗi tháng, và để thời gian làm phần còn lại.",
+   "narration": "Điều thứ ba: bắt đầu ở Việt Nam. Ở Việt Nam, có 2 nhóm quỹ ETF đáng chú ý. Một là quỹ theo chỉ số VN30, rổ 30 cổ phiếu lớn nhất sàn HOSE, Sở Giao dịch Chứng khoán TP.HCM. Hai là quỹ theo chỉ số VNDiamond, rổ cổ phiếu lớn gần hết room cho nhà đầu tư nước ngoài. Từ ngày ra đời năm 2012 tới nay, VN30 tăng trung bình khoảng 10% mỗi năm, chưa tính cổ tức. Quỹ ETF được mua bán qua tài khoản chứng khoán y như một cổ phiếu. Trước khi mua, xem 3 thứ: quỹ bám chỉ số sát tới đâu, thanh khoản có đủ để mua bán dễ dàng không, và phí quản lý mỗi năm. Rồi bỏ tiền đều đặn mỗi tháng, và để thời gian làm phần còn lại.",
    "beats": [
     {
      "at": "điều thứ ba",
@@ -341,10 +353,10 @@
   1
  ],
  "short_hooks": {
-  "0": "Index fund là gì mà 79% chuyên gia thua nó?",
+  "0": "79% chuyên gia thua một thứ không ai chọn.",
   "1": "$10K mỗi năm thành $1.6M?"
  },
- "short_cta": "Bạn sẽ bắt đầu với bao nhiêu? Bình luận và theo dõi kênh nhé!",
+ "short_cta": "Bạn bắt đầu với bao nhiêu? Bình luận nhé!",
  "thumb_text": "$10K/NĂM THÀNH $1.6M",
  "thumb_stat": "10%/NĂM",
  "thumb_points": [],
