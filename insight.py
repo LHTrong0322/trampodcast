@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-TRẠM INSIGHT, biến các bài X (tweet/thread/research) bạn gửi vào bot Telegram thành
+TRẠM INSIGHT, biến các bài X (tweet/thread/research) nhập khi bấm chạy insight.yml thành
 video CHIA SẺ INSIGHT / KIẾN THỨC / KINH NGHIỆM: 1 video dài YouTube + video ngắn highlight.
 
-  python insight.py inbox  --out public    # đọc tin nhắn Telegram mới, lưu link, báo đã nhận
+  python insight.py inbox  --out public    # đọc tin nhắn Telegram mới (chỉ lệnh tin nóng; Trọng 23/11 bỏ gom link qua Telegram)
   python insight.py cook   --out public    # đủ link → dựng video, gửi Telegram + GitHub Release
          [--force]                          # dựng ngay dù chưa đủ số link tối thiểu
 
@@ -129,7 +129,7 @@ def inbox(out: Path, cfg: dict, extra_links: str = "") -> dict:
     res = tg("getUpdates", offset=st["offset"] + 1, timeout=0, allowed_updates='["message","callback_query"]') or {}
     import news_flash as NF
     if extra_links.strip():   # link nhập trực tiếp khi bấm chạy trên GitHub
-        res.setdefault("result", []).append({"update_id": st["offset"],
+        res.setdefault("result", []).append({"update_id": st["offset"], "manual": True,
                                              "message": {"chat": {"id": owner}, "text": extra_links}})
     known = {p["url"] for p in st["posts"]}
     added = 0
@@ -146,16 +146,11 @@ def inbox(out: Path, cfg: dict, extra_links: str = "") -> dict:
             log(f"   ! xử lý lệnh tin nóng lỗi: {ex}")
         if up.get("callback_query"):
             continue
+        # Trọng 23/11: BỎ HẲN tính năng gom link X qua Telegram (không nhận link, không /list, /cook, không tự cook buổi tối).
+        # Hộp thư chỉ còn phục vụ lệnh tin nóng ở trên. Link chỉ nhận khi nhập trực tiếp lúc bấm chạy insight.yml.
+        if not up.get("manual"):
+            continue
         text = msg.get("text") or msg.get("caption") or ""
-        if text.strip().lower().startswith("/cook"):
-            st["force"] = True
-            tg("sendMessage", chat_id=chat, text="👨‍🍳 Ok! Lần chạy kế tiếp (trong ~3 tiếng) bot sẽ cook video Insight ngay.")
-            continue
-        if text.strip().lower().startswith("/list"):
-            pend = [p for p in st["posts"] if not p.get("used")]
-            tg("sendMessage", chat_id=chat, text=f"📥 Đang chờ {len(pend)} link:\n" +
-               "\n".join(f"• {p.get('handle', '')}: {p['url']}" for p in pend[-20:]))
-            continue
         for url in URL_RE.findall(text):
             url = url.rstrip(").,]")
             url = re.sub(r"\?.*$", "", url) if X_RE.search(url) else url
@@ -170,12 +165,6 @@ def inbox(out: Path, cfg: dict, extra_links: str = "") -> dict:
             known.add(url)
             added += 1
     pend = [p for p in st["posts"] if not p.get("used")]
-    need = int((cfg.get("insight") or {}).get("min_posts", 3))
-    if added:
-        tg("sendMessage", chat_id=owner, text=(
-            f"✅ Đã nhận {added} link mới · đang chờ {len(pend)} link.\n"
-            + (f"Đủ {need} link → tối nay bot sẽ cook video Insight." if len(pend) >= need
-               else f"Cần thêm {need - len(pend)} link nữa để cook (hoặc gửi /cook để làm ngay).")))
     save_store(out, st)
     log(f"   Hộp thư: +{added} link, đang chờ {len(pend)}")
     return st

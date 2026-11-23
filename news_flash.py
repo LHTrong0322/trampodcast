@@ -5,7 +5,7 @@ Cứ 4 tiếng (news-flash.yml, mode "pick"):
   → Claude xác nhận lần 2 → viết kịch bản short theo bộ khung Smart Penguin Insights (Claude chấm >= 8)
   → gửi kịch bản lên Telegram, CHỜ TRỌNG DUYỆT. Không có tin đủ lớn thì thôi, không cố làm.
 
-Duyệt trên Telegram (đọc chung hộp thư với insight.py inbox, nên link X vẫn được nhận như cũ):
+Duyệt trên Telegram (đọc qua insight.py inbox; từ 23/11 bot KHÔNG còn nhận link X để làm Insight):
   nút ✅ Duyệt / ✏️ Sửa / ❌ Bỏ dưới tin nháp, hoặc lệnh /duyet, /bo, /sua <góp ý>, /tin (xem kịch bản đang chờ),
   hoặc trả lời (reply) thẳng vào tin nháp: "ok"/"duyệt" = duyệt, "bỏ" = bỏ, chữ khác = góp ý để viết lại.
 
@@ -30,8 +30,6 @@ COMMANDS = [
     ("duyet", "Duyệt kịch bản tin nóng mới nhất (hoặc /duyet <mã>)"),
     ("sua", "Góp ý để viết lại: /sua <góp ý> hoặc /sua <mã> <góp ý>"),
     ("bo", "Bỏ kịch bản tin nóng (hoặc /bo <mã>)"),
-    ("list", "Xem link X đang chờ làm video Insight"),
-    ("cook", "Cook video Insight ngay với link đang chờ"),
 ]
 
 JUDGE_SYSTEM = """Bạn là tổng biên tập kênh video ngắn crypto tiếng Việt "Smart Penguin Insights" (TikTok, Shorts, Reels).
@@ -133,11 +131,11 @@ def say(text: str, reply_to: int | None = None, buttons: list | None = None) -> 
 
 def setup_commands(st: dict):
     """Cài menu lệnh cho bot (hiện khi gõ "/" trong Telegram). Chạy 1 lần."""
-    if st.get("commands_v") == 1:
+    if st.get("commands_v") == 2:   # 2: Trọng 23/11 bỏ /list, /cook (hết gom link Insight qua Telegram)
         return
     r = tg("setMyCommands", commands=json.dumps([{"command": c, "description": d} for c, d in COMMANDS], ensure_ascii=False))
     if r and r.get("ok"):
-        st["commands_v"] = 1
+        st["commands_v"] = 2
         log("   Đã cài menu lệnh Telegram")
 
 
@@ -475,7 +473,7 @@ def poll(out: Path, cfg: dict) -> str:
     st = load_state(out)
     setup_commands(st)
     save_state(out, st)
-    I.inbox(out, cfg)      # đọc toàn bộ tin nhắn mới (lệnh tin nóng + link X cho Insight)
+    I.inbox(out, cfg)      # đọc tin nhắn mới (chỉ lệnh tin nóng)
     revise_all(out, cfg)
     st = load_state(out)
     ready = sorted([x for x in st["drafts"].values() if x.get("status") == "approved"], key=lambda x: x.get("approved", ""))

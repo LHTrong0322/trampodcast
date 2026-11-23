@@ -110,8 +110,8 @@ news_flash:
   short_cta: "Theo dõi Smart Penguin Insights để không lỡ tin nóng nhé!"
 
 # ---------------------------------------------------------------------
-#  TRẠM INSIGHT, gửi link bài X chất lượng vào bot Telegram → video chia sẻ insight
-#  Lệnh trong Telegram: gửi link (nhiều link 1 lúc cũng được) · /list xem link đang chờ · /cook làm ngay
+#  TRẠM INSIGHT, link bài X → video chia sẻ insight
+#  Trọng 23/11: đã bỏ gom link qua Telegram (/list, /cook, tự cook buổi tối). Nhập link khi bấm chạy insight.yml.
 # ---------------------------------------------------------------------
 insight:
   enabled: true

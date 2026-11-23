@@ -187,6 +187,8 @@ nhánh podcast-data = dữ liệu + web Cloudflare Pages "trampodcast").
 
 ## 2. File chính của Insight
 - insight.py: hộp thư Telegram (inbox) + `produce()` = quy trình chính (có thanh tiến độ % trên Telegram).
+- ĐÃ BỎ (Trọng 23/11, xoá vĩnh viễn): gom link X qua Telegram để tối tự cook video Insight. Bot không nhận link,
+  không gửi "Đã nhận link", không còn /list, /cook. inbox() chỉ còn đọc lệnh tin nóng. Link chỉ nhập lúc bấm chạy insight.yml.
 - insight_lab.py: `prepare()` đọc bài X đầy đủ (fxtwitter), viết kịch bản (PROMPT), dữ liệu thật (CoinGecko,
   alternative.me), lọc ảnh bằng AI, màu brand dự án, đọc giọng TỪNG ĐOẠN (không gộp, tránh cắt giữa câu).
 - insight_render.py: dựng Remotion: timeline, phụ đề EN (dịch theo câu), số liệu chỉ lấy số CÓ THẬT trong bài
