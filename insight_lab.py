@@ -696,6 +696,10 @@ def speak(cfg: dict, voice: str, parts: list[str], outdir: Path) -> bool:
         log(f"   ⚠️ Chưa có INSIGHT_GEMINI_API_KEY → bỏ qua giọng Gemini {name} để giữ lượt cho podcast")
         return False
     # "Ludo@kol": giọng Ludo + lời dặn phong cách (Trọng chọn mẫu N "vibe KOL crypto" 21/11)
+    # Trọng chốt 15:56 23/11: giọng Ludo KOL giọng Bắc nghiêm túc (index fund v8) dùng cho MỌI video về sau.
+    # Gọi "gemini:Ludo" trơn (không lời dặn) thì tự gắn @kol, tránh lặp lỗi 22/11 đọc ra giọng miền Nam.
+    if name == "Ludo":
+        name = "Ludo@kol"
     name, _, style = name.partition("@")
     cfg["podcast"]["voice"] = name
     cfg["podcast"]["voice_style"] = ""

@@ -14,7 +14,7 @@
   cùng chiều cao khung nhãn nên 2 số luôn thẳng hàng; nhãn dài xuống dòng ở dấu phẩy.
 - Biểu đồ cổ phiếu/chỉ số nhiều năm: beat chart thêm "years": 30 (giá tháng Yahoo), tiêu đề ghi "30 năm".
 - Kịch bản viết CHỮ SỐ (phụ đề hiện "9" không phải "chín"); giọng đọc tự đổi số sang chữ (vi_num.py); S&P 500 đọc "ét en pi năm trăm".
-- Giọng chính Ludo@kol: giọng Bắc chuẩn Hà Nội, nghiêm túc (Trọng 23/11). Ô voice khi dispatch để trống.
+- 🔒 GIỌNG CHỐT (Trọng 15:56 23/11, sau video index fund v8: "giọng hiện tại đã ổn, áp dụng cho tất cả video về sau"): gemini:Ludo@kol với lời dặn voice_ludo2.STYLE["kol"] (giọng Bắc chuẩn Hà Nội, nghiêm túc, đáng tin). Không đổi lời dặn này. Ô voice khi dispatch để trống; gọi "gemini:Ludo" trơn cũng tự gắn @kol (insight_lab.speak). Lượt nháp vẫn VieNeu Hải Đăng như quy trình 2 lượt.
 
 ## ⚡ TIN NÓNG 4 TIẾNG + DỪNG VIDEO TUẦN (TRỌNG CHỐT 00:28 NGÀY 23/11)
 - DỪNG video tổng hợp tuần: video-weekly.yml bỏ lịch (chỉ còn bấm tay), podcast.yml bỏ bước "làm sẵn đoạn video của ngày", sources.yaml video.enabled: false.
