@@ -10,7 +10,7 @@ Duyệt trên Telegram (đọc qua insight.py inbox; từ 23/11 bot KHÔNG còn 
   hoặc trả lời (reply) thẳng vào tin nháp: "ok"/"duyệt" = duyệt, "bỏ" = bỏ, chữ khác = góp ý để viết lại.
 
 Sau khi duyệt (mode "poll", news-flash-gate.yml gọi khi có lệnh mới):
-  dựng short 9:16 bằng giọng VieNeu Hải Đăng → gửi Telegram để Trọng xem. KHÔNG tự đăng.
+  dựng short 9:16 bằng giọng xịn (sources.yaml news_flash.voice, Ludo KOL) → gửi Telegram để Trọng xem. KHÔNG tự đăng.
 """
 from __future__ import annotations
 
@@ -161,7 +161,7 @@ def draft_text(d: dict, plan: dict) -> str:
         f"Quan trọng {d.get('importance', '?')}/10 · Câu view {d.get('viral', '?')}/10",
         f"Claude chấm kịch bản: {plan.get('script_score', '?')}/10"
         + (" (" + ", ".join(f"{k} {v}" for k, v in scores.items()) + ")" if scores else ""),
-        f"Độ dài ước tính: khoảng {round(n_words / 3.5)} giây · giọng Hải Đăng · short 9:16",
+        f"Độ dài ước tính: khoảng {round(n_words / 3.5)} giây · giọng {str(ncfg(V.load_cfg()).get('voice', '')).split(':')[-1].split('@')[0]} · short 9:16",
         "",
         f"TIÊU ĐỀ: {plan.get('title', '')}",
         f"ẢNH BÌA: {plan.get('thumb_text', '')} · {plan.get('thumb_stat', '')}",
@@ -401,7 +401,7 @@ def on_update(out: Path, cfg: dict, up: dict) -> bool:
     if act == "ok":
         d["status"] = "approved"
         d["approved"] = now_vn().isoformat()
-        say(f"✅ Đã duyệt kịch bản {d['id']}. Bot bắt đầu dựng short (giọng Hải Đăng), khoảng 20 đến 40 phút sẽ gửi video.",
+        say(f"✅ Đã duyệt kịch bản {d['id']}. Bot bắt đầu dựng short, khoảng 20 đến 40 phút sẽ gửi video.",
             reply_to=d.get("msg_id"))
     elif act == "no":
         d["status"] = "rejected"
@@ -449,7 +449,7 @@ def build(out: Path, cfg: dict, did: str):
     d = st["drafts"][did]
     d["status"] = "building"
     save_state(out, st)
-    voice = os.getenv("NF_VOICE", "").strip() or ncfg(cfg).get("voice", "vieneu:Hải Đăng")
+    voice = os.getenv("NF_VOICE", "").strip() or ncfg(cfg).get("voice", "gemini:Ludo@kol")
     os.environ.update(INSIGHT_SCRIPT=str(out / d["script"]), INSIGHT_VOICE=voice,
                       INSIGHT_TWO_PASS="0", SOCIAL_AUTOPOST="0", INSIGHT_FORMAT="news")
     try:
@@ -590,7 +590,7 @@ def main():
         if os.getenv("NF_APPROVE") == "1":   # Trọng đã nói rõ "cook video" trong chat: duyệt luôn, dựng ngay
             d.update(status="approved", approved=now_vn().isoformat(), version=d.get("version", 1) + 1)
             save_state(out, st)
-            say(f"✅ Đã cập nhật kịch bản {a.id} theo bản Trọng sửa (tiêu đề, ảnh bìa). Bot bắt đầu dựng short giọng Hải Đăng, "
+            say(f"✅ Đã cập nhật kịch bản {a.id} theo bản Trọng sửa (tiêu đề, ảnh bìa). Bot bắt đầu dựng short, "
                 "khoảng 20 đến 40 phút sẽ gửi video.", reply_to=d.get("msg_id"))
             return output("build", a.id)
         d.update(status="waiting", version=d.get("version", 1) + 1)

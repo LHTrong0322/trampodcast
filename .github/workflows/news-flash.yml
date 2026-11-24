@@ -1,4 +1,4 @@
-name: Tin nóng 4 tiếng (lọc tin → kịch bản short chờ duyệt → dựng Hải Đăng)
+name: Tin nóng 4 tiếng (lọc tin → kịch bản short chờ duyệt → dựng giọng xịn)
 
 # Trọng 23/11: cứ 4 tiếng lọc tin, chỉ tin cực kỳ quan trọng hoặc rất dễ viral mới viết kịch bản short.
 # Kịch bản gửi Telegram chờ Trọng duyệt (nút ✅/✏️/❌ hoặc /duyet, /sua, /bo, /tin). Duyệt xong mới dựng.
@@ -22,7 +22,7 @@ on:
         required: false
         default: ""
       voice:
-        description: "giọng dựng (để trống = Hải Đăng). Giọng xịn: gemini:Ludo@kol"
+        description: "giọng dựng (để trống = giọng xịn trong sources.yaml news_flash.voice; nháp: vieneu:Hải Đăng)"
         required: false
         default: ""
       approve:

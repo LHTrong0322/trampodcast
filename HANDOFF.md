@@ -54,7 +54,8 @@
 - TỰ SỬA THEO REVIEW SAU DỰNG (news_flash.build + preflight.plan_fix, Trọng 24/11): dựng xong bot review chấm < 8 thì Claude đọc can_sua,
   viết lại danh sách thẻ hình (mỗi thẻ neo "at" nguyên văn lời đọc, số bignum phải có trong lời đọc, ảnh không theo tên người), dựng lại
   (giọng giữ nguyên), tối đa news_flash.fix_rounds = 2 vòng. Telegram nhận "🔁 Bot tự sửa theo review: điểm a → b → c". Bản sửa có quá ít
-  thẻ hợp lệ thì bỏ, giữ bản cũ. Workflow news-flash có input voice (giọng xịn: gemini:Ludo@kol). Số ảnh bìa: dấu + màu xanh, dấu − màu đỏ.
+  thẻ hợp lệ thì bỏ, giữ bản cũ. GIỌNG TIN NÓNG (Trọng 24/11): mặc định giọng xịn như video đã duyệt, sources.yaml news_flash.voice = gemini:Ludo@kol;
+  Hải Đăng chỉ là nháp. Gemini hết lượt thì dừng và báo, không tự đổi giọng (luật 20/11). Workflow có input voice để đổi tay. Số ảnh bìa: dấu + màu xanh, dấu − màu đỏ.
 - Ảnh người thật (kể cả ảnh chế Trump đăng về Huang 23/11): KHÔNG đưa vào video. Kể sự kiện bằng lời đọc + thẻ chữ.
 - Ảnh bìa tin nóng: dùng thumb_text + thumb_stat Trọng chọn, dòng dưới "Tin nóng · @Trong0322" (không "Xem bản đầy đủ trên YouTube").
   Không cắt cứng 60 ký tự nữa (từng mất dấu %). Ảnh gửi Telegram dạng JPEG nhẹ (PNG 1MB bị Telegram Desktop kẹt).
