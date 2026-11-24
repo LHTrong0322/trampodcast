@@ -6,5 +6,6 @@
   "youtube",
   "facebook"
  ],
- "fb_caption_clean": true
+ "fb_caption_clean": true,
+ "asr_removed": true
 }
