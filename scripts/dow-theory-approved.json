@@ -1,0 +1,526 @@
+{
+ "title": "Lý thuyết Dow: gồng hay thoát khi BTC gãy trend?",
+ "description": "Bài học đầu tư từ số 0: lý thuyết Dow (Dow Theory), gốc rễ của phân tích kỹ thuật. Giá phản ánh mọi thứ, 3 loại xu hướng (thuỷ triều, sóng, gợn), 3 giai đoạn của xu hướng lớn, cách xác nhận xu hướng bằng đỉnh đáy và volume, và vì sao nhà đầu tư dài hạn vẫn cần tư duy trading. Ví dụ BTC thật từ 2022 tới 2026.",
+ "theme": "Đầu tư từ số 0",
+ "own_source": true,
+ "source_post": {
+  "author": "Smart Penguin Insights",
+  "handle": "Trong0322",
+  "url": "https://en.wikipedia.org/wiki/Dow_theory",
+  "title": "Dow theory (Wikipedia, Britannica); BTC price history",
+  "text": "Dow theory derived from 255 Wall Street Journal editorials by Charles H. Dow (1851 to 1902), founder of the WSJ and co-founder of Dow Jones & Company. Dow never used the term Dow theory. Hamilton, Rhea and Schaefer summarized six tenets: the market discounts everything; three movements (primary: a year or more, secondary: weeks to months, retracing about 1/3 to 2/3; minor: days); primary trends have three phases: accumulation, public participation, distribution; averages must confirm each other (industrials and rails); volume must confirm the trend; a trend persists until a definitive reversal signal (lower high and lower low). Dow Jones Industrial Average 1896 with 12 stocks. BTC: ATH about $69K Nov 2021, bottom about $15.5K Nov 2022, June 2022 low about $17.6K, Aug 2022 rally to about $25K, accumulation $16K to $25K late 2022 to early 2023, US spot BTC ETF approved Jan 2024, ATH about $126K Oct 2025, no rally has reclaimed that high since."
+ },
+ "hook_screen": "GỒNG HAY THOÁT?",
+ "hook_stat": "$126K",
+ "hook_label": "ATH BTC tháng 10/2025",
+ "hook": "BTC đã mất gần một nửa từ ATH $126K. Có người gồng lỗ tới giờ, có người thoát từ rất sớm. Khác biệt nằm ở một lý thuyết hơn 125 năm tuổi.",
+ "hook_beats": [
+  {
+   "at": "ath $126K",
+   "type": "bignum",
+   "value": "$126K",
+   "label": "ATH BTC tháng 10/2025, giờ mất gần một nửa",
+   "tone": "down",
+   "tone_lock": true
+  },
+  {
+   "at": "có người gồng lỗ",
+   "type": "question",
+   "text": "Gồng lỗ hay thoát sớm?"
+  },
+  {
+   "at": "hơn 125 năm tuổi",
+   "type": "statement",
+   "text": "Lý thuyết Dow, từ năm 1896"
+  }
+ ],
+ "intro": "Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Người thoát sớm không đoán giá. Họ chỉ đọc xu hướng, theo đúng những gì Charles Dow viết từ hơn 100 năm trước. Mình đi qua 5 phần, phần nào cũng có ví dụ BTC thật.",
+ "agenda_label": "5 PHẦN",
+ "visual_queries": [
+  "stock market chart trend",
+  "ocean tide waves"
+ ],
+ "sections": [
+  {
+   "heading": "Lý thuyết Dow là gì?",
+   "edu": true,
+   "key_stat": "1896",
+   "key_label": "năm ra đời chỉ số Dow Jones",
+   "bullets": [
+    "Gốc của phân tích kỹ thuật",
+    "Giá phản ánh mọi thứ",
+    "Nhìn giá trước, tin sau"
+   ],
+   "narration": "Đầu tiên, lý thuyết Dow là gì? Charles Dow là người sáng lập tờ Wall Street Journal. Năm 1896, ông tạo ra chỉ số Dow Jones công nghiệp, chỉ gồm 12 cổ phiếu. Từ 255 bài báo của ông, những người đi sau gom lại thành lý thuyết Dow. Điều thú vị: chính Dow chưa bao giờ dùng cái tên này. Ý cốt lõi đầu tiên: giá đã phản ánh mọi thứ. Tin tốt, tin xấu, kỳ vọng, nỗi sợ, tất cả đều nằm trong giá. Ví dụ, một tin xấu chưa lên báo, giá đã giảm trước vài ngày. Vì insider và quỹ lớn hành động trước retail. Vậy thì sao? Thay vì chạy theo tin, hãy nhìn giá trước. Nhưng nhìn giá thế nào cho đúng?",
+   "beats": [
+    {
+     "at": "năm 1896",
+     "type": "bignum",
+     "value": "12",
+     "label": "cổ phiếu trong chỉ số Dow Jones đầu tiên (1896)",
+     "tone": "up"
+    },
+    {
+     "at": "255 bài báo",
+     "type": "bignum",
+     "value": "255",
+     "label": "bài báo của Charles Dow trên Wall Street Journal",
+     "tone": "up"
+    },
+    {
+     "at": "chưa bao giờ dùng cái tên này",
+     "type": "statement",
+     "text": "Dow chưa từng gọi nó là lý thuyết"
+    },
+    {
+     "at": "giá đã phản ánh mọi thứ",
+     "type": "statement",
+     "text": "GIÁ PHẢN ÁNH MỌI THỨ"
+    },
+    {
+     "at": "một tin xấu chưa lên báo",
+     "type": "flow",
+     "label": "Giá chạy trước tin",
+     "steps": [
+      "Tin xấu chưa lên báo",
+      "Giá giảm trước",
+      "Insider đã hành động"
+     ],
+     "step_at": [
+      "một tin xấu chưa lên báo",
+      "giá đã giảm trước",
+      "vì insider"
+     ]
+    },
+    {
+     "at": "nhìn giá thế nào",
+     "type": "question",
+     "text": "Nhìn giá thế nào cho đúng?"
+    }
+   ],
+   "visual_queries": [
+    "Wall Street Journal newspaper history",
+    "stock market ticker tape"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Thuỷ triều, sóng và gợn",
+   "edu": true,
+   "key_stat": "3",
+   "key_label": "loại xu hướng chạy cùng lúc",
+   "bullets": [
+    "Primary: thuỷ triều, 1 năm trở lên",
+    "Secondary: con sóng, vài tuần",
+    "Minor: gợn nước, vài ngày"
+   ],
+   "narration": "Phần hai: thị trường luôn có 3 loại xu hướng cùng lúc. Dow ví nó như mặt biển. Primary trend là thuỷ triều, kéo dài từ một năm đến nhiều năm. Secondary trend là con sóng, đi ngược thuỷ triều vài tuần đến vài tháng. Nó thường lấy lại khoảng 1/3 đến 2/3 nhịp trước đó. Còn minor trend là gợn nước, dao động vài ngày, gần như chỉ là nhiễu. Ví dụ năm 2022, thuỷ triều của BTC là giảm, từ khoảng $69K về khoảng $15.5K. Giữa năm, có nhịp hồi từ khoảng $17.6K lên khoảng $25K. Nhiều người tưởng uptrend đã quay lại. Thực ra đó chỉ là con sóng, thuỷ triều vẫn đang rút. Vậy thì sao? Đừng nhầm một con sóng với cả thuỷ triều. Và phần tiếp theo mới là cái bẫy đắt nhất.",
+   "beats": [
+    {
+     "at": "3 loại xu hướng",
+     "type": "flow",
+     "label": "3 xu hướng cùng lúc",
+     "steps": [
+      "Thuỷ triều: primary",
+      "Con sóng: secondary",
+      "Gợn nước: minor"
+     ],
+     "step_at": [
+      "primary trend là thuỷ triều",
+      "secondary trend là con sóng",
+      "minor trend là gợn nước"
+     ]
+    },
+    {
+     "at": "1/3 đến 2/3",
+     "type": "bignum",
+     "value": "1/3 đến 2/3",
+     "label": "mức hồi thường gặp của một con sóng",
+     "tone": "up"
+    },
+    {
+     "at": "thuỷ triều của BTC là giảm",
+     "type": "versus",
+     "left": {
+      "label": "Đỉnh 11/2021",
+      "value": "$69K",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Đáy 11/2022",
+      "value": "$15.5K",
+      "tone": "down"
+     },
+     "hold": 3.5
+    },
+    {
+     "at": "nhịp hồi từ khoảng",
+     "type": "versus",
+     "left": {
+      "label": "Đáy 6/2022",
+      "value": "$17.6K",
+      "tone": "down"
+     },
+     "right": {
+      "label": "Nhịp hồi 8/2022",
+      "value": "~$25K",
+      "tone": "up"
+     },
+     "hold": 3.5
+    },
+    {
+     "at": "thuỷ triều vẫn đang rút",
+     "type": "wma",
+     "label": "BTC theo tuần: thuỷ triều lên xuống nhiều năm",
+     "tag": "Sóng ngắn, triều dài"
+    },
+    {
+     "at": "đừng nhầm một con sóng",
+     "type": "statement",
+     "text": "Đừng nhầm con sóng với thuỷ triều"
+    },
+    {
+     "at": "cái bẫy đắt nhất",
+     "type": "question",
+     "text": "Cái bẫy đắt nhất là gì?"
+    }
+   ],
+   "visual_queries": [
+    "ocean tide waves",
+    "sea waves aerial"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "3 giai đoạn của một xu hướng lớn",
+   "edu": true,
+   "key_stat": "$126K",
+   "key_label": "ATH BTC 2025, lúc hưng phấn nhất",
+   "bullets": [
+    "Accumulation: gom khi tin xấu",
+    "Public participation: đám đông vào",
+    "Distribution: xả khi hưng phấn"
+   ],
+   "narration": "Phần ba, và đây là phần quan trọng nhất video. Một primary trend tăng thường đi qua 3 giai đoạn. Một: accumulation, tức giai đoạn gom hàng. Tin tức còn xấu, retail chán nản, nhưng dòng tiền thông minh bắt đầu mua. Hai: public participation, giai đoạn đám đông tham gia. Giá tăng rõ, tin tốt dồn dập. Ba: distribution, tức giai đoạn xả hàng. Ai cũng nói về coin, retail FOMO mua đuổi, còn người mua sớm lặng lẽ bán ra. Nhìn lại BTC: cuối 2022 đầu 2023, quanh $16K đến $25K, là accumulation. Năm 2024, ETF spot được duyệt, đám đông đổ vào. Năm 2025, BTC lập ATH quanh $126K, đúng lúc hưng phấn nhất. Đây là nhìn lại sau khi mọi chuyện đã xảy ra. Vậy thì sao? Giai đoạn 3 là cái bẫy retail hay rơi vào nhất. Lúc thấy an toàn nhất, thường là lúc rủi ro nhất.",
+   "beats": [
+    {
+     "at": "phần quan trọng nhất",
+     "type": "statement",
+     "text": "Phần quan trọng nhất"
+    },
+    {
+     "at": "đi qua 3 giai đoạn",
+     "type": "flow",
+     "label": "3 giai đoạn của xu hướng tăng",
+     "steps": [
+      "Accumulation: gom hàng",
+      "Public participation: đám đông vào",
+      "Distribution: xả hàng"
+     ],
+     "step_at": [
+      "một: accumulation",
+      "hai: public participation",
+      "ba: distribution"
+     ]
+    },
+    {
+     "at": "người mua sớm lặng lẽ bán ra",
+     "type": "statement",
+     "text": "Retail mua đuổi, người mua sớm bán ra"
+    },
+    {
+     "at": "cuối 2022 đầu 2023",
+     "type": "bignum",
+     "value": "$16K đến $25K",
+     "label": "BTC cuối 2022 đầu 2023: accumulation",
+     "tone": "up",
+     "tone_lock": true
+    },
+    {
+     "at": "etf spot được duyệt",
+     "type": "statement",
+     "text": "2024: ETF spot BTC được duyệt, đám đông vào"
+    },
+    {
+     "at": "ath quanh $126K",
+     "type": "bignum",
+     "value": "$126K",
+     "label": "ATH 2025: lúc hưng phấn nhất",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "nhìn lại sau",
+     "type": "statement",
+     "text": "Nhìn lại sau, không phải dự đoán"
+    },
+    {
+     "at": "lúc thấy an toàn nhất",
+     "type": "statement",
+     "text": "An toàn nhất = rủi ro nhất"
+    }
+   ],
+   "visual_queries": [
+    "crowd euphoria stock market",
+    "bitcoin trading screen"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Đọc xu hướng: đỉnh, đáy và volume",
+   "edu": true,
+   "key_stat": "3",
+   "key_label": "cách kiểm tra xu hướng của Dow",
+   "bullets": [
+    "Đỉnh, đáy cao dần = uptrend",
+    "Volume phải đi cùng giá",
+    "BTC, ETH, altcoin cùng chiều"
+   ],
+   "narration": "Vậy làm sao biết thuỷ triều đã đổi chiều? Dow đưa ra 3 cách kiểm tra. Thứ nhất, đỉnh và đáy. Uptrend là chuỗi higher high, higher low, tức đỉnh sau cao hơn đỉnh trước, đáy sau cao hơn đáy trước. Xu hướng vẫn còn, cho tới khi có tín hiệu đảo chiều rõ ràng. Tín hiệu đó là: hồi lên không vượt đỉnh cũ, rồi thủng luôn đáy cũ. Thứ hai, volume phải xác nhận. Giá tăng mà volume teo dần, con sóng đó yếu. Thứ ba, các chỉ số phải xác nhận lẫn nhau. Thời Dow là cổ phiếu công nghiệp và đường sắt. Trong crypto, bạn có thể so BTC với ETH và nhóm altcoin. Ví dụ hiện tại, BTC đã giảm khoảng {YTD:BTC}% từ đầu năm 2026. Từ đỉnh $126K, chưa nhịp hồi nào lấy lại đỉnh cũ. Theo Dow, đây là lúc cần thận trọng, chưa phải lúc nói uptrend đã quay lại.",
+   "beats": [
+    {
+     "at": "3 cách kiểm tra",
+     "type": "flow",
+     "label": "3 cách kiểm tra của Dow",
+     "steps": [
+      "Đỉnh và đáy",
+      "Volume xác nhận",
+      "Chỉ số xác nhận nhau"
+     ],
+     "step_at": [
+      "thứ nhất, đỉnh và đáy",
+      "thứ hai, volume",
+      "thứ ba, các chỉ số"
+     ]
+    },
+    {
+     "at": "higher high, higher low",
+     "type": "statement",
+     "text": "Higher high + higher low = uptrend"
+    },
+    {
+     "at": "không vượt đỉnh cũ",
+     "type": "statement",
+     "text": "Đỉnh thấp hơn + thủng đáy cũ = đảo chiều"
+    },
+    {
+     "at": "volume teo dần",
+     "type": "statement",
+     "text": "Giá tăng, volume giảm = sóng yếu"
+    },
+    {
+     "at": "so BTC với ETH",
+     "type": "logos",
+     "label": "Các chỉ số phải cùng chiều",
+     "items": [
+      {
+       "logo": "BTC",
+       "label": "Bitcoin"
+      },
+      {
+       "logo": "ETH",
+       "label": "Ethereum"
+      }
+     ]
+    },
+    {
+     "at": "từ đầu năm 2026",
+     "type": "chart",
+     "ticker": "BTC",
+     "days": 330,
+     "label": "BTC 2026 tới {DATE}: chưa lấy lại đỉnh cũ",
+     "hold": 4
+    },
+    {
+     "at": "cần thận trọng",
+     "type": "statement",
+     "text": "Theo Dow: thận trọng, chưa phải uptrend"
+    }
+   ],
+   "visual_queries": [
+    "stock chart trend lines",
+    "trading volume chart"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Vì sao nhà đầu tư cần tư duy trading",
+   "edu": true,
+   "key_stat": "-10%",
+   "key_label": "thay vì gồng -50%",
+   "bullets": [
+    "Biết mình ở thuỷ triều nào",
+    "Triều lên: DCA nhịp điều chỉnh",
+    "Triều rút: giảm rủi ro, có stop loss"
+   ],
+   "narration": "Phần cuối: vì sao người đầu tư dài hạn vẫn cần tư duy trading? Vì đầu tư không phải mua rồi quên. Bạn không cần lướt từng ngày. Nhưng bạn cần biết mình đang ở thuỷ triều nào. Thuỷ triều lên, các nhịp điều chỉnh là cơ hội DCA, tức mỗi tháng bỏ vào một khoản cố định. Thuỷ triều rút, nhịp hồi là lúc giảm bớt rủi ro, không phải lúc all-in. Ví dụ bạn mua ở $100, đáy gần nhất là $90. Đặt stop loss, tức lệnh cắt lỗ tự động, ngay dưới $90. Thủng đáy đó là xu hướng đã đổi. Bạn rút ra, mất khoảng 10%, thay vì gồng mất 50%. Nhưng nhớ, Dow có điểm yếu. Tín hiệu đến chậm, thường bỏ lỡ phần đầu và phần cuối con sóng. Hãy dùng nó như la bàn, không phải quả cầu pha lê.",
+   "beats": [
+    {
+     "at": "mua rồi quên",
+     "type": "statement",
+     "text": "Đầu tư không phải mua rồi quên"
+    },
+    {
+     "at": "thuỷ triều lên",
+     "type": "versus",
+     "left": {
+      "label": "Triều lên",
+      "value": "DCA",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Triều rút",
+      "value": "Giảm rủi ro",
+      "tone": "down"
+     },
+     "hold": 3.5
+    },
+    {
+     "at": "bạn mua ở $100",
+     "type": "flow",
+     "label": "Stop loss theo đáy",
+     "steps": [
+      "Mua $100",
+      "Stop loss dưới $90",
+      "Thủng đáy: thoát"
+     ],
+     "step_at": [
+      "bạn mua ở $100",
+      "đặt stop loss",
+      "thủng đáy đó"
+     ]
+    },
+    {
+     "at": "mất khoảng 10%",
+     "type": "versus",
+     "left": {
+      "label": "Có stop loss",
+      "value": "-10%",
+      "tone": "down"
+     },
+     "right": {
+      "label": "Gồng lỗ",
+      "value": "-50%",
+      "tone": "down"
+     },
+     "hold": 3.5
+    },
+    {
+     "at": "dow có điểm yếu",
+     "type": "statement",
+     "text": "Điểm yếu: tín hiệu đến chậm"
+    },
+    {
+     "at": "như la bàn",
+     "type": "statement",
+     "text": "La bàn, không phải quả cầu pha lê"
+    }
+   ],
+   "visual_queries": [
+    "compass navigation",
+    "trader risk management"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  }
+ ],
+ "outro": "Tóm lại: giá phản ánh mọi thứ, đừng nhầm con sóng với thuỷ triều, và cẩn thận nhất khi đám đông hưng phấn nhất. Đây là nội dung giáo dục, không phải lời khuyên đầu tư. Bình luận cho mình biết: theo bạn, thuỷ triều BTC lúc này đang lên hay đang rút?",
+ "outro_points": [
+  "Giá phản ánh mọi thứ",
+  "Sóng không phải thuỷ triều",
+  "Hưng phấn nhất = rủi ro nhất"
+ ],
+ "outro_cta": "THUỶ TRIỀU BTC: LÊN HAY RÚT?",
+ "shorts": [
+  2,
+  1
+ ],
+ "short_spans": [
+  {
+   "from": "một primary trend tăng",
+   "to": "thường là lúc rủi ro nhất"
+  },
+  {
+   "from": "ví dụ năm 2022",
+   "to": "với cả thuỷ triều"
+  }
+ ],
+ "short_hooks": {
+  "2": "ATH $126K: lúc an toàn nhất lại rủi ro nhất?",
+  "1": "BTC hồi $17K lên $25K: uptrend hay cái bẫy?"
+ },
+ "short_cta": "Thuỷ triều BTC đang lên hay rút? Bình luận nhé!",
+ "thumb_text": "GỒNG HAY THOÁT?",
+ "thumb_stat": "{YTDS:BTC}%",
+ "thumb_points": [
+  "Thuỷ triều, sóng, gợn",
+  "Gom, đám đông, xả hàng",
+  "Đỉnh thấp dần = báo động"
+ ],
+ "thumb_warn": true,
+ "thumb_tag": "LÝ THUYẾT DOW"
+}
