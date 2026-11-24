@@ -9,4 +9,6 @@
 
 Khi Trọng nói "đăng video N" thì tra bảng này để lấy đúng bản dựng.
 
-TikTok (vidIQ, đã lên lịch 23/11): Video 1 Short 2 T3 24/11 10:00; Video 3 Short 4 T4 25/11 18:30, Short 1 T5 26/11 18:30, Short 5 T2 30/11 18:30, Short 2 T3 1/12 18:30, Short 3 T4 2/12 18:30; Video 2 Short 1 T7 28/11 19:00, Short 2 CN 29/11 19:00.
+TikTok (vidIQ, đã lên lịch 23/11): Video 1 Short 2 T3 24/11 11:30 (Trọng dời từ 10:00 ngày 24/11); Video 3 BẢN DÀI T3 24/11 19:00 (Trọng thêm 24/11); Video 3 Short 4 T4 25/11 18:30, Short 1 T5 26/11 18:30, Short 5 T2 30/11 18:30, Short 2 T3 1/12 18:30, Short 3 T4 2/12 18:30; Video 2 Short 1 T7 28/11 19:00, Short 2 CN 29/11 19:00.
+
+Tin nóng (không có bản dài): NVDA "Jensen Huang trở lại, Nvidia bật hơn 30%" insight-20261124-0716, đã đăng 24/11 ~08:20: YouTube XCKLwPR0YSM, Facebook Reel 2936437546729216, TikTok 7711540657038298389.
