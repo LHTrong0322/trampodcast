@@ -233,7 +233,7 @@ def beats_for(beats: list, words: list, dur: float, data: dict) -> list:
 # Trọng 22/11: hình đang dựng dở không được biến mất (biểu đồ chưa vẽ xong đã chuyển cảnh).
 # Mỗi kiểu hình có thời gian tối thiểu đủ để chạy xong hiệu ứng và để người xem đọc; "hold" kéo dài thêm.
 # Tuyệt đối KHÔNG chèn khoảng lặng vào giọng đọc để giữ hình (Trọng 22/11: nghe như video bị mất tiếng).
-MIN_BEAT = {"matrix": 4.5, "race": 5.5, "chart": 4.0, "versus": 3.5, "flow": 4.0, "dots": 3.0, "bignum": 2.6, "logos": 2.4,
+MIN_BEAT = {"matrix": 4.5, "race": 5.5, "chart": 4.0, "wma": 7.0, "versus": 3.5, "flow": 4.0, "dots": 3.0, "bignum": 2.6, "logos": 2.4,
             "statement": 2.4, "question": 2.0, "photo": 2.6}
 
 

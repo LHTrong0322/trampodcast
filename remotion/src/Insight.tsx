@@ -210,12 +210,19 @@ const Bullets: React.FC<{items: string[]; dur: number; fps: number}> = ({items, 
             padding: '8px 16px', marginLeft: -16, borderRadius: 14, background: active ? `${ac}18` : 'transparent',
             fontFamily: FONT, fontSize: 40, fontWeight: active ? 800 : 700, color: C.ink}}>
             <div style={{width: 10, height: 10, borderRadius: 99, background: ac, flexShrink: 0}} />
-            <span>{b}</span>
+            <span><SignText text={b} /></span>
           </div>
         );
       })}
     </div>
   );
+};
+
+// Trọng 24/11: số có dấu trong dòng chữ (bullet) cũng theo màu: "+" xanh, "-" đỏ (như thẻ số, sign_tone)
+export const SignText: React.FC<{text: string}> = ({text}) => {
+  const parts = String(text).split(/((?:^|(?<=\s))[+\-−]\$?\d[\d.,]*\s?[%KkMB]?)/);
+  return <>{parts.map((p, i) => /^[+\-−]\$?\d/.test(p)
+    ? <b key={i} style={{color: p[0] === '+' ? C.green : C.red}}>{p}</b> : <React.Fragment key={i}>{p}</React.Fragment>)}</>;
 };
 
 export const QuoteCard: React.FC<{post: Post | null; quote: string; w: number; h: number}> = ({post, quote, w, h}) => {

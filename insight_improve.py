@@ -104,8 +104,8 @@ def improve(plan: dict, rv: dict, locked: bool = True) -> tuple[dict, list[str]]
         return plan, [f"Chưa xử lý được: {x}" for x in fixes]
     new = copy.deepcopy(plan)
     for k in VISUAL_KEYS:
-        if k in patch and patch[k] not in (None, "", []):
-            new[k] = patch[k]
+        if k in patch and patch[k] not in (None, "", []) and k not in (plan.get("lock_keys") or []):
+            new[k] = patch[k]   # "lock_keys": phần hình Trọng đã chốt (vd ảnh bìa), bot không được đổi (Trọng 24/11)
     for i, sp in enumerate((patch.get("sections") or [])[: len(new.get("sections") or [])]):
         if isinstance(sp, dict):
             for k in SEC_KEYS:

@@ -11,8 +11,14 @@
    "at": "bitcoin về năm mươi lăm nghìn đô",
    "type": "bignum",
    "value": "$55K",
-   "label": "Crypto chết rồi, hay cơ hội của cả thế hệ?",
-   "tone": "down"
+   "label": "Giá Bitcoin trong bài của 100y",
+   "tone": "down",
+   "tone_lock": true
+  },
+  {
+   "at": "crypto chết rồi",
+   "type": "statement",
+   "text": "Crypto chết rồi, hay cơ hội thế hệ?"
   },
   {
    "at": "năm tín hiệu dưới đây",
@@ -30,7 +36,7 @@
    "key_label": "chi phí đào 1 BTC, Q3/2026",
    "bullets": [
     "Giá thành đào ≈ $62.9K",
-    "Giá BTC đang thấp hơn",
+    "Giá BTC $55K, thấp hơn giá thành",
     "M2 tăng, BTC giảm"
    ],
    "beats": [
@@ -56,32 +62,27 @@
      "sub": "Thợ đào bán ra là lỗ"
     },
     {
-     "at": "dù vậy",
      "type": "flow",
      "label": "Vì sao chưa phải đáy tuyệt đối",
      "steps": [
-      "Halving giảm lượng BTC đào ra",
-      "Thợ đào chuyển sang data center AI"
+      "Halving: ít BTC hơn",
+      "Thợ đào sang AI"
      ],
      "step_at": [
       "dù vậy",
       "nhiều thợ đào đã chuyển"
-     ]
+     ],
+     "at": "dù vậy"
     },
     {
      "at": "thêm một thước đo nữa",
-     "type": "versus",
-     "left": {
-      "label": "M2 Mỹ năm 2026",
-      "value": "Tăng",
-      "tone": "up"
-     },
-     "right": {
-      "label": "Bitcoin",
-      "value": "Giảm mạnh",
-      "tone": "down"
-     },
-     "sub": "Tương quan gần như về 0"
+     "type": "statement",
+     "text": "M2 = tổng lượng tiền trong hệ thống Mỹ"
+    },
+    {
+     "type": "statement",
+     "text": "Năm 2026: M2 tăng, Bitcoin vẫn giảm mạnh",
+     "at": "năm 2026, m2 tăng trở lại"
     },
     {
      "at": "tương quan giữa hai bên",
@@ -146,14 +147,8 @@
     {
      "at": "lần này khác hẳn",
      "type": "wma",
-     "label": "BTC theo tuần và đường 200WMA, 350WMA"
-    },
-    {
-     "at": "giá đang thấp hơn đường",
-     "type": "bignum",
-     "value": "-18%",
-     "label": "dưới đường 200 tuần (200WMA)",
-     "tone": "down"
+     "label": "BTC theo tuần: đã thủng 200WMA",
+     "tag": "-18% dưới 200WMA"
     },
     {
      "at": "lần gần nhất thấy cảnh này",
@@ -232,34 +227,24 @@
      ]
     },
     {
-     "at": "nói đơn giản",
-     "type": "versus",
-     "left": {
-      "label": "MVRV cao",
-      "value": "Giá xa giá vốn",
-      "tone": "up"
-     },
-     "right": {
-      "label": "MVRV thấp",
-      "value": "Sát giá vốn holder",
-      "tone": "down"
-     },
-     "sub": "Giá vốn = giá mỗi BTC được chuyển lần cuối on-chain"
+     "type": "statement",
+     "text": "MVRV thấp = giá sát giá vốn của holder",
+     "at": "nói đơn giản"
     },
     {
-     "at": "thường là vùng mua dài hạn",
      "type": "flow",
      "label": "Khi MVRV xuống dưới 1",
      "steps": [
-      "Vùng mua dài hạn đẹp",
-      "Đáy thật sau 1 đến 6 tháng",
+      "Vùng mua dài hạn",
+      "Đáy sau 1 đến 6 tháng",
       "Đi ngang 6 đến 12 tháng"
      ],
      "step_at": [
       "thường là vùng mua dài hạn",
       "đáy thật thường đến",
       "rồi giá đi ngang"
-     ]
+     ],
+     "at": "thường là vùng mua dài hạn"
     },
     {
      "at": "điểm thú vị",
@@ -304,7 +289,7 @@
    ]
   },
   {
-   "heading": "Chu kỳ bốn năm bắt đầu lại?",
+   "heading": "Chu kỳ 4 năm xoay chiều?",
    "key_stat": "363 ngày",
    "key_label": "giảm theo chu kỳ, đã bị vượt",
    "bullets": [
@@ -326,11 +311,10 @@
      "tone": "up"
     },
     {
-     "at": "rồi giảm khoảng",
      "type": "versus",
      "left": {
       "label": "Tăng",
-      "value": "~1.061 đến 1.068 ngày",
+      "value": "~1.061 ngày",
       "tone": "up"
      },
      "right": {
@@ -338,22 +322,23 @@
       "value": "~363 ngày",
       "tone": "down"
      },
-     "sub": "Lặp lại từ đáy 2015"
+     "sub": "Lặp lại từ đáy 2015 (tăng 1.061 đến 1.068 ngày)",
+     "at": "rồi giảm khoảng"
     },
     {
-     "at": "cộng thêm halving",
      "type": "flow",
      "label": "Vì sao narrative này mạnh",
      "steps": [
       "Halving",
       "BTC không có dòng tiền",
-      "Narrative quyết định tâm lý"
+      "Narrative = tâm lý"
      ],
      "step_at": [
       "cộng thêm halving",
       "với một tài sản",
       "narrative quyết định tâm lý"
-     ]
+     ],
+     "at": "cộng thêm halving"
     },
     {
      "at": "nhưng có một rủi ro",
@@ -386,7 +371,7 @@
    ]
   },
   {
-   "heading": "Tâm lý tệ nhất, và cú bơm tiền tất yếu",
+   "heading": "Tâm lý tệ nhất, sắp bơm tiền",
    "key_stat": "Thấp nhất từ 2020",
    "key_label": "Google Trends từ khoá Bitcoin",
    "bullets": [
@@ -413,19 +398,9 @@
      "text": "Cú hích: AI sẽ dẫn tới bơm tiền lớn"
     },
     {
-     "at": "nếu ai tiếp tục tăng trưởng",
-     "type": "versus",
-     "left": {
-      "label": "AI tiếp tục tăng",
-      "value": "Tín dụng mở rộng",
-      "tone": "up"
-     },
-     "right": {
-      "label": "Bong bóng AI vỡ",
-      "value": "Nới lỏng như 2008",
-      "tone": "up"
-     },
-     "sub": "Kịch bản nào cũng dẫn tới bơm tiền"
+     "type": "statement",
+     "text": "AI tiếp tục tăng: tín dụng tư nhân mở rộng",
+     "at": "nếu ai tiếp tục tăng trưởng"
     },
     {
      "at": "nếu bong bóng ai vỡ",
@@ -440,19 +415,19 @@
      "text": "AI là tài sản chiến lược: Mỹ không thể thua Trung Quốc"
     },
     {
-     "at": "sau lùm xùm",
      "type": "flow",
      "label": "100y nghiêng về kịch bản AI vỡ",
      "steps": [
       "Jensen Huang rời Nvidia",
-      "Kết quả bầu cử giữa kỳ",
-      "Nghiêng về kịch bản AI vỡ"
+      "Bầu cử giữa kỳ",
+      "Kịch bản AI vỡ"
      ],
      "step_at": [
       "sau lùm xùm",
       "kết quả bầu cử",
       "anh nghiêng về"
-     ]
+     ],
+     "at": "sau lùm xùm"
     },
     {
      "at": "kịch bản gốc",
@@ -537,5 +512,10 @@
  "thumb_stat": "$43K?",
  "thumb_points": [],
  "thumb_warn": true,
- "thumb_tag": "5 TÍN HIỆU"
+ "thumb_tag": "5 TÍN HIỆU",
+ "lock_keys": [
+  "thumb_text",
+  "thumb_tag",
+  "hook_screen"
+ ]
 }

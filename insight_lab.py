@@ -548,6 +548,58 @@ def _btc_weekly() -> list:
     return []
 
 
+def _gtrends(keyword: str, since: str = "2019-01-01") -> list:
+    """Google Trends (toàn cầu) cho 1 từ khoá: [(ngày 'YYYY-MM-DD', điểm 0-100)], theo tuần/tháng tuỳ độ dài.
+    Gọi thẳng API của trang trends.google.com (cách pytrends làm), thử lại khi bị 429. Lỗi thì trả []."""
+    import time as _t
+    sess = requests.Session()
+    sess.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
+    end = datetime.utcnow().strftime("%Y-%m-%d")
+    for attempt in range(4):
+        try:
+            sess.get("https://trends.google.com/trends/explore", params={"q": keyword}, timeout=20)
+            req = {"comparisonItem": [{"keyword": keyword, "geo": "", "time": f"{since} {end}"}], "category": 0, "property": ""}
+            r = sess.get("https://trends.google.com/trends/api/explore",
+                         params={"hl": "en-US", "tz": 0, "req": json.dumps(req)}, timeout=20)
+            if r.status_code == 429:
+                raise RuntimeError("429")
+            w = next(x for x in json.loads(r.text[r.text.index("{"):])["widgets"] if x.get("id") == "TIMESERIES")
+            r = sess.get("https://trends.google.com/trends/api/widgetdata/multiline",
+                         params={"hl": "en-US", "tz": 0, "req": json.dumps(w["request"]), "token": w["token"]}, timeout=20)
+            if r.status_code == 429:
+                raise RuntimeError("429")
+            rows = json.loads(r.text[r.text.index("{"):])["default"]["timelineData"]
+            out = [(datetime.utcfromtimestamp(int(x["time"])).strftime("%Y-%m-%d"), int(x["value"][0])) for x in rows if x.get("value")]
+            if len(out) > 20:
+                return out
+        except Exception as ex:
+            log(f"   ! Google Trends '{keyword}' lần {attempt + 1}: {ex}")
+        _t.sleep(6 * (attempt + 1))
+    return []
+
+
+def trend_data(plan: dict, data: dict):
+    """Trọng 24/11: câu "Google Trends cho Bitcoin thấp nhất từ 2020" phải có biểu đồ Google Trends thật (beat type "trend",
+    "keyword"). Không lấy được dữ liệu thì bỏ beat (ghi log), thẻ số bên cạnh vẫn còn."""
+    secs = [("hook_beats", plan)] + [("beats", s) for s in plan.get("sections", [])]
+    kws = {b.get("keyword") or "Bitcoin" for k, s in secs for b in (s.get(k) or []) if b.get("type") == "trend"}
+    if not kws:
+        return
+    data["trends"] = {}
+    for kw in kws:
+        rows = _gtrends(kw)
+        if rows:
+            data["trends"][kw] = {"dates": [d for d, _ in rows], "values": [v for _, v in rows]}
+            log(f"   Google Trends '{kw}': {len(rows)} điểm, hiện tại {rows[-1][1]}, thấp nhất từ 2020: "
+                f"{min(v for d, v in rows if d >= '2020')}")
+    for k, s in secs:
+        if s.get(k):
+            keep = [b for b in s[k] if b.get("type") != "trend" or (b.get("keyword") or "Bitcoin") in data["trends"]]
+            if len(keep) < len(s[k]):
+                log("   ! bỏ biểu đồ Google Trends: không lấy được dữ liệu")
+            s[k] = keep
+
+
 def wma_data(plan: dict, data: dict):
     """Trọng 23/11 (video 100y): biểu đồ giá BTC theo tuần + đường trung bình 200 tuần và 350 tuần (beat type "wma").
     Số trên hình là dữ liệu THẬT tính từ giá tuần. Không lấy được giá thì bỏ beat đó (ghi log), không dừng cả bản dựng."""
@@ -991,6 +1043,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     md = market_data(lab)
     coin_data(lab, plan, md)
     wma_data(plan, md)   # biểu đồ BTC tuần + 200WMA/350WMA (Trọng 23/11)
+    trend_data(plan, md)   # biểu đồ Google Trends (Trọng 24/11)
     plan = live_numbers(plan, md)   # Trọng 22/11: hook, biểu đồ, ảnh bìa, short dùng CÙNG một bộ số giá thật
     (lab / "data.json").write_text(json.dumps(md, ensure_ascii=False), encoding="utf-8")
     save_images(lab, plan, gem, cfg)

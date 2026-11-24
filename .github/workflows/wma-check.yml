@@ -1,4 +1,4 @@
-name: "Kiểm tra lấy giá BTC tuần (biểu đồ 200WMA)"
+name: "Kiểm tra lấy dữ liệu biểu đồ (giá BTC tuần 200WMA, Google Trends)"
 
 on:
   workflow_dispatch:
@@ -26,4 +26,6 @@ jobs:
           L.wma_data({'sections': [{'beats': [{'type': 'wma'}]}]}, d)
           w = d.get('wma') or {}
           print('OK' if w else 'KHONG CO', len(w.get('price') or []), w.get('now'), w.get('now200'), w.get('now350'))
+          g = L._gtrends('Bitcoin')
+          print('GTRENDS', len(g), g[:2], g[-3:])
           "

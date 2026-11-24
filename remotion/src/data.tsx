@@ -106,6 +106,7 @@ const Heatmap: React.FC<{data: any; w: number; h: number}> = ({data, w, h}) => {
   const f = useCurrentFrame();
   const mk = (data?.markets || []).filter((m: any) => !['USDT', 'USDC', 'DAI', 'USDE', 'FDUSD', 'USDS', 'PYUSD', 'USD1', 'BUIDL', 'USDTB', 'WBTC', 'STETH', 'WSTETH', 'WEETH', 'CBBTC', 'WETH', 'BSC-USD'].includes(m.sym)
     && /^[A-Z0-9]{2,5}$/.test(m.sym)).slice(0, 15);
+  if (!mk.length) return null;   // không có dữ liệu thì không vẽ khung rỗng (Trọng 24/11)
   const cols = 5;
   const cw = Math.floor((w - 84 - (cols - 1) * 10) / cols);
   return (

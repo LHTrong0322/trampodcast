@@ -14,7 +14,7 @@ export type Beat = {
   left?: Side; right?: Side;
   total?: number; hit?: number;
   steps?: string[]; step_s?: (number | null)[];
-  text?: string; sub?: string;
+  text?: string; sub?: string; tag?: string;
   ticker?: string; tickers?: string[]; days?: number;
   items?: Side[];
   cols?: {label: string; logo?: string | null}[]; rows?: {label: string; marks: string[]}[];
@@ -287,7 +287,13 @@ export const BeatPanel: React.FC<{beats: Beat[]; t: number; sceneDur: number; da
       case 'matrix': return <Matrix b={b} w={w} h={h} />;
       case 'race': return <Race b={b} w={w} h={h} data={data} />;
       case 'wma': return data?.wma?.price?.length ? <Wma b={b} w={w} h={h} data={data} /> : <Statement b={{...b, text: b.label || '200WMA'}} w={w} h={h} />;
-      case 'chart': return <DataPanel spec={{type: 'coin_chart', tickers: [b.ticker || ''], title: b.label}} data={data} w={w} h={h} />;
+      case 'chart': {
+        // Trọng 24/11: hook từng hiện khung "Top coin · 7 ngày" TRỐNG vì biểu đồ không có dữ liệu. Không có giá thì hiện thẻ chữ, không bao giờ khung rỗng
+        const sym = String(b.ticker || '').replace('$', '').toUpperCase();
+        const ok = sym && (data?.coins?.[sym] || (data?.markets || []).some((x: any) => x.sym === sym));
+        return ok ? <DataPanel spec={{type: 'coin_chart', tickers: [sym], title: b.label}} data={data} w={w} h={h} />
+          : <Statement b={{...b, text: b.text || b.label || sym}} w={w} h={h} />;
+      }
       default: return <Statement b={b} w={w} h={h} />;
     }
   })();
@@ -317,7 +323,7 @@ const Race: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, da
   const prog = interpolate(f, [6, Math.round(fps * 3.2)], [0, 1], clamp);   // Trọng 22/11: chạy chậm để người xem kịp theo
   return (
     <Card w={w} h={h} pad={0}>
-      <div style={{position: 'absolute', left: 40, top: 30, fontSize: 32, fontWeight: 800, color: C.ink}}>{b.label}</div>
+      <div style={{position: 'absolute', left: 40, top: 28, fontSize: w >= 1300 ? 42 : 38, fontWeight: 800, color: C.ink}}>{b.label}</div>
       <div style={{position: 'absolute', right: 40, top: 26, display: 'flex', gap: 26}}>
         {lines.map((l) => <div key={l.t} style={{display: 'flex', alignItems: 'center', gap: 10}}>
           <div style={{width: 30, height: 7, borderRadius: 4, background: l.color}} /><Logo src={l.logo} size={40} label={l.t} />
@@ -352,14 +358,14 @@ const Wma: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, dat
   const d = data.wma;
   const px: number[] = d.price, m2: (number | null)[] = d.ma200, m3: (number | null)[] = d.ma350, dates: string[] = d.dates;
   const n = px.length;
-  const pad = {l: 40, r: 250, t: 100, b: 104};
+  const pad = {l: 40, r: 280, t: 120, b: 118};
   const W = w - pad.l - pad.r, H = h - pad.t - pad.b;
   const vals = [...px, ...(m2.filter((v) => v) as number[]), ...(m3.filter((v) => v) as number[])];
   const lo = Math.log(Math.min(...vals) * 0.92), hi = Math.log(Math.max(...vals) * 1.04);
   const x = (i: number) => pad.l + (i / (n - 1)) * W;
   const y = (v: number) => pad.t + H - ((Math.log(v) - lo) / (hi - lo)) * H;
-  const prog = interpolate(f, [4, Math.round(fps * 2.6)], [0, 1], clamp);
-  const maP = interpolate(f, [Math.round(fps * 2.2), Math.round(fps * 3.8)], [0, 1], clamp);
+  const prog = interpolate(f, [2, Math.round(fps * 1.8)], [0, 1], clamp);   // Trọng 24/11: vẽ xong nhanh, giữ khung lâu
+  const maP = interpolate(f, [Math.round(fps * 1.4), Math.round(fps * 2.6)], [0, 1], clamp);
   const line = (arr: (number | null)[], p: number) => {
     const m = Math.max(2, Math.round(n * p));
     return arr.slice(0, m).map((v, i) => (v ? `${x(i).toFixed(1)},${y(v).toFixed(1)}` : '')).filter(Boolean).join(' ');
@@ -372,30 +378,32 @@ const Wma: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, dat
   // nhãn cuối đường: tránh đè nhau
   const ends = [{t: 'BTC', c: BTC, v: px[n - 1]}, {t: '200WMA', c: C2, v: m2[n - 1] || 0}, {t: '350WMA', c: C3, v: m3[n - 1] || 0}]
     .filter((e) => e.v).map((e) => ({...e, yy: y(e.v)})).sort((a, b2) => a.yy - b2.yy);
-  for (let i = 1; i < ends.length; i++) if (ends[i].yy - ends[i - 1].yy < 46) ends[i].yy = ends[i - 1].yy + 46;
+  for (let i = 1; i < ends.length; i++) if (ends[i].yy - ends[i - 1].yy < 52) ends[i].yy = ends[i - 1].yy + 52;
   const lastOn = interpolate(prog, [0.9, 1], [0, 1], clamp);
   return (
     <Card w={w} h={h} pad={0}>
-      <div style={{position: 'absolute', left: 40, top: 30, fontSize: 32, fontWeight: 800, color: C.ink}}>{b.label || 'BTC và đường trung bình 200 tuần'}</div>
-      {w >= 1300 ? <div style={{position: 'absolute', right: 40, top: 32, display: 'flex', gap: 24, fontSize: 24, fontWeight: 700, color: C.muted}}>
+      <div style={{position: 'absolute', left: 40, top: 28, fontSize: w >= 1300 ? 42 : 38, fontWeight: 800, color: C.ink}}>{b.label || 'BTC và đường trung bình 200 tuần'}</div>
+      {w >= 1300 ? <div style={{position: 'absolute', right: 40, top: 32, display: 'flex', gap: 24, fontSize: 28, fontWeight: 700, color: C.muted}}>
         {[['Giá BTC (tuần)', BTC], ['200WMA', C2], ['350WMA', C3]].map(([t, c]) => (
           <div key={t} style={{display: 'flex', alignItems: 'center', gap: 8}}><div style={{width: 28, height: 7, borderRadius: 4, background: c}} />{t}</div>))}
       </div> : null}
       <svg width={w} height={h} style={{position: 'absolute', inset: 0}}>
         {years.map(([yr, i]) => <g key={yr}>
           <line x1={x(i)} x2={x(i)} y1={pad.t} y2={pad.t + H} stroke={C.line} strokeWidth={2} />
-          <text x={x(i) + 8} y={pad.t + H + 34} fontSize={24} fontWeight={700} fill={C.muted} fontFamily={FONT}>{yr}</text></g>)}
+          <text x={x(i) + 8} y={pad.t + H + 34} fontSize={30} fontWeight={700} fill={C.muted} fontFamily={FONT}>{yr}</text></g>)}
         <polyline points={line(m3, maP)} fill="none" stroke={C3} strokeWidth={6} strokeDasharray="14 10" strokeLinecap="round" opacity={maP} />
         <polyline points={line(m2, maP)} fill="none" stroke={C2} strokeWidth={6} strokeLinecap="round" opacity={maP} />
         <polyline points={line(px, prog)} fill="none" stroke={BTC} strokeWidth={5} strokeLinejoin="round" strokeLinecap="round" />
         {k22 >= 0 ? <g opacity={interpolate(prog, [k22 / n, k22 / n + 0.08], [0, 1], clamp)}>
           <circle cx={x(k22)} cy={y(px[k22])} r={14} fill="#fff" stroke={C.red} strokeWidth={5} />
-          <text x={x(k22)} y={y(px[k22]) + 50} textAnchor="middle" fontSize={26} fontWeight={800} fill={C.red} fontFamily={FONT}>Đáy 2022</text></g> : null}
+          <text x={x(k22)} y={y(px[k22]) + 50} textAnchor="middle" fontSize={32} fontWeight={800} fill={C.red} fontFamily={FONT}>Đáy 2022</text></g> : null}
         <circle cx={x(n - 1)} cy={y(px[n - 1])} r={14 * lastOn} fill="#fff" stroke={BTC} strokeWidth={5} />
       </svg>
-      {ends.map((e) => <div key={e.t} style={{position: 'absolute', left: pad.l + W + 26, top: e.yy - 22, fontSize: 30, fontWeight: 800, color: e.c,
+      {b.tag ? <div style={{position: 'absolute', right: pad.r + 10, top: Math.min(pad.t + H - 70, y(px[n - 1]) + 34), fontSize: w >= 1300 ? 40 : 36,
+        fontWeight: 900, color: /^[+]/.test(b.tag) ? C.green : C.red, opacity: maP, whiteSpace: 'nowrap'}}>{b.tag}</div> : null}
+      {ends.map((e) => <div key={e.t} style={{position: 'absolute', left: pad.l + W + 26, top: e.yy - 24, fontSize: 36, fontWeight: 800, color: e.c,
         whiteSpace: 'nowrap', opacity: e.t === 'BTC' ? lastOn : maP}}>{e.t}</div>)}
-      <div style={{position: 'absolute', left: 40, bottom: 14, fontSize: 22, fontWeight: 600, color: C.muted}}>
+      <div style={{position: 'absolute', left: 40, bottom: 14, fontSize: 24, fontWeight: 600, color: C.muted}}>
         {b.sub || 'Dữ liệu thật: giá BTC đóng cửa theo tuần, trục giá dạng log'}</div>
     </Card>
   );
