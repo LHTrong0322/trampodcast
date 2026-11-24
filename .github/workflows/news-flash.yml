@@ -36,6 +36,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # gọi lượt canh Telegram (news-flash-gate.yml loop=1)
 
 concurrency:
   group: podcast
@@ -148,3 +149,14 @@ jobs:
           git add -A
           git commit -q -m "Tin nóng $(date -u +%Y-%m-%dT%H:%MZ)"
           git push -f -q "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" podcast-data
+
+      - name: Còn kịch bản chờ duyệt thì mở lượt canh Telegram
+        if: always()
+        run: |
+          # Trọng 24/11: không trông vào lịch hẹn giờ của GitHub (hay bỏ lượt), lượt canh tự đọc Telegram mỗi phút
+          W=$(python news_flash.py watch --state public/flash/state.json | sed -n 's/.*watch=//p' | tail -1)
+          echo "watch=$W"
+          if [ "$W" = "yes" ]; then
+            gh api -X POST "repos/${{ github.repository }}/actions/workflows/news-flash-gate.yml/dispatches" \
+              -f ref=main -f 'inputs[loop]=1' && echo "Đã mở lượt canh Telegram"
+          fi

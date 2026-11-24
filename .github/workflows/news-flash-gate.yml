@@ -1,27 +1,38 @@
 name: Tin nóng, canh lệnh duyệt Telegram (dự phòng mỗi tiếng)
 
 # Rất nhẹ: chỉ gọi news-flash.yml (mode poll) khi có kịch bản đang chờ VÀ Trọng vừa nhắn/bấm nút,
-# hoặc có bản đã duyệt chưa dựng. Không ghi dữ liệu. Có việc khác đang chạy (podcast, insight...) thì đợi lượt sau,
-# để không chen hàng làm mất lượt chạy podcast.
+# hoặc có bản đã duyệt chưa dựng. Không ghi dữ liệu. Có việc khác đang chạy hoặc đang chờ trong hàng podcast
+# (podcast, insight...) thì đợi, để không chen hàng làm mất lượt chạy.
+#
+# Trọng 24/11: lịch hẹn giờ của GitHub bỏ hết lượt canh từ 10:00 đến 14:00, bấm duyệt trên Telegram bị kẹt.
+# Nên có thêm chế độ loop=1: news-flash.yml tự gọi sau khi gửi kịch bản mà Trọng chưa trả lời.
+# Lượt loop ở lại đọc Telegram mỗi phút (không dùng lịch GitHub), thấy lệnh mới thì đợi hàng podcast trống
+# rồi gọi poll. Tối đa khoảng 5 tiếng một lượt, còn kịch bản chờ (dưới 24 giờ) thì tự gọi lượt loop tiếp.
+# Quay lại cách cũ: git revert commit này.
 on:
   schedule:
-    # Trọng 23/11: 15 phút/lần tốn phút GitHub mà GitHub cũng hay bỏ lượt. Giờ run gửi kịch bản tự chờ trả lời 30 phút,
-    # lượt này chỉ là dự phòng mỗi tiếng.
+    # Trọng 23/11: 15 phút/lần tốn phút GitHub mà GitHub cũng hay bỏ lượt. Lượt này chỉ là dự phòng mỗi tiếng.
     - cron: "41 * * * *"
   workflow_dispatch:
+    inputs:
+      loop:
+        description: "1 = ở lại canh Telegram mỗi phút (news-flash.yml tự gọi), trống = kiểm tra 1 lần"
+        required: false
+        default: ""
 
 permissions:
   contents: read
   actions: write
 
 concurrency:
-  group: news-flash-gate
+  # lượt loop tách riêng: lượt dự phòng mỗi tiếng không huỷ lượt loop đang canh
+  group: news-flash-gate-${{ github.event.inputs.loop || 'once' }}
   cancel-in-progress: true
 
 jobs:
   gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 340
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -32,25 +43,54 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          LOOP: ${{ github.event.inputs.loop }}
         run: |
           R="${{ github.repository }}"
-          # Bỏ qua run "queued" quá 2 tiếng (run ma không có job, lỗi GitHub 23/11 làm chặn mãi)
-          CUT=$(date -u -d '-2 hours' +%Y-%m-%dT%H:%M:%SZ)
-          for f in podcast.yml insight.yml news-flash.yml video-weekly.yml; do
-            for s in in_progress queued; do
-              N=$(gh api "repos/$R/actions/workflows/$f/runs?status=$s&per_page=20" \
-                    -q "[.workflow_runs[] | select(\"$s\" == \"in_progress\" or .created_at > \"$CUT\")] | length")
-              if [ "${N:-0}" != "0" ]; then
-                echo "Đang có $f ($s), đợi lượt sau."; exit 0
-              fi
-            done
-          done
-          gh api "repos/$R/contents/flash/state.json?ref=podcast-data" -H "Accept: application/vnd.github.raw" > state.json 2>/dev/null || echo '{}' > state.json
-          gh api "repos/$R/contents/insight/store.json?ref=podcast-data" -H "Accept: application/vnd.github.raw" > store.json 2>/dev/null || echo '{}' > store.json
           pip install -q requests feedparser pyyaml beautifulsoup4 pillow numpy
-          RUN=$(python news_flash.py gate --state state.json --store store.json | sed -n 's/.*run=//p' | tail -1)
-          echo "run=$RUN"
-          if [ "$RUN" = "yes" ]; then
-            gh workflow run news-flash.yml -R "$R" -f mode=poll
-            echo "Đã gọi news-flash.yml (poll)"
+          busy() {
+            # Hàng "podcast" chỉ giữ 1 lượt chờ: gọi thêm khi đang có lượt chờ sẽ làm huỷ lượt đó.
+            # Bỏ qua run "queued" quá 2 tiếng (run ma không có job, lỗi GitHub 23/11 làm chặn mãi)
+            CUT=$(date -u -d '-2 hours' +%Y-%m-%dT%H:%M:%SZ)
+            for f in podcast.yml insight.yml news-flash.yml video-weekly.yml insight-lab.yml voice-samples.yml; do
+              for s in in_progress queued pending waiting requested; do
+                N=$(gh api "repos/$R/actions/workflows/$f/runs?status=$s&per_page=20" \
+                      -q "[.workflow_runs[] | select(\"$s\" != \"queued\" or .created_at > \"$CUT\")] | length" 2>/dev/null)
+                if [ "${N:-0}" != "0" ]; then echo "Đang có $f ($s)"; return 0; fi
+              done
+            done
+            return 1
+          }
+          fetch() {
+            gh api "repos/$R/contents/flash/state.json?ref=podcast-data" -H "Accept: application/vnd.github.raw" > state.json 2>/dev/null || echo '{}' > state.json
+            gh api "repos/$R/contents/insight/store.json?ref=podcast-data" -H "Accept: application/vnd.github.raw" > store.json 2>/dev/null || echo '{}' > store.json
+          }
+          out() { python news_flash.py "$1" --state state.json --store store.json | sed -n "s/.*$1=//p" | tail -1; }
+
+          if [ "$LOOP" != "1" ]; then
+            if busy; then echo "Đợi lượt sau."; exit 0; fi
+            fetch
+            RUN=$(out run); echo "run=$RUN"
+            if [ "$RUN" = "yes" ]; then
+              gh api -X POST "repos/$R/actions/workflows/news-flash.yml/dispatches" -f ref=main -f 'inputs[mode]=poll'
+              echo "Đã gọi news-flash.yml (poll)"
+            fi
+            exit 0
           fi
+
+          END=$(( $(date +%s) + 320 * 60 ))
+          while [ "$(date +%s)" -lt "$END" ]; do
+            fetch
+            if [ "$(out watch)" != "yes" ]; then echo "Không còn kịch bản cần xử lý, thôi canh."; exit 0; fi
+            if [ "$(out run)" = "yes" ]; then
+              if busy; then
+                echo "Có lệnh mới, đợi hàng podcast trống..."
+              else
+                gh api -X POST "repos/$R/actions/workflows/news-flash.yml/dispatches" -f ref=main -f 'inputs[mode]=poll'
+                echo "Đã gọi news-flash.yml (poll), lượt đó tự gọi canh tiếp nếu cần."
+                exit 0
+              fi
+            fi
+            sleep 60
+          done
+          echo "Hết 5 tiếng, còn kịch bản chờ: gọi lượt canh mới."
+          gh api -X POST "repos/$R/actions/workflows/news-flash-gate.yml/dispatches" -f ref=main -f 'inputs[loop]=1'

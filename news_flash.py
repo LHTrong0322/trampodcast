@@ -558,9 +558,30 @@ def gate(state: Path, store: Path) -> str:
     return "yes" if any(u["update_id"] > off for u in r.get("result", [])) else "no"
 
 
+def watching(state: Path, hours: float = 24) -> str:
+    """Trọng 24/11: lịch hẹn giờ của GitHub hay bỏ lượt (10:00 đến 14:00 không lượt canh nào chạy), nên bấm duyệt
+    trên Telegram bị kẹt. Lượt canh riêng (news-flash-gate.yml loop=1) chạy chừng nào còn kịch bản cần xử lý.
+    "yes" khi còn kịch bản chờ duyệt, chờ sửa hoặc đã duyệt chưa dựng, gửi trong vòng `hours` giờ
+    (Telegram chỉ giữ tin nhắn chưa đọc 24 giờ, quá thì thôi canh)."""
+    st = json.loads(state.read_text(encoding="utf-8")) if state.exists() and state.stat().st_size else {}
+    cut = now_vn() - timedelta(hours=hours)
+    for d in (st.get("drafts") or {}).values():
+        if d.get("status") not in ("waiting", "revise", "approved"):
+            continue
+        try:
+            made = datetime.fromisoformat(d.get("created", ""))
+        except ValueError:
+            continue
+        if made.tzinfo is None:
+            made = made.replace(tzinfo=P.VN_TZ)
+        if made >= cut:
+            return "yes"
+    return "no"
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("mode", choices=["pick", "poll", "build", "gate", "topic", "revise", "setscript"])
+    ap.add_argument("mode", choices=["pick", "poll", "build", "gate", "watch", "topic", "revise", "setscript"])
     ap.add_argument("--script", default="")
     ap.add_argument("--note", default="")
     ap.add_argument("--brief", default="")
@@ -579,6 +600,8 @@ def main():
                 f.write(f"{k}={v}\n")
     if a.mode == "gate":
         return output("run", gate(Path(a.state), Path(a.store)))
+    if a.mode == "watch":
+        return output("watch", watching(Path(a.state)))
     if not ncfg(cfg).get("enabled", True):
         log("Tin nóng đang tắt trong sources.yaml (news_flash.enabled)")
         return output("build", "")

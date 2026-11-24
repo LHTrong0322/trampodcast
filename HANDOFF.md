@@ -61,6 +61,13 @@
 - Ảnh bìa tin nóng: dùng thumb_text + thumb_stat Trọng chọn, dòng dưới "Tin nóng · @Trong0322" (không "Xem bản đầy đủ trên YouTube").
   Không cắt cứng 60 ký tự nữa (từng mất dấu %). Ảnh gửi Telegram dạng JPEG nhẹ (PNG 1MB bị Telegram Desktop kẹt).
 
+## TELEGRAM KHÔNG NHẬN LỆNH DUYỆT (sửa 24/11)
+- Nguyên nhân: run gửi kịch bản chỉ chờ trả lời 30 phút; lượt canh dự phòng mỗi tiếng chạy theo lịch hẹn giờ GitHub, mà GitHub bỏ hết lượt từ 10:00 đến 14:00 ngày 24/11.
+- Sửa: news-flash.yml cuối run, nếu còn kịch bản chờ (dưới 24 giờ, news_flash.py watch) thì gọi news-flash-gate.yml loop=1.
+  Lượt loop đọc Telegram mỗi phút, thấy lệnh mới thì đợi hàng "podcast" TRỐNG HẲN (kể cả lượt đang chờ) rồi mới gọi poll, tối đa khoảng 5 tiếng rồi tự gọi lượt mới.
+- Hàng "podcast" (podcast, insight, news-flash, insight-lab, video-weekly, voice-samples) chỉ giữ 1 lượt chờ: gọi thêm khi đang có lượt chờ sẽ HUỶ lượt chờ đó (video Dow 24/11 bị huỷ vì vậy). Trước khi dispatch tay, kiểm tra không có run pending.
+- Quay lại cách cũ: git revert commit này.
+
 ## BỘ LỌC GIÁO DỤC (TRỌNG CHỐT 23:22 NGÀY 21/11)
 - Nội dung video phải mang tính giáo dục nhiều hơn. Tên riêng lạ (vd DWF Labs, Assistance Fund) giải thích 1 câu lần đầu.
 - So sánh 2 dự án phải có con số của CẢ HAI (vd Hyperliquid dùng khoảng 97 đến 99% phí để buyback HYPE, Aave 50 triệu đô một năm, khoảng 1/3 revenue).
