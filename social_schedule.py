@@ -329,8 +329,43 @@ def comments():
         sp.write_text(json.dumps(st, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
+def now(plan_path: Path):
+    """Trọng 24/11 "sớm hơn được không": bài đã đặt lịch thì đưa lên NGAY (YouTube công khai, Reel Facebook đăng luôn),
+    dời giờ bình luận về bây giờ."""
+    st = json.loads(_state_path(plan_path).read_text(encoding="utf-8"))
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    report = []
+    if st.get("yt_id"):
+        tok = SU._yt_token()
+        r = requests.put("https://www.googleapis.com/youtube/v3/videos?part=status", headers={"Authorization": f"Bearer {tok}"},
+                         json={"id": st["yt_id"], "status": {"privacyStatus": "public", "selfDeclaredMadeForKids": False, "embeddable": True}},
+                         timeout=60)
+        report.append(f"YouTube: {'đã công khai ngay' if r.ok else 'lỗi ' + r.text[:200]} https://youtu.be/{st['yt_id']}")
+    if st.get("fb_id"):
+        tok = os.environ["FB_PAGE_TOKEN"].strip()
+        r = requests.post(f"https://graph.facebook.com/{FB}/{st['fb_id']}", data={"access_token": tok, "published": "true"}, timeout=60)
+        if not r.ok:   # Reel hẹn giờ: thử dời giờ đăng về sớm nhất Facebook cho phép (10 phút)
+            t = int(time.time()) + 11 * 60
+            r2 = requests.post(f"https://graph.facebook.com/{FB}/{st['fb_id']}",
+                               data={"access_token": tok, "scheduled_publish_time": str(t)}, timeout=60)
+            report.append("Facebook: " + (f"không đăng ngay được, đã dời giờ đăng về {datetime.fromtimestamp(t, timezone.utc):%H:%M} UTC"
+                                          if r2.ok else f"lỗi {r.text[:150]} / {r2.text[:150]}"))
+        else:
+            report.append("Facebook Reel: đã đăng ngay")
+    soon = (datetime.now(timezone.utc) - timedelta(minutes=1)).strftime("%Y-%m-%dT%H:%M:%SZ")   # bình luận đăng luôn trong lượt này
+    for key in ("youtube", "facebook"):
+        if (plan.get(key) or {}).get("comment_at"):
+            plan[key]["comment_at"] = soon
+    plan_path.write_text(json.dumps(plan, ensure_ascii=False, indent=1), encoding="utf-8")
+    for line in report:
+        print("KẾT QUẢ:", line, flush=True)
+    _tg("🚀 Đăng ngay " + plan.get("tag", "") + "\n" + "\n".join(report))
+
+
 if __name__ == "__main__":
     if sys.argv[1] == "post":
         post(Path(sys.argv[2]))
+    elif sys.argv[1] == "now":
+        now(Path(sys.argv[2]))
     else:
         comments()
