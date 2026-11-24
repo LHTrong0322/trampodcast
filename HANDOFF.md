@@ -51,6 +51,11 @@
   biểu đồ đúng lúc, 2 giây đầu) và trả lệnh sửa: đổi chữ thẻ, đổi tiêu đề ≤ 46, dời mốc giờ, bỏ thẻ, đổi thành thẻ chữ, thêm thẻ
   chữ/số/ảnh kho (số mới phải có trong lời đọc, ảnh không theo tên người). Áp, chụp lại, chấm lại, tối đa 2 vòng sửa, rồi mới dựng.
   Telegram nhận "🔎 Bot review xem trước" kèm điểm dự kiến trước → sau. Lời đọc không đổi ở bước này. Thiếu token/PREFLIGHT=0 thì bỏ qua.
+- TỰ SỬA THEO REVIEW SAU DỰNG (news_flash.build + preflight.plan_fix, Trọng 24/11): dựng xong bot review chấm < 8 thì Claude đọc can_sua,
+  viết lại danh sách thẻ hình (mỗi thẻ neo "at" nguyên văn lời đọc, số bignum phải có trong lời đọc, ảnh không theo tên người), dựng lại
+  (giọng giữ nguyên), tối đa news_flash.fix_rounds = 2 vòng. Telegram nhận "🔁 Bot tự sửa theo review: điểm a → b → c". Bản sửa có quá ít
+  thẻ hợp lệ thì bỏ, giữ bản cũ. Workflow news-flash có input voice (giọng xịn: gemini:Ludo@kol). Số ảnh bìa: dấu + màu xanh, dấu − màu đỏ.
+- Ảnh người thật (kể cả ảnh chế Trump đăng về Huang 23/11): KHÔNG đưa vào video. Kể sự kiện bằng lời đọc + thẻ chữ.
 - Ảnh bìa tin nóng: dùng thumb_text + thumb_stat Trọng chọn, dòng dưới "Tin nóng · @Trong0322" (không "Xem bản đầy đủ trên YouTube").
   Không cắt cứng 60 ký tự nữa (từng mất dấu %). Ảnh gửi Telegram dạng JPEG nhẹ (PNG 1MB bị Telegram Desktop kẹt).
 

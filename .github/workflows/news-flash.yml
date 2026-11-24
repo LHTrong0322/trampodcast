@@ -21,6 +21,10 @@ on:
         description: "mode revise: góp ý của Trọng để viết lại"
         required: false
         default: ""
+      voice:
+        description: "giọng dựng (để trống = Hải Đăng). Giọng xịn: gemini:Ludo@kol"
+        required: false
+        default: ""
       approve:
         description: "mode setscript: 1 = Trọng đã duyệt trong chat, dựng luôn"
         required: false
@@ -92,6 +96,7 @@ jobs:
           IN_NOTE: ${{ github.event.inputs.note }}
           IN_ID: ${{ github.event.inputs.id }}
           NF_APPROVE: ${{ github.event.inputs.approve }}
+          NF_VOICE: ${{ github.event.inputs.voice }}
         run: |
           MODE="${{ github.event.inputs.mode }}"
           [ "${{ github.event_name }}" = "schedule" ] && MODE=pick
@@ -118,6 +123,8 @@ jobs:
 
       - name: Dựng short tin nóng + gửi Telegram
         if: steps.nf.outputs.build != ''
+        env:
+          NF_VOICE: ${{ github.event.inputs.voice }}
         run: python news_flash.py build --out public --id "${{ steps.nf.outputs.build }}"
 
       - name: Báo lỗi vào Telegram

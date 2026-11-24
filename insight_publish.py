@@ -485,7 +485,7 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, draft
     log("⑦ Gửi Telegram")
     plan = res["plan"]
     if plan.get("news"):   # Trọng 23/11: tin nóng chỉ có short (giọng Hải Đăng), gửi gọn để duyệt, không tự đăng
-        return publish_news(gem, cfg, res, seo, covers, url, data_dir, tag)
+        return publish_news(gem, cfg, res, seo, covers, url, data_dir, tag, rv)
     tg_text(f"🐧 SMART PENGUIN INSIGHTS · video mới ({res['duration'] / 60:.1f} phút · giọng {res['voice'].split(':')[1]})\n"
             f"1 video YouTube 16:9 + {len(res['shorts'])} video ngắn 9:16 (TikTok/Shorts/Reels)\n" + (f"📦 File gốc: {url}" if url else ""))
     tg_photo(thumb, "🖼 Ảnh bìa YouTube")
@@ -547,7 +547,7 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, draft
     return {"release": url, "seo": seo, "review": rv, "thumb": str(thumb) if thumb else None}
 
 
-def publish_news(gem, cfg, res, seo, covers, url, data_dir, tag) -> dict:
+def publish_news(gem, cfg, res, seo, covers, url, data_dir, tag, rv0: dict | None = None) -> dict:
     """Tin nóng (news_flash.py): chỉ gửi short 9:16 + caption + bot review, KHÔNG đăng tự động."""
     plan = res["plan"]
     tg_text(f"⚡ TIN NÓNG · short đã dựng xong (giọng {res['voice'].split(':')[-1]})\n{plan.get('title', '')}\n"
@@ -565,7 +565,9 @@ def publish_news(gem, cfg, res, seo, covers, url, data_dir, tag) -> dict:
     if preflight_text(res):
         tg_text(preflight_text(res))
     log("⑧ Bot review")
-    rv = review(gem, cfg, res, None)
+    rv = rv0 or review(gem, cfg, res, None)   # news_flash.build đã review (và tự sửa) rồi thì dùng luôn
+    if len(res.get("review_rounds") or []) > 1:
+        tg_text("🔁 Bot tự sửa theo review rồi dựng lại: điểm " + " → ".join(str(x) for x in res["review_rounds"]))
     if rv:
         tg_text(review_text(rv))
         if data_dir:   # lưu riêng, không trộn vào bài học của video insight dài

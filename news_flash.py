@@ -449,12 +449,40 @@ def build(out: Path, cfg: dict, did: str):
     d = st["drafts"][did]
     d["status"] = "building"
     save_state(out, st)
-    os.environ.update(INSIGHT_SCRIPT=str(out / d["script"]), INSIGHT_VOICE=ncfg(cfg).get("voice", "vieneu:Hải Đăng"),
+    voice = os.getenv("NF_VOICE", "").strip() or ncfg(cfg).get("voice", "vieneu:Hải Đăng")
+    os.environ.update(INSIGHT_SCRIPT=str(out / d["script"]), INSIGHT_VOICE=voice,
                       INSIGHT_TWO_PASS="0", SOCIAL_AUTOPOST="0", INSIGHT_FORMAT="news")
     try:
+        import preflight as PF
         lab = L.prepare("", Path("lab"))
-        res = R.render(lab, Path("render_out"))
-        PB.publish(lab, res, Path("render_out"), data_dir=out)
+        # Trọng 24/11: dựng → bot review → còn dưới 8 thì Claude sửa thẻ hình theo góp ý → dựng lại (giọng giữ nguyên)
+        gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))
+        rounds = int(ncfg(cfg).get("fix_rounds", 2))
+        hist, rv = [], None
+        for k in range(rounds + 1):
+            res = R.render(lab, Path("render_out"))
+            rv = PB.review(gem, cfg, res, None) or {}
+            hist.append(rv.get("score"))
+            log(f"⑨ Review sau dựng vòng {k + 1}: {rv.get('score', '?')}/10")
+            try:
+                sc = float(rv.get("score") or 0)
+            except (TypeError, ValueError):
+                sc = 0
+            if sc >= 8 or k == rounds or not rv.get("can_sua"):
+                break
+            plan = json.loads((lab / "plan.json").read_text(encoding="utf-8"))
+            try:
+                ch = PF.plan_fix(plan, rv)
+            except Exception as ex:
+                log(f"   ! tự sửa theo review lỗi: {str(ex)[:200]}")
+                break
+            if not ch:
+                break
+            L.photo_beats(lab, plan)
+            (lab / "plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=1), encoding="utf-8")
+            log("   Tự sửa theo review: " + "; ".join(ch[:8]))
+        res["review_rounds"] = hist
+        PB.publish(lab, res, Path("render_out"), data_dir=out, rv=rv)
         d["status"] = "built"
         d["built"] = now_vn().isoformat()
     except Exception as ex:

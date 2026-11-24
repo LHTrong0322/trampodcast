@@ -43,7 +43,8 @@ export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat, label, points
         ) : null}
         {stat && !vs.length ? (
           <div style={{position: 'absolute', left: 70, top: 1070, display: 'flex', alignItems: 'center', gap: 26}}>
-            <div style={{padding: '14px 36px', borderRadius: 26, background: accent, color: '#FFFFFF', fontWeight: 800, fontSize: 110, lineHeight: 1.05}}>{stat}</div>
+            <div style={{padding: '14px 36px', borderRadius: 26, color: '#FFFFFF', fontWeight: 800, fontSize: 110, lineHeight: 1.05,
+              background: /^\s*\+/.test(stat) ? '#16A34A' : /^\s*[-−]/.test(stat) ? '#DC2626' : accent}}>{stat}</div>
             {label ? <div style={{color: C.muted, fontWeight: 700, fontSize: 38, maxWidth: 480, lineHeight: 1.15}}>{label}</div> : null}
           </div>
         ) : null}

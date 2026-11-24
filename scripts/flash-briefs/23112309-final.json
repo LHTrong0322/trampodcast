@@ -69,17 +69,29 @@
     },
     {
      "at": "Theo CNN và Yahoo",
-     "type": "photo",
-     "query": "stock market trading screen green",
-     "label": "CNN, Yahoo Finance: bật hơn 30%"
+     "type": "versus",
+     "left": {
+      "label": "Đóng cửa thứ Sáu",
+      "value": "$125.53",
+      "note": "đáy sau tuần -23%",
+      "logo": "NVDA",
+      "tone": "down"
+     },
+     "right": {
+      "label": "Sau tin Huang",
+      "value": "+30%",
+      "note": "CNN, Yahoo Finance",
+      "logo": "NVDA",
+      "tone": "up"
+     },
+     "sub": "Một tin, cổ phiếu quay đầu",
+     "hold": 3
     },
     {
      "at": "Vì cú sập trước đó",
-     "type": "chart",
-     "ticker": "NVDA",
-     "days": 60,
-     "label": "NVDA 60 ngày: sập rồi bật",
-     "hold": 3
+     "type": "photo",
+     "query": "stock market red crash screen",
+     "label": "Rủi ro lãnh đạo, không phải kinh doanh"
     },
     {
      "at": "Tuần trước NVDA giảm",

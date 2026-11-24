@@ -260,3 +260,81 @@ def check_short(props: dict, work: Path, rounds: int = 2) -> dict:
         if not changed:
             break
     return rep
+
+
+# ---------------------------------------------------------------------------
+# Trọng 24/11 "bot có thể sửa những lỗi được mention để cải thiện video tốt hơn":
+# sau khi dựng, bot review chấm < 8 thì Claude đọc góp ý (can_sua) và sửa KỊCH BẢN HÌNH (plan), dựng lại.
+# Lời đọc không đổi (giọng đã đọc xong), chỉ đổi thẻ hình, tiêu đề short, chữ ảnh bìa.
+FIX_PROMPT = """Bạn là biên tập viên sửa video ngắn 9:16 tiếng Việt kênh Smart Penguin Insights. Bot review vừa chấm bản dựng
+{score}/10 và góp ý như dưới. Hãy sửa KỊCH BẢN HÌNH để lần dựng sau đạt từ 8/10. KHÔNG đổi lời đọc (giọng đã đọc xong).
+
+LỜI ĐỌC: "{narration}"
+TIÊU ĐỀ SHORT: "{title}" · CHỮ ẢNH BÌA: "{thumb}" · SỐ ẢNH BÌA: "{stat}"
+
+GÓP Ý CỦA BOT REVIEW:
+{issues}
+
+CÁC THẺ HÌNH HIỆN TẠI (i, "at" = cụm từ trong lời đọc làm mốc thẻ hiện ra):
+{beats}
+
+Loại thẻ: bignum (value, label, tone up/down), versus (left/right: label, value, note, tone; sub), statement (text, sub),
+question (text, sub, chỉ dùng cho câu hỏi cuối), chart (ticker, days, label; biểu đồ giá thật, % hiện là thay đổi trong đúng số
+ngày đó, chọn days sao cho chiều đi của giá KHỚP ý đang nói), photo (query: 2-4 từ tiếng Anh cảnh/đồ vật, KHÔNG tên người; label),
+logos, flow, dots. Nhãn ≤ 40 ký tự, versus nhãn ≤ 16. Số mới chỉ dùng khi lời đọc có số đó (note/sub được ghi số liệu nguồn kèm theo).
+Không dấu gạch ngang dài. Mỗi 3 đến 5 giây nên đổi thẻ; đọc khoảng 3.5 từ mỗi giây.
+
+Trả về DUY NHẤT JSON: {{"beats": [danh sách thẻ MỚI ĐẦY ĐỦ, mỗi thẻ có "at" là cụm từ NGUYÊN VĂN trong lời đọc],
+ "short_title": "≤ 46 ký tự hoặc để trống", "thumb_text": "hoặc để trống", "changes": ["đã sửa gì, ứng với góp ý nào"]}}"""
+
+
+def plan_fix(plan: dict, rv: dict) -> list[str]:
+    """Sửa plan tại chỗ theo bot review. Trả danh sách thay đổi (rỗng nếu không sửa được)."""
+    sec = plan["sections"][0]
+    nar = sec["narration"]
+    low = nar.lower()
+    issues = "\n".join(f"- {x}" for x in (rv.get("can_sua") or [])) + (f"\n- Rủi ro bỏ xem: {rv['retention_risk']}" if rv.get("retention_risk") else "")
+    bl = "\n".join(f"[{i}] {json.dumps({k: v for k, v in b.items() if k not in ('src',)}, ensure_ascii=False)[:300]}"
+                   for i, b in enumerate(sec.get("beats") or []))
+    out = _claude_text(FIX_PROMPT.format(score=rv.get("score", "?"), narration=nar, title=plan.get("short_title") or "",
+                                         thumb=plan.get("thumb_text") or "", stat=plan.get("thumb_stat") or "", issues=issues, beats=bl))
+    new = []
+    for b in out.get("beats") or []:
+        if not isinstance(b, dict) or not str(b.get("at", "")).strip() or str(b["at"]).lower() not in low:
+            continue
+        if b.get("type") == "bignum" and not _nums_ok(b.get("value", ""), nar):
+            continue
+        if b.get("type") == "photo":
+            q = str(b.get("query") or "")
+            import insight_lab as L
+            if L._PERSON_HINT.search(q):
+                continue
+            old = next((x for x in sec["beats"] if x.get("type") == "photo" and x.get("query") == q and x.get("src")), None)
+            if old:
+                b["src"] = old["src"]
+            else:
+                b.pop("src", None)
+        new.append(P.nodash(b))
+    if len(new) < max(3, len(sec.get("beats") or []) // 2):
+        return []
+    sec["beats"] = new
+    if out.get("short_title") and len(out["short_title"]) <= 46:
+        plan["short_title"] = P.nodash(out["short_title"])
+        plan["short_hooks"] = {"0": plan["short_title"]}
+    if out.get("thumb_text"):
+        plan["thumb_text"] = P.nodash(out["thumb_text"])[:40]
+    return [P.nodash(str(c)) for c in out.get("changes") or []] or ["đã sửa thẻ hình theo review"]
+
+
+def _claude_text(prompt: str) -> dict:
+    tok = re.sub(r"\s+", "", os.getenv("CLAUDE_CODE_OAUTH_TOKEN", ""))
+    env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
+    if tok:
+        env["CLAUDE_CODE_OAUTH_TOKEN"] = tok
+    r = subprocess.run(["claude", "-p", prompt + "\n\nChỉ in ra JSON hợp lệ, không thêm chữ nào khác.", "--max-turns", "3",
+                        "--model", os.getenv("PREFLIGHT_MODEL", "sonnet"), "--output-format", "text"],
+                       env=env, capture_output=True, text=True, timeout=900)
+    m = re.search(r"\{.*\}", r.stdout, re.S)
+    if not m:
+        raise RuntimeError(f"Claude không trả JSON: {(r.stdout or r.stderr)[:300]}")
+    return json.loads(m.group(0))
