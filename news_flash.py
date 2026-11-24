@@ -29,6 +29,7 @@ COMMANDS = [
     ("tin", "Xem kịch bản tin nóng đang chờ duyệt"),
     ("duyet", "Duyệt kịch bản tin nóng mới nhất (hoặc /duyet <mã>)"),
     ("sua", "Góp ý để viết lại: /sua <góp ý> hoặc /sua <mã> <góp ý>"),
+    ("nhap", "Dựng nháp giọng Hải Đăng trước (hoặc /nhap <mã>)"),
     ("bo", "Bỏ kịch bản tin nóng (hoặc /bo <mã>)"),
 ]
 
@@ -140,7 +141,8 @@ def setup_commands(st: dict):
 
 
 def buttons_for(did: str) -> list:
-    return [[{"text": "✅ Duyệt, dựng video", "callback_data": f"nf:ok:{did}"}],
+    return [[{"text": "✅ Duyệt, dựng giọng xịn", "callback_data": f"nf:ok:{did}"}],
+            [{"text": "🎙 Dựng nháp Hải Đăng trước", "callback_data": f"nf:draft:{did}"}],
             [{"text": "✏️ Sửa", "callback_data": f"nf:edit:{did}"}, {"text": "❌ Bỏ", "callback_data": f"nf:no:{did}"}]]
 
 
@@ -363,12 +365,12 @@ def on_update(out: Path, cfg: dict, up: dict) -> bool:
     st = load_state(out)
     act, d, note = "", None, ""
     if cb:
-        m = re.match(r"nf:(ok|no|edit):(\w+)", cb.get("data") or "")
+        m = re.match(r"nf:(ok|no|edit|draft):(\w+)", cb.get("data") or "")
         if not m:
             return False
         tg("answerCallbackQuery", callback_query_id=cb["id"], text="Đã nhận")
         act, d = m.group(1), st["drafts"].get(m.group(2))
-    elif re.match(r"/(duyet|duyệt|bo|bỏ|sua|sửa|tin)\b", text, re.I):
+    elif re.match(r"/(duyet|duyệt|bo|bỏ|sua|sửa|tin|nhap|nháp)\b", text, re.I):
         cmd, _, rest = text.partition(" ")
         cmd = cmd.lower().split("@")[0]
         if cmd == "/tin":
@@ -379,7 +381,7 @@ def on_update(out: Path, cfg: dict, up: dict) -> bool:
         mid = re.match(r"(\d{8})\b\s*(.*)", rest.strip(), re.S)
         d = _find(st, mid.group(1) if mid else "", reply_id)
         note = (mid.group(2) if mid else rest).strip()
-        act = {"/duyet": "ok", "/duyệt": "ok", "/bo": "no", "/bỏ": "no"}.get(cmd, "edit")
+        act = {"/duyet": "ok", "/duyệt": "ok", "/bo": "no", "/bỏ": "no", "/nhap": "draft", "/nháp": "draft"}.get(cmd, "edit")
     elif text and (reply_id or not re.search(r"https?://|^/", text)):
         # Trọng 23/11: sau khi bấm "Sửa" anh gõ góp ý thành tin thường (không reply) nên bot bỏ qua.
         # Giờ: reply vào tin kịch bản, HOẶC tin chữ thường không có link khi đang có kịch bản chờ duyệt, đều tính là góp ý.
@@ -398,10 +400,11 @@ def on_update(out: Path, cfg: dict, up: dict) -> bool:
     if d.get("status") not in ("waiting", "revise"):
         say(f"Kịch bản {d['id']} đang ở trạng thái {d.get('status')}, không đổi được nữa.", reply_to=d.get("msg_id"))
         return True
-    if act == "ok":
+    if act in ("ok", "draft"):   # Trọng 24/11: Hải Đăng là giọng nháp, có lúc muốn xem nháp trước rồi mới dựng giọng xịn
         d["status"] = "approved"
         d["approved"] = now_vn().isoformat()
-        say(f"✅ Đã duyệt kịch bản {d['id']}. Bot bắt đầu dựng short, khoảng 20 đến 40 phút sẽ gửi video.",
+        d["voice"] = "vieneu:Hải Đăng" if act == "draft" else ""
+        say(f"✅ Đã duyệt kịch bản {d['id']}{' (bản NHÁP giọng Hải Đăng)' if act == 'draft' else ''}. Bot bắt đầu dựng short, khoảng 20 đến 40 phút sẽ gửi video.",
             reply_to=d.get("msg_id"))
     elif act == "no":
         d["status"] = "rejected"
@@ -449,7 +452,7 @@ def build(out: Path, cfg: dict, did: str):
     d = st["drafts"][did]
     d["status"] = "building"
     save_state(out, st)
-    voice = os.getenv("NF_VOICE", "").strip() or ncfg(cfg).get("voice", "gemini:Ludo@kol")
+    voice = os.getenv("NF_VOICE", "").strip() or d.get("voice") or ncfg(cfg).get("voice", "gemini:Ludo@kol")
     os.environ.update(INSIGHT_SCRIPT=str(out / d["script"]), INSIGHT_VOICE=voice,
                       INSIGHT_TWO_PASS="0", SOCIAL_AUTOPOST="0", INSIGHT_FORMAT="news")
     try:
