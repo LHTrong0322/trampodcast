@@ -90,7 +90,8 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5
   const accent = tone(acIn);
   useFonts();
   const style: ThumbStyle = styleIn || (vs.length ? 'vs' : 'classic');
-  const words = (text || '').toUpperCase().split(/\s+/).filter(Boolean);
+  // dấu _ dính các chữ thành 1 cụm không bị ngắt dòng (Trọng 24/11: "CƠ HỘI / THẾ HỆ" bị tách xấu)
+  const words = (text || '').toUpperCase().split(/\s+/).filter(Boolean).map((w) => w.replace(/_/g, '\u00A0'));
   const len = words.join(' ').length;
   const hl = (i: number) => (style === 'stack' ? C.ink : i % 3 === 1 ? accent : C.ink);
   const brandRow = (

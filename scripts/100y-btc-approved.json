@@ -387,10 +387,10 @@
     },
     {
      "at": "google trends cho bitcoin",
-     "type": "bignum",
-     "value": "Thấp nhất từ 2020",
-     "label": "Google Trends từ khoá Bitcoin",
-     "tone": "down"
+     "type": "trend",
+     "keyword": "Bitcoin",
+     "label": "Google Trends: Bitcoin",
+     "tag": "Thấp nhất từ 2020"
     },
     {
      "at": "còn cú hích",
@@ -398,16 +398,17 @@
      "text": "Cú hích: AI sẽ dẫn tới bơm tiền lớn"
     },
     {
-     "type": "statement",
-     "text": "AI tiếp tục tăng: tín dụng tư nhân mở rộng",
-     "at": "nếu ai tiếp tục tăng trưởng"
-    },
-    {
-     "at": "nếu bong bóng ai vỡ",
-     "type": "bignum",
-     "value": "Như 2008",
-     "label": "Bong bóng AI vỡ: Mỹ nới lỏng tiền tệ, bơm tiền",
-     "tone": "up"
+     "at": "nếu ai tiếp tục tăng trưởng",
+     "type": "flow",
+     "label": "2 kịch bản AI, đều dẫn tới bơm tiền",
+     "steps": [
+      "AI tăng: tín dụng tăng",
+      "AI vỡ: nới lỏng như 2008"
+     ],
+     "step_at": [
+      "nếu ai tiếp tục",
+      "nếu bong bóng ai vỡ"
+     ]
     },
     {
      "at": "giờ là tài sản chiến lược",
@@ -508,7 +509,7 @@
   "1": "Đường 200 tuần của Bitcoin vừa gãy?",
   "3": "Chu kỳ 4 năm của Bitcoin đang lệch nhịp?"
  },
- "thumb_text": "$55K: CƠ HỘI THẾ HỆ?",
+ "thumb_text": "$55K: CƠ_HỘI_THẾ_HỆ?",
  "thumb_stat": "$43K?",
  "thumb_points": [],
  "thumb_warn": true,

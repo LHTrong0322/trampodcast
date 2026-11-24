@@ -37,7 +37,7 @@ def props_for(plan: dict, sec_idx: int, title: str, logos: dict | None = None) -
         vs = []
     news = bool(plan.get("news"))
     if news and plan.get("thumb_text"):   # Trọng 24/11: tin nóng dùng đúng chữ ảnh bìa Trọng chọn, không lấy câu mở
-        title = plan["thumb_text"]
+        title = plan["thumb_text"].replace("_", " ")
     text = P.nodash(V.en_money(title))
     if len(text) > 60:   # lỗi 24/11: cắt cứng 60 ký tự làm mất "%" ("HƠN 30"), giờ cắt ở ranh giới từ
         text = text[:60].rsplit(" ", 1)[0]

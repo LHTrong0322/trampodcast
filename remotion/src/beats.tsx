@@ -8,13 +8,13 @@ import {DataPanel} from './data';
 export type Side = {label: string; value: string; logo?: string | null; tone?: 'up' | 'down' | 'flat'; note?: string};
 export type Beat = {
   s: number;
-  type: 'bignum' | 'versus' | 'dots' | 'flow' | 'statement' | 'chart' | 'logos' | 'question' | 'race' | 'matrix' | 'wma' | 'photo';
+  type: 'bignum' | 'versus' | 'dots' | 'flow' | 'statement' | 'chart' | 'logos' | 'question' | 'race' | 'matrix' | 'wma' | 'trend' | 'photo';
   src?: string;
   value?: string; label?: string; logo?: string | null; tone?: 'up' | 'down' | 'flat';
   left?: Side; right?: Side;
   total?: number; hit?: number;
   steps?: string[]; step_s?: (number | null)[];
-  text?: string; sub?: string; tag?: string;
+  text?: string; sub?: string; tag?: string; keyword?: string;
   ticker?: string; tickers?: string[]; days?: number;
   items?: Side[];
   cols?: {label: string; logo?: string | null}[]; rows?: {label: string; marks: string[]}[];
@@ -286,6 +286,7 @@ export const BeatPanel: React.FC<{beats: Beat[]; t: number; sceneDur: number; da
       case 'question': return <Statement b={b} w={w} h={h} question />;
       case 'matrix': return <Matrix b={b} w={w} h={h} />;
       case 'race': return <Race b={b} w={w} h={h} data={data} />;
+      case 'trend': return data?.trends?.[b.keyword || 'Bitcoin']?.values?.length ? <Trend b={b} w={w} h={h} data={data} /> : <Statement b={{...b, text: b.label || 'Google Trends'}} w={w} h={h} />;
       case 'wma': return data?.wma?.price?.length ? <Wma b={b} w={w} h={h} data={data} /> : <Statement b={{...b, text: b.label || '200WMA'}} w={w} h={h} />;
       case 'chart': {
         // Trọng 24/11: hook từng hiện khung "Top coin · 7 ngày" TRỐNG vì biểu đồ không có dữ liệu. Không có giá thì hiện thẻ chữ, không bao giờ khung rỗng
@@ -350,6 +351,51 @@ const Race: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, da
   );
 };
 
+// Trọng 24/11: biểu đồ Google Trends THẬT (insight_lab.trend_data), đánh dấu điểm thấp nhất từ 2020 và hiện tại.
+const Trend: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, data}) => {
+  const f = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const d = data.trends[b.keyword || 'Bitcoin'];
+  const v: number[] = d.values, dates: string[] = d.dates, n = v.length;
+  const pad = {l: 60, r: 70, t: 130, b: 118};
+  const W = w - pad.l - pad.r, H = h - pad.t - pad.b;
+  const x = (i: number) => pad.l + (i / (n - 1)) * W;
+  const y = (val: number) => pad.t + H - (val / 100) * H;
+  const prog = interpolate(f, [2, Math.round(fps * 1.8)], [0, 1], clamp);
+  const m = Math.max(2, Math.round(n * prog));
+  const pts = v.slice(0, m).map((val, i) => `${x(i).toFixed(1)},${y(val).toFixed(1)}`).join(' ');
+  const area = `${x(0)},${y(0)} ${pts} ${x(m - 1)},${y(0)}`;
+  let kMin = -1;
+  dates.forEach((dt, i) => { if (dt >= '2020' && (kMin < 0 || v[i] <= v[kMin])) kMin = i; });
+  const years = dates.map((dt, i) => [dt.slice(0, 4), i] as [string, number]).filter(([yr], j, a) => j > 0 && yr !== a[j - 1][0])
+    .filter(([yr]) => w >= 1300 || Number(yr) % 2 === 0);
+  const on = interpolate(prog, [0.92, 1], [0, 1], clamp);
+  const ac = '#4F5BD5';
+  return (
+    <Card w={w} h={h} pad={0}>
+      <div style={{position: 'absolute', left: 40, top: 28, fontSize: w >= 1300 ? 42 : 38, fontWeight: 800, color: C.ink}}>{b.label || `Google Trends: ${b.keyword || 'Bitcoin'}`}</div>
+      <div style={{position: 'absolute', left: 40, top: 80, fontSize: 26, fontWeight: 600, color: C.muted}}>Mức quan tâm tìm kiếm toàn cầu, 100 = cao nhất</div>
+      <svg width={w} height={h} style={{position: 'absolute', inset: 0}}>
+        {years.map(([yr, i]) => <g key={yr}>
+          <line x1={x(i)} x2={x(i)} y1={pad.t} y2={pad.t + H} stroke={C.line} strokeWidth={2} />
+          <text x={x(i) + 8} y={pad.t + H + 36} fontSize={30} fontWeight={700} fill={C.muted} fontFamily={FONT}>{yr}</text></g>)}
+        <polygon points={area} fill={ac} opacity={0.1} />
+        <polyline points={pts} fill="none" stroke={ac} strokeWidth={6} strokeLinejoin="round" strokeLinecap="round" />
+        {kMin >= 0 ? <g opacity={on}>
+          <circle cx={x(kMin)} cy={y(v[kMin])} r={15} fill="#fff" stroke={C.red} strokeWidth={6} />
+        </g> : null}
+      </svg>
+      {kMin >= 0 ? <div style={{position: 'absolute', right: Math.max(30, w - x(kMin) - 60), top: pad.t + 10, fontSize: w >= 1300 ? 40 : 32,
+        padding: '6px 18px', borderRadius: 14, background: '#fff', border: `3px solid ${C.red}`, boxShadow: '0 6px 18px rgba(40,50,110,0.12)',
+        fontWeight: 900, color: C.red, opacity: on, whiteSpace: 'nowrap'}}>{b.tag || 'Thấp nhất từ 2020'} ↓</div> : null}
+      {kMin >= 0 ? <svg width={w} height={h} style={{position: 'absolute', inset: 0, opacity: on}}>
+        <line x1={x(kMin)} x2={x(kMin)} y1={pad.t + 70} y2={y(v[kMin]) - 18} stroke={C.red} strokeWidth={3} strokeDasharray="8 8" /></svg> : null}
+      <div style={{position: 'absolute', left: 40, bottom: 14, fontSize: 24, fontWeight: 600, color: C.muted}}>
+        {b.sub || `Dữ liệu thật: Google Trends, tới ${dates[n - 1].slice(5, 7)}/${dates[n - 1].slice(0, 4)}`}</div>
+    </Card>
+  );
+};
+
 // Trọng 23/11 (video 100y): giá BTC theo tuần + đường trung bình 200 tuần, 350 tuần. Dữ liệu thật (insight_lab.wma_data).
 // Trục giá dạng log để thấy rõ cả đáy 2022 lẫn hiện tại; giá chạy trước, 2 đường trung bình hiện sau.
 const Wma: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, data}) => {
@@ -374,7 +420,8 @@ const Wma: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, dat
   // đáy 2022
   let k22 = -1;
   dates.forEach((dt, i) => { if (dt.startsWith('2022') && (k22 < 0 || px[i] < px[k22])) k22 = i; });
-  const years = dates.map((dt, i) => [dt.slice(0, 4), i] as [string, number]).filter(([yr, i], j, a) => j > 0 && yr !== a[j - 1][0]);
+  const years = dates.map((dt, i) => [dt.slice(0, 4), i] as [string, number]).filter(([yr, i], j, a) => j > 0 && yr !== a[j - 1][0])
+    .filter(([yr]) => w >= 1300 || Number(yr) % 2 === 0);
   // nhãn cuối đường: tránh đè nhau
   const ends = [{t: 'BTC', c: BTC, v: px[n - 1]}, {t: '200WMA', c: C2, v: m2[n - 1] || 0}, {t: '350WMA', c: C3, v: m3[n - 1] || 0}]
     .filter((e) => e.v).map((e) => ({...e, yy: y(e.v)})).sort((a, b2) => a.yy - b2.yy);
@@ -399,7 +446,8 @@ const Wma: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, dat
           <text x={x(k22)} y={y(px[k22]) + 50} textAnchor="middle" fontSize={32} fontWeight={800} fill={C.red} fontFamily={FONT}>Đáy 2022</text></g> : null}
         <circle cx={x(n - 1)} cy={y(px[n - 1])} r={14 * lastOn} fill="#fff" stroke={BTC} strokeWidth={5} />
       </svg>
-      {b.tag ? <div style={{position: 'absolute', right: pad.r + 10, top: Math.min(pad.t + H - 70, y(px[n - 1]) + 34), fontSize: w >= 1300 ? 40 : 36,
+      {b.tag ? <div style={{position: 'absolute', right: pad.r + 10, top: pad.t + H - 76, fontSize: w >= 1300 ? 40 : 34, padding: '6px 18px',
+        borderRadius: 14, background: '#fff', border: `3px solid ${/^[+]/.test(b.tag) ? C.green : C.red}`, boxShadow: '0 6px 18px rgba(40,50,110,0.12)',
         fontWeight: 900, color: /^[+]/.test(b.tag) ? C.green : C.red, opacity: maP, whiteSpace: 'nowrap'}}>{b.tag}</div> : null}
       {ends.map((e) => <div key={e.t} style={{position: 'absolute', left: pad.l + W + 26, top: e.yy - 24, fontSize: 36, fontWeight: 800, color: e.c,
         whiteSpace: 'nowrap', opacity: e.t === 'BTC' ? lastOn : maP}}>{e.t}</div>)}

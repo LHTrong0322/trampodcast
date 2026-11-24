@@ -129,7 +129,7 @@ def lint(plan: dict) -> list[str]:
             sizes = [len(b.get("steps") or b.get("items") or b.get("coins") or []) for b in beats]
             if n not in sizes and len(s.get("bullets") or []) != n:
                 bad.append(f"Phần {k}: lời đọc nói '{m.group(0)}' nhưng không có hình nào hiện đủ {n} ý.")
-    if not any(b.get("type") in ("chart", "race", "wma") for b in all_beats):
+    if not any(b.get("type") in ("chart", "race", "wma", "trend") for b in all_beats):
         bad.append("Cả video chưa có biểu đồ giá nào. Thêm ít nhất 1 hình 'race' hoặc 'chart' (giá thật của coin đang nói tới).")
     bad += layout_issues(all_beats)
     types = [b.get("type") for b in all_beats]

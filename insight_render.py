@@ -125,7 +125,7 @@ def mix_music(voice_wav: Path, out_wav: Path, seconds: float, seed: int, swell: 
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(voice_wav), "-f", "s16le", "-ar", str(SR), "-ac", "1",
                     "-i", str(tmp), "-filter_complex",
                     f"[1:a]lowpass=f=3200,volume='{_swell_expr(swell)}':eval=frame[m];[0:a]asplit=2[v1][v2];"
-                    "[m][v1]sidechaincompress=threshold=0.015:ratio=6:attack=20:release=450[md];"
+                    "[m][v1]sidechaincompress=threshold=0.015:ratio=3:attack=20:release=450[md];"
                     "[v2][md]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11[a]",
                     "-map", "[a]", "-ar", "48000", str(out_wav)], check=True)
     tmp.unlink()
@@ -133,7 +133,7 @@ def mix_music(voice_wav: Path, out_wav: Path, seconds: float, seed: int, swell: 
 
 
 def _swell_expr(swell: list | None) -> str:
-    base = "0.2"
+    base = "0.32"   # Trọng 24/11 "chèn nhạc không lời": nhạc nền to hơn khoảng 4-5 dB dưới giọng (trước 0.2, nén ratio 6)
     terms = [f"clip((t-{a:.2f})/0.5,0,1)*clip(({a + d:.2f}-t)/0.6,0,1)" for a, d in (swell or [])]
     return base + ("+0.45*(" + "+".join(terms) + ")" if terms else "")
 
@@ -233,7 +233,7 @@ def beats_for(beats: list, words: list, dur: float, data: dict) -> list:
 # Trọng 22/11: hình đang dựng dở không được biến mất (biểu đồ chưa vẽ xong đã chuyển cảnh).
 # Mỗi kiểu hình có thời gian tối thiểu đủ để chạy xong hiệu ứng và để người xem đọc; "hold" kéo dài thêm.
 # Tuyệt đối KHÔNG chèn khoảng lặng vào giọng đọc để giữ hình (Trọng 22/11: nghe như video bị mất tiếng).
-MIN_BEAT = {"matrix": 4.5, "race": 5.5, "chart": 4.0, "wma": 7.0, "versus": 3.5, "flow": 4.0, "dots": 3.0, "bignum": 2.6, "logos": 2.4,
+MIN_BEAT = {"matrix": 4.5, "race": 5.5, "chart": 4.0, "wma": 7.0, "trend": 6.0, "versus": 3.5, "flow": 4.0, "dots": 3.0, "bignum": 2.6, "logos": 2.4,
             "statement": 2.4, "question": 2.0, "photo": 2.6}
 
 
@@ -403,7 +403,7 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
                            "stat": "" if (plan.get("own_source") and plan.get("hook_beats")) or plan.get("intro_beats") else V.en_money(P.nodash(str(plan.get("thumb_stat") or plan.get("hook_stat") or "")))[:10],
                            "statLabel": P.nodash(str(plan.get("thumb_tag") or "")).upper()[:24],
                            # từ khoá tô màu trong tiêu đề = các chữ của chữ ảnh bìa (không tô bừa chữ "hội", "từ")
-                           "hl": [re.sub(r"[^\w$%]", "", w.lower()) for w in str(plan.get("thumb_text") or "").split() if len(w) > 1],
+                           "hl": [re.sub(r"[^\w$%]", "", w.lower()) for w in str(plan.get("thumb_text") or "").replace("_", " ").split() if len(w) > 1],
                            # review 22/11: lúc chào màn hình không được trống → giữ lại thẻ so sánh của hook ở bên phải
                            "beats": [{**b, "s": 0.0} for b in beats_for(plan.get("intro_beats") or [x for x in (plan.get("hook_beats") or []) if x.get("type") in ("versus", "race", "bignum")][:1],
                                                                          sc["words"], sc["dur"], data)][:1],
