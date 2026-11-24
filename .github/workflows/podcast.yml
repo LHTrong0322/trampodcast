@@ -2,13 +2,17 @@ name: Trạm Podcast Crypto, tạo tập podcast
 
 on:
   schedule:
-    # 1 tập/ngày lúc 5:02 sáng VN (22:02 giờ UTC). Lệch 2 phút khỏi giờ chẵn vì
-    # GitHub hay dồn việc đúng phút :00. GitHub có thể vẫn chạy trễ vào giờ cao điểm.
+    # Chính: Cloudflare Worker (cloudflare/podcast-trigger) bấm Run workflow đúng 5:00 VN.
+    # Cron GitHub dưới đây chỉ là dự phòng (hay trễ 3 đến 7 tiếng); hôm nay có tập rồi thì tự bỏ qua.
     - cron: "2 22 * * *"
   workflow_dispatch:
     inputs:
       hours:
         description: "Lấy tin trong bao nhiêu giờ gần nhất (để trống = tự động)"
+        required: false
+        default: ""
+      auto:
+        description: "Để trống. Cloudflare Worker gửi 1: hôm nay có tập rồi thì bỏ qua"
         required: false
         default: ""
 
@@ -61,6 +65,7 @@ jobs:
           TG_SESSION: ${{ secrets.TG_SESSION }}
           SITE_URL: ${{ vars.SITE_URL }}
           RUN_EVENT: ${{ github.event_name }}
+          AUTO_TRIGGER: ${{ github.event.inputs.auto }}
         run: |
           SCRIPT=podcast.py
           [ -f scripts/podcast.py ] && SCRIPT=scripts/podcast.py

@@ -1,0 +1,7 @@
+name = "tram-podcast-trigger"
+main = "worker.js"
+compatibility_date = "2026-11-01"
+
+[triggers]
+# Giờ UTC: 22:00 = 5:00 sáng VN, 22:20 = 5:20 sáng VN (dự phòng)
+crons = ["0 22 * * *", "20 22 * * *"]
