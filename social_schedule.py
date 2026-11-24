@@ -164,7 +164,8 @@ def post(plan_path: Path):
         r = requests.post("https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status",
                           headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json; charset=UTF-8",
                                    "X-Upload-Content-Type": "video/mp4", "X-Upload-Content-Length": str(size)}, data=json.dumps(meta), timeout=60)
-        r.raise_for_status()
+        if not r.ok:   # in lý do YouTube trả về (vd uploadLimitExceeded: hết lượt tải lên trong ngày)
+            raise RuntimeError(f"YouTube từ chối tải lên ({r.status_code}): {r.text[:300]}")
         with open(path, "rb") as f:
             up = requests.put(r.headers["Location"], headers={"Content-Type": "video/mp4", "Content-Length": str(size)}, data=f, timeout=900)
         up.raise_for_status()
