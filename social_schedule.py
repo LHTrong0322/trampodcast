@@ -181,6 +181,18 @@ def post(plan_path: Path):
     if y and st.get("yt_id") and not st.get("thumb_ok") and th:   # gắn lại ảnh bìa nếu lần trước bị chặn
         st["thumb_ok"] = SU.yt_thumb(SU._yt_token(), st["yt_id"], th)
         report.append("YouTube ảnh bìa: " + ("đã gắn" if st["thumb_ok"] else "vẫn bị chặn, kênh chưa xác minh xong"))
+    fb0 = plan.get("facebook") or {}
+    if st.get("fb_id") and st.get("fb_thumb_ok") is False and fb0.get("thumb"):   # Trọng 24/11: đổi ảnh bìa video dài Facebook đã đặt lịch
+        try:
+            with open(fb0["thumb"], "rb") as fh:
+                mime = "image/png" if str(fb0["thumb"]).endswith(".png") else "image/jpeg"
+                tr = requests.post(f"https://graph.facebook.com/{FB}/{st['fb_id']}/thumbnails",
+                                   params={"access_token": os.environ["FB_PAGE_TOKEN"].strip(), "is_preferred": "true"},
+                                   files={"source": (Path(fb0["thumb"]).name, fh, mime)}, timeout=120)
+            st["fb_thumb_ok"] = tr.ok
+            report.append("Facebook ảnh bìa mới: " + ("đã gắn" if tr.ok else f"lỗi {tr.status_code}"))
+        except Exception as ex:
+            report.append(f"Facebook ảnh bìa mới lỗi: {ex}")
     fb = plan.get("facebook")
     if fb and not st.get("fb_id") and fb.get("item") == "long":   # video dài 16:9: video thường của Trang, hẹn giờ công khai
         page, tok = os.environ["FB_PAGE_ID"].strip(), os.environ["FB_PAGE_TOKEN"].strip()
