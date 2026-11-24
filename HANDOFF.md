@@ -369,3 +369,6 @@ Tắt: config insight.two_pass: false hoặc env INSIGHT_TWO_PASS=0. Job timeout
   insight_lab.wma_data, remotion/src/beats.tsx Wma). Không lấy được giá tuần thì bỏ beat, ghi log, không dừng dựng.
 - Mới: "short_spans" (cùng thứ tự với "shorts"): mỗi short lấy đúng đoạn tinh tuý {"from": cụm đầu, "to": cụm cuối} trong phần,
   không cố định từ đầu phần (Trọng 23/11: short lấy tinh tuý, không cố định số lượng hay theo từng phần).
+- Trọng 24/11 "xong lượt nào gửi lượt đó trước": bản nháp (lượt 1) gửi Telegram NGAY khi xong (video dài + short + lỗi chính + bot sửa gì),
+  bản chính lượt 2 cũng gửi ngay nếu phải sửa thêm vòng 3. Code: insight.two_pass_draft, insight.quality_gate.
+- Bật/tắt insight.yml khi dispatch tay: CHỜ run chuyển sang in_progress rồi mới tắt lại. Tắt ngay sau dispatch làm run kẹt "queued" mãi (23-24/11 kẹt 2 run).

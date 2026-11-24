@@ -460,6 +460,11 @@ def quality_gate(src, tips, draft: dict, lab, res):
     why = (["thua nháp: " + "; ".join(bad)] if bad else []) + (["dưới chuẩn " + str(TARGET) + ": " + "; ".join(low)] if low else [])
     log(f"🚦 Bản chính chưa đạt ({' | '.join(why)}), bot sửa thêm 1 vòng")
     gate.append("⚠️ Chưa đạt: " + " | ".join(why) + ". Bot sửa thêm 1 vòng theo góp ý của bản chính")
+    try:   # Trọng 24/11: xong lượt nào gửi lượt đó, không bắt chờ vòng sửa thêm
+        PB.tg_video(Path(res["long"]), f"🎙 LƯỢT 2 XONG: bản CHÍNH, {rv.get('score', '?')} điểm (nháp {d.get('score', '?')}).\n"
+                                       f"Chưa đạt ({' | '.join(why)[:300]}), bot đang sửa thêm 1 vòng rồi dựng lại, xong sẽ gửi.")
+    except Exception as ex:
+        log(f"   ! gửi bản chính lượt 2 lên Telegram lỗi: {ex}")
     try:
         cur = os.getenv("INSIGHT_SCRIPT", "").strip()
         base = json.loads(Path(cur).read_text(encoding="utf-8")) if cur else json.loads((lab / "plan.json").read_text(encoding="utf-8"))
@@ -511,10 +516,23 @@ def two_pass_draft(src, tips, ic) -> dict:
     new, changes = IM.improve(base, rv, locked=bool(approved))
     fixed = Path("lab_nhap") / "kich-ban-da-sua.json"
     fixed.write_text(json.dumps(new, ensure_ascii=False, indent=1), encoding="utf-8")
+    # Trọng 24/11: "xong lượt nào gửi lượt đó trước": gửi bản nháp + điểm + bot sửa gì NGAY, không đợi bản chính dựng xong
+    try:
+        cuts = (rv or {}).get("can_sua") or []
+        PB.tg_video(Path(res["long"]), f"🧪 LƯỢT 1 XONG: bản NHÁP (giọng {dv.split(':')[-1]}), {(rv or {}).get('score', '?')} điểm.\n"
+                                       f"Bản chính (giọng {main_voice.split(':')[-1] or 'chính'}) đang dựng tiếp, xong sẽ gửi.")
+        for k, sp in enumerate(res.get("shorts") or []):
+            PB.tg_video(Path(sp["path"]), f"🧪 Short {k + 1} bản NHÁP")
+        msg = ("🧪 BOT REVIEW BẢN NHÁP: các lỗi chính\n\n" + "\n\n".join(f"{i + 1}. {c}" for i, c in enumerate(cuts[:6]))
+               + ("\n\n🛠 BOT ĐÃ SỬA CHO BẢN CHÍNH:\n" + "\n".join(changes) if changes else ""))
+        for k in range(0, len(msg), 3800):
+            PB.tg_text(msg[k:k + 3800])
+    except Exception as ex:
+        log(f"   ! gửi bản nháp lên Telegram lỗi: {ex}")
     os.environ["INSIGHT_SCRIPT"] = str(fixed)   # lượt chính dựng đúng lời đọc lượt 1 + hình đã sửa
     log(f"══ LƯỢT 2 (bản chính): giọng {main_voice or 'mặc định'}, {len(changes)} sửa hình ══")
     return {"long": str(res["long"]), "shorts": [str(s["path"]) for s in res.get("shorts") or []],
-            "review": rv, "changes": changes, "voice": dv.split(":")[-1]}
+            "review": rv, "changes": changes, "voice": dv.split(":")[-1], "sent": True}
 
 
 def produce(out: Path, cfg: dict, st: dict, links: str = ""):

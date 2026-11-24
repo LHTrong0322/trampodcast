@@ -498,7 +498,7 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, draft
         tg_video(s["path"], f"📱 Short {i + 1}: {sh.get('yt_title') or s['title']}")
     if preflight_text(res):
         tg_text(preflight_text(res))
-    if draft and draft.get("long") and Path(draft["long"]).exists():   # Trọng 22/11: gửi cả bản nháp để so khác biệt
+    if draft and not draft.get("sent") and draft.get("long") and Path(draft["long"]).exists():   # Trọng 22/11: gửi cả bản nháp (24/11: đã gửi ngay sau lượt 1 thì thôi)
         drv = draft.get("review") or {}
         tg_video(Path(draft["long"]), f"🧪 Bản NHÁP (giọng {draft.get('voice', 'Hải Đăng')}, trước khi bot sửa): {drv.get('score', '?')} điểm")
         if draft.get("changes"):
