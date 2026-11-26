@@ -408,7 +408,17 @@ def retime(plan_path: Path):
 
 if __name__ == "__main__":
     if sys.argv[1] == "post":
-        post(Path(sys.argv[2]))
+        # Trọng 26/11: nhận nhiều plan cách nhau dấu phẩy (gắn lại ảnh bìa hàng loạt trong 1 lượt chạy).
+        # Lỗi ở 1 plan không chặn các plan sau; cuối cùng vẫn báo lỗi để workflow đỏ.
+        errs = []
+        for one in [x.strip() for x in sys.argv[2].split(",") if x.strip()]:
+            try:
+                post(Path(one))
+            except Exception as ex:
+                print("LỖI", one, ex)
+                errs.append(one)
+        if errs:
+            raise SystemExit(f"Lỗi ở: {', '.join(errs)}")
     elif sys.argv[1] == "now":
         now(Path(sys.argv[2]))
     elif sys.argv[1] == "retime":
