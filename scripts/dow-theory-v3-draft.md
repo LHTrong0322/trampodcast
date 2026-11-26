@@ -1,13 +1,12 @@
-# Kịch bản v3 (chờ Trọng duyệt): Lý thuyết Dow: 6 nguyên lý nền móng của phân tích kỹ thuật
+# Kịch bản v3 (Trọng duyệt 02:02 27/11, thêm phần tầm quan trọng PTKT): Lý thuyết Dow: 6 nguyên lý và vì sao cần phân tích kỹ thuật
 
-Series: Phân tích kỹ thuật. Trọng tâm: dạy lý thuyết Dow, đủ 6 nguyên lý. BTC chỉ là ví dụ minh hoạ 1 đến 2 câu mỗi nguyên lý, không phân tích giá. Giọng mặc định (nháp Hải Đăng, bản chính Ludo KOL). Khoảng 4 phút.
+Series: Phân tích kỹ thuật. Trọng tâm: dạy lý thuyết Dow, đủ 6 nguyên lý, rồi vì sao phân tích kỹ thuật quan trọng. BTC chỉ là ví dụ minh hoạ.
 
 ## Hook
 Một lý thuyết hơn 120 năm tuổi vẫn là nền móng của mọi chart. Bạn biết đủ 6 nguyên lý của nó chưa?
-Chữ trên hình: thẻ số 120+ năm, thẻ số 6 nguyên lý
 
 ## Mở đầu
-Tóm tắt trong một câu: lý thuyết Dow dạy bạn đi theo xu hướng chính, và chỉ đổi ý khi thị trường xác nhận rõ ràng. Nó do Charles Dow, người sáng lập tờ Wall Street Journal, viết ra từ những năm 1900. Chào mừng mọi người quay lại Smart Penguin Insights. Mình đi qua đủ 6 nguyên lý, mỗi nguyên lý một ví dụ thật.
+Tóm tắt trong một câu: lý thuyết Dow dạy bạn đi theo xu hướng chính, và chỉ đổi ý khi thị trường xác nhận rõ ràng. Nó do Charles Dow, người sáng lập tờ Wall Street Journal, viết ra từ những năm 1900. Chào mừng mọi người quay lại Smart Penguin Insights. Mình đi qua đủ 6 nguyên lý, mỗi nguyên lý một ví dụ thật, rồi trả lời câu hỏi: vì sao phân tích kỹ thuật quan trọng.
 
 ## Phần 1: Nguyên lý 1: giá phản ánh tất cả
 Tin tốt vừa ra mà giá lại giảm. Vì sao? Đó là nguyên lý thứ nhất của lý thuyết Dow: giá phản ánh tất cả. Mọi thứ thị trường biết, từ tin tức, kỳ vọng đến nỗi sợ, đều đã nằm trong giá. Ví dụ, tháng 1/2024, ETF Bitcoin spot được duyệt. Tin cực lớn. Ngày 11/1, BTC chạm khoảng $49K. Chỉ 2 tuần sau, giá về khoảng $38.5K, giảm hơn 20%. Vì kỳ vọng đã được mua trước, khi tin ra thì người mua sớm chốt lời. Vậy thì sao? Đừng giao dịch theo tiêu đề báo. Hãy hỏi: giá đang phản ứng với tin đó như thế nào?
@@ -26,15 +25,16 @@ Làm sao biết một xu hướng là thật? Dow đưa ra 2 phép thử. Nguyê
 Chữ trên hình: Các chỉ số phải cùng chiều / Volume phải đi cùng xu hướng / Thiếu xác nhận: nghi ngờ
 
 ## Phần 5: Nguyên lý 6: xu hướng còn cho tới khi đảo chiều rõ
-Nguyên lý cuối cùng, và là nguyên lý giúp bạn giữ tiền: xu hướng vẫn còn, cho tới khi có tín hiệu đảo chiều rõ ràng. Uptrend là đỉnh sau cao hơn đỉnh trước, đáy sau cao hơn đáy trước. Tín hiệu đảo chiều là: giá hồi lên không vượt được đỉnh cũ, rồi thủng luôn đáy cũ. Ví dụ, sau đỉnh $126K, nhịp hồi lớn nhất của BTC năm 2026 chỉ lên $87.4K. Rồi tháng 11/2026, giá thủng đáy $57.7K của năm. Theo Dow, đó là tín hiệu uptrend đã kết thúc. Vì sao nguyên lý này quan trọng với cả trading lẫn đầu tư? Vì nó bắt bạn có kỷ luật: không đoán đỉnh, không bắt đáy, chỉ đổi ý khi thị trường xác nhận. Nhưng nhớ, Dow có điểm yếu: tín hiệu luôn đến muộn, thường bỏ lỡ phần đầu và phần cuối con sóng. Hãy dùng nó như la bàn, không phải quả cầu pha lê.
-Chữ trên hình: Đỉnh, đáy cao dần = uptrend / Đỉnh thấp hơn + thủng đáy = đảo chiều / Dow chậm: la bàn, không phải quả cầu pha lê
+Nguyên lý cuối cùng, và là nguyên lý giúp bạn giữ tiền: xu hướng vẫn còn, cho tới khi có tín hiệu đảo chiều rõ ràng. Uptrend là đỉnh sau cao hơn đỉnh trước, đáy sau cao hơn đáy trước. Tín hiệu đảo chiều là: giá hồi lên không vượt được đỉnh cũ, rồi thủng luôn đáy cũ. Ví dụ, sau đỉnh $126K, nhịp hồi lớn nhất của BTC năm 2026 chỉ lên $87.4K. Rồi tháng 11/2026, giá thủng đáy $57.7K của năm. Theo Dow, đó là tín hiệu uptrend đã kết thúc. Vì sao nguyên lý này quan trọng với cả trading lẫn đầu tư? Vì nó bắt bạn có kỷ luật: không đoán đỉnh, không bắt đáy, chỉ đổi ý khi thị trường xác nhận.
+Chữ trên hình: Đỉnh, đáy cao dần = uptrend / Đỉnh thấp hơn + thủng đáy = đảo chiều / Không đoán đỉnh, không bắt đáy
+
+## Phần 6: Vì sao phân tích kỹ thuật quan trọng
+Vậy vì sao phân tích kỹ thuật quan trọng, kể cả với người đầu tư dài hạn? Có 3 lý do. Một: nó cho bạn bản đồ. Bạn biết mình đang ở thuỷ triều nào, giai đoạn nào. Hai: nó cho bạn kế hoạch trước khi vào lệnh. Mua ở vùng nào, sai ở mốc nào, thoát khi nào. Ba: nó giữ bạn khỏi cảm xúc, FOMO lúc hưng phấn và hoảng loạn lúc giảm. Phân tích cơ bản trả lời câu hỏi mua gì. Phân tích kỹ thuật trả lời mua khi nào và quản trị rủi ro ra sao. Ví dụ, năm 2025, đỉnh đáy khung tuần của BTC còn cao dần, người theo Dow cứ giữ. Năm 2026, đỉnh thấp hơn rồi thủng đáy, họ giảm rủi ro thay vì gồng. Nhưng nhớ, Dow có điểm yếu: tín hiệu luôn đến muộn, thường bỏ lỡ phần đầu và phần cuối con sóng. Vậy thì sao? Hãy dùng phân tích kỹ thuật như la bàn, không phải quả cầu pha lê.
+Chữ trên hình: Bản đồ: đang ở đâu trong xu hướng / Kế hoạch: mua, sai, thoát ở đâu / Kỷ luật: tránh FOMO và hoảng loạn
 
 ## Tóm lại
-Tóm lại: giá phản ánh tất cả, nhìn thuỷ triều trước con sóng, cẩn thận nhất khi đám đông hưng phấn nhất, và chỉ đổi ý khi có xác nhận. Đây là nội dung giáo dục, không phải lời khuyên đầu tư. Bình luận cho mình biết: trong 6 nguyên lý, nguyên lý nào bạn thấy khó áp dụng nhất? Ghi số từ 1 đến 6 nhé.
+Tóm lại: giá phản ánh tất cả, nhìn thuỷ triều trước con sóng, cẩn thận nhất khi đám đông hưng phấn nhất, chỉ đổi ý khi có xác nhận, và dùng phân tích kỹ thuật làm bản đồ cho mọi quyết định. Đây là nội dung giáo dục, không phải lời khuyên đầu tư. Bình luận cho mình biết: trong 6 nguyên lý, nguyên lý nào bạn thấy khó áp dụng nhất? Ghi số từ 1 đến 6 nhé.
 
 ## 2 Short
 - Lúc retail thấy an toàn nhất: insider bán?
 - ETF được duyệt mà BTC giảm 20%: vì sao?
-
-## Ảnh bìa
-Số lớn "6", chữ "nền móng của mọi chart", nhãn "lý thuyết Dow", dòng nhỏ "Phân tích kỹ thuật từ số 0", avatar penguin, hình dán kính lúp.
