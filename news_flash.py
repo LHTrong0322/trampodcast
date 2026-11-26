@@ -460,8 +460,9 @@ def build(out: Path, cfg: dict, did: str):
         lab = L.prepare("", Path("lab"))
         # Trọng 24/11: dựng → bot review → còn dưới 8 thì Claude sửa thẻ hình theo góp ý → dựng lại (giọng giữ nguyên)
         gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))
-        rounds = int(ncfg(cfg).get("fix_rounds", 2))
+        rounds = int(os.getenv("NF_FIX_ROUNDS", "").strip() or ncfg(cfg).get("fix_rounds", 2))
         hist, rv = [], None
+        best = None   # (điểm, kế hoạch, review) của vòng tốt nhất
         for k in range(rounds + 1):
             res = R.render(lab, Path("render_out"))
             rv = PB.review(gem, cfg, res, None) or {}
@@ -471,6 +472,8 @@ def build(out: Path, cfg: dict, did: str):
                 sc = float(rv.get("score") or 0)
             except (TypeError, ValueError):
                 sc = 0
+            if best is None or sc > best[0]:
+                best = (sc, (lab / "plan.json").read_text(encoding="utf-8"), rv)
             if sc >= 8 or k == rounds or not rv.get("can_sua"):
                 break
             plan = json.loads((lab / "plan.json").read_text(encoding="utf-8"))
@@ -484,8 +487,26 @@ def build(out: Path, cfg: dict, did: str):
             L.photo_beats(lab, plan)
             (lab / "plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=1), encoding="utf-8")
             log("   Tự sửa theo review: " + "; ".join(ch[:8]))
+        # Lỗi 26/11 (short ETF): tự sửa làm điểm tụt 6.0 → 5.6 → 5.4 mà vẫn gửi bản cuối. Giờ vòng cuối kém hơn thì dựng lại bản tốt nhất
+        if best is not None and hist and best[0] > float(hist[-1] or 0):
+            log(f"   Vòng cuối {hist[-1]} kém hơn vòng tốt nhất {best[0]}: dựng lại bản tốt nhất để gửi")
+            (lab / "plan.json").write_text(best[1], encoding="utf-8")
+            res = R.render(lab, Path("render_out"))
+            rv = best[2]
+            hist.append(f"giữ {best[0]}")
         res["review_rounds"] = hist
+        # LUẬT CỨNG (Trọng 26/11): video ra điểm thấp hơn là không bao giờ chấp nhận. Dựng lại 1 tin đã có video mà bản mới
+        # thấp hơn bản cũ thì không gửi làm bản chính, giữ bản cũ và báo điểm.
+        old_best = float(d.get("best_score") or 0)
+        new_best = best[0] if best else 0
+        if old_best and new_best < old_best:
+            say(f"⛔ Bản dựng lại {did} chỉ đạt {new_best}/10, thấp hơn bản cũ {old_best}/10 nên KHÔNG gửi, giữ bản cũ. "
+                f"Các vòng: {' → '.join(str(x) for x in hist)}", reply_to=d.get("msg_id"))
+            log(f"   ⛔ {new_best} < bản cũ {old_best}: không gửi")
+            d["status"] = "built"
+            return
         PB.publish(lab, res, Path("render_out"), data_dir=out, rv=rv)
+        d["best_score"] = new_best
         d["status"] = "built"
         d["built"] = now_vn().isoformat()
     except Exception as ex:

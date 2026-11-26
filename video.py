@@ -259,10 +259,26 @@ def _num(raw: str) -> str:
     return raw.replace(",", ".")                          # 1,2 → 1.2
 
 
+# review 26/11: "4 tỷ 940 triệu đô la" từng ra phụ đề "4B $940M"; gộp số kép thành 1 số ($4.94B)
+_COMPOUND_RE = re.compile(r"(?:(\$)\s?)?(\d+)\s*(tỷ|triệu)\s+(\d{1,3})\s*(triệu|nghìn|ngàn)(?![\w])"
+                          r"(\s*(?:đô la Mỹ|đô la|đô|USD|usd|\$))?", re.I)
+_NEXT = {"tỷ": "triệu", "triệu": "nghìn"}
+
+
+def _compound(m) -> str:
+    big, small = m.group(3).lower(), m.group(5).lower().replace("ngàn", "nghìn")
+    if _NEXT[big] != small:
+        return m.group(0)
+    frac = f"{int(m.group(4)):03d}".rstrip("0")
+    num = m.group(2) + (f".{frac}" if frac else "")
+    return f"{'$' if (m.group(1) or m.group(6)) else ''}{num}{'B' if big == 'tỷ' else 'M'}"
+
+
 def en_money(text: str) -> str:
     if not text:
         return text
     text = P.nodash(text)
+    text = _COMPOUND_RE.sub(_compound, text)
 
     def unit(m):
         dollar = bool(m.group(1)) or bool(m.group(4))

@@ -274,7 +274,8 @@ export const BeatPanel: React.FC<{beats: Beat[]; t: number; sceneDur: number; da
   let i = -1;
   list.forEach((b, k) => { if (t >= b.s - 0.15) i = k; });
   if (i < 0) i = 0;
-  const b = list[i];
+  // review 26/11: trước thẻ đầu tiên không để màn trống (từng trống 5 giây đầu): thẻ đầu hiện từ giây 0
+  const b = i === 0 && t < list[0].s ? {...list[0], s: 0} : list[i];
   const end = list[i + 1]?.s ?? sceneDur;
   const local = t - b.s;
   const inP = interpolate(local, [-0.12, 0.06], [0, 1], clamp);   // review 26/11: chuyển thẻ nhanh (khoảng 0,15 giây), không còn chữ xám mờ

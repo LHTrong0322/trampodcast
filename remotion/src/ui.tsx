@@ -172,7 +172,9 @@ export const CountUp: React.FC<{value: string; delay?: number; size: number; col
   const m = value.match(/^([^\d]*)(\d+(?:[.,]\d+)?)(.*)$/);
   let shown = value;
   // review 22/11: số đếm dở trên khung tĩnh trông như số liệu khác (vd ~25% thay vì ~30%); khoảng "97-99%" không đếm
-  if (m && !/\d/.test(m[3]) && !m[1].includes('~')) {
+  // review 26/11: short dọc không chạy đếm số (bot review chụp trúng số đếm dở "$4.43B", "-3%" rồi trừ điểm "số lệch")
+  const {width: vw, height: vh} = useVideoConfig();
+  if (m && vh <= vw && !/\d/.test(m[3]) && !m[1].includes('~')) {
     const target = parseFloat(m[2].replace(/,/g, ''));
     const dec = (m[2].split(/[.]/)[1] || '').length;
     const p = interpolate(f - delay, [0, 16], [0, 1], {...clamp, easing: ease});

@@ -70,6 +70,11 @@ Xác minh nâng cao YouTube không làm giảm reach, đã xác minh. 8 luật d
   Hải Đăng là giọng NHÁP: Trọng có lúc muốn xem nháp Hải Đăng trước, bấm nút "🎙 Dựng nháp Hải Đăng trước" hoặc /nhap.
   Gemini hết lượt thì dừng và báo, không tự đổi giọng (luật 20/11). Workflow có input voice để đổi tay. Số ảnh bìa: dấu + màu xanh, dấu − màu đỏ.
 - Ảnh người thật (kể cả ảnh chế Trump đăng về Huang 23/11): KHÔNG đưa vào video. Kể sự kiện bằng lời đọc + thẻ chữ.
+- LUẬT CỨNG ĐIỂM (Trọng 26/11, sau short ETF 6.0 → 5.6 → 5.4): video ra điểm thấp hơn KHÔNG BAO GIỜ được chấp nhận.
+  news_flash.build giữ vòng điểm cao nhất (vòng cuối kém hơn thì dựng lại bản tốt nhất rồi mới gửi); dựng lại 1 tin đã có video
+  (state drafts.<mã>.best_score) mà bản mới thấp hơn thì không gửi, báo "⛔" trên Telegram. Env NF_FIX_ROUNDS đổi số vòng tự sửa.
+- Short dọc không chạy đếm số trên thẻ (CountUp): bot review chụp trúng số đếm dở rồi trừ điểm "số lệch". Trước thẻ đầu tiên, thẻ đầu hiện từ giây 0.
+- en_money gộp số kép: "4 tỷ 940 triệu đô la" → "$4.94B" (trước ra "4B $940M" trên phụ đề).
 - thumb_subject: "penguin" (26/11) = bìa 16:9 không lấy logo dự án làm chủ thể tròn (tin không xoay quanh 1 dự án, vd ETF).
 - Bố cục short sau review 26/11 (short ETF 6.0): nguồn tin bỏ khỏi header, chỉ ghi nhỏ trong thẻ số liệu (beat.source hoặc "Nguồn: ..." trong sub,
   tự tách dòng); nhãn dự án (chip) chỉ hiện từ lúc lời đọc nhắc tới; phụ đề nâng lên bottom 470 (trước 390); thẻ chuyển nhanh khoảng 0,15 giây.
