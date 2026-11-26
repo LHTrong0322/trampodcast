@@ -444,6 +444,39 @@ def revise_all(out: Path, cfg: dict):
 # ---------------------------------------------------------------------------
 # 3. DỰNG SAU KHI DUYỆT
 # ---------------------------------------------------------------------------
+
+def _fair_res(res: dict, short: Path, long: Path) -> dict:
+    """Bản tối giản để chấm đối đầu: 2 bản nhận ĐÚNG cùng lượng thông tin (khung hình, không lời đọc từng giây)."""
+    plan = res["plan"]
+    return {"plan": {"title": "", "hook": "", "news": True, "format": plan.get("format", ""),
+                     "sections": [{"narration": " ".join(s.get("narration", "") for s in plan.get("sections", []))}]},
+            "long": long, "shorts": [{"path": short}], "duration": res["duration"], "voice": res.get("voice", ""), "scenes": []}
+
+
+def head_to_head(gem, cfg, res: dict, old_tag: str) -> tuple[float, float] | None:
+    """Trọng 27/11: chấm LẠI bản cũ và bản mới bằng CÙNG luật hiện hành, cùng bot, trong cùng lượt, rồi mới so.
+    Trả (điểm mới, điểm cũ) hoặc None nếu không tải được bản cũ."""
+    import subprocess
+    import insight_publish as PB
+    d = Path("old_release")
+    d.mkdir(exist_ok=True)
+    r = subprocess.run(["gh", "release", "download", f"insight-{old_tag}", "-R", os.getenv("GITHUB_REPOSITORY", "LHTrong0322/trampodcast"),
+                        "-p", "*9x16.mp4", "-p", "*16x9.mp4", "-D", str(d), "--clobber"], capture_output=True, text=True)
+    olds = sorted(x for x in d.glob("*short1-9x16.mp4") if "nhap" not in x.name)
+    oldl = sorted(x for x in d.glob("*16x9.mp4") if "nhap" not in x.name)
+    if not olds:
+        log(f"   ! không tải được bản cũ {old_tag}: {(r.stderr or '')[:200]}")
+        return None
+    sc = []
+    for rr in (_fair_res(res, res["shorts"][0]["path"], res["long"]), _fair_res(res, olds[0], oldl[0] if oldl else res["long"])):
+        try:
+            sc.append(float((PB.review(gem, cfg, rr, None) or {}).get("score") or 0))
+        except Exception as ex:
+            log(f"   ! chấm đối đầu lỗi: {str(ex)[:200]}")
+            return None
+    log(f"   Chấm đối đầu cùng luật: bản mới {sc[0]} / bản cũ {sc[1]}")
+    return sc[0], sc[1]
+
 def build(out: Path, cfg: dict, did: str):
     import insight_lab as L
     import insight_render as R
@@ -497,16 +530,33 @@ def build(out: Path, cfg: dict, did: str):
         res["review_rounds"] = hist
         # LUẬT CỨNG (Trọng 26/11): video ra điểm thấp hơn là không bao giờ chấp nhận. Dựng lại 1 tin đã có video mà bản mới
         # thấp hơn bản cũ thì không gửi làm bản chính, giữ bản cũ và báo điểm.
+        # Trọng 27/11: điểm cũ chấm theo luật cũ thì không so được. Chấm lại CẢ 2 bản bằng luật hiện hành rồi mới so.
         old_best = float(d.get("best_score") or 0)
         new_best = best[0] if best else 0
-        if old_best and new_best < old_best:
-            say(f"⛔ Bản dựng lại {did} chỉ đạt {new_best}/10, thấp hơn bản cũ {old_best}/10 nên KHÔNG gửi, giữ bản cũ. "
+        h2h = head_to_head(gem, cfg, res, d["best_tag"]) if d.get("best_tag") else None
+        if h2h:
+            new_cmp, old_cmp = h2h
+            cmp_note = f"chấm lại cùng luật mới: bản mới {new_cmp}/10, bản cũ {old_cmp}/10"
+        else:
+            new_cmp, old_cmp = new_best, old_best
+            cmp_note = f"bản mới {new_best}/10, bản cũ {old_best}/10 (không chấm lại được bản cũ)"
+        if old_cmp and new_cmp < old_cmp:
+            say(f"⛔ Bản dựng lại {did} KHÔNG ĐẠT: {cmp_note}. Không gửi làm bản chính, giữ bản cũ. "
                 f"Các vòng: {' → '.join(str(x) for x in hist)}", reply_to=d.get("msg_id"))
-            log(f"   ⛔ {new_best} < bản cũ {old_best}: không gửi")
+            try:   # Trọng 27/11: bản bị chặn vẫn gửi để xem, ghi rõ không đăng
+                PB.tg_video(res["shorts"][0]["path"], f"⛔ KHÔNG ĐẠT, chỉ để xem, KHÔNG đăng ({did}, {new_cmp}/10)")
+            except Exception as ex:
+                log(f"   ! gửi bản không đạt để xem lỗi: {str(ex)[:200]}")
+            log(f"   ⛔ {cmp_note}: không gửi làm bản chính")
             d["status"] = "built"
             return
-        PB.publish(lab, res, Path("render_out"), data_dir=out, rv=rv)
+        if h2h:
+            say(f"✅ {did}: {cmp_note}, bản mới tốt hơn nên gửi.", reply_to=d.get("msg_id"))
+        pub = PB.publish(lab, res, Path("render_out"), data_dir=out, rv=rv) or {}
         d["best_score"] = new_best
+        rel = str(pub.get("release") or "")
+        if "/insight-" in rel:   # bản đang là bản chính, để lần dựng lại sau chấm đối đầu
+            d["best_tag"] = rel.rsplit("/insight-", 1)[1]
         d["status"] = "built"
         d["built"] = now_vn().isoformat()
     except Exception as ex:

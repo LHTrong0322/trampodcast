@@ -247,6 +247,7 @@ bối cảnh, nguyên nhân, hệ quả, hoặc việc người xem làm đượ
 nhắc lại con số hay ý đã nói (vd đã nói "gần 5 tỷ" thì không nói lại "4 tỷ 940 triệu"); câu đệm, câu chuyển rỗng, câu chỉ để kéo dài;
 câu hỏi tu từ không được trả lời; thẻ hình chỉ nhắc lại chữ của phụ đề hoặc tiêu đề mà không thêm số liệu hay hình mới;
 ảnh minh hoạ chung chung không liên quan nội dung.
+CÁCH LÀM ĐÚNG (gỡ xung đột với luật "chữ trên hình khớp lời đọc"): mỗi câu lời đọc mang 1 con số hoặc 1 so sánh, và thẻ hình VẼ chính con số đó (số to, so sánh 2 bên, biểu đồ, logo), không chép lại câu chữ. Câu không có gì để vẽ thì viết lại câu cho có số, hoặc bỏ câu.
 Mỗi đoạn KHÔNG ĐÁNG ghi vào can_sua, bắt đầu bằng "KHÔNG ĐÁNG:" (giây/khung, vì sao, đập đi thay bằng gì), và điểm tổng tối đa 6 nếu còn đoạn như vậy."""
 
 

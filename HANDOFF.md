@@ -83,6 +83,10 @@ Xác minh nâng cao YouTube không làm giảm reach, đã xác minh. 8 luật d
   chấm kịch bản (script_review: tiêu chí dang_xem, dưới 8 thì KHÔNG qua dù điểm tổng cao), review xem trước khi dựng (preflight.PROMPT),
   review sau dựng (insight_publish.REVIEW_PROMPT, còn đoạn không đáng thì tối đa 6). Văn bản luật: script_review.VALUE_RULE. Test: tests/test_value_gate.py.
   Tin gốc mỏng thì phải đào thêm bối cảnh có nguồn (vd ETF 27/11: quý 3 bị xoá sạch, BTC cách giá vốn TB 11%) thay vì nói lại 1 con số.
+- CHẤM ĐỐI ĐẦU (Trọng 27/11): dựng lại 1 tin đã có bản chính (state drafts.<mã>.best_tag) thì news_flash.head_to_head tải bản cũ từ release,
+  chấm lại CẢ 2 bản bằng luật hiện hành, cùng bot, cùng lượng thông tin, rồi mới so. Mới thấp hơn cũ: không gửi làm bản chính, nhưng vẫn gửi
+  video vào Telegram kèm "⛔ KHÔNG ĐẠT, chỉ để xem, KHÔNG đăng" (không tạo release, không đặt lịch).
+- Luật giá trị + khớp lời đọc không còn đá nhau: mỗi câu lời đọc mang 1 con số, thẻ hình VẼ con số đó, không chép câu chữ.
 - Short dọc không chạy đếm số trên thẻ (CountUp): bot review chụp trúng số đếm dở rồi trừ điểm "số lệch". Trước thẻ đầu tiên, thẻ đầu hiện từ giây 0.
 - en_money gộp số kép: "4 tỷ 940 triệu đô la" → "$4.94B" (trước ra "4B $940M" trên phụ đề).
 - thumb_subject: "penguin" (26/11) = bìa 16:9 không lấy logo dự án làm chủ thể tròn (tin không xoay quanh 1 dự án, vd ETF).

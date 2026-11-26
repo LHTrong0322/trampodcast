@@ -25,7 +25,8 @@ từng câu, từng hình có xứng với thời gian người xem bỏ ra khô
 bối cảnh, nguyên nhân, hệ quả, hoặc việc người xem làm được. KHÔNG ĐÁNG (phải đập đi viết lại, không được giữ):
 nhắc lại con số hay ý đã nói (vd đã nói "gần 5 tỷ" thì không nói lại "4 tỷ 940 triệu"); câu đệm, câu chuyển rỗng, câu chỉ để kéo dài;
 câu hỏi tu từ không được trả lời; thẻ hình chỉ nhắc lại chữ của phụ đề hoặc tiêu đề mà không thêm số liệu hay hình mới;
-ảnh minh hoạ chung chung không liên quan nội dung."""
+ảnh minh hoạ chung chung không liên quan nội dung.
+CÁCH LÀM ĐÚNG (gỡ xung đột với luật "chữ trên hình khớp lời đọc"): mỗi câu lời đọc mang 1 con số hoặc 1 so sánh, và thẻ hình VẼ chính con số đó (số to, so sánh 2 bên, biểu đồ, logo), không chép lại câu chữ. Câu không có gì để vẽ thì viết lại câu cho có số, hoặc bỏ câu."""
 
 RUBRIC = """Bạn là biên tập viên kịch bản YouTube crypto tiếng Việt, khó tính, chấm kịch bản cho kênh "Smart Penguin Insights"
 (video 16:9 khoảng 4 phút + 2 video ngắn 9:16, giọng đọc máy vibe KOL crypto, khoảng 210 từ/phút).
@@ -71,6 +72,7 @@ bối cảnh, nguyên nhân, hệ quả, hoặc việc người xem làm đượ
 nhắc lại con số hay ý đã nói (vd đã nói "gần 5 tỷ" thì không nói lại "4 tỷ 940 triệu"); câu đệm, câu chuyển rỗng, câu chỉ để kéo dài;
 câu hỏi tu từ không được trả lời; thẻ hình chỉ nhắc lại chữ của phụ đề hoặc tiêu đề mà không thêm số liệu hay hình mới;
 ảnh minh hoạ chung chung không liên quan nội dung.
+CÁCH LÀM ĐÚNG (gỡ xung đột với luật "chữ trên hình khớp lời đọc"): mỗi câu lời đọc mang 1 con số hoặc 1 so sánh, và thẻ hình VẼ chính con số đó (số to, so sánh 2 bên, biểu đồ, logo), không chép lại câu chữ. Câu không có gì để vẽ thì viết lại câu cho có số, hoặc bỏ câu.
 
 BÀI HỌC TỪ CÁC VIDEO TRƯỚC (kênh đang yếu nhất ở nhịp độ, hook 3 giây và video ngắn):
 {lessons}
@@ -129,6 +131,7 @@ bối cảnh, nguyên nhân, hệ quả, hoặc việc người xem làm đượ
 nhắc lại con số hay ý đã nói (vd đã nói "gần 5 tỷ" thì không nói lại "4 tỷ 940 triệu"); câu đệm, câu chuyển rỗng, câu chỉ để kéo dài;
 câu hỏi tu từ không được trả lời; thẻ hình chỉ nhắc lại chữ của phụ đề hoặc tiêu đề mà không thêm số liệu hay hình mới;
 ảnh minh hoạ chung chung không liên quan nội dung.
+CÁCH LÀM ĐÚNG (gỡ xung đột với luật "chữ trên hình khớp lời đọc"): mỗi câu lời đọc mang 1 con số hoặc 1 so sánh, và thẻ hình VẼ chính con số đó (số to, so sánh 2 bên, biểu đồ, logo), không chép lại câu chữ. Câu không có gì để vẽ thì viết lại câu cho có số, hoặc bỏ câu.
 
 BÀI HỌC TỪ CÁC VIDEO TRƯỚC:
 {lessons}
