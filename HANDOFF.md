@@ -86,6 +86,11 @@ Xác minh nâng cao YouTube không làm giảm reach, đã xác minh. 8 luật d
 - CHẤM ĐỐI ĐẦU (Trọng 27/11): dựng lại 1 tin đã có bản chính (state drafts.<mã>.best_tag) thì news_flash.head_to_head tải bản cũ từ release,
   chấm lại CẢ 2 bản bằng luật hiện hành, cùng bot, cùng lượng thông tin, rồi mới so. Mới thấp hơn cũ: không gửi làm bản chính, nhưng vẫn gửi
   video vào Telegram kèm "⛔ KHÔNG ĐẠT, chỉ để xem, KHÔNG đăng" (không tạo release, không đặt lịch).
+- PHÁT HIỆN LÀ SỬA NGAY (Trọng 27/11, value_fix.py, test tests/test_value_fix.py):
+  A. news_flash.value_gate_script: MỌI kịch bản (kể cả viết tay, đã duyệt) chấm "đáng xem" TRƯỚC khi đọc giọng; dưới 8 thì viết lại câu không đáng.
+  B. Sau review (xem trước hoặc sau dựng) còn lỗi "KHÔNG ĐÁNG" thì viết lại lời đọc, đọc giọng lại, dựng lại (tối đa 1 lần mỗi lượt).
+  Chốt an toàn: không bịa số (số mới phải có sẵn trong kịch bản cũ), thẻ bám đúng cụm lời đọc, không gạch dài; sai thì giữ bản cũ.
+  Mỗi lần viết lại đều báo Telegram "✂️" kèm câu cũ, câu mới, lý do. Tắt bằng env VALUE_FIX=0.
 - Luật giá trị + khớp lời đọc không còn đá nhau: mỗi câu lời đọc mang 1 con số, thẻ hình VẼ con số đó, không chép câu chữ.
 - Short dọc không chạy đếm số trên thẻ (CountUp): bot review chụp trúng số đếm dở rồi trừ điểm "số lệch". Trước thẻ đầu tiên, thẻ đầu hiện từ giây 0.
 - en_money gộp số kép: "4 tỷ 940 triệu đô la" → "$4.94B" (trước ra "4B $940M" trên phụ đề).

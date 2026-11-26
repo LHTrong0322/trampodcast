@@ -445,6 +445,32 @@ def revise_all(out: Path, cfg: dict):
 # 3. DỰNG SAU KHI DUYỆT
 # ---------------------------------------------------------------------------
 
+def value_gate_script(out: Path, d: dict, did: str, rounds: int = 2):
+    """Trọng 27/11 (cách A): kịch bản nào cũng chấm "đáng xem" TRƯỚC khi đọc giọng, kể cả bản viết tay hoặc đã duyệt.
+    Dưới mức thì viết lại câu không đáng ngay (chưa tốn lượt giọng), báo Telegram câu cũ và câu mới."""
+    import script_review as SR
+    import value_fix as VF
+    path = out / d["script"]
+    plan = json.loads(path.read_text(encoding="utf-8"))
+    for r in range(rounds):
+        try:
+            rv = SR.review(json.dumps(plan, ensure_ascii=False, indent=1), fmt="short")
+        except Exception as ex:
+            log(f"   ! chấm đáng xem lỗi: {str(ex)[:150]}")
+            return
+        dx = float((rv.get("scores") or {}).get("dang_xem", 10))
+        log(f"   Luật giá trị trước khi đọc giọng, vòng {r + 1}: đáng xem {dx}/10, tổng {rv.get('score')}")
+        if dx >= SR.VALUE_MIN:
+            return
+        new, ch, why = VF.rewrite(plan, list(rv.get("fixes") or []))
+        if not new:
+            log(f"   ! không viết lại được: {why}")
+            return
+        plan = new
+        path.write_text(json.dumps(plan, ensure_ascii=False, indent=1), encoding="utf-8")
+        say(VF.changes_text(did, "trước khi đọc giọng", ch), reply_to=d.get("msg_id"))
+
+
 def _fair_res(res: dict, short: Path, long: Path) -> dict:
     """Bản tối giản để chấm đối đầu: 2 bản nhận ĐÚNG cùng lượng thông tin (khung hình, không lời đọc từng giây)."""
     plan = res["plan"]
@@ -490,7 +516,11 @@ def build(out: Path, cfg: dict, did: str):
                       INSIGHT_TWO_PASS="0", SOCIAL_AUTOPOST="0", INSIGHT_FORMAT="news")
     try:
         import preflight as PF
+        import value_fix as VF
+        if os.getenv("CLAUDE_CODE_OAUTH_TOKEN") and os.getenv("VALUE_FIX", "1") != "0":
+            value_gate_script(out, d, did)
         lab = L.prepare("", Path("lab"))
+        revoiced = 0
         # Trọng 24/11: dựng → bot review → còn dưới 8 thì Claude sửa thẻ hình theo góp ý → dựng lại (giọng giữ nguyên)
         gem = P.Gemini(os.getenv("INSIGHT_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", ""))
         rounds = int(os.getenv("NF_FIX_ROUNDS", "").strip() or ncfg(cfg).get("fix_rounds", 2))
@@ -506,9 +536,21 @@ def build(out: Path, cfg: dict, did: str):
             except (TypeError, ValueError):
                 sc = 0
             if best is None or sc > best[0]:
-                best = (sc, (lab / "plan.json").read_text(encoding="utf-8"), rv)
+                best = (sc, (lab / "plan.json").read_text(encoding="utf-8"), rv, lab)
             if sc >= 8 or k == rounds or not rv.get("can_sua"):
                 break
+            # Trọng 27/11 (cách B): lỗi KHÔNG ĐÁNG ở lời đọc thì viết lại câu, đọc giọng lại, dựng lại (tối đa 1 lần mỗi lượt)
+            probs = VF.problems_from(rv, (res.get("shorts") or [{}])[0].get("preflight"))
+            if probs and revoiced < 1 and os.getenv("CLAUDE_CODE_OAUTH_TOKEN") and os.getenv("VALUE_FIX", "1") != "0":
+                new, ch, why = VF.rewrite(json.loads((lab / "plan.json").read_text(encoding="utf-8")), probs)
+                if new and any(c.get("cu") for c in ch):
+                    (out / d["script"]).write_text(json.dumps(new, ensure_ascii=False, indent=1), encoding="utf-8")
+                    say(VF.changes_text(did, "sau review, đọc giọng lại", ch), reply_to=d.get("msg_id"))
+                    log(f"   Luật giá trị: viết lại {len(ch)} câu, đọc giọng lại")
+                    lab = L.prepare("", Path("lab"))
+                    revoiced += 1
+                    continue
+                log(f"   ! luật giá trị không viết lại được lời đọc: {why or 'không có câu nào đổi'}")
             plan = json.loads((lab / "plan.json").read_text(encoding="utf-8"))
             try:
                 ch = PF.plan_fix(plan, rv)
@@ -523,6 +565,7 @@ def build(out: Path, cfg: dict, did: str):
         # Lỗi 26/11 (short ETF): tự sửa làm điểm tụt 6.0 → 5.6 → 5.4 mà vẫn gửi bản cuối. Giờ vòng cuối kém hơn thì dựng lại bản tốt nhất
         if best is not None and hist and best[0] > float(hist[-1] or 0):
             log(f"   Vòng cuối {hist[-1]} kém hơn vòng tốt nhất {best[0]}: dựng lại bản tốt nhất để gửi")
+            lab = best[3]   # bản tốt nhất có thể nằm ở lab cũ (trước khi đọc giọng lại)
             (lab / "plan.json").write_text(best[1], encoding="utf-8")
             res = R.render(lab, Path("render_out"))
             rv = best[2]
