@@ -578,6 +578,8 @@ def build(out: Path, cfg: dict, did: str):
         # Trọng 27/11: điểm cũ chấm theo luật cũ thì không so được. Chấm lại CẢ 2 bản bằng luật hiện hành rồi mới so.
         old_best = float(d.get("best_score") or 0)
         new_best = best[0] if best else 0
+        if not d.get("best_tag") and old_best:
+            log("   ! thiếu mốc bản chính cũ (best_tag), không chấm đối đầu được")
         h2h = head_to_head(gem, cfg, res, d["best_tag"]) if d.get("best_tag") else None
         if h2h:
             new_cmp, old_cmp = h2h

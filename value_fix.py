@@ -81,7 +81,7 @@ def validate(old: dict, new: dict, verified: list[dict] | None = None) -> str:
     if "\u2014" in nar or "\u2013" in nar:
         return "có dấu gạch ngang dài"
     n = len(nar.split())
-    if not 80 <= n <= 170:
+    if not 80 <= n <= 185:
         return f"độ dài {n} từ ngoài khoảng cho phép"
     allowed = _nums(json.dumps(old, ensure_ascii=False))
     for f in verified or []:
@@ -126,19 +126,26 @@ def rewrite(plan: dict, problems: list[str], run=None, check=None) -> tuple[dict
     pr = PROMPT.format(rule=SR.VALUE_RULE, problems="\n".join(f"- {x}" for x in problems[:12]),
                        narration=sec.get("narration", ""), beats=json.dumps(sec.get("beats", []), ensure_ascii=False, indent=1),
                        facts=facts or "(chỉ dùng số đã có trong lời đọc và thẻ hình)")
-    try:
-        j = run(pr)
-    except Exception as ex:
-        return None, [], f"Claude lỗi: {str(ex)[:150]}"
-    j = P.nodash(j) if isinstance(j, dict) else j
-    if not isinstance(j, dict):
-        return None, [], "Claude không trả JSON"
-    claimed = [f for f in j.get("new_facts") or [] if isinstance(f, dict)]
-    good = verify(claimed, run=check) if claimed else []
-    why = validate(plan, j, good)
-    if why:
-        if claimed and len(good) < len(claimed):
+    why = ""
+    for attempt in range(2):   # 27/11: bị chặn thì cho viết lại 1 lần nữa, nói rõ lỗi (từng bị chặn oan vì số tự tính, dài hơn 3 từ)
+        try:
+            j = run(pr if not why else pr + "\n\nBẢN TRƯỚC BỊ CHẶN VÌ: " + why +
+                    ". Sửa đúng lỗi đó: số nào không có nguồn thì bỏ hoặc ghi vào new_facts kèm link (số tự tính thì ghi rõ phép tính"
+                    " trong claim và để url là link của các số gốc); giữ trong 80 đến 180 từ.")
+        except Exception as ex:
+            return None, [], f"Claude lỗi: {str(ex)[:150]}"
+        j = P.nodash(j) if isinstance(j, dict) else j
+        if not isinstance(j, dict):
+            why = "Claude không trả JSON"
+            continue
+        claimed = [f for f in j.get("new_facts") or [] if isinstance(f, dict)]
+        good = verify(claimed, run=check) if claimed else []
+        why = validate(plan, j, good)
+        if claimed and len(good) < len(claimed) and why:
             why += f" ({len(claimed) - len(good)}/{len(claimed)} số mới trượt kiểm chứng)"
+        if not why:
+            break
+    if why:
         return None, [], why
     new = json.loads(json.dumps(plan, ensure_ascii=False))
     ns = new["sections"][0]
