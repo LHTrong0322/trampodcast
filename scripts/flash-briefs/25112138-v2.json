@@ -11,7 +11,7 @@
    "heading": "ETF Bitcoin rút ròng kỷ lục tháng 11",
    "key_stat": "-$4.94B",
    "key_label": "ETF Bitcoin rút ròng kỷ lục tháng 11",
-   "narration": "Bitcoin ETF vừa bị rút ròng 4 tỷ 940 triệu đô la trong tháng 11. Kỷ lục mới. Kỷ lục cũ là 4 tỷ 510 triệu đô, hồi tháng 6. Đợt rút vốn diễn ra đúng lúc cổ phiếu AI bị bán tháo. Cùng lúc đó, Bitcoin có lúc trượt xuống dưới 59 nghìn đô la. Altcoin cũng không thoát. Hyperliquid giảm hơn 8% sau khi quỹ Abraxas Capital rút vốn khỏi Hyperliquid. Câu hỏi lớn bây giờ: các quỹ đã bán tháo xong, hay tháng 12 còn tiếp? Mọi người nghĩ sao, bình luận cho mình biết nhé.",
+   "narration": "Bitcoin ETF vừa bị rút ròng 4 tỷ 940 triệu đô la trong tháng 11. Kỷ lục mới. Kỷ lục cũ: 4 tỷ 510 triệu đô, tháng 6. Đợt rút vốn diễn ra đúng lúc cổ phiếu AI bị bán tháo. Cùng lúc đó, Bitcoin có lúc trượt xuống dưới 59 nghìn đô la. Altcoin cũng không thoát. Hyperliquid giảm hơn 8% sau khi quỹ Abraxas Capital rút vốn khỏi Hyperliquid. Câu hỏi lớn bây giờ: các quỹ đã bán tháo xong, hay tháng 12 còn tiếp? Mọi người nghĩ sao, bình luận cho mình biết nhé.",
    "visual_queries": [
     "computer chip circuit board",
     "stock market red screen",
@@ -149,5 +149,5 @@
  },
  "thumb_style": "stat",
  "thumb_kicker": "ETF Bitcoin rút ròng tháng 11",
- "thumb_subject": "penguin"
+ "thumb_logo": "BTC"
 }
