@@ -28,6 +28,7 @@ Cài 1 lần, mất khoảng 10 phút, miễn phí.
 2. Thêm 2 lịch (giờ UTC):
    - `0 22 * * *` (5:00 sáng VN)
    - `20 22 * * *` (5:20 sáng VN, dự phòng)
+   - `5,20,35,50 * * * *` (mỗi 15 phút: đăng comment video đúng giờ, thêm 26/11)
 3. Lưu lại.
 
 ## Bước 5: Thử ngay
@@ -39,3 +40,9 @@ sẽ thấy 1 lượt "Trạm Podcast Crypto, tạo tập podcast" vừa chạy.
 ## Cách quay lại
 
 Xoá Worker trên Cloudflare là xong. Cron GitHub cũ vẫn còn trong `podcast.yml`, podcast vẫn chạy như trước (chỉ là hay trễ).
+
+## Cập nhật 26/11: comment đúng giờ
+
+Worker giờ bấm thêm workflow `social-schedule.yml` mỗi 15 phút (phút 5, 20, 35, 50) để comment YouTube/Facebook lên đúng giờ.
+Cách cập nhật Worker đã cài: mở Worker, **Edit code**, dán lại toàn bộ `worker.js` mới, **Deploy**; rồi vào **Settings**, **Trigger Events**, thêm Cron `5,20,35,50 * * * *`.
+Token cũ dùng được luôn (cùng quyền Actions: Read and write).
