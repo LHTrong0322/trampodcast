@@ -93,6 +93,7 @@ Xác minh nâng cao YouTube không làm giảm reach, đã xác minh. 8 luật d
   Lượt loop đọc Telegram mỗi phút, thấy lệnh mới thì đợi hàng "podcast" TRỐNG HẲN (kể cả lượt đang chờ) rồi mới gọi poll, tối đa khoảng 5 tiếng rồi tự gọi lượt mới.
 - Hàng "podcast" (podcast, insight, news-flash, insight-lab, video-weekly, voice-samples) chỉ giữ 1 lượt chờ: gọi thêm khi đang có lượt chờ sẽ HUỶ lượt chờ đó (video Dow 24/11 bị huỷ vì vậy). Trước khi dispatch tay, kiểm tra không có run pending.
 - Quay lại cách cũ: git revert commit này.
+- RUN MA (27/11): tắt insight.yml (disable) khi run vừa dispatch còn "queued" làm run kẹt queued mãi, không có job, không huỷ được (45136391598, 45298785025, 45872833600). Dispatch xong phải ĐỢI run sang in_progress (hoặc pending) rồi mới disable.
 
 ## BỘ LỌC GIÁO DỤC (TRỌNG CHỐT 23:22 NGÀY 21/11)
 - Nội dung video phải mang tính giáo dục nhiều hơn. Tên riêng lạ (vd DWF Labs, Assistance Fund) giải thích 1 câu lần đầu.
