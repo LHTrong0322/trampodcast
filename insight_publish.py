@@ -240,7 +240,14 @@ SOÁT TRÌNH BÀY BẮT BUỘC (Trọng 23/11, lỗi nào cũng phải ghi vào 
 xuống tối đa 6 nếu có dù chỉ 1 lỗi): chữ đè lên nhau; chữ tràn hoặc bị cắt mép; lỗi font (ô vuông, mất dấu tiếng Việt);
 nhãn bị máy tự ngắt dòng giữa cụm (vd "lãi / 10%/năm"); 2 con số trong thẻ so sánh không thẳng hàng; nguồn số liệu viết liền
 trong chú thích thay vì dòng nhỏ riêng; một từ mồ côi đứng một mình ở dòng cuối; chữ trên hình không khớp lời đọc lúc đó;
-biểu đồ biến mất trước khi vẽ xong."""
+biểu đồ biến mất trước khi vẽ xong.
+LUẬT GIÁ TRỊ (Trọng chốt 27/11, áp dụng cho MỌI câu lời đọc, MỌI thẻ hình, ảnh, chữ trên màn hình, kể cả câu mở và câu kết):
+từng câu, từng hình có xứng với thời gian người xem bỏ ra không? Mỗi câu phải mang lại 1 điều MỚI: thông tin mới, con số mới,
+bối cảnh, nguyên nhân, hệ quả, hoặc việc người xem làm được. KHÔNG ĐÁNG (phải đập đi viết lại, không được giữ):
+nhắc lại con số hay ý đã nói (vd đã nói "gần 5 tỷ" thì không nói lại "4 tỷ 940 triệu"); câu đệm, câu chuyển rỗng, câu chỉ để kéo dài;
+câu hỏi tu từ không được trả lời; thẻ hình chỉ nhắc lại chữ của phụ đề hoặc tiêu đề mà không thêm số liệu hay hình mới;
+ảnh minh hoạ chung chung không liên quan nội dung.
+Mỗi đoạn KHÔNG ĐÁNG ghi vào can_sua, bắt đầu bằng "KHÔNG ĐÁNG:" (giây/khung, vì sao, đập đi thay bằng gì), và điểm tổng tối đa 6 nếu còn đoạn như vậy."""
 
 
 def scene_changes(video: Path, thr: float = 0.06) -> int:

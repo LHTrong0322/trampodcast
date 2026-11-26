@@ -78,6 +78,11 @@ Xác minh nâng cao YouTube không làm giảm reach, đã xác minh. 8 luật d
   Mẹo kịch bản đã áp dụng: mở bằng câu hỏi "vì sao" có con số, có câu nối khi chuyển chủ đề (Bitcoin sang altcoin), kết bằng lựa chọn "bình luận 1 hoặc 2".
 - Review 27/11 (Claude, short ETF 6.3): mở bằng CON SỐ rồi mới hỏi "vì sao" (gộp 2 mẹo trái nhau của Gemini và Claude); thẻ đầu và tiêu đề
   cùng 1 con số; câu nhắc altcoin phải đi kèm số; biểu đồ: nguồn 1 dòng riêng ở chân thẻ, "Không phải tín hiệu mua bán" dòng riêng, chữ to hơn; phụ đề ngắt theo dấu câu.
+- LUẬT GIÁ TRỊ (Trọng chốt 27/11, LUẬT CỨNG): từng câu, từng thẻ, ảnh, chữ phải xứng với thời gian người xem bỏ ra; câu lặp số/ý đã nói,
+  câu đệm, thẻ chỉ nhắc lại phụ đề, ảnh chung chung = KHÔNG ĐÁNG, phải đập đi viết lại. Có ở 4 bước: viết kịch bản (insight_lab.NEWS_PROMPT),
+  chấm kịch bản (script_review: tiêu chí dang_xem, dưới 8 thì KHÔNG qua dù điểm tổng cao), review xem trước khi dựng (preflight.PROMPT),
+  review sau dựng (insight_publish.REVIEW_PROMPT, còn đoạn không đáng thì tối đa 6). Văn bản luật: script_review.VALUE_RULE. Test: tests/test_value_gate.py.
+  Tin gốc mỏng thì phải đào thêm bối cảnh có nguồn (vd ETF 27/11: quý 3 bị xoá sạch, BTC cách giá vốn TB 11%) thay vì nói lại 1 con số.
 - Short dọc không chạy đếm số trên thẻ (CountUp): bot review chụp trúng số đếm dở rồi trừ điểm "số lệch". Trước thẻ đầu tiên, thẻ đầu hiện từ giây 0.
 - en_money gộp số kép: "4 tỷ 940 triệu đô la" → "$4.94B" (trước ra "4B $940M" trên phụ đề).
 - thumb_subject: "penguin" (26/11) = bìa 16:9 không lấy logo dự án làm chủ thể tròn (tin không xoay quanh 1 dự án, vd ETF).

@@ -37,6 +37,14 @@ Video dài {dur:.0f} giây. Tiêu đề short đang hiện trên đầu: "{title
 Các thẻ hình (chỉ số i, giây bắt đầu s):
 {beats}
 
+LUẬT GIÁ TRỊ (Trọng chốt 27/11, áp dụng cho MỌI câu lời đọc, MỌI thẻ hình, ảnh, chữ trên màn hình, kể cả câu mở và câu kết):
+từng câu, từng hình có xứng với thời gian người xem bỏ ra không? Mỗi câu phải mang lại 1 điều MỚI: thông tin mới, con số mới,
+bối cảnh, nguyên nhân, hệ quả, hoặc việc người xem làm được. KHÔNG ĐÁNG (phải đập đi viết lại, không được giữ):
+nhắc lại con số hay ý đã nói (vd đã nói "gần 5 tỷ" thì không nói lại "4 tỷ 940 triệu"); câu đệm, câu chuyển rỗng, câu chỉ để kéo dài;
+câu hỏi tu từ không được trả lời; thẻ hình chỉ nhắc lại chữ của phụ đề hoặc tiêu đề mà không thêm số liệu hay hình mới;
+ảnh minh hoạ chung chung không liên quan nội dung.
+Thẻ hoặc đoạn nào KHÔNG ĐÁNG thì ghi vào "issues" bắt đầu bằng "KHÔNG ĐÁNG:" và sửa/thay thẻ đó ngay (không được giữ).
+
 CHẤM THEO ĐÚNG TIÊU CHÍ BOT REVIEW SAU DỰNG, ghi mọi lỗi vào "issues" (ghi rõ ảnh nào):
 1. Trình bày: chữ đè nhau, chữ bị thẻ đè, chữ tràn hoặc bị cắt mép; lỗi font (ô vuông, mất/vỡ dấu tiếng Việt); nhãn bị ngắt giữa cụm;
    chữ mồ côi ở dòng cuối; 2 số trong thẻ so sánh không thẳng hàng, số dính chữ VS; thẻ trống hoặc gần trống; ảnh mờ vỡ.

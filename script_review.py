@@ -18,6 +18,14 @@ import sys
 from pathlib import Path
 
 PASS = 8.0
+VALUE_MIN = 8.0   # Trọng 27/11: dang_xem dưới 8 thì KHÔNG qua, dù điểm tổng cao
+
+VALUE_RULE = """LUẬT GIÁ TRỊ (Trọng chốt 27/11, áp dụng cho MỌI câu lời đọc, MỌI thẻ hình, ảnh, chữ trên màn hình, kể cả câu mở và câu kết):
+từng câu, từng hình có xứng với thời gian người xem bỏ ra không? Mỗi câu phải mang lại 1 điều MỚI: thông tin mới, con số mới,
+bối cảnh, nguyên nhân, hệ quả, hoặc việc người xem làm được. KHÔNG ĐÁNG (phải đập đi viết lại, không được giữ):
+nhắc lại con số hay ý đã nói (vd đã nói "gần 5 tỷ" thì không nói lại "4 tỷ 940 triệu"); câu đệm, câu chuyển rỗng, câu chỉ để kéo dài;
+câu hỏi tu từ không được trả lời; thẻ hình chỉ nhắc lại chữ của phụ đề hoặc tiêu đề mà không thêm số liệu hay hình mới;
+ảnh minh hoạ chung chung không liên quan nội dung."""
 
 RUBRIC = """Bạn là biên tập viên kịch bản YouTube crypto tiếng Việt, khó tính, chấm kịch bản cho kênh "Smart Penguin Insights"
 (video 16:9 khoảng 4 phút + 2 video ngắn 9:16, giọng đọc máy vibe KOL crypto, khoảng 210 từ/phút).
@@ -37,6 +45,9 @@ Chấm THẲNG TAY từng tiêu chí trên thang 10 (số thập phân được)
   mọi so sánh phải có con số cụ thể của CẢ HAI bên (vd % revenue dùng buyback của từng dự án);
   SAU mỗi kiến thức phức tạp hoặc insight phải có ví dụ cụ thể, dễ hình dung (số thật, coin thật, hoặc phép so sánh đời thường như "cứ 100 đô phí...").
   Thiếu một trong ba điều này thì giao_duc tối đa 6.
+- dang_xem (LUẬT GIÁ TRỊ, Trọng chốt 27/11): soát TỪNG câu lời đọc và TỪNG thẻ hình theo LUẬT GIÁ TRỊ bên dưới.
+  Có 1 câu hoặc 1 thẻ không đáng thì dang_xem tối đa 6, có từ 2 chỗ trở lên thì tối đa 4. Mỗi chỗ không đáng phải ghi vào fixes
+  dạng "Câu/thẻ '...' không đáng xem vì ..., viết lại thành: ...".
 - goc_nhin (CHỐNG NỘI DUNG "INAUTHENTIC", Trọng chốt 26/11): video phải có góc nhìn RIÊNG của kênh, không chỉ đọc lại bài X.
   Cần ít nhất: 1 nhận định riêng, 1 số liệu so sánh hoặc bối cảnh thêm ngoài bài gốc (có nguồn), và kết luận "vậy retail nên làm gì".
   Hook, cấu trúc, câu chuyển phần không được rập khuôn y hệt video trước. Chỉ diễn giải lại bài gốc thì goc_nhin tối đa 5.
@@ -53,6 +64,13 @@ QUY TẮC TỪ NGỮ CỦA TRỌNG (vi phạm thì quy_tac tối đa 5):
   DEX, CEX, KOL...) dùng nguyên, KHÔNG giải thích. Chỉ viết tắt dài hoặc ít gặp mới kèm giải thích ngắn.
 - An toàn niche crypto (Trọng chốt 26/11): không dùng từ mồi scam như "x100 chắc chắn", "giveaway", "gửi coin nhận lại",
   "airdrop miễn phí", "lãi đảm bảo", "cam kết lợi nhuận"; phải có câu "không phải lời khuyên đầu tư".
+
+LUẬT GIÁ TRỊ (Trọng chốt 27/11, áp dụng cho MỌI câu lời đọc, MỌI thẻ hình, ảnh, chữ trên màn hình, kể cả câu mở và câu kết):
+từng câu, từng hình có xứng với thời gian người xem bỏ ra không? Mỗi câu phải mang lại 1 điều MỚI: thông tin mới, con số mới,
+bối cảnh, nguyên nhân, hệ quả, hoặc việc người xem làm được. KHÔNG ĐÁNG (phải đập đi viết lại, không được giữ):
+nhắc lại con số hay ý đã nói (vd đã nói "gần 5 tỷ" thì không nói lại "4 tỷ 940 triệu"); câu đệm, câu chuyển rỗng, câu chỉ để kéo dài;
+câu hỏi tu từ không được trả lời; thẻ hình chỉ nhắc lại chữ của phụ đề hoặc tiêu đề mà không thêm số liệu hay hình mới;
+ảnh minh hoạ chung chung không liên quan nội dung.
 
 BÀI HỌC TỪ CÁC VIDEO TRƯỚC (kênh đang yếu nhất ở nhịp độ, hook 3 giây và video ngắn):
 {lessons}
@@ -91,6 +109,9 @@ Chấm THẲNG TAY từng tiêu chí trên thang 10 (số thập phân được)
 - hinh_anh: hình (beats) đổi khoảng 3 đến 6 giây một lần, chữ trên hình rất ngắn, đọc được trên điện thoại
 - giao_duc (BỘ LỌC GIÁO DỤC): tên riêng lạ giải thích 1 câu lần đầu; so sánh có số của CẢ HAI bên; sau kiến thức khó có ví dụ cụ thể.
   Thiếu một trong ba điều này thì giao_duc tối đa 6.
+- dang_xem (LUẬT GIÁ TRỊ, Trọng chốt 27/11): soát TỪNG câu lời đọc và TỪNG thẻ hình theo LUẬT GIÁ TRỊ bên dưới.
+  Có 1 câu hoặc 1 thẻ không đáng thì dang_xem tối đa 6, có từ 2 chỗ trở lên thì tối đa 4. Mỗi chỗ không đáng phải ghi vào fixes
+  dạng "Câu/thẻ '...' không đáng xem vì ..., viết lại thành: ...".
 - goc_nhin (CHỐNG NỘI DUNG "INAUTHENTIC", Trọng chốt 26/11): có nhận định riêng hoặc "vậy retail nên làm gì", không chỉ đọc lại tin/bài X;
   câu mở và cấu trúc không rập khuôn y hệt short trước. Chỉ đọc lại nguồn thì goc_nhin tối đa 5.
 
@@ -101,6 +122,13 @@ QUY TẮC TỪ NGỮ CỦA TRỌNG (vi phạm thì quy_tac tối đa 5):
 - Thuật ngữ giữ tiếng Anh. Viết tắt phổ thông (FDV, DCA, TVL, VC, ETF, ATH...) dùng nguyên, KHÔNG giải thích.
 - An toàn niche crypto (Trọng chốt 26/11): không dùng từ mồi scam như "x100 chắc chắn", "giveaway", "gửi coin nhận lại",
   "airdrop miễn phí", "lãi đảm bảo", "cam kết lợi nhuận"; phải có câu "không phải lời khuyên đầu tư".
+
+LUẬT GIÁ TRỊ (Trọng chốt 27/11, áp dụng cho MỌI câu lời đọc, MỌI thẻ hình, ảnh, chữ trên màn hình, kể cả câu mở và câu kết):
+từng câu, từng hình có xứng với thời gian người xem bỏ ra không? Mỗi câu phải mang lại 1 điều MỚI: thông tin mới, con số mới,
+bối cảnh, nguyên nhân, hệ quả, hoặc việc người xem làm được. KHÔNG ĐÁNG (phải đập đi viết lại, không được giữ):
+nhắc lại con số hay ý đã nói (vd đã nói "gần 5 tỷ" thì không nói lại "4 tỷ 940 triệu"); câu đệm, câu chuyển rỗng, câu chỉ để kéo dài;
+câu hỏi tu từ không được trả lời; thẻ hình chỉ nhắc lại chữ của phụ đề hoặc tiêu đề mà không thêm số liệu hay hình mới;
+ảnh minh hoạ chung chung không liên quan nội dung.
 
 BÀI HỌC TỪ CÁC VIDEO TRƯỚC:
 {lessons}
@@ -151,6 +179,11 @@ def review(draft: str, source: str = "", lessons: str = "", fmt: str = "") -> di
     if sc and not rv.get("score"):
         rv["score"] = round(sum(float(v) for v in sc.values()) / len(sc), 1)
     rv["pass"] = float(rv.get("score") or 0) >= PASS
+    try:   # Trọng 27/11: còn câu hoặc thẻ không đáng xem thì không được chốt, phải viết lại
+        if float(sc.get("dang_xem", 10)) < VALUE_MIN:
+            rv["pass"] = False
+    except (TypeError, ValueError):
+        pass
     rv["format"] = "short" if short else "long"
     return rv
 

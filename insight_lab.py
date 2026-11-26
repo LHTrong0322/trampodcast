@@ -82,6 +82,12 @@ quan trọng vừa xảy ra, đăng TikTok/Shorts/Reels. Viết ĐÚNG 1 phần 
 - narration của phần: 95-130 từ (khoảng 35-45 giây), câu ngắn, nhịp nhanh, theo khuôn: chuyện gì vừa xảy ra (ai, bao nhiêu, khi nào)
   → vì sao quan trọng (bối cảnh 1-2 câu, giải thích nửa câu nếu tên lạ) → ảnh hưởng tới nhà đầu tư/ giá coin liên quan
   → 1 câu kết hỏi ý kiến người xem để bình luận. KHÔNG dự đoán giá, KHÔNG hô mua bán, KHÔNG phóng đại quá mức tin gốc.
+LUẬT GIÁ TRỊ (Trọng chốt 27/11, áp dụng cho MỌI câu lời đọc, MỌI thẻ hình, ảnh, chữ trên màn hình, kể cả câu mở và câu kết):
+từng câu, từng hình có xứng với thời gian người xem bỏ ra không? Mỗi câu phải mang lại 1 điều MỚI: thông tin mới, con số mới,
+bối cảnh, nguyên nhân, hệ quả, hoặc việc người xem làm được. KHÔNG ĐÁNG (phải đập đi viết lại, không được giữ):
+nhắc lại con số hay ý đã nói (vd đã nói "gần 5 tỷ" thì không nói lại "4 tỷ 940 triệu"); câu đệm, câu chuyển rỗng, câu chỉ để kéo dài;
+câu hỏi tu từ không được trả lời; thẻ hình chỉ nhắc lại chữ của phụ đề hoặc tiêu đề mà không thêm số liệu hay hình mới;
+ảnh minh hoạ chung chung không liên quan nội dung.
 - Nêu nguồn tin bằng tên báo/kênh trong lời đọc nếu cần (vd "theo CoinDesk"), KHÔNG nhắc @handle nào; số liệu CHỈ lấy từ tin nguồn, không bịa.
 - beats: 9-13 beats, cứ khoảng 3 đến 4 giây đổi một hình; ưu tiên bignum có số thật của tin, logo dự án/coin, chart giá liên quan.
   Thêm 2-3 beat {{"type": "photo", "query": "2-4 từ tiếng Anh chung, KHÔNG tên người (vd 'computer chip closeup', 'stock market red screen', 'data center servers')", "label": "chú thích ngắn ≤ 40 ký tự"}}.
