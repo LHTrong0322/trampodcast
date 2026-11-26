@@ -1,6 +1,6 @@
 {
  "yt_id": "lQXUB_XYCYM",
- "thumb_ok": true,
+ "thumb_ok": false,
  "fb_id": "1131425233099987",
  "comments_done": [
   "youtube",
@@ -8,5 +8,6 @@
  ],
  "fb_caption_clean": true,
  "tiktok_sent": true,
- "asr_removed": true
+ "asr_removed": true,
+ "fb_thumb_ok": false
 }
