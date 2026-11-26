@@ -28,9 +28,20 @@ export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat = '', label = 
   useFonts();
   const t = (text || '').replace(/_/g, ' ');
   const len = t.length;
+  // Trọng 24/11 + 26/11: không tách cụm (vd "S&P / 500", "225 / tỷ đô") và không để 1 từ mồ côi ở dòng cuối.
+  // Dấu _ trong kịch bản dính các chữ thành 1 cụm; tự dính thêm: "S&P 500", số + đơn vị, 2 từ cuối khi từ cuối ngắn.
+  // Lưu ý: \s trong JS khớp cả dấu cách không ngắt ( ), nên chỉ tách theo dấu cách thường.
+  const UNIT = /^(tỷ|triệu|nghìn|ngàn|năm|ngày|tháng|tuần|phiên|lần|câu|bước|điều|coin|đô|USD|%)[?!.,:]?$/i;
+  const glued: string[] = [];
+  (text || '').split(/[ \t\n]+/).filter(Boolean).forEach((w) => {
+    const prev = glued[glued.length - 1];
+    if (prev !== undefined && (/S&P$/i.test(prev) || (/\d/.test(prev) && UNIT.test(w)))) glued[glued.length - 1] = `${prev} ${w}`;
+    else glued.push(w);
+  });
+  if (glued.length > 2 && glued[glued.length - 1].replace(/[?!.,]/g, '').length <= 5) glued.splice(-2, 2, `${glued[glued.length - 2]} ${glued[glued.length - 1]}`);
   const size = len > 46 ? 84 : len > 32 ? 96 : len > 20 ? 110 : 124;
   // số trong tiêu đề tô màu (giảm đỏ, tăng xanh) như bản cũ, chữ còn lại màu mực
-  const words = t.split(/\s+/).filter(Boolean);
+  const words = glued.map((w) => w.replace(/[_ ]/g, '\u00A0'));
   const hasVs = vs.length >= 2;
   const top = 400;
   const titleH = Math.ceil((len * size * 0.58) / 940) * size * 1.22;   // ước lượng chiều cao tiêu đề để xếp khối bên dưới
