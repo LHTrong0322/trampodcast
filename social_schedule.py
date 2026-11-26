@@ -155,7 +155,7 @@ def post(plan_path: Path):
         desc = y["description"].replace("{PLAYLIST_URL}", f"https://www.youtube.com/playlist?list={pl}" if pl else "")
         meta = {"snippet": {"title": y["title"][:100], "description": desc[:4900], "tags": y.get("tags", []), "categoryId": "27",
                             "defaultLanguage": "vi", "defaultAudioLanguage": "vi"},
-                "status": {"privacyStatus": "private", "publishAt": y["publish_at"], "selfDeclaredMadeForKids": False, "embeddable": True}}
+                "status": {"privacyStatus": "private", "publishAt": y["publish_at"], **SU.YT_STATUS_BASE}}
         same = yt_existing(tok, y["title"][:100])
     if y and not st.get("yt_id") and same:   # lần chạy trước đã tải lên nhưng chưa kịp lưu trạng thái: dùng lại, không tải trùng
         st["yt_id"] = same
@@ -182,7 +182,12 @@ def post(plan_path: Path):
             st["thumb_ok"] = SU.yt_thumb(tok, vid, th)
         SP.yt_add(tok, pl, vid)
         report.append(f"YouTube: đã tải lên, tự công khai lúc {y['publish_at']} (giờ VN +7). Link: https://youtu.be/{vid}")
-    th = (Path(y["thumb"]) if y and y.get("thumb") else rel.get("thumb") if y and y.get("item", "long") == "long" else None)
+        # Trọng 26/11: API không gắn được "Video liên quan" cho Short và không ghim được bình luận, nhắc Trọng làm tay trong Studio
+        if str(y.get("item", "long")).startswith("short"):
+            report.append("👉 Việc tay trong YouTube Studio: gắn 'Video liên quan' (Related video) của Short này trỏ về video dài, rồi ghim bình luận câu hỏi")
+        else:
+            report.append("👉 Việc tay trong YouTube Studio: ghim bình luận câu hỏi khi bot đăng xong (API không ghim được)")
+    th =(Path(y["thumb"]) if y and y.get("thumb") else rel.get("thumb") if y and y.get("item", "long") == "long" else None)
     if y and st.get("yt_id") and not st.get("thumb_ok") and th:   # gắn lại ảnh bìa nếu lần trước bị chặn
         st["thumb_ok"] = SU.yt_thumb(SU._yt_token(), st["yt_id"], th)
         report.append("YouTube ảnh bìa: " + ("đã gắn" if st["thumb_ok"] else "vẫn bị chặn, kênh chưa xác minh xong"))
@@ -356,7 +361,7 @@ def now(plan_path: Path):
     if st.get("yt_id"):
         tok = SU._yt_token()
         r = requests.put("https://www.googleapis.com/youtube/v3/videos?part=status", headers={"Authorization": f"Bearer {tok}"},
-                         json={"id": st["yt_id"], "status": {"privacyStatus": "public", "selfDeclaredMadeForKids": False, "embeddable": True}},
+                         json={"id": st["yt_id"], "status": {"privacyStatus": "public", **SU.YT_STATUS_BASE}},
                          timeout=60)
         report.append(f"YouTube: {'đã công khai ngay' if r.ok else 'lỗi ' + r.text[:200]} https://youtu.be/{st['yt_id']}")
     if st.get("fb_id"):
@@ -389,7 +394,7 @@ def retime(plan_path: Path):
         tok = SU._yt_token()
         r = requests.put("https://www.googleapis.com/youtube/v3/videos?part=status", headers={"Authorization": f"Bearer {tok}"},
                          json={"id": st["yt_id"], "status": {"privacyStatus": "private", "publishAt": y["publish_at"],
-                                                             "selfDeclaredMadeForKids": False, "embeddable": True}}, timeout=60)
+                                                             **SU.YT_STATUS_BASE}}, timeout=60)
         report.append(f"YouTube: {'dời lịch sang ' + y['publish_at'] if r.ok else 'lỗi ' + r.text[:200]} https://youtu.be/{st['yt_id']}")
     if st.get("fb_id") and fb.get("publish_unix"):
         tok = os.environ["FB_PAGE_TOKEN"].strip()

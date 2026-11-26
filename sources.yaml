@@ -104,7 +104,7 @@ news_flash:
   voice: "gemini:Ludo@kol"   # Trọng 24/11: giọng xịn như video đã duyệt (Hải Đăng chỉ là nháp). Gemini hết lượt thì dừng, báo Telegram (luật 20/11)
   min_importance: 9           # điểm quan trọng tối thiểu (thang 10) để làm video
   min_viral: 9                # hoặc điểm "câu view" tối thiểu (thang 10)
-  max_per_day: 3              # tối đa bao nhiêu kịch bản tin nóng mỗi ngày
+  max_per_day: 1              # Trọng 26/11: tối đa 1 kịch bản tin nóng/ngày (đăng đều, không spam; trước là 3). Lệnh topic của Trọng vẫn bỏ qua giới hạn
   expire_hours: 10            # kịch bản chờ duyệt quá bao lâu thì bỏ (tin đã cũ)
   lookback_hours: 5           # mỗi lần lọc xem tin trong bao nhiêu giờ gần nhất
   short_cta: "Theo dõi Smart Penguin Insights để không lỡ tin nóng nhé!"

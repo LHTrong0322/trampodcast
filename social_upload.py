@@ -69,6 +69,10 @@ def fb_link_comment(yt_url: str | None) -> str:
 
 
 # ---------------------------------------------------------------- YouTube
+# Trọng 26/11: video dùng giọng AI nên luôn tự khai nhãn nội dung AI (containsSyntheticMedia), nhãn này không làm giảm reach.
+YT_STATUS_BASE = {"selfDeclaredMadeForKids": False, "embeddable": True, "containsSyntheticMedia": True}
+
+
 def _yt_token() -> str:
     r = requests.post("https://oauth2.googleapis.com/token", data={
         "client_id": os.environ["YT_CLIENT_ID"], "client_secret": os.environ["YT_CLIENT_SECRET"],
@@ -80,7 +84,7 @@ def _yt_token() -> str:
 def yt_upload(tok: str, path: Path, title: str, desc: str, tags: list[str], privacy: str) -> str:
     meta = {"snippet": {"title": title[:100], "description": desc[:4900], "tags": tags, "categoryId": "27",
                         "defaultLanguage": "vi", "defaultAudioLanguage": "vi"},
-            "status": {"privacyStatus": privacy, "selfDeclaredMadeForKids": False, "embeddable": True}}
+            "status": {"privacyStatus": privacy, **YT_STATUS_BASE}}
     size = path.stat().st_size
     r = requests.post("https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status",
                       headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json; charset=UTF-8",

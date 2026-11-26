@@ -30,13 +30,18 @@ Chấm THẲNG TAY từng tiêu chí trên thang 10 (số thập phân được)
 - de_hieu: câu ngắn (đa số dưới 20 từ), đọc to nghe tự nhiên; thuật ngữ thường có giải thích ngắn, nhưng KHÔNG bắt buộc giải thích hết (Trọng chốt 21/11: có đoạn được viết chuyên nghiệp như pro researcher), không trừ điểm vì thế
 - chinh_xac: số liệu khớp bài gốc, không bịa, không hô hào mua bán, có câu "không phải lời khuyên đầu tư"
 - quy_tac: đúng quy tắc từ ngữ của Trọng (xem bên dưới)
-- ket: kết bằng nhắc lại ý chính trong 1 câu + kêu gọi bình luận cụ thể
+- ket: kết bằng nhắc lại ý chính trong 1 câu + kêu gọi bình luận cụ thể; có sẵn 1 câu hỏi cho bình luận ghim (kéo thảo luận, vd "Bạn đang hold coin nào?")
 - hinh_anh: chữ trên hình ngắn gọn, đổi kiểu hình thường xuyên, ảnh bìa đọc được khi thu nhỏ (tối đa 2 dòng chữ lớn)
 - short: 2 video ngắn có câu mở gây tò mò, tự đứng được một mình
 - giao_duc (BỘ LỌC GIÁO DỤC, Trọng chốt 21/11): tên riêng lạ (quỹ, tổ chức, cơ chế như DWF Labs, Assistance Fund) được giải thích 1 câu lần đầu;
   mọi so sánh phải có con số cụ thể của CẢ HAI bên (vd % revenue dùng buyback của từng dự án);
   SAU mỗi kiến thức phức tạp hoặc insight phải có ví dụ cụ thể, dễ hình dung (số thật, coin thật, hoặc phép so sánh đời thường như "cứ 100 đô phí...").
   Thiếu một trong ba điều này thì giao_duc tối đa 6.
+- goc_nhin (CHỐNG NỘI DUNG "INAUTHENTIC", Trọng chốt 26/11): video phải có góc nhìn RIÊNG của kênh, không chỉ đọc lại bài X.
+  Cần ít nhất: 1 nhận định riêng, 1 số liệu so sánh hoặc bối cảnh thêm ngoài bài gốc (có nguồn), và kết luận "vậy retail nên làm gì".
+  Hook, cấu trúc, câu chuyển phần không được rập khuôn y hệt video trước. Chỉ diễn giải lại bài gốc thì goc_nhin tối đa 5.
+- series (Trọng chốt 26/11): kịch bản ghi rõ thuộc series nào (dòng "Series:" trong nháp hoặc trường "video_series"), mạch nội dung khớp series đó;
+  không ghi series thì series tối đa 6.
 
 LƯU Ý: câu mở "Chào mừng mọi người đã quay trở lại với Smart Penguin Insights" là BẮT BUỘC theo Trọng (kèm logo kênh), không trừ điểm vì câu này; chỉ trừ nếu phần mở đầu dài quá 3 câu.
 
@@ -46,6 +51,8 @@ QUY TẮC TỪ NGỮ CỦA TRỌNG (vi phạm thì quy_tac tối đa 5):
   revenue hoặc doanh thu (không "lợi nhuận").
 - Thuật ngữ giữ tiếng Anh (buyback, tokenomics, holder, narrative...). Viết tắt phổ thông (FDV, DCA, TVL, VC, ETF, ATH, TGE,
   DEX, CEX, KOL...) dùng nguyên, KHÔNG giải thích. Chỉ viết tắt dài hoặc ít gặp mới kèm giải thích ngắn.
+- An toàn niche crypto (Trọng chốt 26/11): không dùng từ mồi scam như "x100 chắc chắn", "giveaway", "gửi coin nhận lại",
+  "airdrop miễn phí", "lãi đảm bảo", "cam kết lợi nhuận"; phải có câu "không phải lời khuyên đầu tư".
 
 BÀI HỌC TỪ CÁC VIDEO TRƯỚC (kênh đang yếu nhất ở nhịp độ, hook 3 giây và video ngắn):
 {lessons}
@@ -79,16 +86,20 @@ Chấm THẲNG TAY từng tiêu chí trên thang 10 (số thập phân được)
 - de_hieu: người mới hiểu ngay khi nghe 1 lần; thuật ngữ lạ được giải thích nửa câu
 - chinh_xac: số liệu khớp nguồn, không bịa, không hô hào mua bán
 - quy_tac: đúng quy tắc từ ngữ của Trọng (xem bên dưới)
-- ket: câu kết gọn, có lời mời theo dõi hoặc câu hỏi để bình luận; kết nối được với câu mở (vòng lặp càng tốt)
+- ket: câu kết gọn, có lời mời theo dõi hoặc câu hỏi để bình luận; câu cuối nối được về câu mở để video lặp mượt (tăng loop)
 - hinh_anh: hình (beats) đổi khoảng 3 đến 6 giây một lần, chữ trên hình rất ngắn, đọc được trên điện thoại
 - giao_duc (BỘ LỌC GIÁO DỤC): tên riêng lạ giải thích 1 câu lần đầu; so sánh có số của CẢ HAI bên; sau kiến thức khó có ví dụ cụ thể.
   Thiếu một trong ba điều này thì giao_duc tối đa 6.
+- goc_nhin (CHỐNG NỘI DUNG "INAUTHENTIC", Trọng chốt 26/11): có nhận định riêng hoặc "vậy retail nên làm gì", không chỉ đọc lại tin/bài X;
+  câu mở và cấu trúc không rập khuôn y hệt short trước. Chỉ đọc lại nguồn thì goc_nhin tối đa 5.
 
 QUY TẮC TỪ NGỮ CỦA TRỌNG (vi phạm thì quy_tac tối đa 5):
 - Không dùng dấu gạch ngang dài (em dash, en dash).
 - Nói insider (không "người trong cuộc"), retail (không "nhỏ lẻ"), unlock (không "mở khoá"),
   revenue hoặc doanh thu (không "lợi nhuận") với dự án crypto.
 - Thuật ngữ giữ tiếng Anh. Viết tắt phổ thông (FDV, DCA, TVL, VC, ETF, ATH...) dùng nguyên, KHÔNG giải thích.
+- An toàn niche crypto (Trọng chốt 26/11): không dùng từ mồi scam như "x100 chắc chắn", "giveaway", "gửi coin nhận lại",
+  "airdrop miễn phí", "lãi đảm bảo", "cam kết lợi nhuận"; phải có câu "không phải lời khuyên đầu tư".
 
 BÀI HỌC TỪ CÁC VIDEO TRƯỚC:
 {lessons}

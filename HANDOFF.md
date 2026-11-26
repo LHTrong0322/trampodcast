@@ -5,6 +5,18 @@
 
 
 
+## 📈 TĂNG PHÂN PHỐI KÊNH MỚI (TRỌNG CHỐT 15:32 NGÀY 26/11, áp dụng cho MỌI video từ nay)
+
+Xác minh nâng cao YouTube không làm giảm reach, đã xác minh. 8 luật dưới đây (bỏ mục SEO đa ngôn ngữ):
+1. Chống nội dung "inauthentic" (YouTube siết từ 7/2025): mỗi video phải có góc nhìn riêng (nhận định, số liệu so sánh hoặc bối cảnh ngoài bài gốc có nguồn, kết luận "vậy retail nên làm gì"), không chỉ đọc lại bài X. Đổi hook, visual, cấu trúc giữa các video. Code: tiêu chí `goc_nhin` trong `script_review.py` (chỉ diễn giải lại thì tối đa 5).
+2. Shorts: hook 1 đến 2 giây đầu (số sốc, câu hỏi, cảnh báo), không intro, câu cuối nối về câu mở để lặp mượt. Code: `RUBRIC_SHORT` (hook_1s, ket).
+3. Đăng đều, không spam: khoảng 5 đến 30 Shorts/tháng là vùng hiệu quả, quá 35/tháng hết tác dụng. Tin nóng giảm từ 3 xuống tối đa 1 kịch bản/ngày (`sources.yaml` news_flash.max_per_day; muốn quay lại thì đổi về 3). Lệnh topic của Trọng vẫn bỏ qua giới hạn.
+4. Niche rõ + series: mỗi video thuộc 1 series có branding riêng (vd "Unlock tuần này", "Insider đang mua gì", "Macro 60 giây", "Phân tích kỹ thuật"). Nháp ghi dòng "Series:", kịch bản duyệt có trường `video_series`. Code: tiêu chí `series` trong `script_review.py`.
+5. Shorts dẫn sang video dài: mọi Short gắn "Video liên quan" (Related video) trỏ về video dài. API không làm được, bot đặt lịch nhắc Trọng làm tay trong Studio (`social_schedule.py`).
+6. Cộng đồng: mỗi kịch bản có sẵn 1 câu hỏi bình luận ghim kéo thảo luận; trả lời comment trong 1 đến 2 giờ đầu; đăng poll Community. Code: tiêu chí `ket`.
+7. An toàn niche crypto: không từ mồi scam ("x100 chắc chắn", "giveaway", "gửi coin nhận lại", "airdrop miễn phí", "lãi đảm bảo"...), luôn có câu "không phải lời khuyên đầu tư". Mọi video YouTube tự khai nhãn AI (`containsSyntheticMedia: true`, `social_upload.YT_STATUS_BASE`), nhãn này không giảm reach. Code: `compliance.scam_hits` + kiểm tra câu miễn trừ trong gói SEO (cảnh báo).
+8. Đọc analytics sau 48 đến 72 giờ: Shorts xem tỷ lệ "Đã xem" và "Đã lướt qua", video dài xem CTR và giữ chân 30 giây đầu. Video nào chạy tốt thì nhân bản format sang chủ đề khác. Báo cáo tuần: `growth_report.py`.
+
 ## 🎨 SOÁT TRÌNH BÀY TRƯỚC KHI HOÀN THIỆN (TRỌNG CHỐT 15:05 NGÀY 23/11: "lỗi font, lỗi dựng nhiều, chữ xấu, không thẳng hàng")
 - `video_lint.layout_issues`: nhãn so sánh tối đa 26 ký tự, số so sánh tối đa 11, chú thích thẻ số 60, thẻ chữ 56, bước sơ đồ 24, chú thích chấm 48.
   Lỗi trình bày được đưa vào `insight_improve` như góp ý "[Lỗi trình bày]" nên bot tự sửa trước khi dựng bản chính.

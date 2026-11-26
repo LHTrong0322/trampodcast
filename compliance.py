@@ -33,6 +33,10 @@ SPACED_HYPHEN_RE = re.compile(r"(?<=\S)\s+-{1,3}\s+(?=\S)")
 # trên ảnh (OCR): chỉ tính khi gạch ngang dài nằm giữa 2 CHỮ thật (tránh nhầm với đường kẻ trang trí)
 OCR_DASH_RE = re.compile(rf"[0-9A-Za-zÀ-ỹ]{{2,}}\s*[{DASH_CHARS}]+\s*[0-9A-Za-zÀ-ỹ]{{2,}}")
 SKIP_KEYS = {"audio", "avatar", "cover", "logo", "images", "img", "url", "file", "projectLogo", "bg", "series", "spark"}
+# Trọng 26/11: từ mồi scam dễ dính bộ lọc YouTube với niche crypto (cảnh báo trước khi xuất bản)
+SCAM_BAIT = re.compile(r"\bx\s?(?:10|50|100|1000)\s+chắc chắn|giveaway|gửi\s+(?:coin|token|usdt)\s+nhận|airdrop\s+miễn\s+phí|"
+                       r"lãi\s+đảm\s+bảo|cam\s+kết\s+lợi\s+nhuận|chắc\s+chắn\s+x\s?\d+|free\s+crypto", re.I)
+DISCLAIMER = re.compile(r"không\s+phải\s+lời\s+khuyên\s+đầu\s+tư", re.I)
 BAD_THUMB = re.compile(r"SẮP CHẾT|\bCHẾT\b|\bSẬP\b|TOANG|BAY MÀU|VỀ 0|LỪA ĐẢO|\bSCAM\b", re.I)
 
 
@@ -49,6 +53,21 @@ def find_dashes(x, path: str = "") -> list[tuple[str, str]]:
     elif isinstance(x, (list, tuple)):
         for i, v in enumerate(x):
             out += find_dashes(v, f"{path}[{i}]")
+    return out
+
+
+def scam_hits(x, path: str = "") -> list[tuple[str, str]]:
+    """Trả về [(vị trí, cụm từ)] có từ mồi scam (giveaway, x100 chắc chắn, lãi đảm bảo...)."""
+    out = []
+    if isinstance(x, str):
+        out += [(path or "text", m.group(0)) for m in SCAM_BAIT.finditer(x)]
+    elif isinstance(x, dict):
+        for k, v in x.items():
+            if k not in SKIP_KEYS:
+                out += scam_hits(v, f"{path}.{k}" if path else str(k))
+    elif isinstance(x, (list, tuple)):
+        for i, v in enumerate(x):
+            out += scam_hits(v, f"{path}[{i}]")
     return out
 
 
@@ -188,6 +207,12 @@ def check_publish(res: dict, seo: dict, out_dir: Path, thumb: Path | None, extra
                 rep["warnings"].append(f"Ảnh bìa có chữ tiêu cực: {tx}")
         except Exception:
             pass
+    # 3b) an toàn niche crypto (Trọng 26/11): từ mồi scam + câu "không phải lời khuyên đầu tư" trong mô tả
+    for w, t in scam_hits(seo):
+        rep["warnings"].append(f"Từ mồi scam ở {w}: \"{t}\" (nên bỏ để tránh bộ lọc YouTube)")
+    desc = json.dumps(seo, ensure_ascii=False)
+    if seo and not DISCLAIMER.search(desc):
+        rep["warnings"].append("Gói SEO chưa có câu \"không phải lời khuyên đầu tư\"")
     # 4) OCR khung hình: gạch ngang dài trên hình thì KHÔNG tự sửa được → chặn
     if do_ocr and shutil.which("tesseract"):
         work = out_dir / "_ocr"
@@ -237,6 +262,9 @@ def selftest():
     assert not find_dashes(fix(s)), fix(s)
     assert not find_dashes(fix({"a": [s], "b": {"c": s}})), "sửa đệ quy lỗi"
     assert OCR_DASH_RE.search(f"Kyle {em} nhà đầu tư") and not OCR_DASH_RE.search(f"O2 {em}{em}"), "OCR regex lỗi"
+    assert scam_hits({"t": "Giveaway 1000 USDT", "d": "coin này x100 chắc chắn"}) and len(scam_hits({"t": "Giveaway", "d": "x100 chắc chắn"})) == 2
+    assert not scam_hits("Dự án có revenue thật, buyback mỗi tuần"), "bắt nhầm câu sạch"
+    assert DISCLAIMER.search("⚠️ Không phải lời khuyên đầu tư.")
     print("✓ compliance selftest ok")
 
 
