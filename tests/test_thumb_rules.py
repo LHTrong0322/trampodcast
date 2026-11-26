@@ -62,3 +62,9 @@ def test_short_nhac_du_an_thi_co_logo():
     assert p["projectLogo"] == "logos/HYPE.png" and p["icon"] == "up"
     p2 = SC.props_for(plan, 0, "Lưới đỡ vừa biến mất", {"HYPE": "logos/HYPE.png"})
     assert p2["projectLogo"] is None
+
+
+def test_bia_short_uu_tien_thumb_logo():
+    import short_covers as SC
+    plan = {"thumb_logo": "BTC", "sections": [{"project": {"ticker": "HYPE"}}]}
+    assert SC._logo(plan, plan["sections"][0], "Bán tháo đã hết chưa?", {"BTC": "logos/BTC.png", "HYPE": "logos/HYPE.png"}) == "logos/BTC.png"

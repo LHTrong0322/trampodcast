@@ -32,6 +32,9 @@ def _logo(plan: dict, sec: dict, title: str, logos: dict | None) -> str | None:
     if plan.get("thumb_subject") == "penguin" or not logos:
         return None
     import insight_render as R
+    t0 = str(plan.get("thumb_logo") or "").lstrip("$").upper()   # 26/11: kịch bản chỉ định thì dùng đúng logo đó (bìa ETF từng gắn nhầm logo Hyperliquid)
+    if t0 and logos.get(t0):
+        return logos[t0]
     coins = {k: {"logo": v, "name": ""} for k, v in logos.items() if v}
     lg = R.mention_logo([], 0, coins, {"text": title})
     if lg:
