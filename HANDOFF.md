@@ -73,6 +73,8 @@ Xác minh nâng cao YouTube không làm giảm reach, đã xác minh. 8 luật d
 - LUẬT CỨNG ĐIỂM (Trọng 26/11, sau short ETF 6.0 → 5.6 → 5.4): video ra điểm thấp hơn KHÔNG BAO GIỜ được chấp nhận.
   news_flash.build giữ vòng điểm cao nhất (vòng cuối kém hơn thì dựng lại bản tốt nhất rồi mới gửi); dựng lại 1 tin đã có video
   (state drafts.<mã>.best_score) mà bản mới thấp hơn thì không gửi, báo "⛔" trên Telegram. Env NF_FIX_ROUNDS đổi số vòng tự sửa.
+- Short sau review 27/11: header hạ xuống top 270 (trước 230); nhãn dự án (chip) chỉ hiện khi tiêu đề short nói về dự án đó; chữ ghi chú thẻ so sánh to hơn (38).
+  Mẹo kịch bản đã áp dụng: mở bằng câu hỏi "vì sao" có con số, có câu nối khi chuyển chủ đề (Bitcoin sang altcoin), kết bằng lựa chọn "bình luận 1 hoặc 2".
 - Short dọc không chạy đếm số trên thẻ (CountUp): bot review chụp trúng số đếm dở rồi trừ điểm "số lệch". Trước thẻ đầu tiên, thẻ đầu hiện từ giây 0.
 - en_money gộp số kép: "4 tỷ 940 triệu đô la" → "$4.94B" (trước ra "4B $940M" trên phụ đề).
 - thumb_subject: "penguin" (26/11) = bìa 16:9 không lấy logo dự án làm chủ thể tròn (tin không xoay quanh 1 dự án, vd ETF).

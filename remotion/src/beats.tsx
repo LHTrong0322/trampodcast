@@ -111,7 +111,7 @@ const Versus: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
           fontSize: lbFs, lineHeight: 1.25, fontWeight: 800, color: C.ink, maxWidth: half - 20, overflow: 'hidden'}}>{nice(x.label)}</div>
         <CountUp value={x.value} size={valFs} delay={4 + i * 3} color={toneColor(x.tone)} />
         {/* Trọng 24/11: số % nhỏ dưới số lớn (vd "+103% so với cùng kỳ"); 2 bên cùng chiều cao nên vẫn thẳng hàng */}
-        {anyNote ? <div style={{height: 40, fontSize: 28, fontWeight: 700, color: x.note ? toneColor(x.tone) : 'transparent', whiteSpace: 'nowrap',
+        {anyNote ? <div style={{height: 50, fontSize: 38, fontWeight: 800, color: x.note ? toneColor(x.tone) : 'transparent', whiteSpace: 'nowrap',
           opacity: interpolate(f - 14 - i * 3, [0, 10], [0, 1], clamp)}}>{x.note || '.'}</div> : null}
       </div>
     );

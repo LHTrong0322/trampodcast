@@ -22,7 +22,12 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
   const title = props.shortTitle || sc.heading || '';
   const tSize = title.length > 45 ? 50 : title.length > 30 ? 56 : 62;
   const tLines = Math.max(1, Math.ceil((title.length * tSize * 0.56) / 860));
-  const titleBottom = 230 + 60 + 24 + (sc.project?.name ? 44 + 24 : 0) + tLines * tSize * 1.22;
+  // review 27/11: nhãn dự án chỉ khi tiêu đề short nói về dự án đó (nhãn "Hyperliquid" trên tin ETF bị chê lặp, gây hiểu nhầm chủ đề)
+  const nrm = (x: string) => x.toLowerCase().normalize('NFD').replace(/[^a-z0-9]/g, '');
+  const chipTopic = !!sc.project?.name && [sc.project?.name, (sc.project as any)?.ticker].filter(Boolean)
+    .some((x) => nrm(title).includes(nrm(String(x).split(/\s+/)[0])));
+  const TOP = 270;   // review 27/11: header hạ thấp khỏi mép trên (trước 230)
+  const titleBottom = TOP + 60 + 24 + (chipTopic ? 44 + 24 : 0) + tLines * tSize * 1.22;
   const cardTop = Math.max(560, Math.ceil(titleBottom + 40));
   const cardH = Math.max(440, 560 - Math.round((cardTop - 560) / 1.25));
   const srcLabel = (props as any).sourceLabel as string | undefined;
@@ -30,14 +35,14 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
   const norm = (x: string) => x.toLowerCase().normalize('NFD').replace(/[^a-z0-9]/g, '');
   const pKeys = [sc.project?.name, (sc.project as any)?.ticker].filter(Boolean).map((x) => norm(String(x).split(/\s+/)[0]));
   const hit = pKeys.length ? (sc.words || []).find((w) => pKeys.includes(norm(w.t))) : undefined;
-  const chipOn = !!sc.project?.name && (!hit || f / 30 >= hit.s - 0.2);
+  const chipOn = chipTopic && (!hit || f / 30 >= hit.s - 0.2);
   const ownSrc = !sc.source || /trong0322/i.test(sc.source);
   return (
     <AccentCtx.Provider value={tone(ac)}>
       <AbsoluteFill style={{background: C.bg}}>
         {props.audio ? <Audio src={staticFile(props.audio)} /> : null}
         <Backdrop />
-        <div style={{position: 'absolute', top: 230, left: 70, right: 150, display: 'flex', flexDirection: 'column', gap: 24}}>
+        <div style={{position: 'absolute', top: TOP, left: 70, right: 150, display: 'flex', flexDirection: 'column', gap: 24}}>
           <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
             <Img src={staticFile('logo.png')} style={{width: 60, height: 60, borderRadius: 99}} />
             <div style={{fontFamily: FONT}}>
@@ -46,7 +51,7 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
               <div style={{color: C.muted, fontWeight: 600, fontSize: 22}}>@Trong0322{!srcLabel && !ownSrc ? <> · Source: <span style={{color: C.ink}}>{sc.source}</span></> : null}</div>
             </div>
           </div>
-          <div style={{display: 'flex', gap: 12, flexWrap: 'wrap'}}>{sc.project?.name ? <div style={{opacity: chipOn ? 1 : 0}}><Chip text={sc.project.name} size={26} /></div> : null}</div>
+          {chipTopic ? <div style={{display: 'flex', gap: 12, flexWrap: 'wrap', opacity: chipOn ? 1 : 0}}><Chip text={sc.project!.name} size={26} /></div> : null}
           <RevealWords text={title} size={tSize} delay={4} stagger={3} maxWidth={860}
             highlight={[sc.project?.name || ''].filter(Boolean)} />
         </div>
