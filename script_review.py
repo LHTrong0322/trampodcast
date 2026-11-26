@@ -160,15 +160,18 @@ def is_short(draft: str) -> bool:
     return bool(re.search(r"^\W*Dạng\W*:?\W*short\b", draft, re.I | re.M))
 
 
-def run_claude(prompt: str) -> dict:
+def run_claude(prompt: str, tools: str = "", turns: int = 6, timeout: int = 900) -> dict:
+    """tools: công cụ cho phép (vd "WebSearch,WebFetch" để tra và kiểm chứng số liệu trên mạng)."""
     tok = re.sub(r"\s+", "", os.getenv("CLAUDE_CODE_OAUTH_TOKEN", ""))
     env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
     if tok:
         env["CLAUDE_CODE_OAUTH_TOKEN"] = tok
     model = os.getenv("SCRIPT_REVIEW_MODEL", "sonnet")
-    r = subprocess.run(["claude", "-p", prompt + "\n\nChỉ in ra JSON hợp lệ, không thêm chữ nào khác.",
-                        "--max-turns", "6", "--model", model, "--output-format", "text"],
-                       env=env, capture_output=True, text=True, timeout=900)
+    cmd = ["claude", "-p", prompt + "\n\nChỉ in ra JSON hợp lệ, không thêm chữ nào khác.",
+           "--max-turns", str(turns), "--model", model, "--output-format", "text"]
+    if tools:
+        cmd += ["--allowedTools", tools]
+    r = subprocess.run(cmd, env=env, capture_output=True, text=True, timeout=timeout)
     m = re.search(r"\{.*\}", r.stdout, re.S)
     if not m:
         raise RuntimeError(f"Claude không trả JSON: {(r.stdout or r.stderr)[:300]}")

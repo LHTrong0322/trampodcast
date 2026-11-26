@@ -43,3 +43,30 @@ def test_claude_loi_thi_giu_ban_cu():
         raise RuntimeError("hết lượt")
     new, ch, why = VF.rewrite(OLD, ["x"], run=boom)
     assert new is None and "lỗi" in why
+
+
+FACT = {"value": "$53K", "claim": "giá vốn trung bình toàn thị trường", "url": "https://cointelegraph.com/x",
+        "source": "Cointelegraph", "quote": "realized price near $53,000"}
+
+
+def _writer(prompt):
+    return {"narration": NAR + " Giá vốn trung bình khoảng 53 nghìn đô.", "beats": [{"at": "Quý 3 các quỹ", "type": "versus"}],
+            "changes": [{"cu": "a", "moi": "b", "ly_do": "c"}], "new_facts": [FACT]}
+
+
+def test_so_moi_co_nguon_da_kiem_chung_thi_duoc_dung():
+    ok = lambda prompt: {"results": [{"i": 0, "ok": True}]}
+    new, ch, why = VF.rewrite(json.loads(json.dumps(OLD)), ["x"], run=_writer, check=ok)
+    assert why == "" and new["sources"][0]["url"].startswith("https") and any("kiểm chứng" in c["ly_do"] for c in ch)
+
+
+def test_so_moi_truot_kiem_chung_thi_giu_ban_cu():
+    bad = lambda prompt: {"results": [{"i": 0, "ok": False, "why": "bài không có số này"}]}
+    new, ch, why = VF.rewrite(json.loads(json.dumps(OLD)), ["x"], run=_writer, check=bad)
+    assert new is None and "trượt kiểm chứng" in why
+
+
+def test_so_moi_khong_link_thi_bi_chan():
+    nolink = lambda prompt: {**_writer(prompt), "new_facts": [{**FACT, "url": ""}]}
+    new, ch, why = VF.rewrite(json.loads(json.dumps(OLD)), ["x"], run=nolink, check=lambda p: {"results": []})
+    assert new is None and "chưa có nguồn" in why

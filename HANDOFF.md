@@ -89,7 +89,9 @@ Xác minh nâng cao YouTube không làm giảm reach, đã xác minh. 8 luật d
 - PHÁT HIỆN LÀ SỬA NGAY (Trọng 27/11, value_fix.py, test tests/test_value_fix.py):
   A. news_flash.value_gate_script: MỌI kịch bản (kể cả viết tay, đã duyệt) chấm "đáng xem" TRƯỚC khi đọc giọng; dưới 8 thì viết lại câu không đáng.
   B. Sau review (xem trước hoặc sau dựng) còn lỗi "KHÔNG ĐÁNG" thì viết lại lời đọc, đọc giọng lại, dựng lại (tối đa 1 lần mỗi lượt).
-  Chốt an toàn: không bịa số (số mới phải có sẵn trong kịch bản cũ), thẻ bám đúng cụm lời đọc, không gạch dài; sai thì giữ bản cũ.
+  Chốt an toàn: thẻ bám đúng cụm lời đọc, không gạch dài. SỐ MỚI (Trọng 27/11): ĐƯỢC thêm nếu làm video giá trị hơn, bot tra bằng
+  WebSearch/WebFetch, mỗi số kèm link + trích dẫn, rồi bot thứ hai (value_fix.verify) mở đúng link xác nhận; số không link hoặc trượt
+  kiểm chứng thì cả bản viết lại bị bỏ, giữ bản cũ. Số đã kiểm chứng lưu ở plan["sources"], tin "✂️" liệt kê kèm link.
   Mỗi lần viết lại đều báo Telegram "✂️" kèm câu cũ, câu mới, lý do. Tắt bằng env VALUE_FIX=0.
 - Luật giá trị + khớp lời đọc không còn đá nhau: mỗi câu lời đọc mang 1 con số, thẻ hình VẼ con số đó, không chép câu chữ.
 - Short dọc không chạy đếm số trên thẻ (CountUp): bot review chụp trúng số đếm dở rồi trừ điểm "số lệch". Trước thẻ đầu tiên, thẻ đầu hiện từ giây 0.
