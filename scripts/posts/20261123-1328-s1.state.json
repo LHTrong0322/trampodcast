@@ -2,8 +2,12 @@
  "yt_id": "fKqKlMk3enM",
  "thumb_ok": true,
  "fb_id": "40756427240608107",
- "comments_done": [],
+ "comments_done": [
+  "youtube",
+  "facebook"
+ ],
  "fb_caption_clean": true,
  "tiktok_sent": true,
- "fb_thumb_ok": true
+ "fb_thumb_ok": true,
+ "asr_removed": true
 }
