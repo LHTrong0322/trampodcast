@@ -13,3 +13,4 @@ TikTok (vidIQ, đã lên lịch 23/11): Video 1 Short 2 T3 24/11 11:30 (Trọng 
 
 Tin nóng (không có bản dài): NVDA "Jensen Huang trở lại, Nvidia bật hơn 30%" insight-20261124-0716, đã đăng 24/11 ~08:20: YouTube XCKLwPR0YSM, Facebook Reel 2936437546729216, TikTok 7711540657038298389.
 Trọng 26/11 15:15: mọi bài chưa lên sóng dời về 19:00 (giữ ngày), trên YouTube, Facebook, TikTok.
+TikTok Video 2 dài (16:9, caption Facebook + dòng kênh YouTube): T6 27/11 19:00, vidIQ post 630303a0-fa8d-43aa-a914-5838c87ec08c.
