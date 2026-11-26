@@ -315,6 +315,8 @@ def prep_public(lab: Path):
             shutil.copytree(lab / d, RD / d)
     shutil.copytree(ROOT / "fonts", RD / "fonts")
     shutil.copy(ROOT / "logo.png", RD / "logo.png")
+    if (ROOT / "assets" / "stickers").exists():   # hình dán 3D cho ảnh bìa (Fluent Emoji, MIT)
+        shutil.copytree(ROOT / "assets" / "stickers", RD / "stickers")
 
 
 def run_remotion(props: dict, out: Path, frames: str = ""):
