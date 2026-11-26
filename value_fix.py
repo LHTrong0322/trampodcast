@@ -59,7 +59,7 @@ def validate(old: dict, new: dict) -> str:
     nar = str(new.get("narration") or "").strip()
     if not nar or not isinstance(new.get("beats"), list) or not new["beats"]:
         return "thiếu lời đọc hoặc thẻ"
-    if "—" in nar or "–" in nar:
+    if "\u2014" in nar or "\u2013" in nar:
         return "có dấu gạch ngang dài"
     n = len(nar.split())
     if not 80 <= n <= 170:

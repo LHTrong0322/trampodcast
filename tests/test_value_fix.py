@@ -27,7 +27,7 @@ def test_chan_the_khong_bam_loi_doc():
 
 
 def test_chan_gach_dai():
-    new = {"narration": NAR.replace(". Quý", " — Quý", 1), "beats": [{"at": "ETF bị rút", "type": "bignum"}]}
+    new = {"narration": NAR.replace(". Quý", " \u2014 Quý", 1), "beats": [{"at": "ETF bị rút", "type": "bignum"}]}
     assert VF.validate(OLD, new)
 
 
