@@ -23,6 +23,13 @@
   "outro": "Tổng kết + không phải lời khuyên đầu tư + mời đăng ký",
   "shorts": [0, 1],
   "short_hooks": {"0": "câu hook short 1", "1": "câu hook short 2"},
-  "thumb_text": "CHỮ ẢNH BÌA",
-  "thumb_stat": ""
+  "thumb_stat": "-$6T",
+  "thumb_text": "Cú rũ hay sụp đổ?",
+  "thumb_tag": "CÙNG ĐỎ",
+  "thumb_kicker": "Cổ phiếu, vàng, crypto",
+  "thumb_points": [],
+  "thumb_vs": [],
+  "thumb_before": null,
+  "thumb_after": null,
+  "thumb_style": ""
 }

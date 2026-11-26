@@ -149,14 +149,18 @@ ICON_RULES = [("crack", r"bubble|bong bóng|vỡ|sập|crash|nổ"), ("down", r"
               ("flame", r"nóng|hot|fomo|cháy"), ("scale", r"so sánh|cân|hay là|vs"), ("magnifier", r"bí mật|sự thật|soi|vì sao|tại sao|\?")]
 
 
-def thumb_style(plan: dict, has_vs: bool, has_points: bool, has_stat: bool) -> tuple[str, str]:
-    """Trọng 22/11: ảnh bìa không rập khuôn. Chọn bố cục theo nội dung, xoay vòng theo tiêu đề; kịch bản có thể chỉ định thumb_style/thumb_icon."""
+def thumb_style(plan: dict, has_vs: bool, has_points: bool, has_stat: bool, has_before: bool = False) -> tuple[str, str]:
+    """Trọng 26/11: ảnh bìa kiểu "viral sạch" (5 bố cục: stat, pill, vs, before, question).
+    Chọn theo dữ liệu kịch bản, xoay vòng theo tiêu đề để 2 video liền nhau không giống nhau; kịch bản chỉ định được bằng thumb_style."""
     import hashlib
     text = " ".join(str(plan.get(k, "")) for k in ("thumb_text", "title", "theme")).lower()
     icon = plan.get("thumb_icon") or next((k for k, pat in ICON_RULES if re.search(pat, text)), "magnifier")
-    if plan.get("thumb_style"):
+    if plan.get("thumb_style") in ("stat", "pill", "vs", "before", "question"):
         return plan["thumb_style"], icon
-    opts = ["vs"] if has_vs else ["stack", "classic"] if has_points else ["hero", "sticker", "classic"] if has_stat else ["sticker", "stack"]
+    if has_before:
+        return "before", icon
+    opts = (["vs", "question"] if has_vs else ["stat", "pill"] if has_stat and has_points
+            else ["stat", "question"] if has_stat else ["question"])
     k = int(hashlib.md5(text.encode()).hexdigest(), 16) % len(opts)
     return opts[k], icon
 
@@ -166,17 +170,22 @@ def thumbnail(res: dict, out: Path) -> Path | None:
     proj = next((s.get("project") for s in res["scenes"] if s.get("project") and s["project"].get("logo")), None)
     approved = bool(os.getenv("INSIGHT_SCRIPT", "").strip())   # kịch bản Trọng duyệt: dùng đúng chữ ảnh bìa đã duyệt
     stat = P.nodash(plan.get("thumb_stat", ""))[:12] if approved else R.real_number(V.en_money(plan.get("hook_stat", "")), plan.get("posts") or [])[:8]
+    coins = (res.get("data") or {}).get("coins") or {}
+    side = lambda x: {**x, "label": P.nodash(str(x.get("label", ""))), "value": P.nodash(V.en_money(str(x.get("value", "")))),
+                      "logo": coins.get(str(x.get("logo", "")).upper(), {}).get("logo")} if isinstance(x, dict) and x.get("value") else None
     props = {"comp": "Thumb", "width": 1280, "height": 720,
              "text": P.nodash(V.en_money(plan.get("thumb_text") or plan.get("thumb") or plan.get("title", "")))[:48],
              "stat": stat, "accent": (proj or {}).get("color") or "#4F5BD5",
              "points": [P.nodash(x)[:28] for x in (plan.get("thumb_points") or [])][:3],
-             "warn": bool(plan.get("thumb_warn", False)),
-             "tag": P.nodash(str((plan.get("thumb_tag") or ""))), "vs": [{**x, "logo": ((res.get("data") or {}).get("coins") or {}).get(str(x.get("logo", "")).upper(), {}).get("logo")}
-                    for x in (plan.get("thumb_vs") or [])][:2],   # review 1615: dấu chấm than đỏ rối mắt, chỉ bật khi kịch bản yêu cầu
+             "tag": P.nodash(str((plan.get("thumb_tag") or ""))), "kicker": P.nodash(str(plan.get("thumb_kicker") or ""))[:40],
+             "vs": [v for v in (side(x) for x in (plan.get("thumb_vs") or [])[:2]) if v],
+             "before": side(plan.get("thumb_before")), "after": side(plan.get("thumb_after")),
              "projectLogo": (proj or {}).get("logo"), "bg": None,
              "style": "", "icon": "none",
              "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")}
-    props["style"], props["icon"] = thumb_style(plan, bool(props["vs"]), bool(props["points"]), bool(props["stat"]))
+    if not (props["before"] and props["after"]):
+        props["before"] = props["after"] = None
+    props["style"], props["icon"] = thumb_style(plan, len(props["vs"]) >= 2, bool(props["points"]), bool(props["stat"]), bool(props["before"]))
     log(f"   Ảnh bìa: bố cục {props['style']}, hình dán {props['icon']}")
     try:
         R.run_remotion(props, out, frames="0")

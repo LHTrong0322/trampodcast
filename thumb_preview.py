@@ -30,11 +30,12 @@ def main(script: str, fonts: str):
         props = {"comp": "Thumb", "width": 1280, "height": 720, "text": plan.get("thumb_text") or plan.get("title", ""),
                  "stat": plan.get("thumb_stat", ""), "accent": "#4F5BD5", "points": plan.get("thumb_points") or [],
                  "warn": False, "projectLogo": None, "bg": None, "brand": "Smart Penguin Insights", "font": f,
-                 "tag": P.nodash(str((plan.get("thumb_tag") or ""))), "vs": [{**x, "logo": logos.get(str(x.get("logo", "")).upper())} for x in (plan.get("thumb_vs") or [])]}
+                 "tag": P.nodash(str((plan.get("thumb_tag") or ""))), "vs": [{**x, "logo": logos.get(str(x.get("logo", "")).upper())} for x in (plan.get("thumb_vs") or [])],
+                 "kicker": plan.get("thumb_kicker", ""), "before": plan.get("thumb_before"), "after": plan.get("thumb_after")}
         if st:
             props["font"] = "bvp"
             props["warn"] = bool(plan.get("thumb_warn"))
-            auto, icon = IP.thumb_style(plan, bool(props["vs"]), bool(props["points"]), bool(props["stat"]))
+            auto, icon = IP.thumb_style(plan, len(props["vs"]) >= 2, bool(props["points"]), bool(props["stat"]), bool(props["before"] and props["after"]))
             props["style"], props["icon"] = (auto if st == "auto" else st), icon
         p = out / f"thumb-{f.replace(':', '-')}.png"
         R.run_remotion(props, p, frames="0")

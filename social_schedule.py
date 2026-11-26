@@ -134,6 +134,11 @@ def yt_existing(tok: str, title: str) -> str | None:
 def post(plan_path: Path):
     plan = json.loads(plan_path.read_text(encoding="utf-8"))
     rel = SP.fetch_release(plan["tag"], Path("rel"))
+    for ext in ("png", "jpg"):   # Trọng 26/11: ảnh bìa đã chốt lại sau khi dựng nằm ở scripts/posts/thumbs/<mã>.png, ưu tiên hơn ảnh trong Release
+        own = Path("scripts/posts/thumbs") / f"{str(plan['tag']).replace('insight-', '')}.{ext}"
+        if own.exists():
+            rel["thumb"] = own
+            break
     st = json.loads(_state_path(plan_path).read_text(encoding="utf-8")) if _state_path(plan_path).exists() else {}
     report = []
     save = lambda: _state_path(plan_path).write_text(json.dumps(st, ensure_ascii=False, indent=1), encoding="utf-8")

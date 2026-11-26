@@ -379,3 +379,13 @@ Tắt: config insight.two_pass: false hoặc env INSIGHT_TWO_PASS=0. Job timeout
 - Trọng 24/11 "xong lượt nào gửi lượt đó trước": bản nháp (lượt 1) gửi Telegram NGAY khi xong (video dài + short + lỗi chính + bot sửa gì),
   bản chính lượt 2 cũng gửi ngay nếu phải sửa thêm vòng 3. Code: insight.two_pass_draft, insight.quality_gate.
 - Bật/tắt insight.yml khi dispatch tay: CHỜ run chuyển sang in_progress rồi mới tắt lại. Tắt ngay sau dispatch làm run kẹt "queued" mãi (23-24/11 kẹt 2 run).
+
+## Ảnh bìa kiểu "viral sạch" (Trọng chốt 26/11)
+
+Rút từ các thumbnail tài chính viral 12x đến 75x Trọng gửi, giữ phong cách sạch của kênh (nền sáng lưới nhạt, Be Vietnam Pro, thẻ trắng bo góc, lề 64px).
+- Luật: 1 con số làm nhân vật chính; chữ ít, viết thường có dấu như câu nói (không IN HOA cả câu); câu hỏi gây tò mò; nhãn vàng nổi; chủ thể tròn lớn (logo dự án, không có thì avatar penguin) thay khuôn mặt; ảnh bìa bổ sung cho tiêu đề, không lặp y nguyên.
+- Code: `remotion/src/Thumb.tsx` (5 bố cục: stat, pill, vs, before, question), chọn bố cục ở `insight_publish.thumb_style`, soát ở `video_lint.py`.
+- Trường kịch bản: `thumb_stat` (số sốc), `thumb_text` (≤ 24 ký tự), `thumb_tag` (nhãn ≤ 24), `thumb_kicker` (dòng nhỏ ≤ 30), `thumb_points` (≤ 3 chip), `thumb_vs`, `thumb_before` + `thumb_after`, `thumb_style` (tuỳ chọn). Mẫu: `scripts/TEMPLATE-approved.json`.
+- Mẫu đã duyệt: Video 3 bố cục stat ("-$6T", "Cú rũ hay sụp đổ?"), Video 4 bố cục before ("$10K" → "$1.6M").
+- Ảnh bìa chốt lại sau khi dựng: đặt ở `scripts/posts/thumbs/<mã>.png` (vd `20261123-1718.png`), bot đặt lịch tự dùng thay ảnh trong Release.
+- Bố cục cũ (classic, hero, sticker, stack, biển cảnh báo) đã bỏ; muốn quay lại thì `git revert` commit này. Ảnh bìa short (`ShortThumb.tsx`) chưa đổi.

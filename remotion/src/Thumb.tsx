@@ -1,17 +1,20 @@
 import React from 'react';
 import {AbsoluteFill, Img, staticFile} from 'remotion';
-import {AccentCtx, tone, C, FONT, DISPLAY_FONT, useFonts} from './ui';
+import {AccentCtx, tone, C, FONT, useFonts} from './ui';
 
-// Ảnh bìa YouTube 1280×720.
-// Trọng 22/11: "ảnh bìa hãy thêm sự sáng tạo, đừng rập khuôn như nhau, cả cái biển báo đỏ cũng phải làm khác đi".
-// → Nhiều bố cục (style) và bộ hình dán theo chủ đề (icon), Python chọn theo nội dung + xoay vòng để 2 video liền nhau không giống nhau.
-//   Nền luôn sáng sạch (Trọng 22/11), không thẻ nền màu đậm.
-export type ThumbStyle = 'classic' | 'hero' | 'sticker' | 'stack' | 'vs';
+// Ảnh bìa YouTube 1280×720, bản "viral sạch" Trọng chốt 26/11 (rút từ các thumbnail tài chính viral 12x đến 75x):
+//   1 con số làm nhân vật chính, chữ ít (câu hỏi ngắn, viết thường có dấu, không IN HOA cả câu), nhãn vàng nổi,
+//   so sánh 2 phía / trước sau, chủ thể lớn (logo dự án hoặc avatar penguin) thay cho khuôn mặt.
+//   Vẫn giữ phong cách sạch của kênh: nền sáng có lưới nhạt, Be Vietnam Pro, thẻ trắng bo góc, lề 64px, không viền chữ.
+// Bố cục: stat (số khủng + câu hỏi), pill (nhãn vàng lớn), vs (đối đầu 2 thẻ), before (trước → sau), question (câu hỏi + penguin).
+// Python (insight_publish.thumb_style) chọn theo dữ liệu kịch bản, kịch bản có thể chỉ định thumb_style.
+export type ThumbStyle = 'stat' | 'pill' | 'vs' | 'before' | 'question';
 export type ThumbIcon = 'crack' | 'down' | 'up' | 'magnifier' | 'hourglass' | 'flame' | 'tape' | 'scale' | 'none';
+type Side = {label: string; value: string; logo?: string | null; tone?: string};
 export type ThumbProps = {text: string; stat?: string; accent?: string; projectLogo?: string | null; bg?: string | null; brand: string; points?: string[]; warn?: boolean;
-  vs?: {label: string; value: string; logo?: string | null; tone?: string}[]; font?: string; tag?: string; style?: ThumbStyle; icon?: ThumbIcon};
+  vs?: Side[]; font?: string; tag?: string; style?: ThumbStyle | string; icon?: ThumbIcon; kicker?: string; before?: Side | null; after?: Side | null};
 
-const RED = '#E5383B', GREEN = '#1F9D63', AMBER = '#F4B400';
+const RED = '#E5383B', GREEN = '#1F9D63', AMBER = '#F4B400', YEL = '#FFD84D', IND = '#4F5BD5', INK = '#141833', MUTED = '#5A6080';
 
 // ---------- hình dán tự vẽ (SVG), không dùng ảnh có bản quyền ----------
 const Icon: React.FC<{kind: ThumbIcon; size: number; color: string}> = ({kind, size, color}) => {
@@ -72,150 +75,139 @@ export const Sticker: React.FC<{kind: ThumbIcon; size: number; color: string; ro
   </div>
 );
 
-// Băng cảnh báo vàng đen chéo góc (thay biển "!" đỏ khi kịch bản cần cảnh báo)
-const Tape: React.FC<{text: string}> = ({text}) => (
-  <div style={{position: 'absolute', right: -120, top: 70, width: 560, transform: 'rotate(32deg)', padding: '12px 0', textAlign: 'center',
-    background: `repeating-linear-gradient(45deg, ${AMBER} 0 26px, #1A1A1A 26px 52px)`, boxShadow: '0 10px 26px rgba(0,0,0,0.25)'}}>
-    <span style={{background: AMBER, padding: '4px 18px', fontWeight: 900, fontSize: 30, color: '#1A1A1A', letterSpacing: 2}}>{text}</span>
+const valueColor = (v: string) => (/^\s*[-−]/.test(v) ? RED : /^\s*\+/.test(v) ? GREEN : INK);
+const sideColor = (x: Side) => (x.tone === 'down' ? RED : x.tone === 'up' ? GREEN : valueColor(x.value));
+// cỡ chữ tự co theo độ dài để không bao giờ tràn khung (BVP ExtraBold rộng khoảng 0.6em mỗi ký tự)
+const fit = (t: string, maxW: number, maxSize: number, em = 0.6) => Math.round(Math.min(maxSize, maxW / Math.max(1, (t || '').length * em)));
+const nb = (t: string) => (t || '').replace(/_/g, ' ');   // dấu _ dính các chữ thành 1 cụm không bị ngắt dòng
+
+const card: React.CSSProperties = {background: '#FFFFFF', borderRadius: 32, boxShadow: '0 24px 60px rgba(20,24,51,0.12), 0 2px 6px rgba(20,24,51,0.05)'};
+const pill = (bg: string, color: string, size: number): React.CSSProperties => ({display: 'inline-block', background: bg, color, fontSize: size, fontWeight: 800,
+  padding: `${Math.round(size * 0.2)}px ${Math.round(size * 0.55)}px`, borderRadius: Math.round(size * 0.32), whiteSpace: 'nowrap', lineHeight: 1.2});
+const big: React.CSSProperties = {fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1, whiteSpace: 'nowrap'};
+
+const Hero: React.FC<{src?: string | null; size: number; accent: string}> = ({src, size, accent}) => (
+  <div style={{width: size, height: size, borderRadius: '50%', overflow: 'hidden', border: '12px solid #FFFFFF', background: src ? '#FFFFFF' : '#A9CBF2',
+    boxShadow: `0 24px 60px rgba(20,24,51,0.18), 0 0 0 2px ${accent}22`, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+    <Img src={staticFile(src || 'logo.png')} style={src ? {width: '78%', height: '78%', objectFit: 'contain', borderRadius: '50%'} : {width: '100%', height: '100%'}} />
   </div>
 );
+const Brand: React.FC<{brand: string; center?: boolean; right?: number}> = ({brand, center, right}) => (
+  <div style={{position: 'absolute', bottom: 40, ...(center ? {left: 0, right: 0, justifyContent: 'center'} : right !== undefined ? {right} : {left: 64}),
+    display: 'flex', alignItems: 'center', gap: 12, fontSize: 24, fontWeight: 700, color: MUTED}}>
+    <Img src={staticFile('logo.png')} style={{width: 46, height: 46, borderRadius: 99, border: '3px solid #FFFFFF', boxShadow: '0 4px 12px rgba(20,24,51,0.15)'}} />{brand}
+  </div>
+);
+const Curve: React.FC<{w: number; h: number; color: string; down?: boolean}> = ({w, h, color, down}) => {
+  const d = down ? `M0 ${h * 0.05} C ${w * 0.35} ${h * 0.08}, ${w * 0.6} ${h * 0.3}, ${w * 0.75} ${h * 0.55} S ${w * 0.93} ${h * 0.9}, ${w} ${h * 0.95}`
+    : `M0 ${h * 0.95} C ${w * 0.35} ${h * 0.93}, ${w * 0.6} ${h * 0.77}, ${w * 0.75} ${h * 0.5} S ${w * 0.93} ${h * 0.14}, ${w} ${h * 0.05}`;
+  return <svg width={w} height={h} style={{position: 'absolute', left: 0, bottom: 0}}>
+    <defs><linearGradient id="cv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={color} stopOpacity="0.25" /><stop offset="1" stopColor={color} stopOpacity="0" /></linearGradient></defs>
+    <path d={`${d} L${w} ${h} L0 ${h}Z`} fill="url(#cv)" /><path d={d} fill="none" stroke={color} strokeWidth={10} />
+  </svg>;
+};
 
-const valueColor = (v: string) => (/^\s*[-−]/.test(v) ? RED : /^\s*\+/.test(v) ? GREEN : C.ink);
-
-export const Thumb: React.FC<ThumbProps> = ({text, stat, accent: acIn = '#4F5BD5', projectLogo, bg, brand, points = [], warn = false, vs = [],
-  font = 'bvp', tag = '', style: styleIn, icon = 'none'}) => {
-  const HF = DISPLAY_FONT[font] || FONT;
-  const cond = font === 'anton' || font === 'barlow' || font === 'archivo';
-  const disp = {fontFamily: HF, fontStretch: font === 'archivo' ? '62%' : undefined, fontWeight: font === 'anton' ? 400 : 900} as const;
+export const Thumb: React.FC<ThumbProps> = ({text, stat = '', accent: acIn = IND, projectLogo, brand, points = [], vs = [], tag = '',
+  style: styleIn, kicker = '', before, after}) => {
   const accent = tone(acIn);
   useFonts();
-  const style: ThumbStyle = styleIn || (vs.length ? 'vs' : 'classic');
-  // dấu _ dính các chữ thành 1 cụm không bị ngắt dòng (Trọng 24/11: "CƠ HỘI / THẾ HỆ" bị tách xấu)
-  const words = (text || '').toUpperCase().split(/\s+/).filter(Boolean).map((w) => w.replace(/_/g, '\u00A0'));
-  const len = words.join(' ').length;
-  const hl = (i: number) => (style === 'stack' ? C.ink : i % 3 === 1 ? accent : C.ink);
-  const brandRow = (
-    <div style={{position: 'absolute', left: 64, top: 44, display: 'flex', alignItems: 'center', gap: 14}}>
-      <Img src={staticFile('logo.png')} style={{width: 60, height: 60, borderRadius: 99}} />
-      <div style={{color: C.ink, fontWeight: 800, fontSize: 24, letterSpacing: 2}}>{brand.toUpperCase()}</div>
-    </div>
-  );
-  const bgLayer = (
-    <>
-      {bg ? <Img src={staticFile(bg)} style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.3, filter: 'saturate(0.8)'}} /> : null}
-      <AbsoluteFill style={{background: style === 'hero'
-        ? `radial-gradient(700px 520px at 88% 70%, ${accent}33, transparent 70%), radial-gradient(600px 400px at 8% 10%, ${accent}22, transparent 70%)`
-        : style === 'sticker' ? `radial-gradient(620px 520px at 80% 45%, ${accent}2E, transparent 70%)`
-        : `radial-gradient(900px 600px at 15% 20%, ${accent}40, transparent 70%), linear-gradient(90deg, ${C.bg} 35%, rgba(243,245,251,0.4))`}} />
-      {/* vân lưới nhẹ cho đỡ trơn */}
-      <AbsoluteFill style={{backgroundImage: `radial-gradient(${accent}22 2px, transparent 2px)`, backgroundSize: '34px 34px', opacity: 0.5,
-        maskImage: 'linear-gradient(90deg, transparent 40%, black)', WebkitMaskImage: 'linear-gradient(90deg, transparent 40%, black)'}} />
-    </>
-  );
-  const handle = <div style={{position: 'absolute', right: 40, bottom: 28, color: 'rgba(19,24,54,0.7)', fontWeight: 700, fontSize: 26}}>@Trong0322</div>;
-
-  // ---------- bố cục ----------
+  const t = nb(text), k = nb(kicker), g = nb(tag);
+  const style: ThumbStyle = (['stat', 'pill', 'vs', 'before', 'question'] as string[]).includes(String(styleIn)) ? styleIn as ThumbStyle
+    : before && after ? 'before' : vs.length >= 2 ? 'vs' : stat ? 'stat' : 'question';
+  const q = /\?\s*$/.test(t);
   let body: React.ReactNode = null;
-  if (style === 'hero') {
-    // con số khổng lồ là nhân vật chính, tiêu đề gọn phía trên
+
+  if (style === 'stat') {
+    // số khủng bên trái, câu hỏi trong nhãn tím, chủ thể tròn lớn bên phải (mẫu "-$6T, cú rũ hay sụp đổ?")
     body = <>
-      <div style={{position: 'absolute', left: 64, top: 130, width: 760, display: 'flex', flexWrap: 'wrap', columnGap: 18, ...disp,
-        fontSize: (len > 22 ? 70 : 84) * (cond ? 1.2 : 1), lineHeight: 1.3, color: C.ink}}>
-        {words.map((w, i) => <span key={i} style={{color: hl(i)}}>{w}</span>)}
-      </div>
-      {icon !== 'none' ? <div style={{position: 'absolute', right: warn ? 110 : 70, top: warn ? 215 : 120, opacity: 0.95}}><Sticker kind={icon} size={190} color={accent} rotate={10} /></div> : null}
-      {stat ? <div style={{position: 'absolute', left: 56, bottom: 54, ...disp, fontSize: (stat.length > 6 ? 190 : 230) * (cond ? 1.15 : 1), lineHeight: 1,
-        color: valueColor(stat), letterSpacing: -4, textShadow: '0 8px 0 rgba(19,24,54,0.08)'}}>{stat}</div> : null}
-      {tag ? <div style={{position: 'absolute', right: 64, bottom: 90, padding: '12px 24px', borderRadius: 14, background: '#FFFFFF', border: `3px solid ${accent}`,
-        color: accent, fontWeight: 900, fontSize: 36, transform: 'rotate(-4deg)', boxShadow: '0 10px 24px rgba(40,50,110,0.14)'}}>{tag.toUpperCase()}</div> : null}
+      {k ? <div style={{position: 'absolute', left: 64, top: 64, fontSize: 40, fontWeight: 700, color: MUTED, whiteSpace: 'nowrap'}}>{k}</div> : null}
+      {g ? <div style={{position: 'absolute', left: 64, top: k ? 124 : 70}}><span style={pill(RED, '#FFFFFF', 34)}>{g}</span></div> : null}
+      <div style={{position: 'absolute', left: 58, top: 206, ...big, fontSize: fit(stat, 640, 230, 0.58), color: valueColor(stat) === INK ? INK : valueColor(stat)}}>{nb(stat)}</div>
+      <div style={{position: 'absolute', left: 64, top: 470, width: 660}}>{t.length > 24
+        ? <div style={{...pill(IND, '#FFFFFF', 44), whiteSpace: 'normal', lineHeight: 1.25}}>{t}</div>
+        : <span style={pill(IND, '#FFFFFF', fit(t, 640, 54, 0.62))}>{t}</span>}</div>
+      <div style={{position: 'absolute', right: 96, top: 120}}><Hero src={projectLogo} size={420} accent={accent} /></div>
+      {q ? <div style={{position: 'absolute', right: 64, top: 96, width: 110, height: 110, borderRadius: 99, background: YEL, fontSize: 72, fontWeight: 800,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(20,24,51,0.15)'}}>?</div> : null}
+      <Brand brand={brand} />
     </>;
-  } else if (style === 'sticker') {
-    // hình dán to bên phải kể câu chuyện, chữ bên trái; số liệu như mác giá treo dưới hình dán
+  } else if (style === 'pill') {
+    // nhãn vàng cỡ lớn giữa khung, các ý thành thẻ nhỏ phía trên, số khủng góc phải (mẫu "Bong bóng AI vỡ?")
+    const chips = points.slice(0, 3);
     body = <>
-      <div style={{position: 'absolute', left: 64, top: 150, width: 700, display: 'flex', flexWrap: 'wrap', columnGap: 20, ...disp,
-        fontSize: (len > 28 ? 72 : len > 18 ? 86 : 100) * (cond ? 1.2 : 1), lineHeight: 1.3, color: C.ink}}>
-        {words.map((w, i) => <span key={i} style={{color: hl(i)}}>{w}</span>)}
+      <div style={{position: 'absolute', left: 64, top: 64, display: 'flex', gap: 22}}>
+        {chips.map((p, i) => <div key={i} style={{...card, borderRadius: 24, padding: '22px 26px', minWidth: 170, textAlign: 'center',
+          fontSize: fit(p, 200, 38, 0.6), fontWeight: 800, color: INK, whiteSpace: 'nowrap'}}>{nb(p)}</div>)}
       </div>
-      <div style={{position: 'absolute', right: warn ? 150 : 120, top: warn ? 165 : 120}}><Sticker kind={icon === 'none' ? 'magnifier' : icon} size={warn ? 290 : 330} color={accent} rotate={-9} /></div>
-      {stat ? <div style={{position: 'absolute', right: 96, top: warn ? 490 : 470, padding: '8px 30px 8px 52px', background: '#FFFFFF', borderRadius: '14px 40px 40px 14px',
-        border: `4px solid ${C.ink}`, ...disp, fontSize: 76 * (cond ? 1.15 : 1), color: valueColor(stat), transform: 'rotate(6deg)',
-        boxShadow: '0 12px 30px rgba(40,50,110,0.18)'}}>
-        <span style={{position: 'absolute', left: 16, top: '50%', width: 18, height: 18, marginTop: -9, borderRadius: 99, background: C.bg, border: `3px solid ${C.ink}`}} />
-        {stat}</div> : null}
-      {tag ? <div style={{position: 'absolute', left: 64, bottom: 70, padding: '10px 24px', borderRadius: 12, background: `${accent}18`, border: `2px solid ${accent}`,
-        color: accent, fontWeight: 800, fontSize: 34}}>{tag.toUpperCase()}</div> : null}
-    </>;
-  } else if (style === 'stack') {
-    // tiêu đề tô dạ quang từng dòng + các ý thành nhãn số dưới đáy
-    const lines: string[][] = [];
-    words.forEach((w) => { const L = lines[lines.length - 1]; if (!L || L.join(' ').length + w.length > 14) lines.push([w]); else L.push(w); });
-    body = <>
-      <div style={{position: 'absolute', left: 64, top: 140, display: 'flex', flexDirection: 'column', gap: 14}}>
-        {lines.slice(0, 3).map((L, i) => <div key={i} style={{alignSelf: 'flex-start', ...disp, fontSize: 92 * (cond ? 1.15 : 1), lineHeight: 1.25, color: C.ink,
-          padding: '0 18px', background: i === 1 ? `linear-gradient(transparent 52%, ${AMBER}AA 52%, ${AMBER}AA 92%, transparent 92%)` : 'none'}}>{L.join(' ')}</div>)}
-      </div>
-      {points.length ? <div style={{position: 'absolute', left: 64, right: 64, bottom: 70, display: 'flex', gap: 16}}>
-        {points.map((p, i) => <div key={i} style={{flex: 1, display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderRadius: 18, background: '#FFFFFF',
-          border: `1px solid ${C.line}`, boxShadow: '0 10px 26px rgba(40,50,110,0.12)'}}>
-          <div style={{width: 46, height: 46, borderRadius: 99, background: accent, color: '#FFFFFF', fontWeight: 900, fontSize: 28, display: 'flex',
-            alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>{i + 1}</div>
-          <div style={{fontWeight: 800, fontSize: 28, color: C.ink, lineHeight: 1.15}}>{p}</div></div>)}
-      </div> : null}
-      {icon !== 'none' ? <div style={{position: 'absolute', right: warn ? 120 : 80, top: warn ? 190 : 120}}><Sticker kind={icon} size={warn ? 190 : 230} color={accent} rotate={8} /></div> : null}
-      {stat ? <div style={{position: 'absolute', right: 80, top: warn ? 400 : 380, ...disp, fontSize: 110, color: valueColor(stat)}}>{stat}</div> : null}
+      {stat ? <div style={{position: 'absolute', right: 64, top: 70, ...big, fontSize: fit(stat, chips.length ? 1150 - chips.length * 240 - 90 : 700, 190, 0.58),
+        color: valueColor(stat) === INK ? RED : valueColor(stat)}}>{nb(stat)}</div> : null}
+      <div style={{position: 'absolute', left: 0, right: 0, top: 320, textAlign: 'center'}}>
+        <span style={{...pill(YEL, INK, fit(t, 1050, 116, 0.6)), letterSpacing: '-0.03em', borderRadius: 30, boxShadow: '0 20px 50px rgba(20,24,51,0.15)'}}>{t}</span></div>
+      {k ? <div style={{position: 'absolute', right: 64, bottom: 44, fontSize: 28, fontWeight: 700, color: MUTED, whiteSpace: 'nowrap'}}>{k}</div> : null}
+      <Brand brand={brand} />
     </>;
   } else if (style === 'vs') {
+    // đối đầu: 2 thẻ lớn logo + số, vòng VS vàng ở giữa, tiêu đề có nhãn đỏ (mẫu "Coin tốt vẫn lỗ?")
+    const [a, b] = vs;
+    const sideCard = (x: Side, pos: React.CSSProperties) => (
+      <div style={{position: 'absolute', top: 180, width: 470, height: 420, ...card, textAlign: 'center', paddingTop: 44, ...pos}}>
+        {x.logo ? <Img src={staticFile(x.logo)} style={{width: 170, height: 170, borderRadius: 99, boxShadow: '0 18px 40px rgba(20,24,51,0.18)'}} />
+          : <div style={{height: 170, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 72, fontWeight: 800, color: INK}}>{nb(x.label)}</div>}
+        <div style={{fontSize: 34, fontWeight: 700, color: MUTED, marginTop: 16, whiteSpace: 'nowrap'}}>{nb(x.label)}{k ? ` · ${k}` : ''}</div>
+        <div style={{...big, fontSize: fit(x.value, 420, 120, 0.6), color: sideColor(x), marginTop: 8}}>{nb(x.value)}</div>
+      </div>);
     body = <>
-      <div style={{position: 'absolute', left: 64, top: 190, display: 'flex', columnGap: 22, ...disp, fontSize: cond ? 118 : 100, whiteSpace: 'nowrap', lineHeight: 1.32, color: C.ink}}>
-        {words.map((w, i) => <span key={i} style={{color: hl(i)}}>{w}</span>)}
+      <div style={{position: 'absolute', left: 0, right: 0, top: 50, textAlign: 'center', fontSize: fit(t + g, 1100, 84, 0.62), fontWeight: 800, letterSpacing: '-0.02em', whiteSpace: 'nowrap'}}>
+        {t}{g ? <> <span style={{...pill(RED, '#FFFFFF', fit(t + g, 1100, 84, 0.62)), padding: '0 24px'}}>{g}</span></> : null}</div>
+      {sideCard(a, {left: 110})}
+      {sideCard(b, {right: 110})}
+      <div style={{position: 'absolute', left: 590, top: 342, width: 100, height: 100, borderRadius: 99, background: YEL, fontSize: 38, fontWeight: 800,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(20,24,51,0.18)'}}>VS</div>
+      <Brand brand={brand} center />
+    </>;
+  } else if (style === 'before') {
+    // trước → sau: thẻ nhỏ bên trái, thẻ lớn có đường tăng/giảm bên phải, nhãn vàng dưới (mẫu "$10K → $1.6M")
+    const b0 = before as Side, a0 = after as Side, col = valueColor(a0.value) === RED || a0.tone === 'down' ? RED : GREEN;
+    body = <>
+      <div style={{position: 'absolute', left: 64, top: 150, width: 330, height: 300, ...card, textAlign: 'center', paddingTop: 44}}>
+        <div style={{fontSize: 30, fontWeight: 700, color: MUTED, whiteSpace: 'nowrap'}}>{nb(b0.label)}</div>
+        <div style={{...big, fontSize: fit(b0.value, 290, 118, 0.6), color: INK, marginTop: 20}}>{nb(b0.value)}</div>
       </div>
-      <div style={{position: 'absolute', left: 64, right: 64, top: 400, display: 'flex', alignItems: 'center', gap: 18}}>
-        {vs.map((x, i) => <React.Fragment key={i}>
-          {i ? <div style={{fontWeight: 800, fontSize: 40, color: C.muted, flexShrink: 0}}>VS</div> : null}
-          <div style={{flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 14, padding: '20px 22px', borderRadius: 26,
-            background: '#FFFFFF', border: `1px solid ${C.line}`, boxShadow: '0 14px 40px rgba(40,50,110,0.14)'}}>
-            {x.logo ? <Img src={staticFile(x.logo)} style={{width: 64, height: 64, borderRadius: 99, flexShrink: 0}} /> : null}
-            <div style={{fontWeight: 800, fontSize: 32, color: C.ink}}>{x.label}</div>
-            <div style={{flex: 1}} />
-            <div style={{...disp, fontSize: cond ? 100 : 82, color: x.tone === 'down' ? RED : x.tone === 'up' ? GREEN : C.ink, whiteSpace: 'nowrap'}}>{x.value}</div>
-          </div></React.Fragment>)}
+      <svg style={{position: 'absolute', left: 418, top: 250}} width="150" height="100"><path d="M10 50 H125 M95 18 L132 50 L95 82" fill="none" stroke={INK}
+        strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      <div style={{position: 'absolute', left: 592, top: 64, width: 624, height: 470, ...card, overflow: 'hidden'}}>
+        <div style={{position: 'absolute', left: 44, top: 40, fontSize: 30, fontWeight: 700, color: MUTED, whiteSpace: 'nowrap'}}>{nb(a0.label)}</div>
+        <div style={{position: 'absolute', left: 38, top: 84, ...big, fontSize: fit(a0.value, 550, 170, 0.6), color: col}}>{nb(a0.value)}</div>
+        <Curve w={624} h={220} color={col} down={col === RED} />
       </div>
-      {tag ? <div style={{position: 'absolute', left: 64, top: 574, padding: '12px 26px', borderRadius: 16, background: accent, color: '#FFFFFF', fontWeight: 800,
-        fontSize: 38, letterSpacing: 1}}>{tag.toUpperCase()}</div> : null}
+      {t ? <div style={{position: 'absolute', left: 64, top: 560}}><span style={pill(YEL, INK, fit(t, 900, 44, 0.6))}>{t}</span></div> : null}
+      {projectLogo ? <Img src={staticFile(projectLogo)} style={{position: 'absolute', right: 64, top: 566, height: 84, maxWidth: 220, objectFit: 'contain'}} />
+        : <Brand brand={brand} right={64} />}
     </>;
   } else {
-    // classic: chữ trái, danh sách tick hoặc logo dự án bên phải; số liệu và nhãn phụ xếp dọc, không đè nhau
+    // question: câu hỏi/khẳng định lớn bên trái, nhãn vàng, chủ thể tròn bên phải (mẫu "Nếu bắt đầu lại từ $0")
+    const main = stat || t, sub = stat ? t : '';
     body = <>
-      <div style={{position: 'absolute', left: 64, top: 150, width: points.length ? 720 : 1000, display: 'flex', flexWrap: 'wrap', columnGap: 22, ...disp,
-        fontSize: (points.length ? 68 : len > 28 ? 72 : len > 18 ? 84 : 96) * (cond ? 1.2 : 1), lineHeight: 1.32, rowGap: 6, color: C.ink}}>
-        {words.map((w, i) => <span key={i} style={{color: hl(i)}}>{w}</span>)}
-      </div>
-      {points.length ? <div style={{position: 'absolute', right: 56, top: 170, width: 410, padding: '30px 30px', borderRadius: 26,
-        background: '#FFFFFF', border: `1px solid ${C.line}`, boxShadow: '0 18px 50px rgba(40,50,110,0.12)', display: 'flex', flexDirection: 'column', gap: 22}}>
-        {points.map((p, i) => <div key={i} style={{display: 'flex', alignItems: 'center', gap: 16}}>
-          <div style={{width: 44, height: 44, borderRadius: 12, background: accent, color: '#FFFFFF', fontSize: 30, fontWeight: 800,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>✓</div>
-          <div style={{color: C.ink, fontWeight: 700, fontSize: 30, lineHeight: 1.15}}>{p}</div>
-        </div>)}
-      </div> : projectLogo ? <Img src={staticFile(projectLogo)} style={{position: 'absolute', right: 110, top: 200, width: 300, height: 300, borderRadius: '50%',
-        boxShadow: `0 0 0 10px ${accent}55, 0 18px 50px rgba(40,50,110,0.15)`}} /> : null}
-      {icon !== 'none' && !points.length && !projectLogo ? <div style={{position: 'absolute', right: warn ? 160 : 110, top: warn ? 230 : 180}}><Sticker kind={icon} size={260} color={accent} rotate={-10} /></div> : null}
-      <div style={{position: 'absolute', left: 64, bottom: 56, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 14}}>
-        {tag ? <div style={{padding: '10px 24px', borderRadius: 14, background: `${accent}18`, border: `2px solid ${accent}`, color: accent, fontWeight: 800, fontSize: 34}}>
-          {tag.toUpperCase()}</div> : null}
-        {stat ? <div style={{padding: '6px 28px', borderRadius: 20, background: '#FFFFFF', border: `4px solid ${valueColor(stat) === C.ink ? accent : valueColor(stat)}`,
-          ...disp, fontSize: 92, lineHeight: 1.15, color: valueColor(stat) === C.ink ? accent : valueColor(stat)}}>{stat}</div> : null}
-      </div>
+      {k ? <div style={{position: 'absolute', left: 64, top: 80, fontSize: fit(k, 640, 60, 0.58), fontWeight: 700, color: MUTED, whiteSpace: 'nowrap'}}>{k}</div> : null}
+      <div style={{position: 'absolute', left: 58, top: 160, ...big, fontSize: fit(main, 660, 230, 0.6), color: stat ? valueColor(stat) : INK}}>{nb(main)}</div>
+      {sub ? <div style={{position: 'absolute', left: 64, top: 392, fontSize: fit(sub, 640, 72, 0.6), fontWeight: 800, letterSpacing: '-0.02em', whiteSpace: 'nowrap'}}>{sub}</div> : null}
+      {g ? <div style={{position: 'absolute', left: 64, top: sub ? 482 : 420}}><span style={{...pill(YEL, INK, fit(g, 640, sub ? 76 : 84, 0.6)), letterSpacing: '-0.03em'}}>{g}</span></div> : null}
+      {vs.length ? <div style={{position: 'absolute', right: 64, top: 90, width: 420, ...card, padding: '34px 38px'}}>
+        {vs.slice(0, 2).map((x, i) => <div key={i} style={{display: 'flex', alignItems: 'center', gap: 22, marginTop: i ? 26 : 0, paddingTop: i ? 26 : 0,
+          borderTop: i ? '2px solid #EEF0F7' : 'none'}}>
+          {x.logo ? <Img src={staticFile(x.logo)} style={{width: 96, height: 96, borderRadius: 99}} /> : <div style={{fontSize: 40, fontWeight: 800}}>{nb(x.label)}</div>}
+          <span style={{...big, fontSize: fit(x.value, 250, 76, 0.6), color: sideColor(x)}}>{nb(x.value)}</span></div>)}
+      </div> : <div style={{position: 'absolute', right: 110, top: 110}}><Hero src={projectLogo} size={400} accent={accent} /></div>}
+      <Brand brand={brand} right={vs.length ? 64 : undefined} />
     </>;
   }
   return (
     <AccentCtx.Provider value={accent}>
-      <AbsoluteFill style={{background: C.bg, fontFamily: FONT, overflow: 'hidden'}}>
-        {bgLayer}
-        {brandRow}
+      <AbsoluteFill style={{fontFamily: FONT, fontWeight: 800, color: INK, overflow: 'hidden',
+        background: `radial-gradient(ellipse 60% 70% at 85% 30%, ${accent}21, transparent 70%), #F6F7FC`}}>
+        <AbsoluteFill style={{backgroundImage: 'linear-gradient(rgba(79,91,213,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(79,91,213,0.06) 1px, transparent 1px)',
+          backgroundSize: '64px 64px'}} />
         {body}
-        {warn ? <Tape text="CẢNH BÁO" /> : null}
-        {handle}
       </AbsoluteFill>
     </AccentCtx.Provider>
   );

@@ -227,7 +227,9 @@ Trả về DUY NHẤT JSON:
   "outro": "tổng kết 2-3 ý chính + nhắc không phải lời khuyên đầu tư + mời đăng ký (~280 ký tự)",
   "shorts": [số thứ tự (bắt đầu từ 0) của 2-3 section hay nhất để cắt video ngắn],
   "short_hooks": {{"số thứ tự section": "câu hook ≤ 12 từ đọc ~2 giây"}},
-  "thumb_text": "3-5 từ IN HOA cho ảnh bìa", "thumb_stat": "con số ngắn cho ảnh bìa, có thể trống"}}
+  "thumb_stat": "1 con số gây sốc làm nhân vật chính ảnh bìa (vd -$6T, 79%, $0), gần như bắt buộc",
+  "thumb_text": "câu hỏi/lời hứa ≤ 24 ký tự, viết thường có dấu như câu nói, không IN HOA cả câu, nên kết bằng ? (vd Cú rũ hay sụp đổ?), không lặp y nguyên tiêu đề",
+  "thumb_tag": "nhãn nổi ≤ 24 ký tự (vd CÙNG ĐỎ, đúng 1 thứ)", "thumb_kicker": "dòng nhỏ phía trên ≤ 30 ký tự, có thể trống (vd Cổ phiếu, vàng, crypto)"}}
 Số section: 3 đến {max_sections}."""
 
 

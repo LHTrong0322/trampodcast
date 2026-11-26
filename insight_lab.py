@@ -54,7 +54,13 @@ beat đầu gắn vào câu đầu của phần; thẻ question chỉ đứng �
 cả video có ít nhất 1 beat race hoặc chart khi nói về giá (race cho so sánh 2 coin cùng kỳ, days "ytd" nếu nói "từ đầu năm");
 lời đọc nói "N thứ/điều/bước" thì flow phải đủ đúng N steps; outro_points đúng bằng số câu đã hứa ở hook;
 mỗi phần theo khuôn: câu hỏi 1 câu → 1 con số → 1 ví dụ coin thật → kết luận 1 dòng; nói thẳng "Câu 3: ..." thay vì câu đệm "Câu hỏi thứ ba là".
-Ảnh bìa: thumb_text ≤ 24 ký tự, thêm "thumb_tag" (vd "4 CÂU HỎI TRƯỚC KHI MUA"), so sánh thì điền "thumb_vs".
+Ảnh bìa (Trọng 26/11, kiểu viral sạch: 1 con số làm nhân vật chính, chữ ít, câu hỏi gây tò mò, nhãn vàng nổi):
+  thumb_stat = 1 con số gây sốc (vd "-$6T", "79%", "$0"); thumb_text = câu hỏi/lời hứa ≤ 24 ký tự, viết thường có dấu như câu nói,
+  không IN HOA cả câu, nên kết bằng "?", không lặp y nguyên tiêu đề; thumb_tag = nhãn nổi ≤ 24 ký tự (vd "CÙNG ĐỎ", "đúng 1 thứ", "vẫn lỗ?");
+  thumb_kicker = dòng nhỏ phía trên ≤ 30 ký tự (vd "Nếu bắt đầu lại từ"); thumb_points = tối đa 3 chip 1-2 từ;
+  so sánh 2 phía thì điền "thumb_vs"; câu chuyện trước/sau thì điền "thumb_before" và "thumb_after" dạng {"label", "value"}
+  (vd {"label": "Mỗi năm bỏ vào", "value": "$10K"} và {"label": "Sau 30 năm", "value": "$1.6M"}).
+  Có thể chỉ định "thumb_style": stat | pill | vs | before | question.
 Tiêu đề short (short_hooks) phải có con số hoặc dấu hỏi, ≤ 60 ký tự, tự đứng được một mình.
 Gợi ý chọn data.type: nói về tâm lý thị trường → fear_greed; về altcoin vs bitcoin, dòng tiền → dominance;
 về coin cụ thể → coin_chart; so sánh 2-4 thứ có số → stat_compare (điền items); danh sách việc cần làm /
@@ -80,7 +86,7 @@ quan trọng vừa xảy ra, đăng TikTok/Shorts/Reels. Viết ĐÚNG 1 phần 
   Mỗi con số trong lời đọc có đúng 1 thẻ hiện cùng lúc; thẻ chữ không khẳng định mạnh hơn nguồn.
 - short_title: tiêu đề hiện trên đầu short, ≤ 44 ký tự (tối đa 2 dòng), có con số.
 - hook, intro, outro giữ thật ngắn (intro 1 câu, outro 1 câu "không phải lời khuyên đầu tư"); chúng chỉ dùng cho bản 16:9 phụ.
-- title ≤ 70 ký tự kiểu tin nóng, có con số; thumb_text ≤ 24 ký tự; thumb_tag "TIN NÓNG".
+- title ≤ 70 ký tự kiểu tin nóng, có con số; thumb_text ≤ 24 ký tự (viết thường có dấu, nên là câu hỏi); thumb_stat là con số sốc nhất; thumb_tag "TIN NÓNG".
 """
 
 # Nội dung chủ kênh cấm đưa vào video (Trọng chốt 20/11): đoạn ENA/Ethena tăng 95% trong 14 ngày

@@ -150,7 +150,18 @@ def lint(plan: dict) -> list[str]:
     if len(tt) > 24:
         bad.append(f"Chữ ảnh bìa '{tt}' dài {len(tt)} ký tự, nên tối đa 24 để đọc được khi thu nhỏ.")
     if plan.get("thumb_vs") and not plan.get("thumb_tag"):
-        bad.append("Ảnh bìa có bảng so sánh nhưng thiếu nhãn phụ thumb_tag (vd '4 CÂU HỎI TRƯỚC KHI MUA').")
+        bad.append("Ảnh bìa có bảng so sánh nhưng thiếu nhãn phụ thumb_tag (vd 'vẫn lỗ?').")
+    # Trọng 26/11: ảnh bìa kiểu viral sạch (remotion/src/Thumb.tsx)
+    letters = re.sub(r"[^A-Za-zÀ-ỹ]", "", tt)
+    if len(letters) >= 8 and letters == letters.upper():
+        bad.append(f"Chữ ảnh bìa '{tt}' đang IN HOA cả câu, kiểu mới viết thường có dấu như câu nói (vd 'Cú rũ hay sụp đổ?').")
+    if not (plan.get("thumb_stat") or plan.get("thumb_vs") or plan.get("thumb_before")):
+        bad.append("Ảnh bìa thiếu con số làm nhân vật chính: điền thumb_stat (vd '-$6T', '79%') hoặc thumb_vs / thumb_before + thumb_after.")
+    if bool(plan.get("thumb_before")) != bool(plan.get("thumb_after")):
+        bad.append("Ảnh bìa trước/sau phải điền đủ cả thumb_before và thumb_after.")
+    for key, lim in (("thumb_tag", 24), ("thumb_kicker", 30)):
+        if len(str(plan.get(key) or "")) > lim:
+            bad.append(f"{key} '{plan[key]}' dài {len(str(plan[key]))} ký tự, tối đa {lim}.")
     for key, h in (plan.get("short_hooks") or {}).items():
         if not re.search(r"\d|\?", h):
             bad.append(f"Tiêu đề short phần {int(key) + 1} '{h}' không có con số hay câu hỏi, khó gây tò mò.")
