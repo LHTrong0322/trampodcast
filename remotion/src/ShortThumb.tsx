@@ -79,7 +79,7 @@ export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat = '', label = 
           </div>
         ) : stat ? (
           <div style={{position: 'absolute', left: 70, right: 70, top: Math.max(below, 820), ...card, padding: '44px 50px 48px', textAlign: 'left'}}>
-            <div style={{fontSize: fit(stat, 840, 280, 0.6), lineHeight: 1, letterSpacing: '-0.05em', whiteSpace: 'nowrap', color: valueColor(stat) === INK ? accent : valueColor(stat)}}>{stat}</div>
+            <div style={{fontSize: fit(stat, 820, 280, /%|tháng|năm/.test(stat) ? 0.7 : 0.62), lineHeight: 1, letterSpacing: '-0.05em', whiteSpace: 'nowrap', color: valueColor(stat) === INK ? accent : valueColor(stat)}}>{stat}</div>
             {label ? <div style={{marginTop: 20, fontSize: fit(label, 840, 46, 0.55), fontWeight: 700, color: MUTED, lineHeight: 1.2}}>{label}</div> : null}
           </div>
         ) : points.length ? null : (
