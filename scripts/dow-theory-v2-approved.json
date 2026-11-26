@@ -1,0 +1,534 @@
+{
+ "title": "Phân tích kỹ thuật từ số 0: đọc xu hướng BTC theo lý thuyết Dow",
+ "video_series": "Phân tích kỹ thuật",
+ "description": "Bài học phân tích kỹ thuật từ số 0 với BTC thật: đỉnh và đáy (higher high, higher low), khung thời gian theo lý thuyết Dow (thuỷ triều, sóng, gợn), hỗ trợ và kháng cự (sàn bị thủng thành trần), volume và dòng tiền xác nhận, gộp thành checklist 3 bước cho BTC tháng 11/2026.",
+ "theme": "Phân tích kỹ thuật",
+ "own_source": true,
+ "source_post": {
+  "author": "Smart Penguin Insights",
+  "handle": "Trong0322",
+  "url": "https://en.wikipedia.org/wiki/Dow_theory",
+  "title": "Dow theory; BTC price levels 2025 to 2026 (CryptoBriefing, Cryptoticker, investingLive, Cointelegraph)",
+  "text": "Dow theory: primary trend (tide, a year or more), secondary (waves, weeks to months, retracing about 1/3 to 2/3), minor (ripples, days). Uptrend = higher highs and higher lows; trend persists until a definitive reversal; volume must confirm; averages must confirm each other. BTC: all-time high above $126,000 in October 2025. September 21, 2026 high $87,374. 2026 low $57,717 on July 1. BTC fell below $72,000 and its 200-day moving average in mid November 2026. November 20, 2026 intraday low $57,716, about $2 billion in long positions liquidated in 24 hours. November 21, 2026 low $55,150, below the July low of $57,700; the broken lows now act as resistance, first hurdle $57,700 to $58,559 (July low and June closing low). US spot Bitcoin ETFs $4.94 billion November net outflows, a monthly record (previous $4.51 billion in June). BTC slipped below $59K on November 25."
+ },
+ "hook_screen": "GỒNG HAY THOÁT?",
+ "hook_stat": "$55.2K",
+ "hook_label": "đáy 21/11/2026, từ ATH $126K",
+ "hook": "BTC từ $126K về $55.2K. Phân tích kỹ thuật nói gì: gồng hay thoát?",
+ "hook_beats": [
+  {
+   "at": "BTC từ $126K",
+   "type": "versus",
+   "left": {
+    "label": "ATH 10/2025",
+    "value": "$126K",
+    "tone": "up"
+   },
+   "right": {
+    "label": "Đáy 21/11/2026",
+    "value": "$55.2K",
+    "tone": "down",
+    "note": "-56%"
+   },
+   "hold": 3.5
+  },
+  {
+   "at": "gồng hay thoát",
+   "type": "question",
+   "text": "Gồng hay thoát?"
+  }
+ ],
+ "intro": "Trả lời ngắn trước: theo lý thuyết Dow, BTC vừa xác nhận downtrend. Mốc phải canh là vùng $57.7K đến $58.6K, sàn cũ giờ đã thành trần. Chưa lấy lại vùng này thì chưa có gì để mừng. Chào mừng mọi người quay lại Smart Penguin Insights. Hôm nay mình dạy bạn tự đọc ra mốc như vậy, bằng 3 công cụ phân tích kỹ thuật.",
+ "intro_beats": [
+  {
+   "at": "vừa xác nhận downtrend",
+   "type": "statement",
+   "text": "Theo Dow: BTC xác nhận downtrend"
+  },
+  {
+   "at": "vùng $57.7K đến $58.6K",
+   "type": "bignum",
+   "value": "$57.7K đến $58.6K",
+   "label": "sàn cũ năm 2026, giờ thành trần",
+   "tone": "down",
+   "tone_lock": true
+  }
+ ],
+ "agenda_label": "3 CÔNG CỤ + CHECKLIST",
+ "visual_queries": [
+  "stock market chart trend",
+  "candlestick chart"
+ ],
+ "sections": [
+  {
+   "heading": "Công cụ 1: đỉnh và đáy",
+   "edu": true,
+   "key_stat": "$55.2K",
+   "key_label": "đáy mới 21/11/2026, thấp hơn đáy 1/7",
+   "bullets": [
+    "Đỉnh, đáy cao dần = uptrend",
+    "Đỉnh, đáy thấp dần = downtrend",
+    "BTC: cả đỉnh lẫn đáy đều thấp hơn"
+   ],
+   "narration": "Công cụ thứ nhất: đỉnh và đáy. Đây là nền móng của phân tích kỹ thuật, có từ lý thuyết Dow hơn 100 năm trước. Uptrend là đỉnh sau cao hơn đỉnh trước, đáy sau cao hơn đáy trước. Downtrend thì ngược lại. Nhìn BTC một năm qua. Đỉnh là $126K, tháng 10/2025. Nhịp hồi mạnh nhất năm nay chỉ lên $87.4K, ngày 21/9. Đỉnh thấp hơn. Đáy năm nay là $57.7K, ngày 1/7. Ngày 21/11, BTC thủng xuống $55.2K. Đáy cũng thấp hơn. Đỉnh thấp dần, đáy thấp dần. Theo Dow, đó là downtrend đã được xác nhận. Vậy thì sao? Đừng hỏi giá sẽ về đâu. Hãy hỏi: cấu trúc đỉnh đáy đã đổi chưa?",
+   "beats": [
+    {
+     "at": "Công cụ thứ nhất",
+     "type": "flow",
+     "label": "Đọc xu hướng bằng đỉnh đáy",
+     "steps": [
+      "Uptrend: cao dần",
+      "Downtrend: thấp dần"
+     ],
+     "step_at": [
+      "Uptrend là đỉnh sau",
+      "Downtrend thì ngược lại"
+     ]
+    },
+    {
+     "at": "Nhìn BTC một năm qua",
+     "type": "chart",
+     "ticker": "BTC",
+     "days": 365,
+     "label": "BTC 1 năm qua, tới {DATE}",
+     "hold": 4.5
+    },
+    {
+     "at": "chỉ lên $87.4K",
+     "type": "versus",
+     "left": {
+      "label": "Đỉnh 10/2025",
+      "value": "$126K",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Đỉnh 21/9/2026",
+      "value": "$87.4K",
+      "tone": "down",
+      "note": "đỉnh thấp hơn"
+     },
+     "hold": 4
+    },
+    {
+     "at": "thủng xuống $55.2K",
+     "type": "versus",
+     "left": {
+      "label": "Đáy 1/7/2026",
+      "value": "$57.7K",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Đáy 21/11/2026",
+      "value": "$55.2K",
+      "tone": "down",
+      "note": "đáy thấp hơn"
+     },
+     "hold": 4
+    },
+    {
+     "at": "downtrend đã được xác nhận",
+     "type": "statement",
+     "text": "Theo Dow: downtrend đã xác nhận"
+    },
+    {
+     "at": "cấu trúc đỉnh đáy đã đổi chưa",
+     "type": "question",
+     "text": "Cấu trúc đỉnh đáy đã đổi chưa?"
+    }
+   ],
+   "visual_queries": [
+    "stock chart trend lines",
+    "candlestick chart screen"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Công cụ 2: thuỷ triều và con sóng",
+   "edu": true,
+   "key_stat": "43%",
+   "key_label": "nhịp hồi 7 đến 9/2026 so với cả nhịp giảm",
+   "bullets": [
+    "Thuỷ triều: khung tuần",
+    "Con sóng: khung ngày",
+    "Gợn nước: khung giờ"
+   ],
+   "narration": "Công cụ thứ hai: chọn đúng khung thời gian. Dow chia xu hướng làm 3 lớp, như mặt biển. Thuỷ triều là xu hướng chính, xem trên khung tuần, kéo dài nhiều tháng đến nhiều năm. Con sóng là nhịp hồi ngược chiều, vài tuần đến vài tháng, thường lấy lại 1/3 đến 2/3 nhịp trước. Gợn nước là dao động vài ngày, gần như chỉ là nhiễu. Ví dụ thật: từ $57.7K tháng 7, BTC hồi lên $87.4K tháng 9, tăng khoảng 51%. Nghe rất lớn. Nhưng so với cả nhịp giảm từ $126K, nó chỉ lấy lại khoảng 43%. Đúng vùng 1/3 đến 2/3 của một con sóng. Thuỷ triều vẫn đang rút. Vậy thì sao? Trước khi vào lệnh, hãy mở khung tuần trước. Trên khung tuần, chuỗi đỉnh đáy thấp dần của BTC hiện ra rất rõ.",
+   "beats": [
+    {
+     "at": "Công cụ thứ hai",
+     "type": "flow",
+     "label": "3 lớp xu hướng",
+     "steps": [
+      "Thuỷ triều: khung tuần",
+      "Con sóng: khung ngày",
+      "Gợn nước: khung giờ"
+     ],
+     "step_at": [
+      "Thuỷ triều là xu hướng chính",
+      "Con sóng là nhịp hồi",
+      "Gợn nước là dao động"
+     ]
+    },
+    {
+     "at": "1/3 đến 2/3 nhịp trước",
+     "type": "bignum",
+     "value": "1/3 đến 2/3",
+     "label": "mức hồi thường gặp của một con sóng",
+     "tone": "up",
+     "tone_lock": true
+    },
+    {
+     "at": "BTC hồi lên $87.4K",
+     "type": "versus",
+     "left": {
+      "label": "Đáy 7/2026",
+      "value": "$57.7K",
+      "tone": "down"
+     },
+     "right": {
+      "label": "Đỉnh 9/2026",
+      "value": "$87.4K",
+      "tone": "up",
+      "note": "+51%"
+     },
+     "hold": 4
+    },
+    {
+     "at": "chỉ lấy lại khoảng 43%",
+     "type": "bignum",
+     "value": "43%",
+     "label": "phần lấy lại của cả nhịp giảm từ $126K",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "Thuỷ triều vẫn đang rút",
+     "type": "statement",
+     "text": "Con sóng +51%, thuỷ triều vẫn rút"
+    },
+    {
+     "at": "hãy mở khung tuần trước",
+     "type": "wma",
+     "label": "BTC khung tuần",
+     "tag": "Đỉnh đáy thấp dần",
+     "hold": 7
+    }
+   ],
+   "visual_queries": [
+    "ocean tide waves",
+    "sea waves aerial"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Công cụ 3: hỗ trợ và kháng cự",
+   "edu": true,
+   "key_stat": "$57.7K",
+   "key_label": "sàn cả năm 2026, giờ thành trần",
+   "bullets": [
+    "Hỗ trợ: cái sàn",
+    "Kháng cự: cái trần",
+    "Sàn bị thủng = trần mới"
+   ],
+   "narration": "Công cụ thứ ba, và đây là chỗ retail hay mất tiền nhất: hỗ trợ và kháng cự. Hỗ trợ là vùng giá người mua từng đỡ, giống cái sàn. Kháng cự là vùng người bán chờ sẵn, giống cái trần. Quy luật quan trọng nhất: sàn bị thủng sẽ thành trần. Ví dụ, đường MA 200 ngày, tức giá trung bình 200 phiên gần nhất, nằm quanh $72K. Giữa tháng 11, BTC thủng nó, và chưa lấy lại được. Rồi vùng $57.7K đến $58.6K, sàn của cả năm 2026, bị thủng ngày 21/11. Giờ mỗi lần BTC hồi lên vùng này là gặp lực bán. Vậy thì sao? Thấy giá hồi lên sàn cũ, đừng vội nghĩ đáy đã xong. Đó thường là lúc bên bán chờ sẵn.",
+   "beats": [
+    {
+     "at": "chỗ retail hay mất tiền nhất",
+     "type": "statement",
+     "text": "Chỗ retail hay mất tiền nhất"
+    },
+    {
+     "at": "Hỗ trợ là vùng giá",
+     "type": "flow",
+     "label": "Sàn và trần",
+     "steps": [
+      "Hỗ trợ: cái sàn",
+      "Kháng cự: cái trần",
+      "Sàn thủng thành trần"
+     ],
+     "step_at": [
+      "Hỗ trợ là vùng giá",
+      "Kháng cự là vùng",
+      "sàn bị thủng sẽ thành trần"
+     ]
+    },
+    {
+     "at": "nằm quanh $72K",
+     "type": "bignum",
+     "value": "$72K",
+     "label": "MA 200 ngày, BTC thủng giữa tháng 11/2026",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "vùng $57.7K đến $58.6K",
+     "type": "bignum",
+     "value": "$57.7K đến $58.6K",
+     "label": "sàn cả năm 2026, thủng ngày 21/11",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "mỗi lần BTC hồi lên vùng này",
+     "type": "chart",
+     "ticker": "BTC",
+     "days": 30,
+     "label": "BTC 30 ngày, tới {DATE}",
+     "hold": 5
+    },
+    {
+     "at": "đừng vội nghĩ đáy đã xong",
+     "type": "statement",
+     "text": "Hồi lên sàn cũ ≠ đáy đã xong"
+    }
+   ],
+   "visual_queries": [
+    "floor and ceiling building",
+    "staircase concrete"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Volume: cú thủng thật hay bẫy",
+   "edu": true,
+   "key_stat": "$4.94B",
+   "key_label": "ETF Bitcoin rút ròng tháng 11/2026, kỷ lục",
+   "bullets": [
+    "Giá + volume lớn = tiền thật",
+    "Volume teo = dễ là bẫy",
+    "Dòng tiền phải cùng chiều"
+   ],
+   "narration": "Có đỉnh đáy, có hỗ trợ kháng cự rồi, làm sao biết một cú thủng là thật? Dow trả lời: nhìn volume, tức khối lượng giao dịch. Giá đi kèm volume lớn là có tiền thật đứng sau. Giá đi mà volume teo, rất dễ là bẫy. Cú thủng ngày 20 và 21/11 đi kèm bán tháo rất mạnh. Khoảng $2B lệnh long, tức lệnh cược tăng, bị thanh lý chỉ trong một ngày. Dòng tiền lớn cũng đi cùng chiều: ETF Bitcoin bị rút ròng $4.94B trong tháng 11, kỷ lục mới. Đây là phép thử thứ hai của Dow: các tín hiệu phải xác nhận lẫn nhau. Vậy thì sao? Cú thủng có volume lớn và dòng tiền cùng chiều thì nên tôn trọng. Còn nhịp hồi mà volume mỏng thì đừng vội đuổi theo.",
+   "beats": [
+    {
+     "at": "làm sao biết một cú thủng là thật",
+     "type": "chart",
+     "ticker": "BTC",
+     "days": 14,
+     "label": "BTC 14 ngày, cú thủng 20 và 21/11",
+     "hold": 4.5
+    },
+    {
+     "at": "Giá đi kèm volume lớn",
+     "type": "statement",
+     "text": "Giá + volume lớn = tiền thật"
+    },
+    {
+     "at": "volume teo, rất dễ là bẫy",
+     "type": "statement",
+     "text": "Giá đi, volume teo = dễ là bẫy"
+    },
+    {
+     "at": "Khoảng $2B lệnh long",
+     "type": "bignum",
+     "value": "$2B",
+     "label": "lệnh long bị thanh lý quanh 20/11/2026",
+     "source": "Nguồn: Crypto Briefing",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "rút ròng $4.94B",
+     "type": "bignum",
+     "value": "$4.94B",
+     "label": "ETF Bitcoin rút ròng tháng 11/2026, kỷ lục",
+     "source": "Nguồn: Cointelegraph",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "các tín hiệu phải xác nhận lẫn nhau",
+     "type": "statement",
+     "text": "Giá, volume, dòng tiền cùng chiều"
+    },
+    {
+     "at": "nhịp hồi mà volume mỏng",
+     "type": "statement",
+     "text": "Hồi mà volume mỏng: đừng đuổi"
+    }
+   ],
+   "visual_queries": [
+    "trading volume chart",
+    "stock exchange crowd"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Gộp lại: checklist cho BTC lúc này",
+   "edu": true,
+   "key_stat": "3",
+   "key_label": "bước đọc xu hướng trước khi vào lệnh",
+   "bullets": [
+    "Khung tuần: đỉnh đáy thấp dần",
+    "Mốc: trần $58.6K, đáy $55.2K",
+    "Volume, dòng tiền cùng chiều?"
+   ],
+   "narration": "Gộp 3 công cụ lại thành checklist 3 bước. Một: khung tuần, đỉnh đáy đang thấp dần, nên xu hướng chính vẫn là giảm. Hai: mốc giá. Trần gần nhất là vùng $57.7K đến $58.6K, trần lớn hơn là $72K. Đáy gần nhất là $55.2K. Ba: volume và dòng tiền có xác nhận cùng chiều không. Theo Dow, downtrend chỉ đổi chiều khi BTC tạo được đáy cao hơn, rồi vượt được đỉnh hồi gần nhất. Trước lúc đó, mọi nhịp hồi chỉ là con sóng. Nhưng nhớ: Dow luôn xác nhận muộn, thường bỏ lỡ phần đầu và phần cuối con sóng. Hãy dùng nó như la bàn, không phải quả cầu pha lê.",
+   "beats": [
+    {
+     "at": "checklist 3 bước",
+     "type": "flow",
+     "label": "Checklist 3 bước",
+     "steps": [
+      "Khung tuần",
+      "Mốc giá",
+      "Volume"
+     ],
+     "step_at": [
+      "Một: khung tuần",
+      "Hai: mốc giá",
+      "Ba: volume"
+     ]
+    },
+    {
+     "at": "Trần gần nhất",
+     "type": "versus",
+     "left": {
+      "label": "Trần gần nhất",
+      "value": "$58.6K",
+      "tone": "down"
+     },
+     "right": {
+      "label": "Đáy gần nhất",
+      "value": "$55.2K",
+      "tone": "down"
+     },
+     "hold": 4.5
+    },
+    {
+     "at": "downtrend chỉ đổi chiều",
+     "type": "statement",
+     "text": "Đáy cao hơn + vượt đỉnh hồi = đổi chiều"
+    },
+    {
+     "at": "Trước lúc đó, mọi nhịp hồi",
+     "type": "statement",
+     "text": "Trước đó: mọi nhịp hồi là sóng"
+    },
+    {
+     "at": "Dow luôn xác nhận muộn",
+     "type": "statement",
+     "text": "Điểm yếu: Dow xác nhận muộn"
+    },
+    {
+     "at": "như la bàn",
+     "type": "statement",
+     "text": "La bàn, không phải quả cầu pha lê"
+    }
+   ],
+   "visual_queries": [
+    "compass navigation",
+    "checklist notebook"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  }
+ ],
+ "outro": "Tóm lại: đỉnh đáy cho bạn xu hướng, hỗ trợ kháng cự cho bạn mốc giá, volume cho bạn biết cú nào là thật. Đây là nội dung giáo dục, không phải lời khuyên đầu tư. Bình luận cho mình biết: tháng 12, BTC có lấy lại được $58.6K không? Có hay không?",
+ "outro_points": [
+  "Đỉnh đáy: xu hướng",
+  "Hỗ trợ, kháng cự: mốc giá",
+  "Volume: cú nào là thật"
+ ],
+ "outro_cta": "BTC LẤY LẠI $58.6K? CÓ HAY KHÔNG",
+ "shorts": [
+  2,
+  1
+ ],
+ "short_spans": [
+  {
+   "from": "Quy luật quan trọng nhất",
+   "to": "bên bán chờ sẵn"
+  },
+  {
+   "from": "Ví dụ thật: từ $57.7K",
+   "to": "Thuỷ triều vẫn đang rút"
+  }
+ ],
+ "short_hooks": {
+  "2": "Sàn $57.7K bị thủng: giờ thành trần?",
+  "1": "BTC hồi +51% mà vẫn là downtrend?"
+ },
+ "short_cta": "BTC lấy lại $58.6K không? Bình luận có hay không!",
+ "thumb_stat": "$55.2K",
+ "thumb_text": "gồng hay thoát?",
+ "thumb_tag": "phân tích kỹ thuật",
+ "thumb_kicker": "Lý thuyết Dow, BTC thật",
+ "thumb_before": {
+  "label": "ATH 10/2025",
+  "value": "$126K",
+  "logo": "BTC"
+ },
+ "thumb_after": {
+  "label": "21/11/2026",
+  "value": "$55.2K",
+  "logo": "BTC"
+ },
+ "thumb_logo": "BTC",
+ "thumb_icon": "down",
+ "thumb_points": []
+}
