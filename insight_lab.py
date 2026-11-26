@@ -58,8 +58,8 @@ mỗi phần theo khuôn: câu hỏi 1 câu → 1 con số → 1 ví dụ coin t
   thumb_stat = 1 con số gây sốc (vd "-$6T", "79%", "$0"); thumb_text = câu hỏi/lời hứa ≤ 24 ký tự, viết thường có dấu như câu nói,
   không IN HOA cả câu, nên kết bằng "?", không lặp y nguyên tiêu đề; thumb_tag = nhãn nổi ≤ 24 ký tự (vd "CÙNG ĐỎ", "đúng 1 thứ", "vẫn lỗ?");
   thumb_kicker = dòng nhỏ phía trên ≤ 30 ký tự (vd "Nếu bắt đầu lại từ"); thumb_points = tối đa 3 chip 1-2 từ;
-  so sánh 2 phía thì điền "thumb_vs"; câu chuyện trước/sau thì điền "thumb_before" và "thumb_after" dạng {"label", "value"}
-  (vd {"label": "Mỗi năm bỏ vào", "value": "$10K"} và {"label": "Sau 30 năm", "value": "$1.6M"}).
+  so sánh 2 phía thì điền "thumb_vs"; câu chuyện trước/sau thì điền "thumb_before" và "thumb_after" dạng {{"label", "value"}}
+  (vd {{"label": "Mỗi năm bỏ vào", "value": "$10K"}} và {{"label": "Sau 30 năm", "value": "$1.6M"}}).
   Có thể chỉ định "thumb_style": stat | pill | vs | before | question.
 Tiêu đề short (short_hooks) phải có con số hoặc dấu hỏi, ≤ 60 ký tự, tự đứng được một mình.
 Gợi ý chọn data.type: nói về tâm lý thị trường → fear_greed; về altcoin vs bitcoin, dòng tiền → dominance;
