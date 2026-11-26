@@ -21,14 +21,26 @@ const Icon: React.FC<{kind: ThumbIcon; size: number; color: string}> = ({kind, s
   const s = size;
   const stroke = {stroke: C.ink, strokeWidth: s * 0.035, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const};
   switch (kind) {
-    case 'crack':   // bong bóng nứt vỡ
+    case 'crack': {   // bong bóng vỡ đôi (Trọng 26/11: bản nét mảnh cũ trông xấu): 2 nửa tách ra theo đường răng cưa, mảnh vụn bay giữa
+      const zig = 'M52 4 L44 26 L56 40 L42 56 L55 70 L46 96';
+      const L = `${zig} L-10 96 L-10 4 Z`, R = `${zig} L110 96 L110 4 Z`;
       return <svg width={s} height={s} viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="40" fill={`${color}22`} stroke={color} strokeWidth="5" />
-        <ellipse cx="36" cy="34" rx="9" ry="5" fill="#FFFFFF" opacity="0.9" transform="rotate(-35 36 34)" />
-        <path d="M50 10 L46 30 L58 40 L44 55 L56 66 L50 90" fill="none" stroke={RED} strokeWidth="5" strokeLinejoin="round" />
-        <path d="M58 40 L74 36 M44 55 L28 60" fill="none" stroke={RED} strokeWidth="4" />
-        <path d="M86 18 l6 -4 M90 30 l7 1 M14 80 l-6 5" stroke={color} strokeWidth="4" strokeLinecap="round" />
+        <defs>
+          <radialGradient id="bblF" cx="35%" cy="30%" r="75%"><stop offset="0" stopColor="#FFFFFF" /><stop offset="0.55" stopColor={`${color}33`} /><stop offset="1" stopColor={`${color}66`} /></radialGradient>
+          <clipPath id="bblL"><path d={L} /></clipPath><clipPath id="bblR"><path d={R} /></clipPath><clipPath id="bblC"><circle cx="50" cy="50" r="38" /></clipPath>
+        </defs>
+        <g transform="translate(-7 3) rotate(-8 50 50)" clipPath="url(#bblL)">
+          <circle cx="50" cy="50" r="38" fill="url(#bblF)" stroke={color} strokeWidth="4" />
+          <ellipse cx="34" cy="32" rx="9" ry="5" fill="#FFFFFF" transform="rotate(-35 34 32)" />
+          <path d={zig} fill="none" stroke={color} strokeWidth="4" strokeLinejoin="round" clipPath="url(#bblC)" />
+        </g>
+        <g transform="translate(7 -3) rotate(8 50 50)" clipPath="url(#bblR)">
+          <circle cx="50" cy="50" r="38" fill="url(#bblF)" stroke={color} strokeWidth="4" />
+          <path d={zig} fill="none" stroke={color} strokeWidth="4" strokeLinejoin="round" clipPath="url(#bblC)" />
+        </g>
+        <path d="M46 30 l9 3 l-6 7 Z" fill={RED} /><path d="M50 62 l8 -1 l-3 8 Z" fill={AMBER} />
       </svg>;
+    }
     case 'down':
       return <svg width={s} height={s} viewBox="0 0 100 100">
         <path d="M8 22 L36 48 L52 36 L86 76" fill="none" stroke={RED} strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
