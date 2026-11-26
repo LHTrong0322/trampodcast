@@ -10,6 +10,14 @@ on:
         description: "Thư mục trong nhánh lab-renders (để trống = gửi Release có sẵn)"
         required: false
         default: ""
+      main_only:
+        description: "1 = chỉ gửi bản chính (bỏ file -nhap-)"
+        required: false
+        default: ""
+      header:
+        description: "Tin nhắn mở đầu gửi trước các file"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -30,4 +38,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          MAIN_ONLY: ${{ github.event.inputs.main_only }}
+          HEADER: ${{ github.event.inputs.header }}
         run: python tg_send_release.py "${{ github.event.inputs.tag }}" "${{ github.event.inputs.renders_dir }}"

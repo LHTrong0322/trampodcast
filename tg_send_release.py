@@ -28,6 +28,10 @@ caps = json.loads((d / "captions.json").read_text(encoding="utf-8")) if (d / "ca
 token, chat = os.environ["TELEGRAM_BOT_TOKEN"], os.environ["TELEGRAM_CHAT_ID"]
 api = f"https://api.telegram.org/bot{token}"
 order = caps.get("_order") or sorted(p.name for p in d.iterdir())
+if os.environ.get("MAIN_ONLY") == "1":   # Trọng 27/11: gửi lại để chọn lịch thì chỉ gửi bản chính, bỏ bản nháp giọng dự phòng
+    order = [n for n in order if "-nhap-" not in n]
+if os.environ.get("HEADER"):
+    requests.post(f"{api}/sendMessage", data={"chat_id": chat, "text": nodash(os.environ["HEADER"])[:3900]}, timeout=60)
 for name in order:
     p = d / name
     if not p.exists() or p.suffix not in (".mp4", ".png", ".jpg"):
