@@ -1,0 +1,589 @@
+{
+ "title": "Lý thuyết Dow: 6 nguyên lý nền móng của phân tích kỹ thuật",
+ "video_series": "Phân tích kỹ thuật",
+ "theme": "Phân tích kỹ thuật",
+ "own_source": true,
+ "description": "Bài học phân tích kỹ thuật từ số 0: lý thuyết Dow và 6 nguyên lý nền móng. Giá phản ánh tất cả, 3 loại xu hướng (thuỷ triều, sóng, gợn), 3 giai đoạn của xu hướng chính, các chỉ số phải xác nhận nhau, volume xác nhận xu hướng, xu hướng còn cho tới khi đảo chiều rõ. Vì sao lý thuyết Dow quan trọng với cả trading lẫn đầu tư, và điểm yếu cần biết.",
+ "source_post": {
+  "author": "Smart Penguin Insights",
+  "handle": "Trong0322",
+  "url": "https://en.wikipedia.org/wiki/Dow_theory",
+  "title": "Dow theory (Wikipedia, Britannica); BTC examples",
+  "text": "Dow theory was derived from Wall Street Journal editorials by Charles H. Dow (1851 to 1902), co-founder of Dow Jones & Company, and later formalized by William Hamilton and Robert Rhea. Six tenets: 1) the market discounts everything; 2) the market has three trends: primary (tide, a year or more), secondary (waves, weeks to months, retracing about 1/3 to 2/3 of the prior move), minor (ripples, days); 3) primary trends have three phases: accumulation, public participation, distribution; 4) the averages must confirm each other (industrials and rails/transports); 5) volume must confirm the trend (rising in the direction of the primary trend); 6) a trend is assumed in effect until it gives definite signals of reversal (a lower high and a break of the prior low). Weakness: signals are lagging and miss the start and end of moves. BTC examples: US spot Bitcoin ETFs approved January 2024, BTC fell about 20% in the following two weeks; June 2022 low about $17.6K, August 2022 rally to about $25K, November 2022 low about $15.5K; late 2022 around $16K; all-time high above $126K October 2025; September 2026 rally high $87.4K; 2026 low $57.7K broken in November 2026."
+ },
+ "hook_screen": "6 NGUYÊN LÝ",
+ "hook_stat": "6",
+ "hook_label": "nguyên lý của lý thuyết Dow",
+ "hook": "Một lý thuyết hơn 120 năm tuổi vẫn là nền móng của mọi chart. Bạn biết đủ 6 nguyên lý của nó chưa?",
+ "hook_beats": [
+  {
+   "at": "hơn 120 năm tuổi",
+   "type": "bignum",
+   "value": "120+",
+   "label": "năm tuổi của lý thuyết Dow",
+   "tone": "up",
+   "tone_lock": true
+  },
+  {
+   "at": "6 nguyên lý",
+   "type": "bignum",
+   "value": "6",
+   "label": "nguyên lý nền móng của phân tích kỹ thuật",
+   "tone": "up",
+   "tone_lock": true
+  }
+ ],
+ "intro": "Tóm tắt trong một câu: lý thuyết Dow dạy bạn đi theo xu hướng chính, và chỉ đổi ý khi thị trường xác nhận rõ ràng. Nó do Charles Dow, người sáng lập tờ Wall Street Journal, viết ra từ những năm 1900. Chào mừng mọi người quay lại Smart Penguin Insights. Mình đi qua đủ 6 nguyên lý, mỗi nguyên lý một ví dụ thật.",
+ "intro_beats": [
+  {
+   "at": "đi theo xu hướng chính",
+   "type": "statement",
+   "text": "Đi theo xu hướng chính, chờ xác nhận rõ"
+  },
+  {
+   "at": "người sáng lập tờ Wall Street Journal",
+   "type": "statement",
+   "text": "Charles Dow, sáng lập Wall Street Journal"
+  }
+ ],
+ "agenda_label": "6 NGUYÊN LÝ",
+ "visual_queries": [
+  "stock market chart trend",
+  "old newspaper finance"
+ ],
+ "sections": [
+  {
+   "heading": "Nguyên lý 1: giá phản ánh tất cả",
+   "edu": true,
+   "key_stat": "-20%",
+   "key_label": "BTC sau ngày ETF spot được duyệt, 1/2024",
+   "bullets": [
+    "Tin, kỳ vọng, nỗi sợ đều đã nằm trong giá",
+    "Tin ra rồi, giá thường đã chạy trước",
+    "Đọc giá trước, đọc tin sau"
+   ],
+   "narration": "Tin tốt vừa ra mà giá lại giảm. Vì sao? Đó là nguyên lý thứ nhất của lý thuyết Dow: giá phản ánh tất cả. Mọi thứ thị trường biết, từ tin tức, kỳ vọng đến nỗi sợ, đều đã nằm trong giá. Ví dụ, tháng 1/2024, ETF Bitcoin spot được duyệt. Tin cực lớn. Ngày 11/1, BTC chạm khoảng $49K. Chỉ 2 tuần sau, giá về khoảng $38.5K, giảm hơn 20%. Vì kỳ vọng đã được mua trước, khi tin ra thì người mua sớm chốt lời. Vậy thì sao? Đừng giao dịch theo tiêu đề báo. Hãy hỏi: giá đang phản ứng với tin đó như thế nào?",
+   "beats": [
+    {
+     "at": "Tin tốt vừa ra mà giá lại giảm",
+     "type": "logos",
+     "label": "Tin tốt ra, giá lại giảm?",
+     "items": [
+      {
+       "logo": "BTC",
+       "label": "Bitcoin"
+      }
+     ]
+    },
+    {
+     "at": "giá phản ánh tất cả",
+     "type": "statement",
+     "text": "Nguyên lý 1: giá phản ánh tất cả"
+    },
+    {
+     "at": "từ tin tức, kỳ vọng đến nỗi sợ",
+     "type": "flow",
+     "label": "Những gì đã nằm trong giá",
+     "steps": [
+      "Tin tức",
+      "Kỳ vọng",
+      "Nỗi sợ"
+     ],
+     "step_at": [
+      "từ tin tức",
+      "kỳ vọng",
+      "nỗi sợ"
+     ]
+    },
+    {
+     "at": "BTC chạm khoảng $49K",
+     "type": "versus",
+     "left": {
+      "label": "11/1/2024",
+      "value": "$49K",
+      "tone": "up"
+     },
+     "right": {
+      "label": "23/1/2024",
+      "value": "$38.5K",
+      "tone": "down",
+      "note": "giảm hơn 20%"
+     },
+     "hold": 4.5
+    },
+    {
+     "at": "người mua sớm chốt lời",
+     "type": "statement",
+     "text": "Mua kỳ vọng, bán khi tin ra"
+    },
+    {
+     "at": "Đừng giao dịch theo tiêu đề báo",
+     "type": "statement",
+     "text": "Đọc phản ứng của giá, không đọc tiêu đề"
+    }
+   ],
+   "visual_queries": [
+    "newspaper headlines finance",
+    "stock ticker board"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Nguyên lý 2: thuỷ triều, sóng và gợn",
+   "edu": true,
+   "key_stat": "3",
+   "key_label": "loại xu hướng chạy cùng lúc",
+   "bullets": [
+    "Xu hướng chính: thuỷ triều, 1 năm trở lên",
+    "Xu hướng phụ: con sóng, vài tuần đến vài tháng",
+    "Xu hướng nhỏ: gợn nước, vài ngày"
+   ],
+   "narration": "Nguyên lý thứ hai: thị trường luôn có 3 xu hướng chạy cùng lúc. Dow ví nó như mặt biển. Xu hướng chính, primary trend, là thuỷ triều, kéo dài từ một năm trở lên. Xu hướng phụ, secondary trend, là con sóng đánh ngược thuỷ triều, vài tuần đến vài tháng, thường lấy lại 1/3 đến 2/3 nhịp trước. Xu hướng nhỏ, minor trend, là gợn nước, vài ngày, gần như chỉ là nhiễu. Ví dụ, giữa năm 2022, BTC hồi từ $17.6K lên $25K, tăng hơn 40%. Nhiều người tưởng uptrend đã quay lại. Nhưng đó chỉ là con sóng, vì vài tháng sau giá về $15.5K. Trên khung tuần, con sóng đó chỉ là một nhịp nhỏ giữa lúc thuỷ triều rút. Vậy thì sao? Người đầu tư dài hạn nhìn thuỷ triều. Trader lướt sóng. Còn ai chạy theo gợn nước thì thường mệt mà không được gì.",
+   "beats": [
+    {
+     "at": "3 xu hướng chạy cùng lúc",
+     "type": "flow",
+     "label": "3 lớp xu hướng của Dow",
+     "steps": [
+      "Thuỷ triều: chính",
+      "Con sóng: phụ",
+      "Gợn nước: nhỏ"
+     ],
+     "step_at": [
+      "primary trend",
+      "secondary trend",
+      "minor trend"
+     ]
+    },
+    {
+     "at": "kéo dài từ một năm trở lên",
+     "type": "bignum",
+     "value": "1 năm+",
+     "label": "độ dài thường gặp của xu hướng chính",
+     "tone": "up",
+     "tone_lock": true
+    },
+    {
+     "at": "1/3 đến 2/3 nhịp trước",
+     "type": "bignum",
+     "value": "1/3 đến 2/3",
+     "label": "mức hồi thường gặp của một con sóng",
+     "tone": "up",
+     "tone_lock": true
+    },
+    {
+     "at": "BTC hồi từ $17.6K lên $25K",
+     "type": "versus",
+     "left": {
+      "label": "Đáy 6/2022",
+      "value": "$17.6K",
+      "tone": "down"
+     },
+     "right": {
+      "label": "Hồi 8/2022",
+      "value": "$25K",
+      "tone": "up",
+      "note": "+40%"
+     },
+     "hold": 4
+    },
+    {
+     "at": "vài tháng sau giá về $15.5K",
+     "type": "bignum",
+     "value": "$15.5K",
+     "label": "đáy 11/2022, sau con sóng hồi",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "Trên khung tuần, con sóng đó",
+     "type": "wma",
+     "label": "BTC khung tuần nhiều năm",
+     "tag": "Thuỷ triều và con sóng",
+     "hold": 7
+    },
+    {
+     "at": "Người đầu tư dài hạn nhìn thuỷ triều",
+     "type": "flow",
+     "label": "Ai nhìn lớp nào",
+     "steps": [
+      "Đầu tư: thuỷ triều",
+      "Trader: con sóng",
+      "Gợn nước: bỏ qua"
+     ],
+     "step_at": [
+      "nhìn thuỷ triều",
+      "Trader lướt sóng",
+      "chạy theo gợn nước"
+     ]
+    }
+   ],
+   "visual_queries": [
+    "ocean tide waves",
+    "sea waves aerial"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Nguyên lý 3: 3 giai đoạn của xu hướng chính",
+   "edu": true,
+   "key_stat": "3",
+   "key_label": "giai đoạn: gom hàng, đám đông vào, xả hàng",
+   "bullets": [
+    "Gom hàng: tin xấu, người hiểu chuyện mua",
+    "Đám đông vào: giá tăng rõ, tin tốt",
+    "Xả hàng: hưng phấn, insider bán ra"
+   ],
+   "narration": "Lúc retail thấy an toàn nhất thường là lúc insider bán ra. Đó là nguyên lý thứ ba: mỗi xu hướng chính đi qua 3 giai đoạn. Một: accumulation, giai đoạn gom hàng. Tin còn xấu, đám đông chán nản, nhưng người hiểu chuyện bắt đầu mua. Hai: public participation, giai đoạn đám đông tham gia. Giá tăng rõ, tin tốt dồn dập, người theo xu hướng vào lệnh. Ba: distribution, giai đoạn xả hàng. Ai cũng bàn về nó, retail FOMO mua đuổi, còn người mua sớm lặng lẽ bán ra. Nhìn lại chu kỳ BTC vừa qua: cuối 2022 giá quanh $16K, gần như không ai muốn mua. Đến tháng 10/2025, giá lên $126K, đúng lúc hưng phấn nhất. Vậy thì sao? Hãy tự hỏi: mình đang mua lúc mọi người chán nản, hay lúc mọi người hưng phấn?",
+   "beats": [
+    {
+     "at": "Lúc retail thấy an toàn nhất",
+     "type": "statement",
+     "text": "An toàn nhất = rủi ro nhất"
+    },
+    {
+     "at": "đi qua 3 giai đoạn",
+     "type": "flow",
+     "label": "3 giai đoạn của xu hướng chính",
+     "steps": [
+      "Gom hàng",
+      "Đám đông vào",
+      "Xả hàng"
+     ],
+     "step_at": [
+      "Một: accumulation",
+      "Hai: public participation",
+      "Ba: distribution"
+     ]
+    },
+    {
+     "at": "retail FOMO mua đuổi",
+     "type": "flow",
+     "label": "Ai mua, ai bán",
+     "steps": [
+      "Retail mua đuổi",
+      "Người mua sớm bán ra"
+     ],
+     "step_at": [
+      "retail FOMO mua đuổi",
+      "người mua sớm lặng lẽ bán ra"
+     ]
+    },
+    {
+     "at": "cuối 2022 giá quanh $16K",
+     "type": "versus",
+     "left": {
+      "label": "Cuối 2022: chán nản",
+      "value": "$16K",
+      "tone": "down"
+     },
+     "right": {
+      "label": "10/2025: hưng phấn",
+      "value": "$126K",
+      "tone": "up"
+     },
+     "hold": 5
+    },
+    {
+     "at": "đúng lúc hưng phấn nhất",
+     "type": "statement",
+     "text": "10/2025: ai cũng bàn về BTC"
+    },
+    {
+     "at": "mình đang mua lúc mọi người chán nản",
+     "type": "question",
+     "text": "Bạn mua lúc chán nản hay hưng phấn?"
+    }
+   ],
+   "visual_queries": [
+    "crowd euphoria",
+    "empty stock exchange"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Nguyên lý 4 và 5: phải có xác nhận",
+   "edu": true,
+   "key_stat": "2",
+   "key_label": "phép thử xác nhận: chỉ số cùng chiều, volume đi cùng giá",
+   "bullets": [
+    "Các chỉ số phải cùng chiều",
+    "Volume phải đi cùng xu hướng",
+    "Thiếu xác nhận: nghi ngờ"
+   ],
+   "narration": "Làm sao biết một xu hướng là thật? Dow đưa ra 2 phép thử. Nguyên lý thứ tư: các chỉ số phải xác nhận lẫn nhau. Thời Dow là chỉ số công nghiệp và chỉ số đường sắt. Nhà máy bán được hàng thì tàu hoả cũng phải chở nhiều hàng. Nếu chỉ số công nghiệp lập đỉnh mới mà đường sắt không theo, xu hướng đó đáng ngờ. Trong crypto, bạn có thể so BTC với ETH và nhóm altcoin. Nguyên lý thứ năm: volume, tức khối lượng giao dịch, phải đi cùng xu hướng. Trong uptrend, nhịp tăng có volume lớn, nhịp giảm có volume nhỏ. Giá vượt đỉnh mà volume teo, rất dễ là cú vượt giả. Vậy thì sao? Một tín hiệu đơn lẻ chưa đủ. Chờ thêm xác nhận, bạn mua chậm hơn một chút, nhưng tránh được rất nhiều cái bẫy.",
+   "beats": [
+    {
+     "at": "Dow đưa ra 2 phép thử",
+     "type": "flow",
+     "label": "2 phép thử xác nhận",
+     "steps": [
+      "Chỉ số cùng chiều",
+      "Volume đi cùng giá"
+     ],
+     "step_at": [
+      "Nguyên lý thứ tư",
+      "Nguyên lý thứ năm"
+     ]
+    },
+    {
+     "at": "Nhà máy bán được hàng",
+     "type": "flow",
+     "label": "Vì sao 2 chỉ số phải cùng chiều",
+     "steps": [
+      "Nhà máy bán hàng",
+      "Tàu chở hàng"
+     ],
+     "step_at": [
+      "Nhà máy bán được hàng",
+      "tàu hoả cũng phải chở"
+     ]
+    },
+    {
+     "at": "mà đường sắt không theo",
+     "type": "statement",
+     "text": "1 chỉ số lập đỉnh, chỉ số kia không theo = đáng ngờ"
+    },
+    {
+     "at": "so BTC với ETH",
+     "type": "logos",
+     "label": "Crypto: so các chỉ số với nhau",
+     "items": [
+      {
+       "logo": "BTC",
+       "label": "Bitcoin"
+      },
+      {
+       "logo": "ETH",
+       "label": "Ethereum"
+      }
+     ]
+    },
+    {
+     "at": "nhịp tăng có volume lớn",
+     "type": "statement",
+     "text": "Uptrend: tăng volume lớn, giảm volume nhỏ"
+    },
+    {
+     "at": "rất dễ là cú vượt giả",
+     "type": "statement",
+     "text": "Vượt đỉnh, volume teo = dễ là vượt giả"
+    },
+    {
+     "at": "Chờ thêm xác nhận",
+     "type": "statement",
+     "text": "Chậm hơn một chút, tránh nhiều cái bẫy"
+    }
+   ],
+   "visual_queries": [
+    "freight train railway",
+    "factory production line"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Nguyên lý 6: xu hướng còn cho tới khi đảo chiều rõ",
+   "edu": true,
+   "key_stat": "6",
+   "key_label": "nguyên lý của lý thuyết Dow",
+   "bullets": [
+    "Đỉnh, đáy cao dần = uptrend",
+    "Đỉnh thấp hơn + thủng đáy = đảo chiều",
+    "Dow chậm: la bàn, không phải quả cầu pha lê"
+   ],
+   "narration": "Nguyên lý cuối cùng, và là nguyên lý giúp bạn giữ tiền: xu hướng vẫn còn, cho tới khi có tín hiệu đảo chiều rõ ràng. Uptrend là đỉnh sau cao hơn đỉnh trước, đáy sau cao hơn đáy trước. Tín hiệu đảo chiều là: giá hồi lên không vượt được đỉnh cũ, rồi thủng luôn đáy cũ. Ví dụ, sau đỉnh $126K, nhịp hồi lớn nhất của BTC năm 2026 chỉ lên $87.4K. Rồi tháng 11/2026, giá thủng đáy $57.7K của năm. Theo Dow, đó là tín hiệu uptrend đã kết thúc. Vì sao nguyên lý này quan trọng với cả trading lẫn đầu tư? Vì nó bắt bạn có kỷ luật: không đoán đỉnh, không bắt đáy, chỉ đổi ý khi thị trường xác nhận. Nhưng nhớ, Dow có điểm yếu: tín hiệu luôn đến muộn, thường bỏ lỡ phần đầu và phần cuối con sóng. Hãy dùng nó như la bàn, không phải quả cầu pha lê.",
+   "beats": [
+    {
+     "at": "xu hướng vẫn còn, cho tới khi",
+     "type": "statement",
+     "text": "Nguyên lý 6: xu hướng còn tới khi đảo chiều rõ"
+    },
+    {
+     "at": "Uptrend là đỉnh sau cao hơn",
+     "type": "flow",
+     "label": "Đọc xu hướng bằng đỉnh đáy",
+     "steps": [
+      "Uptrend: cao dần",
+      "Downtrend: thấp dần"
+     ],
+     "step_at": [
+      "đỉnh sau cao hơn đỉnh trước",
+      "đáy sau cao hơn đáy trước"
+     ]
+    },
+    {
+     "at": "Tín hiệu đảo chiều là",
+     "type": "flow",
+     "label": "Tín hiệu đảo chiều của Dow",
+     "steps": [
+      "Hồi không vượt đỉnh",
+      "Thủng đáy cũ"
+     ],
+     "step_at": [
+      "không vượt được đỉnh cũ",
+      "thủng luôn đáy cũ"
+     ]
+    },
+    {
+     "at": "chỉ lên $87.4K",
+     "type": "versus",
+     "left": {
+      "label": "Đỉnh 10/2025",
+      "value": "$126K",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Đỉnh hồi 2026",
+      "value": "$87.4K",
+      "tone": "down",
+      "note": "đỉnh thấp hơn"
+     },
+     "hold": 4
+    },
+    {
+     "at": "thủng đáy $57.7K",
+     "type": "bignum",
+     "value": "$57.7K",
+     "label": "đáy năm 2026, bị thủng tháng 11/2026",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "tín hiệu uptrend đã kết thúc",
+     "type": "statement",
+     "text": "Theo Dow: uptrend đã kết thúc"
+    },
+    {
+     "at": "nó bắt bạn có kỷ luật",
+     "type": "flow",
+     "label": "Kỷ luật theo Dow",
+     "steps": [
+      "Không đoán đỉnh",
+      "Không bắt đáy",
+      "Chờ xác nhận"
+     ],
+     "step_at": [
+      "không đoán đỉnh",
+      "không bắt đáy",
+      "chỉ đổi ý"
+     ]
+    },
+    {
+     "at": "tín hiệu luôn đến muộn",
+     "type": "statement",
+     "text": "Điểm yếu: tín hiệu luôn đến muộn"
+    },
+    {
+     "at": "như la bàn",
+     "type": "statement",
+     "text": "La bàn, không phải quả cầu pha lê"
+    }
+   ],
+   "visual_queries": [
+    "compass navigation",
+    "discipline checklist"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  }
+ ],
+ "outro": "Tóm lại: giá phản ánh tất cả, nhìn thuỷ triều trước con sóng, cẩn thận nhất khi đám đông hưng phấn nhất, và chỉ đổi ý khi có xác nhận. Đây là nội dung giáo dục, không phải lời khuyên đầu tư. Bình luận cho mình biết: trong 6 nguyên lý, nguyên lý nào bạn thấy khó áp dụng nhất? Ghi số từ 1 đến 6 nhé.",
+ "outro_points": [
+  "Giá phản ánh tất cả",
+  "Thuỷ triều trước con sóng",
+  "Chỉ đổi ý khi có xác nhận"
+ ],
+ "outro_cta": "NGUYÊN LÝ NÀO KHÓ NHẤT? GHI SỐ 1 ĐẾN 6",
+ "shorts": [
+  2,
+  0
+ ],
+ "short_spans": [
+  {
+   "from": "Lúc retail thấy an toàn nhất",
+   "to": "hay lúc mọi người hưng phấn?"
+  },
+  {
+   "from": "Tin tốt vừa ra mà giá lại giảm",
+   "to": "giá đang phản ứng với tin đó như thế nào?"
+  }
+ ],
+ "short_hooks": {
+  "2": "Lúc retail thấy an toàn nhất: insider bán?",
+  "0": "ETF được duyệt mà BTC giảm 20%: vì sao?"
+ },
+ "short_cta": "Nguyên lý nào khó nhất? Bình luận số 1 đến 6!",
+ "thumb_stat": "6",
+ "thumb_text": "nền móng của mọi chart",
+ "thumb_tag": "lý thuyết Dow",
+ "thumb_kicker": "Phân tích kỹ thuật từ số 0",
+ "thumb_subject": "penguin",
+ "thumb_icon": "magnifier",
+ "thumb_points": [],
+ "thumb_before": null,
+ "thumb_after": null
+}
