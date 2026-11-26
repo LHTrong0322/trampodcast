@@ -149,12 +149,35 @@ ICON_RULES = [("crack", r"bubble|bong bóng|vỡ|sập|crash|nổ"), ("down", r"
               ("flame", r"nóng|hot|fomo|cháy"), ("scale", r"so sánh|cân|hay là|vs"), ("magnifier", r"bí mật|sự thật|soi|vì sao|tại sao|\?")]
 
 
+def topic_icon(plan: dict, text: str = "") -> str:
+    """Hình dán theo chủ đề (bong bóng vỡ, giảm, tăng, đồng hồ, lửa, cân, kính lúp). Không khớp chủ đề nào thì không gắn."""
+    text = (text or " ".join(str(plan.get(k, "")) for k in ("thumb_text", "title", "theme"))).lower()
+    return plan.get("thumb_icon") or next((k for k, pat in ICON_RULES if re.search(pat, text)), "none")
+
+
+def subject_logo(plan: dict, coins: dict, text: str = "", scenes: list | None = None) -> dict | None:
+    """Trọng 26/11 (ghi nhớ bằng code): ảnh bìa nhắc tới dự án nào thì PHẢI có logo dự án đó.
+    Thứ tự: thumb_subject = "penguin" thì không gắn; thumb_logo (mã dự án) chỉ định; tên dự án có trong chữ ảnh bìa/tiêu đề
+    (đúng 1 dự án, nhiều dự án cùng lúc thì không gắn logo đơn lẻ); cuối cùng là dự án đầu tiên có logo trong video."""
+    if plan.get("thumb_subject") == "penguin":
+        return None
+    t = str(plan.get("thumb_logo") or "").lstrip("$").upper()
+    if t and (coins.get(t) or {}).get("logo"):
+        return {"logo": coins[t]["logo"], "color": coins[t].get("color")}
+    txt = text or " ".join(str(plan.get(k) or "") for k in ("thumb_text", "thumb_tag", "thumb_kicker", "thumb_stat", "title"))
+    lg = R.mention_logo([], 0, coins, {"text": txt})
+    if lg:
+        c = next((v for v in coins.values() if v.get("logo") == lg), {})
+        return {"logo": lg, "color": c.get("color")}
+    return next((s.get("project") for s in (scenes or []) if s.get("project") and s["project"].get("logo")), None)
+
+
 def thumb_style(plan: dict, has_vs: bool, has_points: bool, has_stat: bool, has_before: bool = False) -> tuple[str, str]:
     """Trọng 26/11: ảnh bìa kiểu "viral sạch" (5 bố cục: stat, pill, vs, before, question).
     Chọn theo dữ liệu kịch bản, xoay vòng theo tiêu đề để 2 video liền nhau không giống nhau; kịch bản chỉ định được bằng thumb_style."""
     import hashlib
     text = " ".join(str(plan.get(k, "")) for k in ("thumb_text", "title", "theme")).lower()
-    icon = plan.get("thumb_icon") or next((k for k, pat in ICON_RULES if re.search(pat, text)), "magnifier")
+    icon = topic_icon(plan, text)
     if plan.get("thumb_style") in ("stat", "pill", "vs", "before", "question"):
         return plan["thumb_style"], icon
     if has_before:
@@ -167,12 +190,11 @@ def thumb_style(plan: dict, has_vs: bool, has_points: bool, has_stat: bool, has_
 
 def thumbnail(res: dict, out: Path) -> Path | None:
     plan = res["plan"]
-    proj = next((s.get("project") for s in res["scenes"] if s.get("project") and s["project"].get("logo")), None)
-    if plan.get("thumb_subject") == "penguin":   # Trọng 26/11: tin không xoay quanh 1 dự án (vd ETF) thì chủ thể tròn là penguin
-        proj = None
+    coins = (res.get("data") or {}).get("coins") or {}
+    # Trọng 26/11: nhắc dự án thì có logo dự án; tin không xoay quanh 1 dự án (vd ETF) ghi thumb_subject "penguin"
+    proj = subject_logo(plan, coins, scenes=res["scenes"])
     approved = bool(os.getenv("INSIGHT_SCRIPT", "").strip())   # kịch bản Trọng duyệt: dùng đúng chữ ảnh bìa đã duyệt
     stat = P.nodash(plan.get("thumb_stat", ""))[:12] if approved else R.real_number(V.en_money(plan.get("hook_stat", "")), plan.get("posts") or [])[:8]
-    coins = (res.get("data") or {}).get("coins") or {}
     side = lambda x: {**x, "label": P.nodash(str(x.get("label", ""))), "value": P.nodash(V.en_money(str(x.get("value", "")))),
                       "logo": coins.get(str(x.get("logo", "")).upper(), {}).get("logo")} if isinstance(x, dict) and x.get("value") else None
     props = {"comp": "Thumb", "width": 1280, "height": 720,
@@ -188,7 +210,7 @@ def thumbnail(res: dict, out: Path) -> Path | None:
     if not (props["before"] and props["after"]):
         props["before"] = props["after"] = None
     props["style"], props["icon"] = thumb_style(plan, len(props["vs"]) >= 2, bool(props["points"]), bool(props["stat"]), bool(props["before"]))
-    log(f"   Ảnh bìa: bố cục {props['style']}, hình dán {props['icon']}")
+    log(f"   Ảnh bìa: bố cục {props['style']}, hình dán {props['icon']}, logo {'có' if props['projectLogo'] else 'không (penguin)'}")
     try:
         R.run_remotion(props, out, frames="0")
         return out

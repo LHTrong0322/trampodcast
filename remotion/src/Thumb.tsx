@@ -108,13 +108,17 @@ const Curve: React.FC<{w: number; h: number; color: string; down?: boolean}> = (
 };
 
 export const Thumb: React.FC<ThumbProps> = ({text, stat = '', accent: acIn = IND, projectLogo, brand, points = [], vs = [], tag = '',
-  style: styleIn, kicker = '', before, after}) => {
+  style: styleIn, kicker = '', before, after, icon = 'none'}) => {
   const accent = tone(acIn);
   useFonts();
   const t = nb(text), k = nb(kicker), g = nb(tag);
   const style: ThumbStyle = (['stat', 'pill', 'vs', 'before', 'question'] as string[]).includes(String(styleIn)) ? styleIn as ThumbStyle
     : before && after ? 'before' : vs.length >= 2 ? 'vs' : stat ? 'stat' : 'question';
   const q = /\?\s*$/.test(t);
+  // Trọng 26/11 (ghi nhớ bằng code): chủ đề khớp hình dán thì phải có hình dán; nhắc dự án thì có logo (Hero / projectLogo).
+  const stk = icon && icon !== 'none' ? icon : null;
+  const StickerAt = (pos: React.CSSProperties, size: number, rot = -10) => stk
+    ? <div style={{position: 'absolute', ...pos}}><Sticker kind={stk} size={size} color={accent} rotate={rot} /></div> : null;
   let body: React.ReactNode = null;
 
   if (style === 'stat') {
@@ -127,6 +131,7 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat = '', accent: acIn = IND
         ? <div style={{...pill(IND, '#FFFFFF', 44), whiteSpace: 'normal', lineHeight: 1.25}}>{t}</div>
         : <span style={pill(IND, '#FFFFFF', fit(t, 640, 54, 0.62))}>{t}</span>}</div>
       <div style={{position: 'absolute', right: 96, top: 120}}><Hero src={projectLogo} size={420} accent={accent} /></div>
+      {StickerAt({right: 420, top: 420}, 150, -10)}
       {q ? <div style={{position: 'absolute', right: 64, top: 96, width: 110, height: 110, borderRadius: 99, background: YEL, fontSize: 72, fontWeight: 800,
         display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(20,24,51,0.15)'}}>?</div> : null}
       <Brand brand={brand} />
@@ -143,7 +148,9 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat = '', accent: acIn = IND
         color: valueColor(stat) === INK ? RED : valueColor(stat)}}>{nb(stat)}</div> : null}
       <div style={{position: 'absolute', left: 0, right: 0, top: 320, textAlign: 'center'}}>
         <span style={{...pill(YEL, INK, fit(t, 1050, 116, 0.6)), letterSpacing: '-0.03em', borderRadius: 30, boxShadow: '0 20px 50px rgba(20,24,51,0.15)'}}>{t}</span></div>
-      {k ? <div style={{position: 'absolute', right: 64, bottom: 44, fontSize: 28, fontWeight: 700, color: MUTED, whiteSpace: 'nowrap'}}>{k}</div> : null}
+      {projectLogo ? <div style={{position: 'absolute', right: 64, top: 500}}><Hero src={projectLogo} size={130} accent={accent} /></div>
+        : StickerAt({right: 64, top: 500}, 130, 8)}
+      {k ? <div style={{position: 'absolute', right: 230, bottom: 44, fontSize: 28, fontWeight: 700, color: MUTED, whiteSpace: 'nowrap'}}>{k}</div> : null}
       <Brand brand={brand} />
     </>;
   } else if (style === 'vs') {
@@ -182,7 +189,7 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat = '', accent: acIn = IND
       </div>
       {t ? <div style={{position: 'absolute', left: 64, top: 560}}><span style={pill(YEL, INK, fit(t, 900, 44, 0.6))}>{t}</span></div> : null}
       {projectLogo ? <Img src={staticFile(projectLogo)} style={{position: 'absolute', right: 64, top: 566, height: 84, maxWidth: 220, objectFit: 'contain'}} />
-        : <Brand brand={brand} right={64} />}
+        : stk ? StickerAt({right: 64, top: 556}, 120, 8) : <Brand brand={brand} right={64} />}
     </>;
   } else {
     // question: câu hỏi/khẳng định lớn bên trái, nhãn vàng, chủ thể tròn bên phải (mẫu "Nếu bắt đầu lại từ $0")
@@ -197,7 +204,8 @@ export const Thumb: React.FC<ThumbProps> = ({text, stat = '', accent: acIn = IND
           borderTop: i ? '2px solid #EEF0F7' : 'none'}}>
           {x.logo ? <Img src={staticFile(x.logo)} style={{width: 96, height: 96, borderRadius: 99}} /> : <div style={{fontSize: 40, fontWeight: 800}}>{nb(x.label)}</div>}
           <span style={{...big, fontSize: fit(x.value, 250, 76, 0.6), color: sideColor(x)}}>{nb(x.value)}</span></div>)}
-      </div> : <div style={{position: 'absolute', right: 110, top: 110}}><Hero src={projectLogo} size={400} accent={accent} /></div>}
+      </div> : <><div style={{position: 'absolute', right: 110, top: 110}}><Hero src={projectLogo} size={400} accent={accent} /></div>
+        {StickerAt({right: 64, top: 400}, 150, 10)}</>}
       <Brand brand={brand} right={vs.length ? 64 : undefined} />
     </>;
   }

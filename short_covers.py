@@ -24,7 +24,20 @@ def _icon(title: str) -> str:
     t = title.lower()
     if re.search(r"rác|tránh|bẫy|cảnh báo|sai lầm", t):
         return "down"
-    return next((k for k, pat in IP.ICON_RULES if re.search(pat, t)), "magnifier")
+    return next((k for k, pat in IP.ICON_RULES if re.search(pat, t)), "none")
+
+
+def _logo(plan: dict, sec: dict, title: str, logos: dict | None) -> str | None:
+    """Trọng 26/11: short nhắc dự án nào thì ảnh bìa có logo dự án đó (tiêu đề short trước, rồi dự án của phần đó)."""
+    if plan.get("thumb_subject") == "penguin" or not logos:
+        return None
+    import insight_render as R
+    coins = {k: {"logo": v, "name": ""} for k, v in logos.items() if v}
+    lg = R.mention_logo([], 0, coins, {"text": title})
+    if lg:
+        return lg
+    t = str((sec.get("project") or {}).get("ticker") or "").lstrip("$").upper()
+    return logos.get(t)
 
 
 def props_for(plan: dict, sec_idx: int, title: str, logos: dict | None = None) -> dict:
@@ -50,7 +63,7 @@ def props_for(plan: dict, sec_idx: int, title: str, logos: dict | None = None) -
             "label": P.nodash(V.en_money(s.get("key_label", "")))[:40],
             # chỉ hiện ý liệt kê khi kịch bản ghi riêng cho ảnh bìa (bullet của phần thường không khớp tiêu đề short)
             "points": [P.nodash(V.en_money(b))[:34] for b in ((plan.get("short_cover_points") or {}).get(str(sec_idx)) or [])][:3],
-            "accent": "#4F5BD5", "projectLogo": None,
+            "accent": "#4F5BD5", "projectLogo": _logo(plan, s, title, logos),
             "brand": (V.load_cfg().get("insight") or {}).get("brand", "Smart Penguin Insights")}
 
 

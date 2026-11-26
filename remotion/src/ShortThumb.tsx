@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Img, staticFile} from 'remotion';
 import {AccentCtx, tone, FONT, useFonts} from './ui';
-import {ThumbIcon} from './Thumb';
+import {Sticker, ThumbIcon} from './Thumb';
 
 // Ảnh bìa video ngắn 1080×1920 (Reels, Shorts, TikTok), cùng kiểu "viral sạch" với ảnh bìa YouTube (Trọng 26/11):
 //   chữ viết thường có dấu như câu nói, 1 con số khổng lồ làm nhân vật chính, thẻ trắng bo góc, nhãn vàng, avatar penguin khi không có số.
@@ -24,7 +24,9 @@ const numColor = (w: string, prev: string, accent: string) => {
 const fit = (t: string, maxW: number, maxSize: number, em = 0.6) => Math.round(Math.min(maxSize, maxW / Math.max(1, (t || '').length * em)));
 const card: React.CSSProperties = {background: '#FFFFFF', borderRadius: 36, boxShadow: '0 24px 60px rgba(20,24,51,0.12), 0 2px 6px rgba(20,24,51,0.05)'};
 
-export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat = '', label = '', points = [], accent: acIn = '#4F5BD5', projectLogo, brand, vs = [], news = false}) => {
+export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat = '', label = '', points = [], accent: acIn = '#4F5BD5', projectLogo, brand, vs = [], news = false, icon = 'none'}) => {
+  // Trọng 26/11 (ghi nhớ bằng code): nhắc dự án thì có logo, chủ đề khớp hình dán thì có hình dán.
+  const stk = icon && icon !== 'none' ? icon : null;
   const accent = tone(acIn);
   useFonts();
   const t = (text || '').replace(/_/g, ' ');
@@ -79,7 +81,10 @@ export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat = '', label = 
           </div>
         ) : stat ? (
           <div style={{position: 'absolute', left: 70, right: 70, top: Math.max(below, 820), ...card, padding: '44px 50px 48px', textAlign: 'left'}}>
-            <div style={{fontSize: fit(stat, 820, 280, /%|tháng|năm/.test(stat) ? 0.7 : 0.62), lineHeight: 1, letterSpacing: '-0.05em', whiteSpace: 'nowrap', color: valueColor(stat) === INK ? accent : valueColor(stat)}}>{stat}</div>
+            {projectLogo ? <Img src={staticFile(projectLogo)} style={{position: 'absolute', right: -24, top: -60, width: 150, height: 150, borderRadius: 99,
+              border: '8px solid #FFFFFF', background: '#FFFFFF', boxShadow: '0 14px 36px rgba(20,24,51,0.2)'}} />
+              : stk ? <div style={{position: 'absolute', right: -24, top: -70}}><Sticker kind={stk} size={160} color={accent} rotate={10} /></div> : null}
+            <div style={{fontSize: fit(stat, projectLogo || stk ? 700 : 820, 280, /%|tháng|năm/.test(stat) ? 0.7 : 0.62), lineHeight: 1, letterSpacing: '-0.05em', whiteSpace: 'nowrap', color: valueColor(stat) === INK ? accent : valueColor(stat)}}>{stat}</div>
             {label ? <div style={{marginTop: 20, fontSize: fit(label, 840, 46, 0.55), fontWeight: 700, color: MUTED, lineHeight: 1.2}}>{label}</div> : null}
           </div>
         ) : points.length ? null : (
@@ -88,6 +93,7 @@ export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat = '', label = 
               boxShadow: '0 24px 60px rgba(20,24,51,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
               <Img src={staticFile(projectLogo || 'logo.png')} style={projectLogo ? {width: '78%', height: '78%', objectFit: 'contain'} : {width: '100%', height: '100%'}} />
             </div>
+            {stk ? <div style={{position: 'absolute', left: 620, top: 250}}><Sticker kind={stk} size={180} color={accent} rotate={10} /></div> : null}
           </div>
         )}
 
