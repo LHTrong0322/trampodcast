@@ -454,7 +454,9 @@ def value_gate_script(out: Path, d: dict, did: str, rounds: int = 2):
     plan = json.loads(path.read_text(encoding="utf-8"))
     for r in range(rounds):
         try:
-            rv = SR.review(json.dumps(plan, ensure_ascii=False, indent=1), fmt="short")
+            src = "\n".join(f"- {f.get('value', '')}: {f.get('claim', '')} | {f.get('source', '')} {f.get('url', '')} | \"{f.get('quote', '')}\""
+                            for f in plan.get("sources") or [])
+            rv = SR.review(json.dumps(plan, ensure_ascii=False, indent=1), src, fmt="short")
         except Exception as ex:
             log(f"   ! chấm đáng xem lỗi: {str(ex)[:150]}")
             return

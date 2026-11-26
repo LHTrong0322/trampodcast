@@ -30,6 +30,10 @@ THẺ HÌNH HIỆN TẠI (at = cụm từ trong lời đọc nơi thẻ xuất h
 SỐ LIỆU ĐÃ CÓ (dùng thoải mái):
 {facts}
 
+SỐ CHƯA THẤY NGUỒN (Trọng 27/11): ĐÚNG SỰ THẬT quan trọng hơn ĐÚNG NGUỒN. KHÔNG được xoá số chỉ vì chưa thấy trong danh sách trên, không được xoá vì "nguồn gốc không nhắc". Dùng WebSearch/WebFetch tra:
+tìm được bài chứng minh thì GIỮ số đó và ghi vào "new_facts" (kèm link, trích dẫn) để kiểm chứng; chỉ bỏ khi tra ra số sai,
+hoặc đã tra kỹ mà không bài nào có, và ghi rõ lý do trong "changes".
+
 THÊM SỐ LIỆU MỚI: được và NÊN, nếu nó làm câu có giá trị hơn (bối cảnh, so sánh lịch sử, hệ quả). Dùng WebSearch/WebFetch tìm
 từ nguồn uy tín (Cointelegraph, CoinDesk, The Block, Decrypt, Bloomberg, Reuters, Glassnode, CryptoQuant, SoSoValue, trang chính thức),
 ưu tiên tin trong 30 ngày gần đây, đúng chủ đề video. TUYỆT ĐỐI không bịa: số nào không tìm thấy trong bài thì không dùng.
@@ -45,9 +49,10 @@ Trả DUY NHẤT JSON:
   "new_facts": [{{"value": "con số đúng như trong lời đọc hoặc thẻ (vd $53K, 15%)", "claim": "ý của số đó",
                  "url": "link bài nguồn", "source": "tên nguồn", "quote": "trích nguyên văn có con số"}}]}}"""
 
-VERIFY = """Bạn là người kiểm chứng số liệu (fact-checker) độc lập, khó tính. Với TỪNG mục dưới đây, dùng WebFetch mở đúng link,
+VERIFY = """Bạn là người kiểm chứng số liệu (fact-checker) độc lập. Mục tiêu: con số có ĐÚNG SỰ THẬT không. Với TỪNG mục, dùng WebFetch mở link,
 tìm xem bài có thật sự chứa con số đó và có ủng hộ đúng ý (claim) không. Đơn vị, mốc thời gian, chủ thể phải khớp.
-Không mở được link, số không có trong bài, hoặc ý bị nói quá so với bài thì là KHÔNG ĐẠT.
+Link không mở được hoặc không có số đó thì tự tra thêm bằng WebSearch: tìm được nguồn uy tín khác chứng minh thì vẫn ĐẠT.
+Chỉ KHÔNG ĐẠT khi số sai, bị nói quá, hoặc tra kỹ vẫn không có nguồn nào chứng minh.
 {items}
 Trả DUY NHẤT JSON: {{"results": [{{"i": số thứ tự, "ok": true hoặc false, "why": "ngắn gọn"}}]}}"""
 
@@ -99,7 +104,7 @@ def verify(facts: list[dict], run=None) -> list[dict]:
     facts = [f for f in facts or [] if isinstance(f, dict) and str(f.get("url", "")).startswith("http") and f.get("value")]
     if not facts:
         return []
-    run = run or (lambda pr: SR.run_claude(pr, tools="WebFetch", turns=20, timeout=900))
+    run = run or (lambda pr: SR.run_claude(pr, tools="WebSearch,WebFetch", turns=25, timeout=900))
     items = "\n".join(f"{i}. số {f['value']} | ý: {f.get('claim', '')} | link: {f['url']} | trích: {f.get('quote', '')}"
                       for i, f in enumerate(facts))
     try:
@@ -116,7 +121,8 @@ def rewrite(plan: dict, problems: list[str], run=None, check=None) -> tuple[dict
     import script_review as SR
     run = run or (lambda pr: SR.run_claude(pr, tools="WebSearch,WebFetch", turns=30, timeout=1200))
     sec = plan["sections"][0]
-    facts = "\n".join(x for x in [plan.get("description", ""), "; ".join(sec.get("bullets", []) or [])] if x)
+    src = [f"{f.get('value', '')}: {f.get('claim', '')} ({f.get('source', '')}, {f.get('url', '')})" for f in plan.get("sources") or []]
+    facts = "\n".join(x for x in [plan.get("description", ""), "; ".join(sec.get("bullets", []) or []), *src] if x)
     pr = PROMPT.format(rule=SR.VALUE_RULE, problems="\n".join(f"- {x}" for x in problems[:12]),
                        narration=sec.get("narration", ""), beats=json.dumps(sec.get("beats", []), ensure_ascii=False, indent=1),
                        facts=facts or "(chỉ dùng số đã có trong lời đọc và thẻ hình)")

@@ -165,5 +165,70 @@
  },
  "thumb_style": "stat",
  "thumb_kicker": "ETF Bitcoin rút ròng tháng 11",
- "thumb_logo": "BTC"
+ "thumb_logo": "BTC",
+ "sources": [
+  {
+   "value": "$4.94B",
+   "claim": "ETF Bitcoin Mỹ rút ròng tháng 11/2026, kỷ lục tháng từ khi ra mắt tháng 1/2024, vượt kỷ lục $4.51B tháng 6",
+   "source": "Cointelegraph",
+   "url": "https://www.tradingview.com/news/cointelegraph:d498c6461094b:0-bitcoin-etfs-near-5b-in-record-monthly-outflows-amid-ai-stock-rout/",
+   "quote": "approaching $5 billion in monthly net outflows for the first time since their launch in January 2024"
+  },
+  {
+   "value": "$6.34B, -$4.57B",
+   "claim": "Quý 3 hút vào $6.34B; từ đầu năm 2026 rút ròng khoảng $4.57B, xoá sạch phần hồi phục quý 3",
+   "source": "Cointelegraph",
+   "url": "https://www.tradingview.com/news/cointelegraph:d498c6461094b:0-bitcoin-etfs-near-5b-in-record-monthly-outflows-amid-ai-stock-rout/",
+   "quote": "2026 year-to-date net outflows of about $4.57 billion, which erased the recovery from Q3"
+  },
+  {
+   "value": "6 phiên",
+   "claim": "6 phiên giao dịch rút ròng liên tiếp (tới 25/11)",
+   "source": "Cointelegraph, SoSoValue",
+   "url": "https://www.tradingview.com/news/cointelegraph:d498c6461094b:0-bitcoin-etfs-near-5b-in-record-monthly-outflows-amid-ai-stock-rout/",
+   "quote": "six consecutive trading days of withdrawals"
+  },
+  {
+   "value": "AI, Fed",
+   "claim": "Teroxx: lãi suất tăng, cổ phiếu AI yếu, thị trường lo Fed tăng lãi suất tháng 12",
+   "source": "Cointelegraph, Teroxx",
+   "url": "https://www.tradingview.com/news/cointelegraph:d498c6461094b:0-bitcoin-etfs-near-5b-in-record-monthly-outflows-amid-ai-stock-rout/",
+   "quote": "flows into Bitcoin will remain under pressure as long as artificial intelligence stocks are searching for a bottom"
+  },
+  {
+   "value": "$75K",
+   "claim": "Ngày 9/11/2026 giá BTC khoảng $75,000",
+   "source": "Daily Financial",
+   "url": "https://dailyfinancial.in/bitcoin-slips-below-59000-as-spot-etf-outflows-set-a-monthly-record-how-much-the-selling-explains-and-what-comes-next/",
+   "quote": "On 9 November, one bitcoin cost about $75,000."
+  },
+  {
+   "value": "<$59K",
+   "claim": "BTC rơi dưới $59,000 ngày 25/11/2026",
+   "source": "Investing.com",
+   "url": "https://ng.investing.com/news/cryptocurrency-news/bitcoin-extends-losses-below-59000-as-etf-outflows-weigh-2828239",
+   "quote": "Bitcoin fell below $59,000 on Wednesday"
+  },
+  {
+   "value": "$58.9K, 11%",
+   "claim": "BTC $58,919, cao hơn realized price (giá vốn trung bình) 10.75%, tức realized khoảng $53K",
+   "source": "Cointelegraph",
+   "url": "https://www.bizinsider.org/bitcoin-etfs-near-5b-in-record-monthly-outflows-amid-ai-stock-rout/",
+   "quote": "Bitcoin traded at $58,919 at 10 am UTC on Wednesday, 10.75% above its realized price"
+  },
+  {
+   "value": "đáy quanh giá vốn",
+   "claim": "Các chu kỳ giảm lớn đều tạo đáy ngay hoặc hơi dưới realized price",
+   "source": "CryptoQuant qua The Block",
+   "url": "https://www.theblock.co/post/404316/cryptoquant-sees-bitcoin-bottom-near-53600-while-demand-remains-deeply-unfavorable",
+   "quote": "Historically, bitcoin has bottomed at or marginally below the realized price in each major bear cycle"
+  },
+  {
+   "value": "-15%",
+   "claim": "Đáy 2022 thấp hơn realized price khoảng 15%",
+   "source": "CoinDesk",
+   "url": "https://www.coindesk.com/markets/2026/03/31/bitcoin-is-closer-to-its-buy-zone-than-it-s-been-in-three-years",
+   "quote": "the deepest point of that dip, when spot was roughly 15% below realized, coincided almost exactly with the cycle low"
+  }
+ ]
 }
