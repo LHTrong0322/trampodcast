@@ -1,0 +1,152 @@
+{
+ "title": "$4.94B rút khỏi Bitcoin ETF, kỷ lục mới: vì sao? BTC thủng $59K",
+ "description": "Các quỹ Bitcoin ETF tại Mỹ bị rút ròng kỷ lục $4.94B trong tháng 11, vượt mốc $4.51B của tháng 6. Bitcoin có lúc dưới $59K, Hyperliquid giảm hơn 8%.",
+ "theme": "Dòng tiền ETF và biến động",
+ "hook": "4 tỷ 940 triệu đô la vừa rút khỏi Bitcoin ETF trong tháng 11. Kỷ lục mới. Vì sao?",
+ "hook_stat": "$4.94B",
+ "hook_label": "Kỷ lục rút vốn tháng 11",
+ "intro": "Cùng xem con số kỷ lục này nói gì với thị trường.",
+ "sections": [
+  {
+   "heading": "ETF Bitcoin rút ròng kỷ lục tháng 11",
+   "key_stat": "-$4.94B",
+   "key_label": "ETF Bitcoin rút ròng kỷ lục tháng 11",
+   "narration": "4 tỷ 940 triệu đô la vừa rút khỏi Bitcoin ETF trong tháng 11. Kỷ lục mới. Vì sao? Kỷ lục cũ chỉ là 4 tỷ 510 triệu đô, hồi tháng 6. Bối cảnh: cổ phiếu AI đang bị bán tháo, và các quỹ rút tiền khỏi Bitcoin cùng lúc. Bitcoin có lúc trượt xuống dưới 59 nghìn đô la. Bitcoin rung lắc thì altcoin còn chịu nặng hơn: Hyperliquid giảm hơn 8%, sau khi quỹ Abraxas Capital rút vốn khỏi Hyperliquid. 30 ngày qua, Bitcoin mất khoảng một phần tư giá trị. Vậy tháng 12, Bitcoin hồi lại hay giảm tiếp? Hồi thì bình luận số 1, giảm tiếp thì số 2.",
+   "source_ids": [
+    0
+   ],
+   "bullets": [
+    "Rút ròng kỷ lục $4.94B",
+    "BTC có lúc dưới $59K",
+    "Hyperliquid giảm hơn 8%"
+   ],
+   "data": {
+    "type": "stat_compare",
+    "tickers": [
+     "BTC"
+    ],
+    "items": [
+     {
+      "label": "Tháng 11",
+      "value": "$4.94B"
+     },
+     {
+      "label": "Tháng 6",
+      "value": "$4.51B"
+     }
+    ],
+    "title": "So sánh kỷ lục rút vốn ròng"
+   },
+   "project": {
+    "name": "Hyperliquid",
+    "ticker": "HYPE"
+   },
+   "edu": "true",
+   "emphasis": "TIN NÓNG THỊ TRƯỜNG",
+   "beats": [
+    {
+     "at": "4 tỷ 940 triệu",
+     "type": "bignum",
+     "value": "-$4.94B",
+     "label": "ETF Bitcoin rút ròng tháng 11",
+     "logo": "BTC",
+     "tone": "down",
+     "source": "Cointelegraph"
+    },
+    {
+     "at": "Kỷ lục cũ",
+     "type": "versus",
+     "left": {
+      "label": "Tháng 11",
+      "value": "$4.94B",
+      "tone": "down",
+      "note": "Kỷ lục mới"
+     },
+     "right": {
+      "label": "Tháng 6",
+      "value": "$4.51B",
+      "tone": "flat",
+      "note": "Kỷ lục cũ"
+     },
+     "sub": "Nguồn: Cointelegraph"
+    },
+    {
+     "at": "Bối cảnh",
+     "type": "statement",
+     "text": "Cổ phiếu AI bị bán tháo",
+     "sub": "Quỹ rút khỏi Bitcoin cùng lúc. Nguồn: Cointelegraph"
+    },
+    {
+     "at": "Bitcoin có lúc trượt",
+     "type": "bignum",
+     "value": "$59K",
+     "label": "Bitcoin có lúc thủng mốc",
+     "logo": "BTC",
+     "tone": "down",
+     "source": "Decrypt"
+    },
+    {
+     "at": "altcoin còn chịu",
+     "type": "bignum",
+     "value": "-8%",
+     "label": "Hyperliquid giảm hơn 8%",
+     "logo": "HYPE",
+     "tone": "down",
+     "source": "Decrypt"
+    },
+    {
+     "at": "sau khi quỹ Abraxas",
+     "type": "statement",
+     "text": "Quỹ Abraxas Capital rút vốn khỏi Hyperliquid",
+     "sub": "Nguồn: Decrypt",
+     "logo": "HYPE"
+    },
+    {
+     "at": "30 ngày qua, Bitcoin",
+     "type": "chart",
+     "ticker": "BTC",
+     "days": "30",
+     "label": "Bitcoin 30 ngày qua"
+    },
+    {
+     "at": "Hồi thì bình luận",
+     "type": "question",
+     "text": "Tháng 12: Bitcoin hồi hay giảm tiếp?",
+     "sub": "Bình luận 1 = hồi, 2 = giảm tiếp"
+    }
+   ]
+  }
+ ],
+ "outro": "Đây không phải lời khuyên đầu tư, mọi người quản trị rủi ro thật tốt nhé.",
+ "shorts": [
+  0
+ ],
+ "short_hooks": {
+  "0": "ETF rút ròng kỷ lục $4.94B: BTC dưới $59K"
+ },
+ "thumb_text": "Vì sao quỹ tháo chạy?",
+ "thumb_stat": "-$4.94B",
+ "thumb_tag": "KỶ LỤC",
+ "short_title": "$4.94B RÚT KHỎI BITCOIN ETF: VÌ SAO?",
+ "format": "short",
+ "news": true,
+ "own_source": true,
+ "short_cta": "Theo dõi Smart Penguin Insights để không lỡ tin nóng nhé!",
+ "script_score": null,
+ "script_review": {
+  "score": null,
+  "scores": null,
+  "nhan_xet": null,
+  "pass": null
+ },
+ "source_post": {
+  "author": "Cointelegraph, Decrypt",
+  "handle": "",
+  "url": "https://cointelegraph.com/markets/bitcoin-etfs-near-record-5-billion-monthly-outflows?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound",
+  "title": "Bitcoin ETFs near $5B in record monthly outflows amid AI stock rout",
+  "text": "Nguồn: Cointelegraph (18:12 25/11 giờ VN)\nBitcoin ETFs near $5B in record monthly outflows amid AI stock rout\nBitcoin ETFs near $5B in record monthly outflows amid AI stock rout. US spot Bitcoin ETFs have recorded $4.94 billion in November net outflows, exceeding the previous monthly record of $4.51 billion set in June.\n\nNguồn: Decrypt (18:23 25/11 giờ VN)\nHyperliquid Leads Altcoin Losses as Bitcoin Slips Below $59K\nHyperliquid Leads Altcoin Losses as Bitcoin Slips Below $59K. HYPE fell more than 8% after Abraxas Capital pulled out of Hyperliquid, while U.S. Bitcoin ETFs' November outflows passed $4.9 billion."
+ },
+ "thumb_style": "stat",
+ "thumb_kicker": "ETF Bitcoin rút ròng tháng 11",
+ "thumb_logo": "BTC"
+}

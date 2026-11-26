@@ -154,7 +154,7 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
   const chg = ((series[series.length - 1] / series[0] - 1) * 100);
   const last = pts[n - 1];
   return (
-    <Frame w={w} h={h} title={`${m?.name || sym} · ${span}`} sub={coin?.stock ? 'Dữ liệu thật · Yahoo Finance' : undefined}>
+    <Frame w={w} h={h} title={`${m?.name || sym} · ${span}`} sub="">
       <div style={{display: 'flex', alignItems: 'center', gap: 18, marginBottom: 10}}>
         {/* logo chỉ hiện khi thật sự có file (chỉ số như S&P 500 không có logo: bản index fund 23/11 lỗi 404 SPX.png) */}
         {(coin ? coin.logo : mk) ? <Img src={staticFile(coin?.logo || `logos/${m?.sym || sym}.png`)} style={{width: 52, height: 52, borderRadius: 99}} /> : null}
@@ -168,8 +168,10 @@ const CoinChart: React.FC<{data: any; spec: DataSpec; w: number; h: number}> = (
         <circle cx={last[0]} cy={last[1]} r={10} fill="#fff" stroke={col} strokeWidth={4} />
       </svg>
       {/* review 1915: giá giảm mà không chú thích dễ gây tâm lý tiêu cực, nên luôn ghi rõ bối cảnh */}
-      <div style={{marginTop: 10, fontSize: Math.max(20, Math.round(w / 40)), fontWeight: 600, color: C.muted, lineHeight: 1.3}}>
-        {up ? `Dữ liệu thật ${coin?.stock ? 'Yahoo Finance' : 'CoinGecko'}, ${span} gần nhất` : `Dữ liệu thật ${coin?.stock ? 'Yahoo Finance' : 'CoinGecko'}, ${span}. Không phải tín hiệu mua bán`}
+      {/* review 27/11: nguồn tách dòng riêng như các thẻ khác, chú thích to hơn cho điện thoại */}
+      {up ? null : <div style={{marginTop: 10, fontSize: Math.max(24, Math.round(w / 32)), fontWeight: 700, color: C.muted, lineHeight: 1.3}}>Không phải tín hiệu mua bán</div>}
+      <div style={{marginTop: 6, fontSize: Math.max(20, Math.round(w / 42)), fontWeight: 600, color: C.muted, lineHeight: 1.3}}>
+        Nguồn: {coin?.stock ? 'Yahoo Finance' : 'CoinGecko'}, {span} gần nhất
       </div>
     </Frame>
   );

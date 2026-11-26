@@ -205,7 +205,7 @@ export const Captions: React.FC<{words: Word[]; bottom: number; size: number; ma
   const chunks: Word[][] = [];
   let cur: Word[] = [];
   const nextStop = (i: number) => {   // còn bao nhiêu từ nữa thì tới dấu câu
-    for (let k = i + 1; k < Math.min(words.length, i + 5); k++) if (/[.!?…,;:]$/.test(words[k].t)) return k - i;
+    for (let k = i + 1; k < Math.min(words.length, i + 6); k++) if (/[.!?…,;:]$/.test(words[k].t)) return k - i;
     return 99;
   };
   words.forEach((w, i) => {
@@ -214,7 +214,8 @@ export const Captions: React.FC<{words: Word[]; bottom: number; size: number; ma
     const comma = /[,;:]$/.test(w.t);
     const gap = i + 1 < words.length && words[i + 1].s - w.e > 0.3;
     // đủ dài nhưng cụm ý sắp kết thúc trong 3 từ nữa thì đợi, tránh câu cụt kiểu "không quá"
-    const full = cur.length >= perChunk && !(nextStop(i) <= 3 && cur.length < perChunk + 4);
+    // review 27/11: phụ đề short bị cắt giữa cụm ("ETF chỉ trong một tháng?"), nhìn xa hơn 1 từ để ngắt đúng dấu câu
+    const full = cur.length >= perChunk && !(nextStop(i) <= 4 && cur.length < perChunk + 4);
     if (full || stop || (comma && cur.length >= 4) || (gap && cur.length >= 3)) {
       chunks.push(cur);
       cur = [];
