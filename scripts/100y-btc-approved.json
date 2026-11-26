@@ -509,14 +509,15 @@
   "1": "Đường 200 tuần của Bitcoin vừa gãy?",
   "3": "Chu kỳ 4 năm của Bitcoin đang lệch nhịp?"
  },
- "thumb_text": "$55K: CƠ_HỘI_THẾ_HỆ?",
+ "thumb_text": "Đáy thế hệ của Bitcoin?",
  "thumb_stat": "$43K?",
  "thumb_points": [],
- "thumb_warn": true,
- "thumb_tag": "5 TÍN HIỆU",
+ "thumb_tag": "5 tín hiệu",
  "lock_keys": [
   "thumb_text",
   "thumb_tag",
   "hook_screen"
- ]
+ ],
+ "thumb_kicker": "BTC $55K, MVRV chỉ về đây",
+ "thumb_logo": "BTC"
 }
