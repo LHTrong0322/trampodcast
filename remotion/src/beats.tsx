@@ -123,7 +123,9 @@ const Versus: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
         <div style={{fontSize: 38, fontWeight: 800, color: C.muted, alignSelf: 'flex-end', margin: `0 20px ${valFs * 0.3 + (anyNote ? 40 : 0)}px`}}>VS</div>
         {side(b.right, 1)}
       </div>
-      {b.sub ? <div style={{textAlign: 'center', marginTop: 22, fontSize: 26, fontWeight: 600, color: C.muted}}>{b.sub}</div> : null}
+      {/* review 26/11: "Vượt kỷ lục tháng 6. Nguồn: ..." viết liền, tách nguồn xuống dòng nhỏ riêng */}
+      {splitSource(b.sub, (b as any).source)[0] ? <div style={{textAlign: 'center', marginTop: 22, fontSize: 28, fontWeight: 700, color: C.muted}}>{splitSource(b.sub, (b as any).source)[0]}</div> : null}
+      <SourceLine text={splitSource(b.sub, (b as any).source)[1]} />
     </Card>
   );
 };
@@ -194,7 +196,8 @@ const Statement: React.FC<{b: Beat; w: number; h: number; question?: boolean}> =
       {/* Trọng 24/11: chữ mồ côi ("quốc / gia"): chia dòng cân nhau */}
       <div style={{fontSize: (b.text || '').length > 40 ? 60 : 74, fontWeight: 800, color: C.ink, lineHeight: 1.18, textWrap: 'balance',
         transform: `scale(${interpolate(s, [0, 1], [0.92, 1])})`, opacity: s, transformOrigin: 'left center'} as React.CSSProperties}>{b.text}</div>
-      {b.sub ? <div style={{fontSize: 34, fontWeight: 600, color: C.muted, marginTop: 22}}>{b.sub}</div> : null}
+      {splitSource(b.sub, (b as any).source)[0] ? <div style={{fontSize: 34, fontWeight: 600, color: C.muted, marginTop: 22}}>{splitSource(b.sub, (b as any).source)[0]}</div> : null}
+      <SourceLine text={splitSource(b.sub, (b as any).source)[1]} />
     </Card>
   );
 };
@@ -274,7 +277,7 @@ export const BeatPanel: React.FC<{beats: Beat[]; t: number; sceneDur: number; da
   const b = list[i];
   const end = list[i + 1]?.s ?? sceneDur;
   const local = t - b.s;
-  const inP = interpolate(local, [-0.15, 0.25], [0, 1], clamp);
+  const inP = interpolate(local, [-0.12, 0.06], [0, 1], clamp);   // review 26/11: chuyển thẻ nhanh (khoảng 0,15 giây), không còn chữ xám mờ
   const body = (() => {
     switch (b.type) {
       case 'bignum': return <BigNum b={b} w={w} h={h} />;

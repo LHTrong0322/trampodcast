@@ -26,6 +26,11 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
   const cardTop = Math.max(560, Math.ceil(titleBottom + 40));
   const cardH = Math.max(440, 560 - Math.round((cardTop - 560) / 1.25));
   const srcLabel = (props as any).sourceLabel as string | undefined;
+  // review 26/11 (short ETF 6.0): nhãn dự án chỉ hiện từ lúc lời đọc nhắc tới (không gắn "Hyperliquid" khi đang nói ETF)
+  const norm = (x: string) => x.toLowerCase().normalize('NFD').replace(/[^a-z0-9]/g, '');
+  const pKeys = [sc.project?.name, (sc.project as any)?.ticker].filter(Boolean).map((x) => norm(String(x).split(/\s+/)[0]));
+  const hit = pKeys.length ? (sc.words || []).find((w) => pKeys.includes(norm(w.t))) : undefined;
+  const chipOn = !!sc.project?.name && (!hit || f / 30 >= hit.s - 0.2);
   const ownSrc = !sc.source || /trong0322/i.test(sc.source);
   return (
     <AccentCtx.Provider value={tone(ac)}>
@@ -37,11 +42,11 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
             <Img src={staticFile('logo.png')} style={{width: 60, height: 60, borderRadius: 99}} />
             <div style={{fontFamily: FONT}}>
               <div style={{fontWeight: 800, color: C.ink, fontSize: 28, letterSpacing: 2}}>{(props.brand.name || '').toUpperCase()}</div>
-              <div style={{color: C.muted, fontWeight: 600, fontSize: 22}}>@Trong0322{srcLabel ? <> · Nguồn: <span style={{color: C.ink}}>{srcLabel}</span></>
-                : !ownSrc ? <> · Source: <span style={{color: C.ink}}>{sc.source}</span></> : null}</div>
+              {/* review 24/11 + 26/11: nguồn tin không viết liền với tên kênh, chuyển xuống 1 dòng nhỏ riêng dưới thẻ */}
+              <div style={{color: C.muted, fontWeight: 600, fontSize: 22}}>@Trong0322{!srcLabel && !ownSrc ? <> · Source: <span style={{color: C.ink}}>{sc.source}</span></> : null}</div>
             </div>
           </div>
-          <div style={{display: 'flex', gap: 12, flexWrap: 'wrap'}}>{sc.project?.name ? <Chip text={sc.project.name} size={26} /> : null}</div>
+          <div style={{display: 'flex', gap: 12, flexWrap: 'wrap'}}>{sc.project?.name ? <div style={{opacity: chipOn ? 1 : 0}}><Chip text={sc.project.name} size={26} /></div> : null}</div>
           <RevealWords text={title} size={tSize} delay={4} stagger={3} maxWidth={860}
             highlight={[sc.project?.name || ''].filter(Boolean)} />
         </div>
@@ -54,7 +59,9 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
         {sc.keyStat && !sc.beats?.length ? <div style={{position: 'absolute', top: 1215, left: 70, display: 'flex', alignItems: 'center', gap: 24}}>
           <CountUp value={sc.keyStat} size={72} delay={20} /><div style={{fontFamily: FONT, color: C.muted, fontSize: 30, fontWeight: 600, maxWidth: 480}}>{sc.keyLabel}</div>
         </div> : null}
-        <Captions words={sc.words} bottom={390} size={56} maxWidth={940} perChunk={5} />
+        {/* review 26/11: nguồn tin không còn ở header, ghi nhỏ trong từng thẻ số liệu (source của beat) */}
+        {/* review 26/11: phụ đề nâng lên khỏi vùng nút/tên kênh của TikTok, Shorts (trước bottom 390) */}
+        <Captions words={sc.words} bottom={470} size={56} maxWidth={940} perChunk={5} />
         {cover && f < 40 ? <AbsoluteFill style={{opacity: interpolate(f, [26, 40], [1, 0], clamp)}}><ShortThumb {...cover} /></AbsoluteFill> : null}
         <div style={{position: 'absolute', left: 0, bottom: 0, height: 8, width: (f / durationInFrames) * width, background: ac}} />
         {cta && f >= cta.from * 30 ? <EndCard text={cta.text} t={f - cta.from * 30} /> : null}

@@ -168,6 +168,8 @@ def thumb_style(plan: dict, has_vs: bool, has_points: bool, has_stat: bool, has_
 def thumbnail(res: dict, out: Path) -> Path | None:
     plan = res["plan"]
     proj = next((s.get("project") for s in res["scenes"] if s.get("project") and s["project"].get("logo")), None)
+    if plan.get("thumb_subject") == "penguin":   # Trọng 26/11: tin không xoay quanh 1 dự án (vd ETF) thì chủ thể tròn là penguin
+        proj = None
     approved = bool(os.getenv("INSIGHT_SCRIPT", "").strip())   # kịch bản Trọng duyệt: dùng đúng chữ ảnh bìa đã duyệt
     stat = P.nodash(plan.get("thumb_stat", ""))[:12] if approved else R.real_number(V.en_money(plan.get("hook_stat", "")), plan.get("posts") or [])[:8]
     coins = (res.get("data") or {}).get("coins") or {}

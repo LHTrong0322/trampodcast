@@ -58,6 +58,10 @@
   Hải Đăng là giọng NHÁP: Trọng có lúc muốn xem nháp Hải Đăng trước, bấm nút "🎙 Dựng nháp Hải Đăng trước" hoặc /nhap.
   Gemini hết lượt thì dừng và báo, không tự đổi giọng (luật 20/11). Workflow có input voice để đổi tay. Số ảnh bìa: dấu + màu xanh, dấu − màu đỏ.
 - Ảnh người thật (kể cả ảnh chế Trump đăng về Huang 23/11): KHÔNG đưa vào video. Kể sự kiện bằng lời đọc + thẻ chữ.
+- thumb_subject: "penguin" (26/11) = bìa 16:9 không lấy logo dự án làm chủ thể tròn (tin không xoay quanh 1 dự án, vd ETF).
+- Bố cục short sau review 26/11 (short ETF 6.0): nguồn tin bỏ khỏi header, chỉ ghi nhỏ trong thẻ số liệu (beat.source hoặc "Nguồn: ..." trong sub,
+  tự tách dòng); nhãn dự án (chip) chỉ hiện từ lúc lời đọc nhắc tới; phụ đề nâng lên bottom 470 (trước 390); thẻ chuyển nhanh khoảng 0,15 giây.
+  Lời đọc short tin nóng phải MỞ BẰNG đúng câu hook có con số (không chào hỏi), mỗi câu 1 số.
 - Ảnh bìa tin nóng: dùng thumb_text + thumb_stat Trọng chọn, dòng dưới "Tin nóng · @Trong0322" (không "Xem bản đầy đủ trên YouTube").
   Không cắt cứng 60 ký tự nữa (từng mất dấu %). Ảnh gửi Telegram dạng JPEG nhẹ (PNG 1MB bị Telegram Desktop kẹt).
 
