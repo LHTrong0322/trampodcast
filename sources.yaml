@@ -119,7 +119,7 @@ insight:
   brand: "Smart Penguin Insights"
   title_tag: "INSIGHT CRYPTO"
   outro_line: "Đăng ký Smart Penguin Insights để nhận insight crypto mỗi tuần"
-  cta_v: "Xem full trên YouTube · @Trong0322"
+  cta_v: "Xem full trên YouTube · @smartpenguininsights"   # Trọng 26/11: @Trong0322 là X, kênh YouTube là @smartpenguininsights
   voice_primary: "gemini:Ludo@kol"       # Trọng chốt 23/11: giọng Ludo KOL giọng Bắc nghiêm túc (lời dặn ở voice_ludo2.STYLE["kol"]) cho MỌI video về sau. Không đổi.
   voice_fallback: "vieneu:Hải Đăng"  # chỉ dùng khi Gemini hết lượt, cả video đổi sang giọng này
   voice_speed: {gemini: 1.0, vieneu: 1.0}   # Trọng chọn giọng Ludo KOL 21/11: giữ nguyên tốc độ đọc

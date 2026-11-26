@@ -6,6 +6,7 @@ import {ThumbIcon} from './Thumb';
 // Ảnh bìa video ngắn 1080×1920 (Reels, Shorts, TikTok), cùng kiểu "viral sạch" với ảnh bìa YouTube (Trọng 26/11):
 //   chữ viết thường có dấu như câu nói, 1 con số khổng lồ làm nhân vật chính, thẻ trắng bo góc, nhãn vàng, avatar penguin khi không có số.
 // Vùng an toàn: chữ chính nằm giữa màn để giao diện app không che (trên 230px, dưới 440px).
+// Nhãn kênh: YouTube là @smartpenguininsights, @Trong0322 là X (Trọng 26/11).
 // Ảnh này cũng là khung hình đầu của short (InsightShort), nên giữ gọn, đọc được khi thu nhỏ trong lưới video.
 export type ShortThumbProps = {text: string; stat?: string; label?: string; points?: string[]; accent?: string;
   projectLogo?: string | null; brand: string; icon?: ThumbIcon; news?: boolean; vs?: {label: string; value: string; tone?: string; logo?: string | null}[]};
@@ -102,10 +103,10 @@ export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat = '', label = 
           </div>
         ) : null}
 
-        <div style={{position: 'absolute', left: 70, bottom: 460, display: 'flex', alignItems: 'center', gap: 20}}>
+        <div style={{position: 'absolute', left: 70, bottom: 460, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 14}}>
           <span style={{background: YEL, borderRadius: 20, padding: '12px 30px', fontSize: 42, boxShadow: '0 12px 30px rgba(20,24,51,0.12)'}}>
             {news ? 'Tin nóng hôm nay' : 'Xem full trên YouTube'}</span>
-          <span style={{fontSize: 34, fontWeight: 700, color: MUTED}}>@Trong0322</span>
+          <span style={{fontSize: 34, fontWeight: 700, color: MUTED}}>@smartpenguininsights</span>
         </div>
       </AbsoluteFill>
     </AccentCtx.Provider>

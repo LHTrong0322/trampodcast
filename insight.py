@@ -273,7 +273,7 @@ def cook(out: Path, cfg: dict, gem, st: dict) -> dict:
     vcfg = cfg.get("video") or {}
     V.BRAND.update(name=ic.get("brand", "SMART PENGUIN INSIGHTS").upper(), title_tag=ic.get("title_tag", "INSIGHT CRYPTO"),
                    outro_line=ic.get("outro_line", "Đăng ký kênh để nhận insight crypto mỗi tuần"),
-                   cta_v=ic.get("cta_v", "Xem full trên YouTube · @Trong0322"), thumb_tag="{week}",
+                   cta_v=ic.get("cta_v", "Xem full trên YouTube · @smartpenguininsights"), thumb_tag="{week}",
                    tg_header="Video Insight: {week}", tag_prefix="insight")
     V.CAT_COLORS.setdefault("Insight", (123, 92, 255))
     posts = [p for p in st["posts"] if not p.get("used")][: int(ic.get("max_posts", 8))]

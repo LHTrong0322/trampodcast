@@ -81,7 +81,7 @@ const EndCard: React.FC<{text: string; t: number}> = ({text, t}) => {
         <Img src={staticFile('logo.png')} style={{width: 260, height: 260, borderRadius: 999, transform: `scale(${pop})`}} />
         <div style={{fontFamily: FONT, fontWeight: 900, fontSize: 76, lineHeight: 1.15, color: C.ink, textAlign: 'center',
           textTransform: 'uppercase', transform: `translateY(${up}px)`}}>{text}</div>
-        <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 34, color: C.muted, transform: `translateY(${up}px)`}}>@Trong0322</div>
+        <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 34, color: C.muted, transform: `translateY(${up}px)`}}>YouTube: @smartpenguininsights</div>
       </div>
     </AbsoluteFill>
   );
