@@ -1,10 +1,10 @@
 {
  "tag": "20261123-1328",
- "approved_by": "Trọng 23/11 22:25 (VN): lịch short cố định 18:30, T2 30/11",
+ "approved_by": "Trọng 23/11 22:25 (VN): lịch short cố định 18:30, T2 30/11 | Trọng 26/11 15:15: dời về 19:00, giữ ngày",
  "long_url_from": "20261123-1328",
  "youtube": {
   "item": "short5",
-  "publish_at": "2026-11-30T11:30:00Z",
+  "publish_at": "2026-11-30T12:00:00Z",
   "playlist": "Shorts insight",
   "title": "Vì sao crypto rơi dù chẳng liên quan AI? #Shorts",
   "description": "Bitcoin -25% trong 45 ngày dù crypto chẳng liên quan AI. Thanh khoản bị hút cạn, và khi nào nó quay lại?\n\n▶ Xem bản đầy đủ: {LONG_URL}\n\n⚠️ Không phải lời khuyên đầu tư.\n🐧 Smart Penguin Insights · @Trong0322\n\n#Shorts #crypto #dautu",
@@ -22,14 +22,14 @@
   ],
   "thumb": "assets/posts/20261123-1328/short5-cover.jpg",
   "comment": "Bạn đang DCA hay đứng ngoài chờ thanh khoản quay lại? 👇\n▶ Xem bản đầy đủ: {LONG_URL}",
-  "comment_at": "2026-11-30T11:35:00Z"
+  "comment_at": "2026-11-30T12:05:00Z"
  },
  "facebook": {
   "item": "short5",
-  "publish_unix": 1796038200,
+  "publish_unix": 1796040000,
   "caption": "Bitcoin -25% trong 45 ngày dù crypto chẳng liên quan AI 🐧 Thanh khoản bị hút cạn, rồi sẽ quay lại? Comment cho mình biết 👇\n\nKhông phải lời khuyên đầu tư.\n#bitcoin #crypto #thanhkhoan #vimo #smartpenguininsights",
   "thumb": "assets/posts/20261123-1328/short5-cover.jpg",
   "comment": "▶ Bản đầy đủ trên YouTube: {LONG_URL}",
-  "comment_at": "2026-11-30T11:35:00Z"
+  "comment_at": "2026-11-30T12:05:00Z"
  }
 }

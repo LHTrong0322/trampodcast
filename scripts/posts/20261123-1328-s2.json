@@ -1,10 +1,10 @@
 {
  "tag": "20261123-1328",
- "approved_by": "Trọng 23/11 22:25 (VN): lịch short cố định 18:30, T3 1/12",
+ "approved_by": "Trọng 23/11 22:25 (VN): lịch short cố định 18:30, T3 1/12 | Trọng 26/11 15:15: dời về 19:00, giữ ngày",
  "long_url_from": "20261123-1328",
  "youtube": {
   "item": "short2",
-  "publish_at": "2026-12-01T11:30:00Z",
+  "publish_at": "2026-12-01T12:00:00Z",
   "playlist": "Shorts insight",
   "title": "Big Tech đốt 200 tỷ đô mỗi quý, earnings vẫn mạnh nhất 4 năm #Shorts",
   "description": "Big Tech chi 200 tỷ đô capex mỗi quý cho AI, nhưng earnings của S&P 500 vẫn tăng mạnh nhất 4 năm. Thị trường đang sợ sai chỗ?\n\n▶ Xem bản đầy đủ: {LONG_URL}\n\n⚠️ Không phải lời khuyên đầu tư.\n🐧 Smart Penguin Insights · @Trong0322\n\n#Shorts #crypto #dautu",
@@ -22,14 +22,14 @@
   ],
   "thumb": "assets/posts/20261123-1328/short2-cover.jpg",
   "comment": "Big Tech chi đậm cho AI: bạn thấy đáng hay là bong bóng? 👇\n▶ Xem bản đầy đủ: {LONG_URL}",
-  "comment_at": "2026-12-01T11:35:00Z"
+  "comment_at": "2026-12-01T12:05:00Z"
  },
  "facebook": {
   "item": "short2",
-  "publish_unix": 1796124600,
+  "publish_unix": 1796126400,
   "caption": "Big Tech chi 200 tỷ đô mỗi quý cho AI, nhưng earnings vẫn mạnh nhất 4 năm 🐧 Thị trường đang sợ sai chỗ? Comment cho mình biết 👇\n\nKhông phải lời khuyên đầu tư.\n#bigtech #bongbongAI #chungkhoan #crypto #smartpenguininsights",
   "thumb": "assets/posts/20261123-1328/short2-cover.jpg",
   "comment": "▶ Bản đầy đủ trên YouTube: {LONG_URL}",
-  "comment_at": "2026-12-01T11:35:00Z"
+  "comment_at": "2026-12-01T12:05:00Z"
  }
 }

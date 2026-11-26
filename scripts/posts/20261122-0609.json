@@ -1,9 +1,9 @@
 {
  "tag": "20261122-0609",
- "approved_by": "Trọng 23/11 22:25 (VN): Video 2 dài T6 27/11 18:00 YouTube + Facebook, gói SEO seo-20261122-0609.json",
+ "approved_by": "Trọng 23/11 22:25 (VN): Video 2 dài T6 27/11 18:00 YouTube + Facebook, gói SEO seo-20261122-0609.json | Trọng 26/11 15:15: dời về 19:00, giữ ngày",
  "youtube": {
   "item": "long",
-  "publish_at": "2026-11-27T11:00:00Z",
+  "publish_at": "2026-11-27T12:00:00Z",
   "playlist": "Tư duy đầu tư crypto",
   "title": "Coin tốt vẫn lỗ? 4 câu hỏi trước khi mua altcoins",
   "description": "Coin tốt vẫn lỗ? Đầu tư altcoin không chỉ là chọn dự án tốt, mà còn phải hiểu giá trị có quay về token hay không. Video này đi qua 4 câu hỏi trước khi mua altcoin, với ví dụ thật từ HYPE, AAVE và UNI.\n\nTrong video:\n✅ Vì sao HYPE tăng mạnh còn AAVE giảm dù cả hai đều có revenue: bao nhiêu % revenue quay về token qua buyback\n✅ Ai sẽ là người mua token tiếp theo, và dòng tiền mới đến từ đâu\n✅ Thesis chưa được thị trường định giá: bài học từ fee switch của Uniswap\n✅ Đúng nhưng quá đông vẫn thua: khi nào tin tốt không còn đẩy được giá\n\n⏱ Chương:\n00:00 Mở đầu\n00:22 Token có hưởng lợi khi dự án thắng?\n00:57 Ai sẽ mua token tiếp theo?\n01:29 Thị trường đang bỏ sót điều gì?\n02:18 Thesis này đã quá đông chưa?\n02:54 Công thức: điểm giao nhau\n03:20 Tóm lại\n\n📊 Dữ liệu giá: CoinGecko (từ 1/1 tới 22/11/2026)\n\n▶ Playlist Tư duy đầu tư crypto: {PLAYLIST_URL}\n💬 Telegram: https://t.me/SmartPanda0322\n🐦 X: https://x.com/Trong0322\n\n⚠️ Không phải lời khuyên đầu tư. Hãy tự nghiên cứu (DYOR) trước khi xuống tiền.\n🐧 Smart Penguin Insights · @Trong0322\n\n#crypto #altcoin #dautu",
@@ -28,14 +28,14 @@
    "kiến thức crypto"
   ],
   "comment": "Coin bạn đang hold trả lời được mấy câu trong 4 câu hỏi? Bình luận tên coin của bạn bên dưới, Trọng sẽ đọc hết 👇",
-  "comment_at": "2026-11-27T11:05:00Z"
+  "comment_at": "2026-11-27T12:05:00Z"
  },
  "facebook": {
   "item": "long",
-  "publish_unix": 1795777200,
+  "publish_unix": 1795780800,
   "title": "Coin tốt vẫn lỗ? 4 câu hỏi trước khi mua altcoins",
   "caption": "Coin tốt vẫn lỗ? Đầu tư altcoin không chỉ là chọn dự án tốt, mà còn phải hiểu giá trị có quay về token hay không 🐧\n\n✅ Vì sao HYPE tăng mạnh còn AAVE giảm dù cả hai đều có revenue: bao nhiêu % revenue quay về token qua buyback\n✅ Ai sẽ là người mua token tiếp theo, và dòng tiền mới đến từ đâu\n✅ Thesis chưa được thị trường định giá: bài học từ fee switch của Uniswap\n✅ Đúng nhưng quá đông vẫn thua: khi nào tin tốt không còn đẩy được giá\n\nCoin bạn đang hold trả lời được mấy câu trong 4 câu hỏi? Comment cho mình biết 👇\n\nKhông phải lời khuyên đầu tư.\n#crypto #altcoin #dautucrypto #tokenomics #smartpenguininsights",
   "comment": "▶ Xem trên YouTube: {YT_URL}",
-  "comment_at": "2026-11-27T11:05:00Z"
+  "comment_at": "2026-11-27T12:05:00Z"
  }
 }

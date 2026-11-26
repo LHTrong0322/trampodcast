@@ -11,6 +11,10 @@ on:
         description: "1 = bài đã đặt lịch trong plan thì đưa lên NGAY (YouTube công khai, Reel đăng luôn)"
         required: false
         default: ""
+      retime:
+        description: "1 = bài đã đặt lịch: dời giờ công khai YouTube/Facebook theo giờ mới ghi trong plan"
+        required: false
+        default: ""
   schedule:
     - cron: "7,22,37,52 * * * *"   # 15 phút một lần (GitHub hay bỏ lịch): đăng bình luận nào đã tới giờ
 
@@ -43,7 +47,8 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          if [ -n "${{ github.event.inputs.plan }}" ] && [ "${{ github.event.inputs.now }}" = "1" ]; then python social_schedule.py now "${{ github.event.inputs.plan }}";
+          if [ -n "${{ github.event.inputs.plan }}" ] && [ "${{ github.event.inputs.retime }}" = "1" ]; then python social_schedule.py retime "${{ github.event.inputs.plan }}";
+          elif [ -n "${{ github.event.inputs.plan }}" ] && [ "${{ github.event.inputs.now }}" = "1" ]; then python social_schedule.py now "${{ github.event.inputs.plan }}";
           elif [ -n "${{ github.event.inputs.plan }}" ]; then python social_schedule.py post "${{ github.event.inputs.plan }}"; fi
           python social_schedule.py comments
       - name: Lưu trạng thái

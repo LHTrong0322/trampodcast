@@ -1,10 +1,10 @@
 {
  "tag": "20261123-1328",
- "approved_by": "Trọng 23/11 22:25 (VN): lịch short cố định 18:30, T5 26/11",
+ "approved_by": "Trọng 23/11 22:25 (VN): lịch short cố định 18:30, T5 26/11 | Trọng 26/11 15:15: dời về 19:00, giữ ngày",
  "long_url_from": "20261123-1328",
  "youtube": {
   "item": "short1",
-  "publish_at": "2026-11-26T11:30:00Z",
+  "publish_at": "2026-11-26T12:00:00Z",
   "playlist": "Shorts insight",
   "title": "225 tỷ đô bốc hơi mỗi ngày, suốt 31 phiên liền #Shorts",
   "description": "Mỗi ngày bốc hơi 225 tỷ đô, suốt 31 phiên liền. Vì sao Kobeissi cho rằng tin xấu đã vào giá?\n\n▶ Xem bản đầy đủ: {LONG_URL}\n\n⚠️ Không phải lời khuyên đầu tư.\n🐧 Smart Penguin Insights · @Trong0322\n\n#Shorts #crypto #dautu",
@@ -22,14 +22,14 @@
   ],
   "thumb": "assets/posts/20261123-1328/short1-cover.jpg",
   "comment": "225 tỷ đô bốc hơi mỗi ngày: bạn nghĩ đáy đã gần chưa? 👇\n▶ Xem bản đầy đủ: {LONG_URL}",
-  "comment_at": "2026-11-26T11:35:00Z"
+  "comment_at": "2026-11-26T12:05:00Z"
  },
  "facebook": {
   "item": "short1",
-  "publish_unix": 1795692600,
+  "publish_unix": 1795694400,
   "caption": "Mỗi ngày bốc hơi 225 tỷ đô, suốt 31 phiên liền 🐧 Tin xấu đã vào giá chưa? Comment cho mình biết 👇\n\nKhông phải lời khuyên đầu tư.\n#bongbongAI #chungkhoan #vimo #crypto #smartpenguininsights",
   "thumb": "assets/posts/20261123-1328/short1-cover.jpg",
   "comment": "▶ Bản đầy đủ trên YouTube: {LONG_URL}",
-  "comment_at": "2026-11-26T11:35:00Z"
+  "comment_at": "2026-11-26T12:05:00Z"
  }
 }

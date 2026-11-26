@@ -380,10 +380,33 @@ def now(plan_path: Path):
     _tg("🚀 Đăng ngay " + plan.get("tag", "") + "\n" + "\n".join(report))
 
 
+def retime(plan_path: Path):
+    """Trọng 26/11: dời giờ công khai của bài đã đặt lịch theo giờ mới trong plan (YouTube publishAt, Facebook scheduled_publish_time)."""
+    st = json.loads(_state_path(plan_path).read_text(encoding="utf-8"))
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    y, fb, report = plan.get("youtube") or {}, plan.get("facebook") or {}, []
+    if st.get("yt_id") and y.get("publish_at"):
+        tok = SU._yt_token()
+        r = requests.put("https://www.googleapis.com/youtube/v3/videos?part=status", headers={"Authorization": f"Bearer {tok}"},
+                         json={"id": st["yt_id"], "status": {"privacyStatus": "private", "publishAt": y["publish_at"],
+                                                             "selfDeclaredMadeForKids": False, "embeddable": True}}, timeout=60)
+        report.append(f"YouTube: {'dời lịch sang ' + y['publish_at'] if r.ok else 'lỗi ' + r.text[:200]} https://youtu.be/{st['yt_id']}")
+    if st.get("fb_id") and fb.get("publish_unix"):
+        tok = os.environ["FB_PAGE_TOKEN"].strip()
+        r = requests.post(f"https://graph.facebook.com/{FB}/{st['fb_id']}",
+                          data={"access_token": tok, "scheduled_publish_time": str(fb["publish_unix"])}, timeout=60)
+        when = datetime.fromtimestamp(fb["publish_unix"], timezone.utc).isoformat()
+        report.append(f"Facebook: {'dời lịch sang ' + when if r.ok else 'lỗi ' + r.text[:200]} id {st['fb_id']}")
+    for line in report:
+        print("KẾT QUẢ:", line, flush=True)
+
+
 if __name__ == "__main__":
     if sys.argv[1] == "post":
         post(Path(sys.argv[2]))
     elif sys.argv[1] == "now":
         now(Path(sys.argv[2]))
+    elif sys.argv[1] == "retime":
+        retime(Path(sys.argv[2]))
     else:
         comments()
