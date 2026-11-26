@@ -93,6 +93,54 @@ def splitless(lab: str) -> str:
     return re.split(r"[.,;]?\s*(?:Nguồn|Source)\s*:", lab, flags=re.I)[0].strip()
 
 
+# Trọng 27/11: câu đầu short CẤM mở bằng tên tác giả; đoạn đầu short luôn là HIGHLIGHT (con số sốc, nghịch lý,
+# kết luận bất ngờ) để tạo tò mò giữ chân người xem. Bằng chứng: short "coin rác" mở "Kyle gọi crypto là..." chỉ 4,5% ở lại xem.
+_SAY = r"(?:gọi|nói|cho rằng|chia sẻ|viết|nhận định|bảo|tin rằng|khẳng định|vừa đăng|phân tích|chỉ ra|đưa ra)"
+_AUTHOR_OPEN = re.compile(rf"^\W*(?:[Tt]heo\s+)?@?[A-ZĐ][\wÀ-ỹ.]*(?:\s+[A-ZĐ][\wÀ-ỹ.]*)?\s+{_SAY}\b|^\W*(?:[Tt]heo\s+)?@\w+", re.U)
+
+
+def _authors(plan: dict) -> set[str]:
+    names = set()
+    posts = list(plan.get("posts") or []) + [plan.get("source_post") or {}]
+    for p in posts:
+        if isinstance(p, dict):
+            names |= {str(p.get(k) or "") for k in ("author", "handle")}
+    names |= {str(x) for x in (plan.get("authors") or [])} | {str(plan.get("source_label") or "")}
+    return {n.lstrip("@").lower() for n in names if len(n.lstrip("@")) >= 3}
+
+
+def opens_with_author(text: str, authors: set[str] | None = None) -> bool:
+    """Câu mở có bắt đầu bằng tên tác giả / @handle không (xét 5 từ đầu)."""
+    t = (text or "").strip()
+    if not t:
+        return False
+    if _AUTHOR_OPEN.search(t):
+        return True
+    head = " ".join(re.findall(r"[\w@.]+", t.lower())[:5]).replace("@", "")
+    return any(re.search(rf"(?<![\w]){re.escape(a)}(?![\w])", head) for a in (authors or set()))
+
+
+def short_open_issues(plan: dict) -> list[str]:
+    """Câu đầu tiên người xem nghe trong mỗi short: short_hooks nếu có, không thì cụm bắt đầu short_spans / đầu lời đọc phần."""
+    bad, au = [], _authors(plan)
+    secs = plan.get("sections") or []
+    hooks = plan.get("short_hooks") or {}
+    spans = plan.get("short_spans") or []
+    for n, i in enumerate(plan.get("shorts") or []):
+        if not isinstance(i, int) or not 0 <= i < len(secs):
+            continue
+        h = str(hooks.get(str(i)) or hooks.get(i) or "")
+        sp = spans[n] if n < len(spans) and isinstance(spans[n], dict) else {}
+        narr = str(secs[i].get("narration") or "")
+        # dựng từ kịch bản duyệt: short_hooks chỉ là tiêu đề trên hình, câu NGHE đầu tiên là đầu short_spans (hoặc đầu lời đọc phần)
+        spoken = narr[narr.find(sp["from"]):] if sp.get("from") and sp["from"] in narr else narr
+        for what, first in (("tiêu đề/câu mở", h), ("câu đọc đầu tiên", spoken)):
+            if opens_with_author(first, au):
+                bad.append(f"Short {n + 1}: {what} mở bằng tên tác giả ('{first[:50]}'). Đoạn đầu short phải là highlight gây tò mò "
+                           f"(con số sốc, nghịch lý, kết luận bất ngờ), tên tác giả để sau; chỉnh short_spans 'from' hoặc lời đọc.")
+    return bad
+
+
 def lint(plan: dict) -> list[str]:
     bad: list[str] = []
     secs = plan.get("sections") or []
@@ -168,6 +216,7 @@ def lint(plan: dict) -> list[str]:
         # Trọng 24/11 (short NVDA): tiêu đề 61 ký tự tràn 3 dòng, bị thẻ đè. Video đã duyệt (video 3, 4) đều ≤ 46 ký tự.
         if len(h) > 46:
             bad.append(f"Tiêu đề short phần {int(key) + 1} dài {len(h)} ký tự, tối đa 46 (2 dòng), video đã duyệt đều 25 đến 46.")
+    bad += short_open_issues(plan)
     st = plan.get("short_title") or ""
     if st and len(st) > 46:
         bad.append(f"short_title dài {len(st)} ký tự, tối đa 46 (2 dòng).")

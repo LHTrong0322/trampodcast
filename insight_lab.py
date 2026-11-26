@@ -62,6 +62,9 @@ mỗi phần theo khuôn: câu hỏi 1 câu → 1 con số → 1 ví dụ coin t
   (vd {{"label": "Mỗi năm bỏ vào", "value": "$10K"}} và {{"label": "Sau 30 năm", "value": "$1.6M"}}).
   Có thể chỉ định "thumb_style": stat | pill | vs | before | question.
 Tiêu đề short (short_hooks) phải có con số hoặc dấu hỏi, ≤ 60 ký tự, tự đứng được một mình.
+Đoạn đầu MỖI short (câu hook và câu đọc đầu tiên, tức cụm "from" của short_spans) luôn là HIGHLIGHT đắt nhất để tạo tò mò:
+con số sốc, nghịch lý hoặc kết luận bất ngờ. CẤM mở bằng tên tác giả hay @handle (vd KHÔNG "Kyle gọi crypto là...",
+mà "95% altcoin sẽ về 0, chỉ 1 thước đo lọc được coin sống sót"). Tên tác giả nhắc sau, nếu cần.
 Gợi ý chọn data.type: nói về tâm lý thị trường → fear_greed; về altcoin vs bitcoin, dòng tiền → dominance;
 về coin cụ thể → coin_chart; so sánh 2-4 thứ có số → stat_compare (điền items); danh sách việc cần làm /
 tiêu chí đánh giá → checklist (điền items, value để trống); bức tranh toàn thị trường → market_heatmap.
@@ -75,7 +78,7 @@ của bài (thị trường lemon/coin rác, FDV, PMF, token alignment, Hyperliq
 NEWS_PROMPT = """
 CHẾ ĐỘ TIN NÓNG (ghi đè các yêu cầu độ dài ở trên): đây KHÔNG phải tập insight dài mà là 1 VIDEO NGẮN 9:16 về MỘT tin
 quan trọng vừa xảy ra, đăng TikTok/Shorts/Reels. Viết ĐÚNG 1 phần (sections có 1 phần tử), "shorts": [0].
-- short_hooks {{"0": "..."}}: câu mở ≤ 12 từ, có con số hoặc điều bất ngờ của tin (vd "BlackRock vừa gom thêm $500M BTC trong 1 ngày").
+- short_hooks {{"0": "..."}}: câu mở ≤ 12 từ, là HIGHLIGHT của tin, CẤM mở bằng tên tác giả, có con số hoặc điều bất ngờ của tin (vd "BlackRock vừa gom thêm $500M BTC trong 1 ngày").
 - narration của phần: 95-130 từ (khoảng 35-45 giây), câu ngắn, nhịp nhanh, theo khuôn: chuyện gì vừa xảy ra (ai, bao nhiêu, khi nào)
   → vì sao quan trọng (bối cảnh 1-2 câu, giải thích nửa câu nếu tên lạ) → ảnh hưởng tới nhà đầu tư/ giá coin liên quan
   → 1 câu kết hỏi ý kiến người xem để bình luận. KHÔNG dự đoán giá, KHÔNG hô mua bán, KHÔNG phóng đại quá mức tin gốc.

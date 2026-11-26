@@ -32,7 +32,7 @@ Chấm THẲNG TAY từng tiêu chí trên thang 10 (số thập phân được)
 - quy_tac: đúng quy tắc từ ngữ của Trọng (xem bên dưới)
 - ket: kết bằng nhắc lại ý chính trong 1 câu + kêu gọi bình luận cụ thể; có sẵn 1 câu hỏi cho bình luận ghim (kéo thảo luận, vd "Bạn đang hold coin nào?")
 - hinh_anh: chữ trên hình ngắn gọn, đổi kiểu hình thường xuyên, ảnh bìa đọc được khi thu nhỏ (tối đa 2 dòng chữ lớn)
-- short: 2 video ngắn có câu mở gây tò mò, tự đứng được một mình
+- short: 2 video ngắn có câu mở gây tò mò, tự đứng được một mình. Trọng 27/11: câu đầu CẤM mở bằng tên tác giả, phải là HIGHLIGHT đắt nhất (con số sốc, nghịch lý, kết luận bất ngờ) tạo tò mò giữ chân; short nào mở bằng tên tác giả thì short tối đa 4
 - giao_duc (BỘ LỌC GIÁO DỤC, Trọng chốt 21/11): tên riêng lạ (quỹ, tổ chức, cơ chế như DWF Labs, Assistance Fund) được giải thích 1 câu lần đầu;
   mọi so sánh phải có con số cụ thể của CẢ HAI bên (vd % revenue dùng buyback của từng dự án);
   SAU mỗi kiến thức phức tạp hoặc insight phải có ví dụ cụ thể, dễ hình dung (số thật, coin thật, hoặc phép so sánh đời thường như "cứ 100 đô phí...").
@@ -78,7 +78,8 @@ RUBRIC_SHORT = """Bạn là biên tập viên video ngắn 9:16 (YouTube Shorts,
 vì thời lượng, số phần, mục lục hay số lượng short của nó. Giọng máy khoảng 210 từ/phút, đoạn "edu" đọc chậm 5%.
 
 Chấm THẲNG TAY từng tiêu chí trên thang 10 (số thập phân được):
-- hook_1s: câu đầu (short_hooks) gây tò mò trong 1 đến 2 giây, có con số hoặc nghịch lý, dưới 15 từ
+- hook_1s: câu đầu (short_hooks) gây tò mò trong 1 đến 2 giây, có con số hoặc nghịch lý, dưới 15 từ.
+  Trọng 27/11: câu đầu CẤM mở bằng tên tác giả, phải là HIGHLIGHT đắt nhất (con số sốc, nghịch lý, kết luận bất ngờ) tạo tò mò giữ chân; mở bằng tên tác giả hay @handle thì hook_1s tối đa 4
 - mot_y: cả short xoay quanh MỘT ý chính, không lan man; người xem nhận được "câu trả lời" trước giây 40
 - giu_chan: không có đoạn quá 5 giây không có thông tin mới; câu ngắn, nhịp nhanh, có twist hoặc "nhưng" giữa video
 - do_dai: tổng hook + lời đọc + CTA trong khoảng 30 đến 59 giây (tính khoảng 3,5 từ/giây); quá 59 giây là lỗi nặng
