@@ -388,4 +388,5 @@ Rút từ các thumbnail tài chính viral 12x đến 75x Trọng gửi, giữ p
 - Trường kịch bản: `thumb_stat` (số sốc), `thumb_text` (≤ 24 ký tự), `thumb_tag` (nhãn ≤ 24), `thumb_kicker` (dòng nhỏ ≤ 30), `thumb_points` (≤ 3 chip), `thumb_vs`, `thumb_before` + `thumb_after`, `thumb_style` (tuỳ chọn). Mẫu: `scripts/TEMPLATE-approved.json`.
 - Mẫu đã duyệt: Video 3 bố cục stat ("-$6T", "Cú rũ hay sụp đổ?"), Video 4 bố cục before ("$10K" → "$1.6M").
 - Ảnh bìa chốt lại sau khi dựng: đặt ở `scripts/posts/thumbs/<mã>.png` (vd `20261123-1718.png`), bot đặt lịch tự dùng thay ảnh trong Release.
-- Bố cục cũ (classic, hero, sticker, stack, biển cảnh báo) đã bỏ; muốn quay lại thì `git revert` commit này. Ảnh bìa short (`ShortThumb.tsx`) chưa đổi.
+- Bố cục cũ (classic, hero, sticker, stack, biển cảnh báo) đã bỏ; muốn quay lại thì `git revert` commit e95d0df.
+- Ảnh bìa short 9:16 (`ShortThumb.tsx`, Trọng 26/11) cùng phong cách: tiêu đề viết thường có dấu, số trong tiêu đề tô đỏ/xanh theo ngữ cảnh (sau "giảm, mất, bốc hơi" là đỏ, sau "tăng" là xanh), 1 thẻ trắng có con số khổng lồ (key_stat) hoặc 2 thẻ đối đầu (thumb_vs), không có số thì avatar penguin; nhãn vàng "Xem full trên YouTube" (tin nóng: "Tin nóng hôm nay"). Có số thì bỏ danh sách ý cho ít chữ. Giữ vùng an toàn trên 230px, dưới 440px.
