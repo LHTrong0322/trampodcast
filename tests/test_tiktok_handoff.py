@@ -29,6 +29,7 @@ def test_gui_mot_lan_dung_gio_vn(monkeypatch, tmp_path):
     line = S.tiktok_handoff(plan, {"short4": tmp_path / "a.mp4"}, st)
     assert "T4 25/11 18:30" in line and st["tiktok_sent"]
     assert sent[1] == "Nvidia P/E 9x"
+    assert "https://t.me/SmartPanda0322" in sent[2]   # 26/11: kèm bình luận kéo về Telegram
     assert S.tiktok_handoff(plan, {"short4": tmp_path / "a.mp4"}, st) is None   # không gửi lại
 
 

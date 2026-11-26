@@ -101,6 +101,11 @@ def main():
                     SU.yt_thumb(tok, long_id, rel["thumb"])
                 yt_add(tok, yt_playlist(tok, a.playlist), long_id)
                 report.append(f"YouTube video dài ({a.privacy}): https://youtu.be/{long_id}")
+                if a.privacy == "public":   # Trọng 26/11: mọi video đều có bình luận kéo về Telegram
+                    r = requests.post("https://www.googleapis.com/youtube/v3/commentThreads", params={"part": "snippet"},
+                                      headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json"}, timeout=60,
+                                      data=json.dumps({"snippet": {"videoId": long_id, "topLevelComment": {"snippet": {"textOriginal": SU.cta_comment(seo.get("pinned_comment", ""), seed=f"{long_id}")}}}}))
+                    report.append(f"   bình luận video dài: {'OK, nhớ ghim' if r.ok else 'lỗi ' + r.text[:120]}")
             pl_short = yt_playlist(tok, "Shorts insight")
             for i, k in enumerate(["short1", "short2"]):
                 if k in yt_items and rel[k]:
@@ -111,10 +116,7 @@ def main():
                     yt_add(tok, pl_short, sid)
                     report.append(f"YouTube Short {i + 1} ({a.privacy}): https://youtube.com/shorts/{sid}")
                     if a.privacy == "public":   # Trọng 23/11: short luôn có bình luận
-                        import social_schedule as SS
-                        url = f"https://youtu.be/{long_id}" if long_id else SS.long_url(a.tag)
-                        txt = "Bạn thấy điều nào khó áp dụng nhất? Comment cho mình biết nhé 👇"
-                        txt += f"\n▶ Xem bản đầy đủ: {url}" if url else "\n▶ Bản đầy đủ có trên kênh Smart Penguin Insights"
+                        txt = SU.cta_comment("Bạn thấy điều nào khó áp dụng nhất? Comment cho mình biết nhé 👇", seed=sid)
                         r = requests.post("https://www.googleapis.com/youtube/v3/commentThreads", params={"part": "snippet"},
                                           headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json"}, timeout=60,
                                           data=json.dumps({"snippet": {"videoId": sid, "topLevelComment": {"snippet": {"textOriginal": txt}}}}))
@@ -128,14 +130,14 @@ def main():
                 fid = fb_long(rel["long"], title, seo.get("yt_description", ""), pub)
                 report.append(f"Facebook video dài ({'công khai' if pub else 'chưa đăng'}): id {fid}")
                 if pub:
-                    ok, _ = SU.fb_comment(fid, SU.fb_link_comment(f"https://youtu.be/{long_id}" if long_id else None))
+                    ok, _ = SU.fb_comment(fid, SU.fb_link_comment(seed=str(fid)))
                     report.append(f"   bình luận link: {'OK, nhớ ghim' if ok else 'không đăng được, đã bỏ qua link'}")
             for i, k in enumerate(["short1", "short2"]):
                 if k in fb_items and rel[k]:
                     rid = fb_reel(rel[k], cap(i), pub)
                     report.append(f"Facebook Reel từ Short {i + 1} ({'công khai' if pub else 'bản nháp'}): id {rid}")
                     if pub:
-                        ok, _ = SU.fb_comment(rid, SU.fb_link_comment(f"https://youtu.be/{long_id}" if long_id else None))
+                        ok, _ = SU.fb_comment(rid, SU.fb_link_comment(seed=str(rid)))
                         report.append(f"   bình luận link: {'OK, nhớ ghim' if ok else 'không đăng được, đã bỏ qua link'}")
         except Exception as ex:
             report.append(f"Facebook LỖI: {str(ex)[:200]}")

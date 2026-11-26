@@ -79,6 +79,8 @@ def tiktok_handoff(plan: dict, rel: dict, st: dict) -> str | None:
         import insight_publish as PB
         PB.tg_video(Path(rel[item]), f"🎵 TIKTOK: đăng {thu} {vn:%d/%m} lúc {vn:%H:%M}. Tải video này, caption ở tin nhắn tiếp theo.")
         PB.tg_text(cap)
+        tk = SU.cta_comment(seed=f"{plan.get('tag', '')}-tiktok-{item}")
+        PB.tg_text(f"💬 Bình luận TikTok (đăng xong dán vào bình luận rồi ghim):\n\n{tk}")
     except Exception as ex:
         return f"TikTok: gửi Telegram lỗi {str(ex)[:120]}"
     st["tiktok_sent"] = True
@@ -87,13 +89,12 @@ def tiktok_handoff(plan: dict, rel: dict, st: dict) -> str | None:
 
 def short_comment(plan: dict, posts: Path = Path("scripts/posts")) -> dict | None:
     """Trọng 23/11: short đăng lên YouTube LUÔN phải có bình luận. Kế hoạch không ghi thì máy tự tạo:
-    câu hỏi kéo thảo luận + link bản đầy đủ, đăng 5 phút sau giờ công khai."""
+    câu hỏi kéo thảo luận + link Telegram (26/11: không gắn link YouTube, bị ẩn), đăng 5 phút sau giờ công khai."""
     y = plan.get("youtube") or {}
-    if not y.get("item", "long").startswith("short") or y.get("comment"):
+    if not y.get("publish_at") or y.get("comment"):   # 26/11: mọi video (dài + short) đều có bình luận
         return None
-    url = long_url(plan.get("tag", ""), posts)
-    text = "Bạn thấy điều nào khó áp dụng nhất? Comment cho mình biết nhé 👇"
-    text += f"\n▶ Xem bản đầy đủ: {url}" if url else "\n▶ Bản đầy đủ có trên kênh Smart Penguin Insights"
+    text = SU.cta_comment("Bạn thấy điều nào khó áp dụng nhất? Comment cho mình biết nhé 👇",
+                          seed=f"{plan.get('tag', '')}-{y.get('item', '')}")
     at = datetime.fromisoformat(y["publish_at"].replace("Z", "+00:00")) + timedelta(minutes=5)
     return {"comment": text, "comment_at": at.strftime("%Y-%m-%dT%H:%M:%SZ")}
 
@@ -285,6 +286,9 @@ def comments():
             c = plan.get(key) or {}
             if key == "youtube" and plan.get("youtube"):
                 c = {**c, **(short_comment(plan) or {})}
+            if key == "facebook" and c and not c.get("comment") and c.get("publish_unix"):
+                at = datetime.fromtimestamp(c["publish_unix"], timezone.utc) + timedelta(minutes=5)
+                c = {**c, "comment": SU.cta_comment(seed=f"{plan.get('tag', '')}-fb-{c.get('item', '')}"), "comment_at": at.strftime("%Y-%m-%dT%H:%M:%SZ")}
             if not c.get("comment") or key in done:
                 continue
             if datetime.fromisoformat(c["comment_at"].replace("Z", "+00:00")) > now:
@@ -292,8 +296,7 @@ def comments():
             text = c["comment"].replace("{YT_URL}", yt_url)
             if "{LONG_URL}" in text:
                 text = text.replace("{LONG_URL}", long_url(plan.get("tag", "")) or yt_url)
-            if key == "facebook" and SU.TELEGRAM not in text:   # link Telegram chỉ nằm ở bình luận Facebook
-                text += f"\n💬 Telegram: {SU.TELEGRAM}"
+            text = SU.cta_comment(text, seed=f"{plan.get('tag', '')}-{key}-{c.get('item', '')}")   # Trọng 26/11: mọi bình luận kéo về Telegram, không link YouTube
             ok, err = False, ""
             try:
                 if key == "youtube" and st.get("yt_id"):

@@ -172,6 +172,11 @@ Xác minh nâng cao YouTube không làm giảm reach, đã xác minh. 8 luật d
   Bình luận tự đăng mỗi giờ phút 07 khi tới giờ, Trọng tự ghim (API không ghim được). Trạng thái ở <tag>.state.json.
   SHORT LUÔN CÓ BÌNH LUẬN (Trọng 23/11): kế hoạch YouTube short không ghi "comment" thì social_schedule.short_comment tự tạo
   (câu hỏi + link video dài cùng tag), đăng 5 phút sau giờ công khai; social_post đăng short công khai cũng tự bình luận.
+  MỌI VIDEO ĐỀU CÓ BÌNH LUẬN KÉO VỀ TELEGRAM (Trọng 26/11): bình luận gắn link YouTube bị ẩn hết, nên mọi bình luận
+  trên YouTube (video dài + short), Facebook (video dài + Reel) và TikTok đi qua social_upload.cta_comment: xoá dòng có
+  link YouTube, luôn kết bằng 1 câu call to action Telegram https://t.me/SmartPanda0322, cố định 1 câu (Trọng 27/11): "🐧 Cả nhà join group Telegram để nhận nhiều insights sớm hơn nhé 👉 <link>". Kế hoạch không ghi bình luận thì máy tự tạo
+  (5 phút sau giờ đăng). TikTok không có API bình luận: tiktok_handoff gửi sẵn bình luận qua Telegram để Trọng dán và ghim;
+  đăng TikTok qua vidIQ cũng phải dán bình luận này tay. Link video dài vẫn nằm ở mô tả short YouTube.
   Viết kế hoạch vẫn nên ghi "comment" riêng cho từng short (câu hỏi hợp nội dung + link bản đầy đủ).
   TIKTOK (Trọng 23/11): chưa đăng tự động (app TikTok chưa qua audit thì chỉ đăng riêng tư). Khi đặt lịch một short,
   social_schedule.tiktok_handoff gửi Telegram file short + caption (plan["tiktok"]["caption"], không có thì lấy caption Reel)

@@ -60,12 +60,38 @@ def fb_comment(object_id: str, text: str) -> tuple[bool, str]:
         return False, str(ex)[:200]
 
 
-def fb_link_comment(yt_url: str | None) -> str:
-    parts = []
-    if yt_url:
-        parts.append(f"▶ Bản đầy đủ trên YouTube: {yt_url}")
-    parts.append(f"💬 Telegram: {TELEGRAM}")
-    return "\n".join(parts)
+# Trọng 26/11: bình luận gắn link YouTube đầy đủ bị ẩn hết. Từ nay MỌI video trên YouTube, Facebook, TikTok
+# đều có bình luận call to action kéo người xem về Telegram (không còn link YouTube trong bình luận).
+# Trọng 27/11: chỉ dùng đúng 1 câu call to action này cho mọi bình luận.
+TELEGRAM_CTAS = [
+    "🐧 Cả nhà join group Telegram để nhận nhiều insights sớm hơn nhé 👉 {tg}",
+]
+TELEGRAM_CTA = TELEGRAM_CTAS[0].format(tg=TELEGRAM)
+YT_TELEGRAM_CTA = TELEGRAM_CTA
+
+
+def pick_cta(seed: str = "") -> str:
+    import hashlib
+    i = int(hashlib.md5(str(seed).encode()).hexdigest(), 16) % len(TELEGRAM_CTAS) if seed else 0
+    return TELEGRAM_CTAS[i].format(tg=TELEGRAM)
+
+
+def cta_comment(text: str = "", seed: str = "") -> str:
+    """Bình luận mọi nền tảng: bỏ dòng có link YouTube, luôn kết bằng 1 câu call to action Telegram (đổi theo video)."""
+    import re
+    keep = [ln for ln in text.splitlines()
+            if ln.strip() and not re.search(r"youtu\.be|youtube\.com|\{(YT_URL|LONG_URL)\}", ln, re.I)]
+    if "t.me/smartpanda0322" not in "\n".join(keep).lower():
+        keep.append(pick_cta(seed or text))
+    return "\n".join(keep)
+
+
+yt_comment_text = cta_comment
+
+
+def fb_link_comment(yt_url: str | None = None, seed: str = "") -> str:
+    """Bình luận đầu Facebook (Trọng 26/11): call to action Telegram, không gắn link YouTube."""
+    return cta_comment(seed=seed or str(yt_url or ""))
 
 
 # ---------------------------------------------------------------- YouTube
@@ -166,7 +192,7 @@ def facebook(res: dict, seo: dict) -> list[str]:
         fin.raise_for_status()
         out.append(f"Facebook Reel {i + 1} ({'công khai' if publish else 'bản nháp'}): id {vid}")
         if publish:   # link chỉ ở bình luận; lỗi thì thôi, không gắn link ở đâu
-            ok, err = fb_comment(vid, fb_link_comment(res.get("yt_url")))
+            ok, err = fb_comment(vid, fb_link_comment(res.get("yt_url"), seed=str(vid)))
             out.append(f"   bình luận link: {'OK, nhớ ghim' if ok else 'không đăng được, đã bỏ qua link'}")
     return out
 
