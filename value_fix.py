@@ -30,7 +30,7 @@ THẺ HÌNH HIỆN TẠI (at = cụm từ trong lời đọc nơi thẻ xuất h
 SỐ LIỆU ĐÃ CÓ (dùng thoải mái):
 {facts}
 
-SỐ CHƯA THẤY NGUỒN (Trọng 27/11): ĐÚNG SỰ THẬT quan trọng hơn ĐÚNG NGUỒN. KHÔNG được xoá số chỉ vì chưa thấy trong danh sách trên, không được xoá vì "nguồn gốc không nhắc". Dùng WebSearch/WebFetch tra:
+SỐ CHƯA THẤY NGUỒN (Trọng 27/11): ĐÚNG SỰ THẬT quan trọng hơn ĐÚNG NGUỒN. KHÔNG được xoá số chỉ vì chưa thấy trong danh sách trên, không được xoá vì "nguồn gốc không nhắc". Dữ liệu lịch sử phổ biến (đáy, đỉnh các chu kỳ trước, ATH, sự kiện lớn như FTX, Luna, halving) là kiến thức chung của ngành: giữ, không đòi nguồn trong bài, chỉ bỏ khi biết chắc là sai. Dùng WebSearch/WebFetch tra:
 tìm được bài chứng minh thì GIỮ số đó và ghi vào "new_facts" (kèm link, trích dẫn) để kiểm chứng; chỉ bỏ khi tra ra số sai,
 hoặc đã tra kỹ mà không bài nào có, và ghi rõ lý do trong "changes".
 

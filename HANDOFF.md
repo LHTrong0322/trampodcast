@@ -95,6 +95,7 @@ Xác minh nâng cao YouTube không làm giảm reach, đã xác minh. 8 luật d
   Mỗi lần viết lại đều báo Telegram "✂️" kèm câu cũ, câu mới, lý do. Tắt bằng env VALUE_FIX=0.
 - ĐÚNG SỰ THẬT > ĐÚNG NGUỒN (Trọng 27/11): đừng chăm chăm đúng nguồn được đưa. Số chứng minh được ở bất kỳ nguồn uy tín nào là hợp lệ;
   bot chấm và bot viết lại KHÔNG được xoá số chỉ vì "không có trong nguồn", phải tra web, chỉ bỏ khi số sai hoặc tra kỹ không ra.
+  Dữ liệu lịch sử phổ biến (đáy/đỉnh chu kỳ trước, ATH, FTX, Luna, halving) là kiến thức chung: giữ, tra không ra cũng không được bỏ.
   Kịch bản viết tay nên kèm plan["sources"] (value, claim, source, url, quote) để bot biết số đã có chứng cứ.
 - Luật giá trị + khớp lời đọc không còn đá nhau: mỗi câu lời đọc mang 1 con số, thẻ hình VẼ con số đó, không chép câu chữ.
 - Short dọc không chạy đếm số trên thẻ (CountUp): bot review chụp trúng số đếm dở rồi trừ điểm "số lệch". Trước thẻ đầu tiên, thẻ đầu hiện từ giây 0.

@@ -37,7 +37,7 @@ Chấm THẲNG TAY từng tiêu chí trên thang 10 (số thập phân được)
 - giu_chan: cứ 40 đến 60 giây có câu móc hoặc câu hỏi chuyển phần; không có đoạn lý thuyết khô kéo dài
 - gia_tri: mỗi phần có ví dụ thật + "vậy bạn làm gì" dùng được ngay; đúng với tiêu đề
 - de_hieu: câu ngắn (đa số dưới 20 từ), đọc to nghe tự nhiên; thuật ngữ thường có giải thích ngắn, nhưng KHÔNG bắt buộc giải thích hết (Trọng chốt 21/11: có đoạn được viết chuyên nghiệp như pro researcher), không trừ điểm vì thế
-- chinh_xac: số liệu khớp bài gốc, không bịa, không hô hào mua bán, có câu "không phải lời khuyên đầu tư" Trọng 27/11: số CHƯA thấy trong nguồn được đưa KHÔNG tự động là sai; ghi vào fixes dạng "cần kiểm chứng: <số>, tra nguồn" thay vì đòi xoá, chỉ đòi bỏ khi biết chắc số sai. ĐÚNG SỰ THẬT quan trọng hơn ĐÚNG NGUỒN: số đúng, chứng minh được ở bất kỳ nguồn uy tín nào là hợp lệ, không trừ điểm vì "không có trong nguồn được đưa"
+- chinh_xac: số liệu khớp bài gốc, không bịa, không hô hào mua bán, có câu "không phải lời khuyên đầu tư" Trọng 27/11: số CHƯA thấy trong nguồn được đưa KHÔNG tự động là sai; ghi vào fixes dạng "cần kiểm chứng: <số>, tra nguồn" thay vì đòi xoá, chỉ đòi bỏ khi biết chắc số sai. ĐÚNG SỰ THẬT quan trọng hơn ĐÚNG NGUỒN: số đúng, chứng minh được ở bất kỳ nguồn uy tín nào là hợp lệ, không trừ điểm vì "không có trong nguồn được đưa". Dữ liệu lịch sử phổ biến (đáy, đỉnh các chu kỳ trước, ATH, sự kiện lớn như FTX, Luna, halving) là kiến thức chung của ngành: giữ, không đòi nguồn trong bài, chỉ bỏ khi biết chắc là sai
 - quy_tac: đúng quy tắc từ ngữ của Trọng (xem bên dưới)
 - ket: kết bằng nhắc lại ý chính trong 1 câu + kêu gọi bình luận cụ thể; có sẵn 1 câu hỏi cho bình luận ghim (kéo thảo luận, vd "Bạn đang hold coin nào?")
 - hinh_anh: chữ trên hình ngắn gọn, đổi kiểu hình thường xuyên, ảnh bìa đọc được khi thu nhỏ (tối đa 2 dòng chữ lớn)
@@ -105,7 +105,7 @@ Chấm THẲNG TAY từng tiêu chí trên thang 10 (số thập phân được)
 - do_dai: tổng hook + lời đọc + CTA trong khoảng 30 đến 59 giây (tính khoảng 3,5 từ/giây); quá 59 giây là lỗi nặng
 - gia_tri: có ví dụ hoặc con số cụ thể và một việc người xem làm được ngay
 - de_hieu: người mới hiểu ngay khi nghe 1 lần; thuật ngữ lạ được giải thích nửa câu
-- chinh_xac: số liệu khớp nguồn, không bịa, không hô hào mua bán Trọng 27/11: số CHƯA thấy trong nguồn được đưa KHÔNG tự động là sai; ghi vào fixes dạng "cần kiểm chứng: <số>, tra nguồn" thay vì đòi xoá, chỉ đòi bỏ khi biết chắc số sai. ĐÚNG SỰ THẬT quan trọng hơn ĐÚNG NGUỒN: số đúng, chứng minh được ở bất kỳ nguồn uy tín nào là hợp lệ, không trừ điểm vì "không có trong nguồn được đưa"
+- chinh_xac: số liệu khớp nguồn, không bịa, không hô hào mua bán Trọng 27/11: số CHƯA thấy trong nguồn được đưa KHÔNG tự động là sai; ghi vào fixes dạng "cần kiểm chứng: <số>, tra nguồn" thay vì đòi xoá, chỉ đòi bỏ khi biết chắc số sai. ĐÚNG SỰ THẬT quan trọng hơn ĐÚNG NGUỒN: số đúng, chứng minh được ở bất kỳ nguồn uy tín nào là hợp lệ, không trừ điểm vì "không có trong nguồn được đưa". Dữ liệu lịch sử phổ biến (đáy, đỉnh các chu kỳ trước, ATH, sự kiện lớn như FTX, Luna, halving) là kiến thức chung của ngành: giữ, không đòi nguồn trong bài, chỉ bỏ khi biết chắc là sai
 - quy_tac: đúng quy tắc từ ngữ của Trọng (xem bên dưới)
 - ket: câu kết gọn, có lời mời theo dõi hoặc câu hỏi để bình luận; câu cuối nối được về câu mở để video lặp mượt (tăng loop)
 - hinh_anh: hình (beats) đổi khoảng 3 đến 6 giây một lần, chữ trên hình rất ngắn, đọc được trên điện thoại
