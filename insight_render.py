@@ -72,7 +72,10 @@ def word_times(text: str, pcm: bytes) -> list[dict]:
 def build_timeline(plan, pcm, text, gap=0.35, pre: dict | None = None):
     """Ghép audio các đoạn (nghỉ ngắn giữa đoạn để giữ nhịp) + lập danh sách cảnh (giây)."""
     secs = plan["sections"]
-    order = (["hook"] if "hook" in pcm else []) + ["intro"] + [f"s{k}" for k in range(len(secs))] + ["outro"]
+    # Trọng 27/11: kịch bản viết sẵn (vd short bài học Dow) có thể để trống intro/outro, đoạn trống không được đọc giọng
+    # nên không có trong pcm: CHỈ bỏ qua đoạn thật sự không có lời. Đoạn có lời mà thiếu giọng vẫn báo lỗi như cũ.
+    order = [k for k in ["hook", "intro"] + [f"s{k}" for k in range(len(secs))] + ["outro"]
+             if k in pcm or (text.get(k) or "").strip()]
     audio, scenes, t = b"", [], 0.0
     for key in order:
         a = pcm[key] + V.gap(gap if key != "outro" else 2.6)
