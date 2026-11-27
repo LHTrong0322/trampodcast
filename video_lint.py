@@ -138,6 +138,39 @@ def short_open_issues(plan: dict) -> list[str]:
             if opens_with_author(first, au):
                 bad.append(f"Short {n + 1}: {what} mở bằng tên tác giả ('{first[:50]}'). Đoạn đầu short phải là highlight gây tò mò "
                            f"(con số sốc, nghịch lý, kết luận bất ngờ), tên tác giả để sau; chỉnh short_spans 'from' hoặc lời đọc.")
+            if opens_with_greeting(first):
+                bad.append(f"Short {n + 1}: {what} mở bằng lời chào ('{first[:50]}'). Giây 0 của short phải là highlight, "
+                           f"bỏ lời chào; chỉnh short_spans 'from' hoặc lời đọc.")
+    return bad
+
+
+# Trọng 27/11 (audit kênh): Shorts chỉ khoảng 21% engaged view, video dài mất 50% người xem trong khoảng 20 giây đầu.
+# Giây 0 phải có điểm gây tò mò; lời chào và logo để SAU hook (video dài) hoặc bỏ hẳn (short).
+_GREET = re.compile(r"^\W*(?:xin chào|chào\s+(?:mừng|các bạn|mọi người|anh em|cả nhà)|hôm nay\s+(?:chúng ta|mình|ta|chúng mình)"
+                    r"|các bạn ơi|anh em ơi|trong video\s+(?:này|hôm nay))", re.I | re.U)
+_PROMISE = re.compile(r"hết video|cuối video|sau video|bạn sẽ (?:biết|hiểu|có|thấy|nắm)|mình sẽ chỉ|câu trả lời nằm|giúp bạn", re.I | re.U)
+HOOK_SCREEN_WORDS = 8
+_BIG = re.compile(r"\b(?:bitcoin|btc|ethereum|eth|solana|sol|nvidia|nvda|trump|fed|powell|etf|s&p|nasdaq|apple|tesla|binance|"
+                  r"hype|aave|uni|uniswap|ena|xrp|bnb|vàng)\b", re.I | re.U)
+
+
+def opens_with_greeting(text: str) -> bool:
+    """Câu mở có bắt đầu bằng lời chào / dẫn nhập rỗng không."""
+    return bool(_GREET.search(text or ""))
+
+
+def hook_screen_issues(plan: dict) -> list[str]:
+    """Chữ trên hình giây 0: tối đa 8 từ, có con số, câu hỏi, mã coin IN HOA hoặc tên riêng để gây tò mò."""
+    hs = str(plan.get("hook_screen") or "").strip()
+    if not hs:
+        return ["Thiếu hook_screen (chữ to trên hình giây 0). Điền tối đa 8 từ, có con số hoặc tên lớn, vd 'HYPE +150%. AAVE -35%.'"]
+    bad, words = [], hs.split()
+    if len(words) > HOOK_SCREEN_WORDS:
+        bad.append(f"hook_screen '{hs}' dài {len(words)} từ, tối đa {HOOK_SCREEN_WORDS} từ để đọc kịp trong 1 giây.")
+    proper = (any(re.match(r"[A-ZĐ]", w) for w in words[1:]) or any(re.fullmatch(r"\W*[A-Z]{2,}\W*", w) for w in words)
+              or bool(_BIG.search(hs)))
+    if not (re.search(r"\d|\?", hs) or proper):
+        bad.append(f"hook_screen '{hs}' không có con số, câu hỏi hay tên lớn (BTC, Nvidia, Trump...), khó giữ người xem ở giây 0.")
     return bad
 
 
@@ -196,6 +229,12 @@ def lint(plan: dict) -> list[str]:
         q = re.search(r"câu (số )?(\d)", hook.lower())
         if q and int(q.group(2)) <= len(secs) and not secs[int(q.group(2)) - 1].get("emphasis"):
             bad.append(f"Hook nhắc riêng câu số {q.group(2)} nhưng phần đó chưa được làm nổi (thêm \"emphasis\": \"CÂU NGƯỜI TA BỎ QUA\").")
+    if opens_with_greeting(hook):
+        bad.append(f"Hook mở bằng lời chào ('{hook[:50]}'). Đưa con số hoặc nghịch lý lên đầu, lời chào để sau hook.")
+    if hook and plan.get("format") != "short" and not _PROMISE.search(hook):
+        bad.append("Hook video dài chưa có lời hứa cụ thể trong 15 giây đầu (vd 'Hết video bạn sẽ biết...'). "
+                   "Thiếu lời hứa, người xem không có lý do ở lại.")
+    bad += hook_screen_issues(plan)
     if len(_words(hook)) > 42:
         bad.append(f"Hook dài {len(_words(hook))} từ (khoảng {len(_words(hook)) / WPS:.0f} giây), nên dưới 40 từ.")
     tt = plan.get("thumb_text", "")
