@@ -408,7 +408,7 @@ const Trend: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, d
   );
 };
 
-// Trọng 27/11: chart lý thuyết Dow trên giá BTC tuần THẬT (insight_lab.dow_data, thuật toán giống bot radar).
+// Trọng 27/11: chart lý thuyết Dow trên giá BTC tuần THẬT (insight_lab.dow_data, cùng quy tắc đỉnh đáy với dow() của radar-scanner).
 // mode "swings": đánh dấu đỉnh/đáy HH, HL (xanh) và LH, LL (đỏ). mode "backtest": tô nền xanh lúc Dow tăng (cầm BTC),
 // mũi tên mua/bán, bảng so sánh cầm khi Dow tăng với mua rồi giữ.
 export const Dow: React.FC<{b: Beat; w: number; h: number; d: any}> = ({b, w, h, d}) => {
@@ -462,7 +462,7 @@ export const Dow: React.FC<{b: Beat; w: number; h: number; d: any}> = ({b, w, h,
         <div style={{color: C.muted}}>Mua rồi giữ: {pct(st.bh || 0)} · sụt tối đa {pct(st.bhdd || 0)}</div>
       </div> : null}
       <div style={{position: 'absolute', left: 40, bottom: 14, fontSize: 24, fontWeight: 600, color: C.muted}}>
-        {b.sub || 'Dữ liệu thật: BTC đóng cửa tuần, thuật toán Dow của bot radar'}</div>
+        {b.sub || 'Dữ liệu thật: BTC đóng cửa tuần, đỉnh đáy xác định tự động theo Dow'}</div>
     </Card>
   );
 };
