@@ -1,0 +1,24 @@
+{
+ "_rule": "Trọng 27/11: MỌI short YouTube đều gắn 'Video có liên quan' (YouTube Studio, không có API). Chuỗi: short n -> short kế tiếp cùng video, short cuối -> video dài. Short tin nóng -> video dài gần nhất. YouTube chỉ cho chọn video ĐÃ CÔNG KHAI, nên tạm gắn video dài đã công khai, tới khi đích lên sóng thì gắn lại.",
+ "links": [
+  {"short":"ScgdI1yseRw","name":"V1 S1","final":"k5y-oyRjH0Y","now":"k5y-oyRjH0Y"},
+  {"short":"k5y-oyRjH0Y","name":"V1 S2","final":"MBh0-ZsFOuE","now":"MBh0-ZsFOuE"},
+  {"short":"CzIhOftpgeo","name":"V2 S1","final":"DXplVovBCZw","now":"MBh0-ZsFOuE","final_public":"2026-11-29T12:00:00Z"},
+  {"short":"DXplVovBCZw","name":"V2 S2","final":"sJP5y0o5d2I","now":"MBh0-ZsFOuE","final_public":"2026-11-27T12:00:00Z"},
+  {"short":"lQXUB_XYCYM","name":"V3 S4","final":"fKqKlMk3enM","now":"fKqKlMk3enM"},
+  {"short":"fKqKlMk3enM","name":"V3 S1","final":"s_pslsEPmgw","now":"xr8roZAgzow","final_public":"2026-11-30T04:00:00Z"},
+  {"short":"s_pslsEPmgw","name":"V3 S5","final":"o4GXR7vm-bI","now":"xr8roZAgzow","final_public":"2026-12-02T12:00:00Z"},
+  {"short":"o4GXR7vm-bI","name":"V3 S2","final":"9m9XnlzwCFY","now":"xr8roZAgzow","final_public":"2026-12-04T12:00:00Z"},
+  {"short":"9m9XnlzwCFY","name":"V3 S3","final":"xr8roZAgzow","now":"xr8roZAgzow"},
+  {"short":"UECaQ2SvE2g","name":"V5 S1","final":"1MU8BDyDV3I","now":"xr8roZAgzow","final_public":"2026-12-03T04:00:00Z"},
+  {"short":"1MU8BDyDV3I","name":"V5 S2","final":"Tq3BkUpk9vU","now":"xr8roZAgzow","final_public":"2026-12-05T12:00:00Z"},
+  {"short":"Tq3BkUpk9vU","name":"V5 S3","final":"3oQUORtWOiY","now":"xr8roZAgzow","final_public":"2026-12-07T12:00:00Z"},
+  {"short":"3oQUORtWOiY","name":"V5 S4","final":"m-vVAaia1Do","now":"xr8roZAgzow","final_public":"2026-12-09T12:00:00Z"},
+  {"short":"m-vVAaia1Do","name":"V5 S5","final":"S-JAKAH6cpQ","now":"xr8roZAgzow","final_public":"2026-11-30T12:00:00Z"},
+  {"short":"z9ANohq6Zlk","name":"V4 S1","final":"mGefTmE6SVo","now":"xr8roZAgzow","final_public":"2026-12-08T12:00:00Z"},
+  {"short":"mGefTmE6SVo","name":"V4 S2","final":"3Wf1fpuu5VU","now":"xr8roZAgzow","final_public":"2026-12-03T12:00:00Z"},
+  {"short":"XCKLwPR0YSM","name":"Jensen tin nóng","final":"xr8roZAgzow","now":"xr8roZAgzow"},
+  {"short":"bbZoZCyyDHQ","name":"ETF $4.94B tin nóng","final":"S-JAKAH6cpQ","now":"xr8roZAgzow","final_public":"2026-11-30T12:00:00Z"}
+ ],
+ "endscreens": "Màn hình kết thúc 'Phù hợp nhất với người xem' + Đăng ký đã gắn 27/11 cho video dài MBh0-ZsFOuE, xr8roZAgzow, sJP5y0o5d2I, S-JAKAH6cpQ, 3Wf1fpuu5VU. Video dài mới: gắn tương tự."
+}
