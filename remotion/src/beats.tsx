@@ -100,19 +100,20 @@ const Versus: React.FC<{b: Beat; w: number; h: number}> = ({b, w, h}) => {
   };
   const side = (x: Side | undefined, i: number) => {
     if (!x) return null;
-    const s = spring({frame: f - 2 - i * 3, fps, config: {damping: 14}});   // review 22/11: hai bên hiện gần như cùng lúc
+    // review 27/11: cột phải trượt trễ 3 khung làm 2 số lệch hàng, màu mờ khi bot chụp. 2 bên hiện CÙNG lúc, nhanh, không trượt
+    const s = spring({frame: f - 1, fps, config: {damping: 20, mass: 0.6}});
     return (
       <div style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: 14, opacity: s,
-        transform: `translateY(${(1 - s) * 40}px)`}}>
+        transform: `scale(${0.94 + 0.06 * s})`}}>
         {anyLogo ? <div style={{height: 130, display: 'flex', alignItems: 'center'}}><Logo src={x.logo} size={130} label={x.label} /></div> : null}
         {/* Trọng 23/11 "chữ xấu, không thẳng hàng": nhãn 2 bên cùng cỡ chữ, cùng chiều cao khung (tối đa 2 dòng, căn giữa),
             nên 2 con số luôn nằm trên cùng một hàng */}
         <div style={{height: lbFs * 1.25 * 2, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center', textAlign: 'center',
           fontSize: lbFs, lineHeight: 1.25, fontWeight: 800, color: C.ink, maxWidth: half - 20, overflow: 'hidden'}}>{nice(x.label)}</div>
-        <CountUp value={x.value} size={valFs} delay={4 + i * 3} color={toneColor(x.tone)} />
+        <CountUp value={x.value} size={valFs} delay={2} color={toneColor(x.tone)} />
         {/* Trọng 24/11: số % nhỏ dưới số lớn (vd "+103% so với cùng kỳ"); 2 bên cùng chiều cao nên vẫn thẳng hàng */}
         {anyNote ? <div style={{height: 50, fontSize: 38, fontWeight: 800, color: x.note ? toneColor(x.tone) : 'transparent', whiteSpace: 'nowrap',
-          opacity: interpolate(f - 14 - i * 3, [0, 10], [0, 1], clamp)}}>{x.note || '.'}</div> : null}
+          opacity: interpolate(f - 6, [0, 6], [0, 1], clamp)}}>{x.note || '.'}</div> : null}
       </div>
     );
   };
@@ -196,7 +197,11 @@ const Statement: React.FC<{b: Beat; w: number; h: number; question?: boolean}> =
       {/* Trọng 24/11: chữ mồ côi ("quốc / gia"): chia dòng cân nhau */}
       <div style={{fontSize: (b.text || '').length > 40 ? 60 : 74, fontWeight: 800, color: C.ink, lineHeight: 1.18, textWrap: 'balance',
         transform: `scale(${interpolate(s, [0, 1], [0.92, 1])})`, opacity: s, transformOrigin: 'left center'} as React.CSSProperties}>{b.text}</div>
-      {splitSource(b.sub, (b as any).source)[0] ? <div style={{fontSize: 34, fontWeight: 600, color: C.muted, marginTop: 22}}>{splitSource(b.sub, (b as any).source)[0]}</div> : null}
+      {/* review 27/11: "Có: / 1, Không: 2" bị máy ngắt giữa cụm. Mỗi câu (tách ở ". ") 1 dòng, dính "Có: 1", "1 = có" */}
+      {splitSource(b.sub, (b as any).source)[0] ? <div style={{fontSize: 34, fontWeight: 600, color: C.muted, marginTop: 22}}>
+        {splitSource(b.sub, (b as any).source)[0].split(/(?<=[.!?])\s+/).map((ln, k) =>
+          <div key={k} style={{textWrap: 'balance'}}>{ln.replace(/([:=])\s+(?=\S{1,4}\b)/g, '$1\u00a0').replace(/\s+=/g, '\u00a0=')}</div>)}
+      </div> : null}
       <SourceLine text={splitSource(b.sub, (b as any).source)[1]} />
     </Card>
   );

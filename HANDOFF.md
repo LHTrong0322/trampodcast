@@ -98,6 +98,9 @@ Xác minh nâng cao YouTube không làm giảm reach, đã xác minh. 8 luật d
   Dữ liệu lịch sử phổ biến (đáy/đỉnh chu kỳ trước, ATH, FTX, Luna, halving) là kiến thức chung: giữ, tra không ra cũng không được bỏ.
   Kịch bản viết tay nên kèm plan["sources"] (value, claim, source, url, quote) để bot biết số đã có chứng cứ.
 - Luật giá trị + khớp lời đọc không còn đá nhau: mỗi câu lời đọc mang 1 con số, thẻ hình VẼ con số đó, không chép câu chữ.
+- Bố cục short sau review 27/11 (ETF 5.5): khung kết nền trắng che ngay khung đầu (hết chồng chữ lên thẻ câu hỏi); câu phụ của thẻ chữ/câu hỏi
+  tách mỗi câu 1 dòng, không ngắt giữa "Có: 1"; thẻ so sánh 2 bên hiện cùng lúc (hết lệch hàng); thẻ cao 600 (trước 560), phụ đề bottom 430;
+  beats_for khớp được cả khi giọng đọc chép số khác ("75 nghìn" thành "75.000"/"bảy mươi lăm"), test tests/test_beat_timing.py.
 - Short dọc không chạy đếm số trên thẻ (CountUp): bot review chụp trúng số đếm dở rồi trừ điểm "số lệch". Trước thẻ đầu tiên, thẻ đầu hiện từ giây 0.
 - en_money gộp số kép: "4 tỷ 940 triệu đô la" → "$4.94B" (trước ra "4B $940M" trên phụ đề).
 - thumb_subject: "penguin" (26/11) = bìa 16:9 không lấy logo dự án làm chủ thể tròn (tin không xoay quanh 1 dự án, vd ETF).

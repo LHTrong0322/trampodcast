@@ -29,7 +29,8 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
   const TOP = 270;   // review 27/11: header hạ thấp khỏi mép trên (trước 230)
   const titleBottom = TOP + 60 + 24 + (chipTopic ? 44 + 24 : 0) + tLines * tSize * 1.22;
   const cardTop = Math.max(560, Math.ceil(titleBottom + 40));
-  const cardH = Math.max(440, 560 - Math.round((cardTop - 560) / 1.25));
+  // review 27/11: thẻ chỉ chiếm 1/3 màn, nửa dưới trống: thẻ cao hơn (600 thay 560), phụ đề hạ sát vùng an toàn
+  const cardH = Math.max(480, 600 - Math.round((cardTop - 560) / 1.25));
   const srcLabel = (props as any).sourceLabel as string | undefined;
   // review 26/11 (short ETF 6.0): nhãn dự án chỉ hiện từ lúc lời đọc nhắc tới (không gắn "Hyperliquid" khi đang nói ETF)
   const norm = (x: string) => x.toLowerCase().normalize('NFD').replace(/[^a-z0-9]/g, '');
@@ -66,7 +67,7 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
         </div> : null}
         {/* review 26/11: nguồn tin không còn ở header, ghi nhỏ trong từng thẻ số liệu (source của beat) */}
         {/* review 26/11: phụ đề nâng lên khỏi vùng nút/tên kênh của TikTok, Shorts (trước bottom 390) */}
-        <Captions words={sc.words} bottom={470} size={56} maxWidth={940} perChunk={5} />
+        <Captions words={sc.words} bottom={430} size={56} maxWidth={940} perChunk={5} />
         {cover && f < 40 ? <AbsoluteFill style={{opacity: interpolate(f, [26, 40], [1, 0], clamp)}}><ShortThumb {...cover} /></AbsoluteFill> : null}
         <div style={{position: 'absolute', left: 0, bottom: 0, height: 8, width: (f / durationInFrames) * width, background: ac}} />
         {cta && f >= cta.from * 30 ? <EndCard text={cta.text} t={f - cta.from * 30} /> : null}
@@ -77,12 +78,13 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
 
 // Trọng 22/11: khung kết mọi short, nền trắng sạch, chữ mời xem full video (nằm trong vùng an toàn 220..1500)
 const EndCard: React.FC<{text: string; t: number}> = ({text, t}) => {
-  const op = interpolate(t, [0, 8], [0, 1], clamp);
+  const op = interpolate(t, [0, 3], [0, 1], clamp);   // review 27/11: hiện gọn trong 0,1 giây, không chồng chữ lên thẻ câu hỏi
   const up = interpolate(t, [0, 12], [40, 0], clamp);
   const pop = interpolate(t, [0, 10], [0.8, 1], clamp);
   return (
-    <AbsoluteFill style={{background: '#FFFFFF', opacity: op, alignItems: 'center', justifyContent: 'center'}}>
-      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 40, marginTop: -160, padding: '0 80px'}}>
+    <AbsoluteFill style={{background: '#FFFFFF', alignItems: 'center', justifyContent: 'center'}}>
+      {/* review 27/11: nền trắng che hẳn thẻ cũ ngay khung đầu (trước đây mờ dần nên chữ chồng chữ), chỉ phần chữ hiện dần */}
+      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 40, marginTop: -160, padding: '0 80px', opacity: op}}>
         <Img src={staticFile('logo.png')} style={{width: 260, height: 260, borderRadius: 999, transform: `scale(${pop})`}} />
         <div style={{fontFamily: FONT, fontWeight: 900, fontSize: 76, lineHeight: 1.15, color: C.ink, textAlign: 'center',
           textTransform: 'uppercase', transform: `translateY(${up}px)`}}>{text}</div>

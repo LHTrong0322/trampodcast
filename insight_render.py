@@ -199,6 +199,25 @@ def beats_for(beats: list, words: list, dur: float, data: dict) -> list:
             if ph and ws[i:i + len(ph)] == ph:
                 s, last = words[i]["s"], i
                 break
+        if s is None and len(ph) >= 2:
+            # review 27/11: giọng đọc "75 nghìn" bị chép thành "75.000"/"bảy mươi lăm" nên không khớp, thẻ lệch 1 câu.
+            # Thử lại bỏ qua các từ chỉ số (chữ số, nghìn, triệu, tỷ, đô...) ở cả 2 bên.
+            numw = {"nghin", "ngan", "trieu", "ty", "do", "la", "usd", "phan", "tram", "muoi", "mot", "hai", "ba", "bon", "nam",
+                    "sau", "bay", "tam", "chin", "linh", "le"}
+            import unicodedata
+            bare = lambda t: unicodedata.normalize("NFD", t).encode("ascii", "ignore").decode().replace("đ", "d")
+            isnum = lambda t: any(c.isdigit() for c in t) or bare(t.replace("đ", "d")) in numw
+            ph2 = [t for t in ph if not isnum(t)]
+            fw = [(i, t) for i, t in enumerate(ws) if not isnum(t)]
+            if len(ph2) >= 2:
+                for j in range(len(fw) - len(ph2) + 1):
+                    if fw[j][0] > last and [t for _, t in fw[j:j + len(ph2)]] == ph2:
+                        i0 = fw[j][0]
+                        for back in range(i0 - 1, max(last, i0 - 4), -1):   # lùi về từ số đứng ngay trước (vd "Bitcoin từ 75")
+                            if isnum(ws[back]) and ph and isnum(ph[0]):
+                                i0 = back
+                        s, last = words[i0]["s"], i0
+                        break
         if s is None:   # không khớp: rải đều
             s = dur * k / max(1, len(beats))
             log(f"   ! nhịp hình '{b.get('at')}' không khớp lời đọc, đặt ở {s:.1f}s")
