@@ -126,7 +126,7 @@ def improve(plan: dict, rv: dict, locked: bool = True) -> tuple[dict, list[str]]
     for s in new.get("sections") or []:
         s["beats"] = [b for b in (s.get("beats") or []) if isinstance(b, dict) and b.get("type") != "question"]
     for a, b in zip(new.get("sections") or [], plan.get("sections") or []):   # Trọng 23/11: biểu đồ 200WMA không được rơi mất
-        lost = [x for x in b.get("beats") or [] if x.get("type") in ("wma", "trend") and not any(y.get("type") == x.get("type") for y in a.get("beats") or [])]
+        lost = [x for x in b.get("beats") or [] if x.get("type") in ("wma", "trend", "dow") and not any(y.get("type") == x.get("type") for y in a.get("beats") or [])]
         if lost:
             low = (a.get("narration") or "").lower()
             a["beats"] = sorted((a.get("beats") or []) + lost, key=lambda x: (low.find(str(x.get("at", "")).lower()) % 10**6))

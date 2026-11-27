@@ -1,0 +1,800 @@
+{
+ "title": "Lý thuyết Dow: chuyện ra đời, trend is your friend và backtest thật trên BTC",
+ "video_series": "Phân tích kỹ thuật",
+ "theme": "Phân tích kỹ thuật",
+ "own_source": true,
+ "description": "Lý thuyết Dow từ số 0: chuyện ra đời (Charles Dow, Wall Street Journal, chỉ số Dow Jones 1896), case study 1929 A Turn in the Tide, trend is your friend, cách đọc đỉnh đáy HH HL LH LL trên chart BTC khung tuần, backtest thật cầm BTC khi Dow báo tăng từ 2018, và backtest bot radar 108 mã khi thêm bộ lọc Dow. Hạn chế và cách dùng đúng. Không phải lời khuyên đầu tư.",
+ "source_post": {
+  "author": "Smart Penguin Insights",
+  "handle": "Trong0322",
+  "url": "https://en.wikipedia.org/wiki/Dow_theory",
+  "title": "Dow theory history (Wikipedia, TIME, thedowtheory.com, Brown Goetzmann Kumar 1998); BTC weekly backtest; radar bot backtest 11/2026",
+  "text": "Charles H. Dow (1851 to 1902), co-founded Dow Jones & Company in 1882 with Edward Jones, first issue of The Wall Street Journal 1889, Dow Jones Industrial Average 26 May 1896 with 12 stocks, also a railroad average; about 255 editorials; Dow never used the term Dow theory. William Peter Hamilton published The Stock Market Barometer in 1922; Robert Rhea published The Dow Theory in 1932. On October 25, 1929 Hamilton wrote A Turn in the Tide: two days earlier the Dow Theory gave the signal for a bear market; the market dropped 86% from that point. DJIA peak 381.17 on 3 Sep 1929, low 41.22 on 8 Jul 1932 (-89%). Cowles 1934: buy and hold 15.5% annualized 1902 to 1929 vs Dow theory 12%. Brown, Goetzmann and Kumar 1998: Hamilton's timing yields positive risk adjusted returns. BTC: ATH about $126K Oct 2025, 2026 rally high $87.4K, July 2026 low $57.7K broken 21/11/2026 to $55.2K. Radar bot backtest (11/11/2026, 108 assets, about 1410 days): BTC above EMA200 only: 407 trades, win 32.4%, 69.59R, max DD 13.13R, second half 5.78R; EMA200 plus BTC 1D Dow uptrend: 239 trades, win 36.8%, 88.24R, max DD 9.93R, second half 10.99R; Dow 1D only: second half -1.83R."
+ },
+ "hook_screen": "+27% NHỜ 1 BỘ LỌC",
+ "hook_stat": "+27%",
+ "hook_label": "lãi của bot khi thêm bộ lọc Dow",
+ "hook": "Một ý tưởng từ năm 1896. Gắn vào bot trade của mình: lãi tăng 27%, sụt vốn giảm 24%.",
+ "hook_beats": [
+  {
+   "at": "Một ý tưởng từ năm 1896",
+   "type": "bignum",
+   "value": "1896",
+   "label": "năm ra đời chỉ số Dow Jones",
+   "tone": "up",
+   "tone_lock": true
+  },
+  {
+   "at": "lãi tăng 27%",
+   "type": "versus",
+   "label": "Bot radar khi thêm bộ lọc Dow",
+   "left": {
+    "label": "Lãi",
+    "value": "+27%",
+    "tone": "up"
+   },
+   "right": {
+    "label": "Sụt vốn",
+    "value": "-24%",
+    "tone": "up"
+   },
+   "hold": 3.5
+  }
+ ],
+ "intro": "Ý tưởng đó là lý thuyết Dow, gói gọn trong một câu: trend is your friend, đi theo xu hướng chính. Video này có chuyện ra đời, cách đọc trên chart, và 2 backtest thật: trên BTC và trên bot của mình. Chào mừng mọi người quay lại Smart Penguin Insights.",
+ "intro_beats": [
+  {
+   "at": "trend is your friend",
+   "type": "statement",
+   "text": "Lý thuyết Dow: trend is your friend"
+  },
+  {
+   "at": "2 backtest thật",
+   "type": "flow",
+   "label": "Trong video",
+   "steps": [
+    "Chuyện ra đời",
+    "Đọc chart",
+    "2 backtest thật"
+   ],
+   "step_at": [
+    "chuyện ra đời",
+    "cách đọc trên chart",
+    "2 backtest thật"
+   ]
+  }
+ ],
+ "agenda_label": "LÝ THUYẾT DOW TỪ SỐ 0",
+ "visual_queries": [
+  "Wall Street history",
+  "stock market chart trend"
+ ],
+ "sections": [
+  {
+   "heading": "Chuyện ra đời: Charles Dow và tờ Wall Street Journal",
+   "edu": true,
+   "key_stat": "1896",
+   "key_label": "năm ra đời chỉ số Dow Jones công nghiệp",
+   "bullets": [
+    "1882: lập Dow Jones & Company",
+    "1889: ra tờ Wall Street Journal",
+    "1896: chỉ số 12 cổ phiếu"
+   ],
+   "narration": "Câu chuyện bắt đầu ở New York cuối thế kỷ 19. Charles Dow là một nhà báo tài chính. Năm 1882, ông cùng Edward Jones lập ra công ty Dow Jones. Năm 1889, họ ra tờ Wall Street Journal. Thời đó, nhà đầu tư chỉ nhìn giá từng cổ phiếu riêng lẻ, nhiều mã còn bị làm giá. Dow nghĩ khác. Năm 1896, ông lấy giá 12 cổ phiếu công nghiệp lớn, cộng lại rồi chia trung bình. Đó là chỉ số Dow Jones công nghiệp. Ông theo dõi thêm một chỉ số đường sắt. Từ hai con số đó, Dow nhận ra thị trường có một xu hướng chung, giống như thuỷ triều. Ông viết khoảng 255 bài xã luận về ý tưởng này, rồi mất năm 1902. Điều thú vị: chính Dow chưa bao giờ gọi nó là lý thuyết. William Hamilton, tổng biên tập kế nhiệm, viết tiếp và ra sách năm 1922. Năm 1932, Robert Rhea hệ thống lại thành cuốn The Dow Theory. Cái tên lý thuyết Dow ra đời từ đó.",
+   "beats": [
+    {
+     "at": "Câu chuyện bắt đầu",
+     "type": "flow",
+     "label": "Hành trình của Charles Dow",
+     "steps": [
+      "1882: Dow Jones",
+      "1889: WSJ ra đời",
+      "1896: chỉ số Dow Jones"
+     ],
+     "step_at": [
+      "Năm 1882",
+      "Năm 1889",
+      "Năm 1896"
+     ]
+    },
+    {
+     "at": "nhiều mã còn bị làm giá",
+     "type": "statement",
+     "text": "Thời đó: chỉ nhìn từng cổ phiếu, nhiều mã bị làm giá"
+    },
+    {
+     "at": "lấy giá 12 cổ phiếu",
+     "type": "bignum",
+     "value": "12",
+     "label": "cổ phiếu trong chỉ số Dow Jones đầu tiên, 1896",
+     "tone": "up",
+     "tone_lock": true
+    },
+    {
+     "at": "thêm một chỉ số đường sắt",
+     "type": "flow",
+     "label": "Hai chỉ số của Dow",
+     "steps": [
+      "Công nghiệp: sản xuất",
+      "Đường sắt: chở hàng"
+     ],
+     "step_at": [
+      "chỉ số Dow Jones công nghiệp",
+      "chỉ số đường sắt"
+     ]
+    },
+    {
+     "at": "giống như thuỷ triều",
+     "type": "statement",
+     "text": "Thị trường có xu hướng chung, như thuỷ triều"
+    },
+    {
+     "at": "khoảng 255 bài xã luận",
+     "type": "bignum",
+     "value": "255",
+     "label": "bài xã luận của Charles Dow trên Wall Street Journal",
+     "tone": "up",
+     "tone_lock": true
+    },
+    {
+     "at": "chưa bao giờ gọi nó là lý thuyết",
+     "type": "statement",
+     "text": "Dow chưa từng gọi nó là lý thuyết"
+    },
+    {
+     "at": "William Hamilton",
+     "type": "flow",
+     "label": "Người viết tiếp",
+     "steps": [
+      "1902: Dow mất",
+      "1922: sách Hamilton",
+      "1932: The Dow Theory"
+     ],
+     "step_at": [
+      "mất năm 1902",
+      "ra sách năm 1922",
+      "Năm 1932"
+     ]
+    }
+   ],
+   "visual_queries": [
+    "old Wall Street 1890s",
+    "vintage newspaper printing press"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Case study 1929: A Turn in the Tide",
+   "edu": true,
+   "key_stat": "-89%",
+   "key_label": "chỉ số Dow Jones từ đỉnh 9/1929 tới đáy 7/1932",
+   "bullets": [
+    "25/10/1929: Hamilton báo thị trường giá xuống",
+    "Chỉ số Dow Jones: 381 về 41",
+    "Dow giỏi né thảm hoạ, không luôn lãi nhiều hơn"
+   ],
+   "narration": "Bài kiểm tra nổi tiếng nhất của lý thuyết Dow đến năm 1929. Ngày 25 tháng 10 năm 1929, Hamilton đăng bài xã luận A Turn in the Tide, tức thuỷ triều đã đổi chiều. Ông viết: theo lý thuyết Dow, tín hiệu thị trường giá xuống đã xuất hiện từ hai ngày trước. Lúc đó nhiều người vẫn cho rằng chỉ là một nhịp điều chỉnh. Kết quả: chỉ số Dow Jones từ đỉnh 381 điểm tháng 9 năm 1929 rơi về 41 điểm tháng 7 năm 1932, mất 89%. Nhưng phải công bằng. Năm 1934, nhà nghiên cứu Alfred Cowles chấm lại các bài của Hamilton từ 1902 tới 1929: theo Dow lãi khoảng 12% mỗi năm, mua rồi giữ lãi 15.5%. Năm 1998, các nhà nghiên cứu ở Yale và NYU chấm lại, tính cả rủi ro, thì Dow vẫn có lợi thế. Vậy thì sao? Dow không phải cỗ máy in tiền. Nó là chiếc phao giúp bạn né những cú sập lớn nhất.",
+   "beats": [
+    {
+     "at": "Bài kiểm tra nổi tiếng nhất",
+     "type": "bignum",
+     "value": "1929",
+     "label": "case study nổi tiếng nhất của lý thuyết Dow",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "A Turn in the Tide",
+     "type": "statement",
+     "text": "25/10/1929: A Turn in the Tide, thuỷ triều đã đổi chiều"
+    },
+    {
+     "at": "Ông viết",
+     "type": "flow",
+     "label": "Tháng 10/1929",
+     "steps": [
+      "Hamilton: giá xuống",
+      "Đám đông: chỉ điều chỉnh"
+     ],
+     "step_at": [
+      "tín hiệu thị trường giá xuống",
+      "chỉ là một nhịp điều chỉnh"
+     ]
+    },
+    {
+     "at": "đỉnh 381 điểm",
+     "type": "versus",
+     "label": "Chỉ số Dow Jones công nghiệp",
+     "left": {
+      "label": "Đỉnh 9/1929",
+      "value": "381",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Đáy 7/1932",
+      "value": "41",
+      "tone": "down",
+      "note": "-89%"
+     },
+     "hold": 5
+    },
+    {
+     "at": "Alfred Cowles",
+     "type": "bignum",
+     "value": "1934",
+     "label": "Alfred Cowles chấm lại các bài của Hamilton, 1902 tới 1929",
+     "tone": "flat",
+     "tone_lock": true
+    },
+    {
+     "at": "theo Dow lãi khoảng 12%",
+     "type": "versus",
+     "label": "Cowles 1934, giai đoạn 1902 tới 1929",
+     "left": {
+      "label": "Theo Dow",
+      "value": "12%/năm",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "Mua rồi giữ",
+      "value": "15.5%/năm",
+      "tone": "up"
+     },
+     "hold": 5
+    },
+    {
+     "at": "Yale và NYU",
+     "type": "statement",
+     "text": "1998: tính cả rủi ro, Dow vẫn có lợi thế"
+    },
+    {
+     "at": "chiếc phao",
+     "type": "statement",
+     "text": "Dow: chiếc phao né cú sập lớn"
+    }
+   ],
+   "visual_queries": [
+    "1929 stock market crash wall street",
+    "vintage stock ticker"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Dow giúp gì: trend is your friend",
+   "edu": true,
+   "key_stat": "3",
+   "key_label": "loại xu hướng chạy cùng lúc",
+   "bullets": [
+    "Biết xu hướng chính đang là gì",
+    "Không bắt dao rơi, không bán non",
+    "Đứng ngoài khi downtrend"
+   ],
+   "narration": "Vậy lý thuyết Dow giúp gì cho bạn? Nó trả lời đúng một câu hỏi quan trọng nhất: xu hướng chính lúc này là gì. Dow chia thị trường làm 3 lớp. Xu hướng chính là thuỷ triều, kéo dài từ một năm trở lên. Xu hướng phụ là con sóng, đánh ngược vài tuần đến vài tháng. Xu hướng nhỏ là gợn nước, vài ngày, gần như nhiễu. Giới trader có câu: trend is your friend, xu hướng là bạn. Đi cùng thuỷ triều, bạn được cả thị trường đẩy đi. Đi ngược, bạn phải đúng liên tục mới sống được. Biết thuỷ triều đang lên, bạn không bán non khi gặp một con sóng điều chỉnh. Biết thuỷ triều đang rút, bạn không bắt dao rơi chỉ vì giá trông đã rẻ. Vế sau của câu nói mới quan trọng: until the end, cho tới khi xu hướng kết thúc. Dow cho bạn cách nhận ra lúc kết thúc đó.",
+   "beats": [
+    {
+     "at": "Vậy lý thuyết Dow giúp gì",
+     "type": "statement",
+     "text": "Dow giúp gì cho bạn?"
+    },
+    {
+     "at": "chia thị trường làm 3 lớp",
+     "type": "flow",
+     "label": "3 lớp xu hướng của Dow",
+     "steps": [
+      "Thuỷ triều: 1 năm+",
+      "Con sóng: tuần, tháng",
+      "Gợn nước: vài ngày"
+     ],
+     "step_at": [
+      "Xu hướng chính là thuỷ triều",
+      "Xu hướng phụ là con sóng",
+      "Xu hướng nhỏ là gợn nước"
+     ]
+    },
+    {
+     "at": "trend is your friend",
+     "type": "statement",
+     "text": "Trend is your friend"
+    },
+    {
+     "at": "Đi cùng thuỷ triều",
+     "type": "wma",
+     "label": "BTC khung tuần: thuỷ triều lên và rút",
+     "tag": "Thuỷ triều",
+     "hold": 7,
+     "sub": "Nguồn: giá BTC đóng cửa tuần"
+    },
+    {
+     "at": "không bán non",
+     "type": "flow",
+     "label": "Đi theo thuỷ triều",
+     "steps": [
+      "Triều lên: không bán non",
+      "Triều rút: đứng ngoài"
+     ],
+     "step_at": [
+      "không bán non",
+      "không bắt dao rơi"
+     ]
+    },
+    {
+     "at": "until the end",
+     "type": "statement",
+     "text": "...until the end: cho tới khi xu hướng kết thúc"
+    }
+   ],
+   "visual_queries": [
+    "ocean tide waves",
+    "surfer riding wave"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Đọc Dow trên chart: đỉnh và đáy",
+   "edu": true,
+   "key_stat": "HH + HL",
+   "key_label": "đỉnh cao hơn, đáy cao hơn = xu hướng tăng",
+   "bullets": [
+    "HH + HL = xu hướng tăng",
+    "LH + LL = xu hướng giảm",
+    "Đỉnh thấp hơn + thủng đáy = đảo chiều"
+   ],
+   "narration": "Nhận ra bằng cách nào? Nhìn đỉnh và đáy. Uptrend là chuỗi HH và HL: higher high, đỉnh sau cao hơn đỉnh trước, higher low, đáy sau cao hơn đáy trước. Downtrend là chuỗi LH và LL, ngược lại. Đây là BTC khung tuần, đỉnh đáy do máy tự đánh dấu bằng đúng thuật toán trong bot của mình. Màu xanh là HH và HL, màu đỏ là LH và LL. Nhìn giai đoạn 2023 tới 2025: chuỗi xanh nối tiếp, đỉnh và đáy cứ cao dần lên tới $126K. Rồi năm 2026: nhịp hồi lớn nhất chỉ lên $87.4K, một đỉnh thấp hơn. Tháng 11, giá thủng đáy $57.7K, một đáy thấp hơn. Theo Dow, xu hướng tăng đã kết thúc. Quy tắc rất đơn giản: xu hướng vẫn còn cho tới khi có tín hiệu đảo chiều rõ ràng, tức đỉnh thấp hơn rồi thủng đáy cũ. Không đoán, chỉ xác nhận.",
+   "beats": [
+    {
+     "at": "Nhìn đỉnh và đáy",
+     "type": "flow",
+     "label": "Đọc xu hướng bằng đỉnh đáy",
+     "steps": [
+      "Uptrend: HH + HL",
+      "Downtrend: LH + LL"
+     ],
+     "step_at": [
+      "Uptrend là chuỗi HH",
+      "Downtrend là chuỗi LH"
+     ]
+    },
+    {
+     "at": "Đây là BTC khung tuần",
+     "type": "dow",
+     "mode": "swings",
+     "from": "2022",
+     "k": 6,
+     "label": "BTC khung tuần: đỉnh và đáy theo Dow",
+     "hold": 12
+    },
+    {
+     "at": "chỉ lên $87.4K",
+     "type": "versus",
+     "label": "Đỉnh thấp hơn",
+     "left": {
+      "label": "Đỉnh 10/2025",
+      "value": "$126K",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Đỉnh hồi 2026",
+      "value": "$87.4K",
+      "tone": "down",
+      "note": "LH"
+     },
+     "hold": 4
+    },
+    {
+     "at": "thủng đáy $57.7K",
+     "type": "versus",
+     "label": "Đáy thấp hơn",
+     "left": {
+      "label": "Đáy 7/2026",
+      "value": "$57.7K",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "21/11/2026",
+      "value": "$55.2K",
+      "tone": "down",
+      "note": "LL"
+     },
+     "hold": 4
+    },
+    {
+     "at": "xu hướng tăng đã kết thúc",
+     "type": "statement",
+     "text": "Theo Dow: xu hướng tăng đã kết thúc"
+    },
+    {
+     "at": "Quy tắc rất đơn giản",
+     "type": "flow",
+     "label": "Tín hiệu đảo chiều",
+     "steps": [
+      "Đỉnh thấp hơn",
+      "Thủng đáy cũ"
+     ],
+     "step_at": [
+      "tức đỉnh thấp hơn",
+      "thủng đáy cũ"
+     ]
+    }
+   ],
+   "visual_queries": [
+    "stock chart higher highs",
+    "candlestick chart"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Backtest 1: cầm BTC chỉ khi Dow báo tăng",
+   "edu": true,
+   "key_stat": "{DOW:2018:dd}%",
+   "key_label": "sụt tối đa khi cầm theo Dow, từ 2018",
+   "bullets": [
+    "Luật: HH + HL thì cầm, mất thì ra",
+    "So với mua rồi giữ từ 2018",
+    "Sụt vốn nhỏ hơn rất nhiều"
+   ],
+   "narration": "Nghe hay, nhưng có thật hiệu quả không? Mình backtest trên giá BTC tuần thật từ đầu năm 2018. Luật chỉ có một dòng: khi cấu trúc là HH và HL thì cầm BTC, khi mất cấu trúc đó thì bán, ngồi tiền mặt. Không phí, không đòn bẩy. Kết quả: mua rồi giữ từ 2018 lãi {DOW:2018:bh}%, nhưng có lúc tài khoản sụt {DOW:2018:bhdd}% từ đỉnh. Cầm theo Dow lãi {DOW:2018:ret}%, mức sụt tối đa chỉ {DOW:2018:dd}%. Cả 8 năm, Dow chỉ cầm BTC khoảng {DOW:2018:inmkt}% thời gian, với {DOW:2018:trades} lần mua. Phần nền xanh trên chart là lúc cầm. Bạn thấy nó đứng ngoài gần hết năm 2022, đúng lúc BTC mất hơn 70%. Vậy thì sao? Cái Dow cho bạn không phải là mua đúng đáy. Nó cho bạn đứng ngoài những năm tệ nhất, để còn vốn khi thuỷ triều quay lại.",
+   "beats": [
+    {
+     "at": "có thật hiệu quả không",
+     "type": "statement",
+     "text": "Backtest trên giá BTC thật"
+    },
+    {
+     "at": "Luật chỉ có một dòng",
+     "type": "flow",
+     "label": "Luật backtest",
+     "steps": [
+      "HH + HL: cầm BTC",
+      "Mất cấu trúc: bán"
+     ],
+     "step_at": [
+      "HH và HL thì cầm",
+      "khi mất cấu trúc"
+     ]
+    },
+    {
+     "at": "mua rồi giữ từ 2018",
+     "type": "dow",
+     "mode": "backtest",
+     "from": "2018",
+     "k": 4,
+     "label": "Cầm BTC khi Dow tăng, từ 2018",
+     "hold": 14
+    },
+    {
+     "at": "đứng ngoài gần hết năm 2022",
+     "type": "bignum",
+     "value": "70%+",
+     "label": "BTC mất trong năm 2022, lúc Dow đứng ngoài",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "không phải là mua đúng đáy",
+     "type": "statement",
+     "text": "Không mua đúng đáy, mà né năm tệ nhất"
+    }
+   ],
+   "visual_queries": [
+    "backtest equity curve",
+    "trading chart analysis"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Backtest 2: gắn bộ lọc Dow vào bot của mình",
+   "edu": true,
+   "key_stat": "+27%",
+   "key_label": "tổng R khi thêm bộ lọc Dow vào bot radar",
+   "bullets": [
+    "Bot chỉ dùng EMA200: 69.6R, sụt 13.1R",
+    "Thêm Dow khung ngày: 88.2R, sụt 9.9R",
+    "Ít lệnh hơn, lãi hơn, an toàn hơn"
+   ],
+   "narration": "Case study thứ hai là bot trade của chính mình. Bot quét 108 mã crypto, backtest gần 4 năm. Đơn vị là R, tức mỗi lệnh mình chấp nhận rủi ro đúng 1 phần cố định. Bản gốc chỉ vào lệnh khi BTC nằm trên đường EMA200 khung ngày: 407 lệnh, lãi 69.6R, sụt vốn tối đa 13.1R. Rồi mình thêm đúng một điều kiện: BTC khung ngày phải có cấu trúc Dow tăng, HH và HL. Kết quả: số lệnh giảm còn 239, nhưng lãi tăng lên 88.2R, tức thêm 27%. Sụt vốn tối đa giảm còn 9.9R. Tỷ lệ thắng từ 32.4% lên 36.8%. Ở nửa sau của giai đoạn, lúc thị trường khó, bản gốc chỉ lãi 5.8R, bản có Dow lãi 11R, gần gấp đôi. Một chi tiết quan trọng: nếu bỏ EMA200, chỉ dùng mỗi Dow, nửa sau lại lỗ 1.8R. Vậy thì sao? Dow mạnh nhất khi làm bộ lọc, kết hợp với công cụ khác, không phải đứng một mình.",
+   "beats": [
+    {
+     "at": "bot trade của chính mình",
+     "type": "bignum",
+     "value": "108",
+     "label": "mã crypto, backtest gần 4 năm tới 11/2026",
+     "tone": "up",
+     "tone_lock": true,
+     "source": "Nguồn: bot radar của Trọng"
+    },
+    {
+     "at": "Đơn vị là R",
+     "type": "statement",
+     "text": "R = 1 phần rủi ro cố định mỗi lệnh"
+    },
+    {
+     "at": "Bản gốc chỉ vào lệnh",
+     "type": "bignum",
+     "value": "69.6R",
+     "label": "bản gốc: 407 lệnh, chỉ lọc EMA200, sụt tối đa 13.1R",
+     "tone": "flat",
+     "tone_lock": true
+    },
+    {
+     "at": "thêm đúng một điều kiện",
+     "type": "statement",
+     "text": "Thêm 1 điều kiện: BTC khung ngày có Dow tăng"
+    },
+    {
+     "at": "lãi tăng lên 88.2R",
+     "type": "versus",
+     "label": "Tổng lãi theo R",
+     "left": {
+      "label": "Chỉ EMA200",
+      "value": "69.6R",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "EMA200 + Dow",
+      "value": "88.2R",
+      "tone": "up",
+      "note": "+27%"
+     },
+     "hold": 4
+    },
+    {
+     "at": "Sụt vốn tối đa giảm",
+     "type": "versus",
+     "label": "Sụt vốn tối đa",
+     "left": {
+      "label": "Chỉ EMA200",
+      "value": "13.1R",
+      "tone": "down"
+     },
+     "right": {
+      "label": "EMA200 + Dow",
+      "value": "9.9R",
+      "tone": "up",
+      "note": "-24%"
+     },
+     "hold": 4
+    },
+    {
+     "at": "Tỷ lệ thắng",
+     "type": "versus",
+     "label": "Tỷ lệ thắng",
+     "left": {
+      "label": "Chỉ EMA200",
+      "value": "32.4%",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "EMA200 + Dow",
+      "value": "36.8%",
+      "tone": "up"
+     },
+     "hold": 3.5
+    },
+    {
+     "at": "lúc thị trường khó",
+     "type": "versus",
+     "label": "Nửa sau, lúc thị trường khó",
+     "left": {
+      "label": "Chỉ EMA200",
+      "value": "5.8R",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "EMA200 + Dow",
+      "value": "11R",
+      "tone": "up",
+      "note": "gần gấp đôi"
+     },
+     "hold": 4
+    },
+    {
+     "at": "chỉ dùng mỗi Dow",
+     "type": "bignum",
+     "value": "-1.8R",
+     "label": "chỉ dùng Dow, bỏ EMA200: nửa sau lỗ",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "Dow mạnh nhất khi làm bộ lọc",
+     "type": "statement",
+     "text": "Dow mạnh nhất khi làm bộ lọc"
+    }
+   ],
+   "visual_queries": [
+    "trading bot dashboard",
+    "algorithmic trading screen"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Hạn chế và cách dùng Dow đúng",
+   "edu": true,
+   "key_stat": "3",
+   "key_label": "bước dùng Dow trước khi vào lệnh",
+   "bullets": [
+    "Tín hiệu luôn đến muộn",
+    "Thị trường đi ngang: dễ báo sai",
+    "Dùng làm bộ lọc xu hướng"
+   ],
+   "narration": "Dow có hạn chế không? Có, và bạn phải biết. Thứ nhất, tín hiệu luôn đến muộn. Phải chờ đỉnh đáy hình thành rồi mới xác nhận, nên Dow bỏ lỡ phần đầu và phần cuối mỗi con sóng. Thứ hai, khi thị trường đi ngang, đỉnh đáy lẫn lộn, Dow dễ báo vào ra liên tục. Cách dùng mà mình thấy hiệu quả có 3 bước. Một: mở khung tuần hoặc khung ngày, xác định cấu trúc HH HL hay LH LL. Hai: chỉ tìm lệnh mua khi cấu trúc tăng, đứng ngoài hoặc giảm vị thế khi cấu trúc gãy. Ba: kết hợp thêm một công cụ khác, như EMA200, để lọc bớt tín hiệu nhiễu. Hãy dùng lý thuyết Dow như la bàn, không phải quả cầu pha lê.",
+   "beats": [
+    {
+     "at": "Dow có hạn chế không",
+     "type": "flow",
+     "label": "2 hạn chế của Dow",
+     "steps": [
+      "Tín hiệu đến muộn",
+      "Đi ngang: báo sai"
+     ],
+     "step_at": [
+      "tín hiệu luôn đến muộn",
+      "khi thị trường đi ngang"
+     ]
+    },
+    {
+     "at": "Phải chờ đỉnh đáy hình thành",
+     "type": "flow",
+     "label": "Vì sao Dow đến muộn",
+     "steps": [
+      "Chờ đỉnh đáy hình thành",
+      "Bỏ lỡ đầu và cuối sóng"
+     ],
+     "step_at": [
+      "Phải chờ đỉnh đáy hình thành",
+      "bỏ lỡ phần đầu"
+     ]
+    },
+    {
+     "at": "có 3 bước",
+     "type": "flow",
+     "label": "Dùng Dow đúng cách",
+     "steps": [
+      "Xác định cấu trúc",
+      "Chỉ mua khi tăng",
+      "Kết hợp EMA200"
+     ],
+     "step_at": [
+      "Một: mở khung tuần",
+      "Hai: chỉ tìm lệnh mua",
+      "Ba: kết hợp thêm"
+     ]
+    },
+    {
+     "at": "như la bàn",
+     "type": "statement",
+     "text": "La bàn, không phải quả cầu pha lê"
+    }
+   ],
+   "visual_queries": [
+    "compass navigation",
+    "trading checklist"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  }
+ ],
+ "outro": "Tóm lại: Dow dạy bạn nhìn thuỷ triều, đi cùng xu hướng chính, và chỉ đổi ý khi đỉnh đáy xác nhận. Đây là nội dung giáo dục, không phải lời khuyên đầu tư. Bình luận cho mình biết: trước khi vào lệnh, bạn có lọc xu hướng không?",
+ "outro_points": [
+  "Nhìn thuỷ triều trước",
+  "HH + HL: đi cùng xu hướng",
+  "Đổi ý khi đỉnh đáy xác nhận"
+ ],
+ "outro_cta": "BẠN CÓ LỌC XU HƯỚNG KHÔNG?",
+ "shorts": [
+  1,
+  5
+ ],
+ "short_spans": [
+  {
+   "from": "Bài kiểm tra nổi tiếng nhất",
+   "to": "mất 89%."
+  },
+  {
+   "from": "Case study thứ hai",
+   "to": "gần gấp đôi."
+  }
+ ],
+ "short_hooks": {
+  "1": "1929: một bài báo né cú sập 89%",
+  "5": "Thêm 1 bộ lọc Dow: bot lãi thêm 27%"
+ },
+ "short_cta": "Bạn có lọc xu hướng trước khi vào lệnh không?",
+ "thumb_stat": "+27%",
+ "thumb_text": "trend is your friend",
+ "thumb_tag": "lý thuyết Dow",
+ "thumb_kicker": "Chuyện ra đời + backtest thật",
+ "thumb_logo": "BTC",
+ "thumb_icon": "up",
+ "thumb_points": []
+}

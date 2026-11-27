@@ -257,7 +257,7 @@ const SectionInner: React.FC<{sc: Scene; data: any; brandName: string; post?: Po
   const toQuote = hasData && !!sc.quote;
   // Trọng 22/11 (review: "khung nào cũng chữ trái + thẻ phải"): hình so sánh/biểu đồ chiếm trọn khung, cột chữ lùi đi
   const curBeat = [...(sc.beats || [])].sort((a, b) => a.s - b.s).filter((b) => t >= b.s - 0.15).pop();
-  const wide = !!curBeat && ['race', 'versus', 'chart', 'wma', 'trend'].includes(curBeat.type);
+  const wide = !!curBeat && ['race', 'versus', 'chart', 'wma', 'trend', 'dow'].includes(curBeat.type);
   const wideK = interpolate(t - (curBeat?.s ?? 0), [-0.15, 0.35], [0, 1], clamp) * (wide ? 1 : 0);
   return (
     <AbsoluteFill>

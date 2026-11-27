@@ -160,10 +160,14 @@ def lint(plan: dict) -> list[str]:
         if an[0][0] > 12:
             bad.append(f"Phần {k}: {an[0][0] / WPS:.0f} giây đầu chưa có hình, cho hình đầu tiên hiện ngay câu đầu.")
         gap_max = 5.5 if plan.get("format") == "short" else 8.4   # Trọng 24/11: short đổi hình 3 đến 5 giây như video đã duyệt
+        # Trọng 27/11: "dựng chart nhiều hơn": biểu đồ có lời đọc giải thích được giữ lâu hơn (tối đa 22 giây, short 12 giây)
+        chart_max = 12 if plan.get("format") == "short" else 22
+        kind = {i: x.get("type") for i, x in an}
         for a, b in zip(marks[1:], marks[2:]):
-            if (b - a) / WPS > gap_max:
+            lim = chart_max if kind.get(a) in ("dow", "wma", "chart", "trend", "race") else gap_max
+            if (b - a) / WPS > lim:
                 seg = " ".join(w[a:a + 6])
-                bad.append(f"Phần {k}: từ '{seg}...' có {(b - a) / WPS:.0f} giây không đổi hình (tối đa {gap_max:.0f} giây), thêm 1 hình số liệu, ảnh hoặc ví dụ.")
+                bad.append(f"Phần {k}: từ '{seg}...' có {(b - a) / WPS:.0f} giây không đổi hình (tối đa {lim:.0f} giây), thêm 1 hình số liệu, ảnh hoặc ví dụ.")
         for b in beats[:-1]:   # Trọng 24/11: câu hỏi mời comment ở thẻ CUỐI thì được (review muốn thẻ ?, không dùng thẻ trích dẫn)
             if b.get("type") == "question":
                 bad.append(f"Phần {k}: thẻ câu hỏi '{b.get('text', '')}' không có dữ liệu (review 22/11 trừ điểm), thay bằng số liệu, biểu đồ hoặc logo kèm số.")
@@ -177,7 +181,7 @@ def lint(plan: dict) -> list[str]:
             sizes = [len(b.get("steps") or b.get("items") or b.get("coins") or []) for b in beats]
             if n not in sizes and len(s.get("bullets") or []) != n:
                 bad.append(f"Phần {k}: lời đọc nói '{m.group(0)}' nhưng không có hình nào hiện đủ {n} ý.")
-    if not any(b.get("type") in ("chart", "race", "wma", "trend") for b in all_beats):
+    if not any(b.get("type") in ("chart", "race", "wma", "trend", "dow") for b in all_beats):
         bad.append("Cả video chưa có biểu đồ giá nào. Thêm ít nhất 1 hình 'race' hoặc 'chart' (giá thật của coin đang nói tới).")
     bad += layout_issues(all_beats)
     types = [b.get("type") for b in all_beats]
