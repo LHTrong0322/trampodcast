@@ -3,6 +3,10 @@
  "thumb_ok": true,
  "fb_id": "4716402398684622",
  "fb_caption_clean": true,
- "comments_done": [],
- "fb_thumb_ok": true
+ "comments_done": [
+  "youtube",
+  "facebook"
+ ],
+ "fb_thumb_ok": true,
+ "asr_removed": true
 }
