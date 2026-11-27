@@ -14,4 +14,4 @@ def test_khop_khi_so_bi_chep_khac():
 
 def test_khop_dung_nguyen_van_van_nhu_cu():
     b = R.beats_for([{"at": "giá vốn", "type": "bignum", "value": "$53K"}], _w("chỉ còn cao hơn giá vốn trung bình"), 20, {})
-    assert b[0]["s"] == 1.2
+    assert b[0]["s"] == 1.6   # "giá" là từ thứ 5
