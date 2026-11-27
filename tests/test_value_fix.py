@@ -16,9 +16,11 @@ def test_loc_loi_khong_dang():
     assert VF.problems_from(rv, pre) == ["KHÔNG ĐÁNG: thẻ 2 lặp phụ đề", "KHÔNG ĐÁNG: câu đệm"]
 
 
-def test_chan_so_bia():
+def test_so_moi_chua_kiem_chung_van_dung():
+    """Trọng 27/11 14:10: số chưa kiểm chứng được vẫn dùng, chỉ chặn số đã kiểm chứng ra sai."""
     new = {"narration": NAR + " Giá có thể về 42 nghìn.", "beats": [{"at": "ETF bị rút", "type": "bignum"}]}
-    assert "số mới" in VF.validate(OLD, new)
+    assert VF.validate(OLD, new) == ""
+    assert "sai" in VF.validate(OLD, new, wrong=[{"value": "42 nghìn"}])
 
 
 def test_chan_the_khong_bam_loi_doc():
@@ -60,16 +62,26 @@ def test_so_moi_co_nguon_da_kiem_chung_thi_duoc_dung():
     assert why == "" and new["sources"][0]["url"].startswith("https") and any("kiểm chứng" in c["ly_do"] for c in ch)
 
 
-def test_so_moi_truot_kiem_chung_thi_giu_ban_cu():
-    bad = lambda prompt: {"results": [{"i": 0, "ok": False, "why": "bài không có số này"}]}
+def test_so_moi_kiem_chung_ra_sai_thi_giu_ban_cu():
+    bad = lambda prompt: {"results": [{"i": 0, "verdict": "sai", "why": "giá vốn thật là $45K"}]}
     new, ch, why = VF.rewrite(json.loads(json.dumps(OLD)), ["x"], run=_writer, check=bad)
-    assert new is None and "trượt kiểm chứng" in why
+    assert new is None and "kiểm chứng ra sai" in why
 
 
-def test_so_moi_khong_link_thi_bi_chan():
+def test_so_moi_chua_kiem_chung_duoc_van_dung():
+    """Trọng 27/11 14:10: tra không ra nguồn (hoặc không có link) không phải là sai, vẫn dùng và ghi chú."""
+    unk = lambda prompt: {"results": [{"i": 0, "verdict": "chua_ro", "why": "không tìm thấy bài"}]}
+    new, ch, why = VF.rewrite(json.loads(json.dumps(OLD)), ["x"], run=_writer, check=unk)
+    assert why == "" and new is not None and any("chưa kiểm chứng" in c["ly_do"] for c in ch)
     nolink = lambda prompt: {**_writer(prompt), "new_facts": [{**FACT, "url": ""}]}
     new, ch, why = VF.rewrite(json.loads(json.dumps(OLD)), ["x"], run=nolink, check=lambda p: {"results": []})
-    assert new is None and "chưa có nguồn" in why
+    assert why == "" and new is not None
+
+
+def test_kieu_tra_cu_ok_false_khong_coi_la_sai():
+    old_style = lambda prompt: {"results": [{"i": 0, "ok": False, "why": "bài không có số này"}]}
+    good, wrong = VF.verify([FACT], run=old_style)
+    assert good == [] and wrong == []
 
 
 def test_chan_the_sai_khung():

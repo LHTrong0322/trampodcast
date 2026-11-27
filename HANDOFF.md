@@ -98,6 +98,7 @@ Xác minh nâng cao YouTube không làm giảm reach, đã xác minh. 8 luật d
   Dữ liệu lịch sử phổ biến (đáy/đỉnh chu kỳ trước, ATH, FTX, Luna, halving) là kiến thức chung: giữ, tra không ra cũng không được bỏ.
   Kịch bản viết tay nên kèm plan["sources"] (value, claim, source, url, quote) để bot biết số đã có chứng cứ.
 - Luật giá trị + khớp lời đọc không còn đá nhau: mỗi câu lời đọc mang 1 con số, thẻ hình VẼ con số đó, không chép câu chữ.
+- SỐ CHƯA KIỂM CHỨNG (Trọng 27/11 14:10): số/ý chưa kiểm chứng được nguồn VẪN DÙNG bình thường (ghi chú "chưa kiểm chứng" trong tin Telegram). CHỈ bỏ số đã kiểm chứng ra SAI hoặc nói quá. value_fix.verify trả (đúng, sai); validate chỉ chặn số sai.
 - Bố cục short sau review 27/11 (ETF 5.5): khung kết nền trắng che ngay khung đầu (hết chồng chữ lên thẻ câu hỏi); câu phụ của thẻ chữ/câu hỏi
   tách mỗi câu 1 dòng, không ngắt giữa "Có: 1"; thẻ so sánh 2 bên hiện cùng lúc (hết lệch hàng); thẻ cao 600 (trước 560), phụ đề bottom 430;
   beats_for khớp được cả khi giọng đọc chép số khác ("75 nghìn" thành "75.000"/"bảy mươi lăm"), test tests/test_beat_timing.py.

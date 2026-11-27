@@ -5,8 +5,9 @@ Dùng ở 2 chỗ (news_flash.build):
   B. Sau review (xem trước hoặc sau dựng): lỗi KHÔNG ĐÁNG nằm ở lời đọc thì viết lại câu, đọc giọng lại, dựng lại.
 
 Ràng buộc an toàn: chỉ sửa câu bị chỉ ra; không dấu gạch ngang dài; thẻ hình phải bám đúng cụm trong lời đọc mới.
-Số liệu MỚI (Trọng 27/11): được thêm để video có giá trị hơn, NHƯNG mỗi số mới phải kèm link nguồn, và một bot thứ hai
-mở đúng link đó xác nhận số có thật. Số không có nguồn hoặc không qua kiểm chứng thì bị chặn. Sai ràng buộc thì giữ bản cũ.
+Số liệu MỚI (Trọng 27/11, 14:10): được thêm để video có giá trị hơn, kèm link nguồn nếu có; một bot thứ hai kiểm chứng.
+CHỈ chặn số đã kiểm chứng ra SAI (hoặc nói quá). Số chưa kiểm chứng được (không tìm thấy nguồn, link không mở được)
+vẫn dùng bình thường, chỉ ghi chú "chưa kiểm chứng" trong danh sách thay đổi. Sai ràng buộc khác thì giữ bản cũ.
 """
 from __future__ import annotations
 
@@ -31,13 +32,14 @@ SỐ LIỆU ĐÃ CÓ (dùng thoải mái):
 {facts}
 
 SỐ CHƯA THẤY NGUỒN (Trọng 27/11): ĐÚNG SỰ THẬT quan trọng hơn ĐÚNG NGUỒN. KHÔNG được xoá số chỉ vì chưa thấy trong danh sách trên, không được xoá vì "nguồn gốc không nhắc". Dữ liệu lịch sử phổ biến (đáy, đỉnh các chu kỳ trước, ATH, sự kiện lớn như FTX, Luna, halving) là kiến thức chung của ngành: giữ, không đòi nguồn trong bài, chỉ bỏ khi biết chắc là sai. Dùng WebSearch/WebFetch tra:
-tìm được bài chứng minh thì GIỮ số đó và ghi vào "new_facts" (kèm link, trích dẫn) để kiểm chứng; chỉ bỏ khi tra ra số sai,
-hoặc đã tra kỹ mà không bài nào có, và ghi rõ lý do trong "changes".
+tìm được bài chứng minh thì GIỮ số đó và ghi vào "new_facts" (kèm link, trích dẫn) để kiểm chứng. Tra không ra nguồn thì VẪN GIỮ
+(Trọng 27/11: chưa kiểm chứng được không phải là sai). CHỈ bỏ khi tra ra số sai hoặc nói quá, và ghi rõ lý do trong "changes".
 
 THÊM SỐ LIỆU MỚI: được và NÊN, nếu nó làm câu có giá trị hơn (bối cảnh, so sánh lịch sử, hệ quả). Dùng WebSearch/WebFetch tìm
 từ nguồn uy tín (Cointelegraph, CoinDesk, The Block, Decrypt, Bloomberg, Reuters, Glassnode, CryptoQuant, SoSoValue, trang chính thức),
-ưu tiên tin trong 30 ngày gần đây, đúng chủ đề video. TUYỆT ĐỐI không bịa: số nào không tìm thấy trong bài thì không dùng.
-Mỗi số mới ghi vào "new_facts" với link bài và đoạn trích nguyên văn ngắn (dưới 25 từ) có chứa con số đó.
+ưu tiên tin trong 30 ngày gần đây, đúng chủ đề video. TUYỆT ĐỐI không bịa (không tự nghĩ ra số). Ý hoặc số bạn tin là đúng
+nhưng chưa tìm được bài nguồn thì VẪN được dùng (Trọng 27/11), ghi vào "new_facts" với url để trống. Chỉ không dùng khi biết là sai.
+Mỗi số mới ghi vào "new_facts" với link bài (nếu có) và đoạn trích nguyên văn ngắn (dưới 25 từ) có chứa con số đó.
 
 Viết lại ĐÚNG các câu bị chỉ ra (câu khác giữ nguyên từng chữ) để mỗi câu mang 1 điều mới, có 1 con số hoặc 1 so sánh,
 và thẻ hình VẼ chính con số đó (bignum, versus, chart, logo), không chép câu chữ. Câu không có gì để vẽ thì bỏ câu.
@@ -51,10 +53,11 @@ Trả DUY NHẤT JSON:
 
 VERIFY = """Bạn là người kiểm chứng số liệu (fact-checker) độc lập. Mục tiêu: con số có ĐÚNG SỰ THẬT không. Với TỪNG mục, dùng WebFetch mở link,
 tìm xem bài có thật sự chứa con số đó và có ủng hộ đúng ý (claim) không. Đơn vị, mốc thời gian, chủ thể phải khớp.
-Link không mở được hoặc không có số đó thì tự tra thêm bằng WebSearch: tìm được nguồn uy tín khác chứng minh thì vẫn ĐẠT.
-Chỉ KHÔNG ĐẠT khi số sai, bị nói quá, hoặc tra kỹ vẫn không có nguồn nào chứng minh.
+Link không mở được hoặc không có số đó thì tự tra thêm bằng WebSearch: tìm được nguồn uy tín khác chứng minh thì "dung".
+"sai" CHỈ khi tìm được bằng chứng số đó sai hoặc bị nói quá. Không tìm được nguồn nào (chứng minh hay bác bỏ) thì "chua_ro":
+số đó vẫn được dùng (Trọng 27/11), nên đừng ghi "sai" chỉ vì không tra ra.
 {items}
-Trả DUY NHẤT JSON: {{"results": [{{"i": số thứ tự, "ok": true hoặc false, "why": "ngắn gọn"}}]}}"""
+Trả DUY NHẤT JSON: {{"results": [{{"i": số thứ tự, "verdict": "dung" hoặc "sai" hoặc "chua_ro", "why": "ngắn gọn"}}]}}"""
 
 _NUM = re.compile(r"\d+(?:[.,]\d+)?")
 
@@ -73,8 +76,9 @@ def problems_from(rv: dict | None, pre: dict | None = None) -> list[str]:
     return out
 
 
-def validate(old: dict, new: dict, verified: list[dict] | None = None) -> str:
-    """Trả "" nếu bản mới dùng được, không thì lý do bỏ. verified: số mới đã qua kiểm chứng (có link)."""
+def validate(old: dict, new: dict, wrong: list[dict] | None = None) -> str:
+    """Trả "" nếu bản mới dùng được, không thì lý do bỏ. wrong: số mới đã kiểm chứng ra SAI.
+    Trọng 27/11 (14:10): số chưa kiểm chứng được vẫn dùng bình thường, chỉ chặn số kiểm chứng ra sai."""
     nar = str(new.get("narration") or "").strip()
     if not nar or not isinstance(new.get("beats"), list) or not new["beats"]:
         return "thiếu lời đọc hoặc thẻ"
@@ -83,13 +87,12 @@ def validate(old: dict, new: dict, verified: list[dict] | None = None) -> str:
     n = len(nar.split())
     if not 80 <= n <= 185:
         return f"độ dài {n} từ ngoài khoảng cho phép"
-    allowed = _nums(json.dumps(old, ensure_ascii=False))
-    for f in verified or []:
-        if str(f.get("url", "")).startswith("http"):
-            allowed |= _nums(f"{f.get('value', '')} {f.get('claim', '')}")
-    extra = _nums(nar + " " + json.dumps(new["beats"], ensure_ascii=False)) - allowed
-    if extra:
-        return "có số mới chưa có nguồn đã kiểm chứng: " + ", ".join(sorted(extra)[:5])
+    used = _nums(nar + " " + json.dumps(new["beats"], ensure_ascii=False)) - _nums(json.dumps(old, ensure_ascii=False))
+    bad = set()
+    for f in wrong or []:
+        bad |= _nums(str(f.get("value", "")))
+    if used & bad:
+        return "có số mới đã kiểm chứng ra sai: " + ", ".join(sorted(used & bad)[:5])
     # Trọng 27/11: bot viết lại từng để thẻ "versus" có left/right là chữ thay vì khung {label, value...}, làm dựng lỗi.
     for b in new["beats"]:
         if not isinstance(b, dict):
@@ -108,26 +111,34 @@ def validate(old: dict, new: dict, verified: list[dict] | None = None) -> str:
     return ""
 
 
-def verify(facts: list[dict], run=None) -> list[dict]:
-    """Bot thứ hai mở từng link, chỉ giữ số liệu có thật trong bài. Lỗi thì coi như không đạt hết."""
+def verify(facts: list[dict], run=None) -> tuple[list[dict], list[dict]]:
+    """Bot thứ hai kiểm chứng từng số. Trả (đã chứng minh đúng, đã chứng minh SAI).
+    Số còn lại là chưa kiểm chứng được: vẫn dùng (Trọng 27/11). Bot kiểm chứng lỗi thì không coi số nào là sai."""
     import script_review as SR
-    facts = [f for f in facts or [] if isinstance(f, dict) and str(f.get("url", "")).startswith("http") and f.get("value")]
+    facts = [f for f in facts or [] if isinstance(f, dict) and f.get("value")]
     if not facts:
-        return []
+        return [], []
     run = run or (lambda pr: SR.run_claude(pr, tools="WebSearch,WebFetch", turns=25, timeout=900))
-    items = "\n".join(f"{i}. số {f['value']} | ý: {f.get('claim', '')} | link: {f['url']} | trích: {f.get('quote', '')}"
+    items = "\n".join(f"{i}. số {f['value']} | ý: {f.get('claim', '')} | link: {f.get('url') or '(chưa có, tự tra)'} | trích: {f.get('quote', '')}"
                       for i, f in enumerate(facts))
     try:
         res = run(VERIFY.format(items=items)).get("results") or []
     except Exception:
-        return []
-    ok = {int(r.get("i", -1)) for r in res if r.get("ok") is True}
-    return [f for i, f in enumerate(facts) if i in ok]
+        return [], []
+
+    def verdict(r: dict) -> str:
+        v = str(r.get("verdict", "")).lower()
+        if v in ("dung", "sai", "chua_ro"):
+            return v
+        return "dung" if r.get("ok") is True else "chua_ro"   # kiểu trả cũ: false không có nghĩa là sai
+    vs = {int(r.get("i", -1)): verdict(r) for r in res if isinstance(r, dict)}
+    return ([f for i, f in enumerate(facts) if vs.get(i) == "dung"],
+            [f for i, f in enumerate(facts) if vs.get(i) == "sai"])
 
 
 def rewrite(plan: dict, problems: list[str], run=None, check=None) -> tuple[dict | None, list[dict], str]:
     """Viết lại câu/thẻ không đáng. Trả (plan mới hoặc None, danh sách đổi, lý do nếu bỏ).
-    Số mới phải qua verify(); số nào trượt kiểm chứng thì cả bản viết lại bị bỏ, giữ bản cũ."""
+    Số mới qua verify(): số kiểm chứng ra SAI thì cả bản viết lại bị bỏ, giữ bản cũ; số chưa kiểm chứng được vẫn dùng."""
     import script_review as SR
     run = run or (lambda pr: SR.run_claude(pr, tools="WebSearch,WebFetch", turns=30, timeout=1200))
     sec = plan["sections"][0]
@@ -140,8 +151,8 @@ def rewrite(plan: dict, problems: list[str], run=None, check=None) -> tuple[dict
     for attempt in range(2):   # 27/11: bị chặn thì cho viết lại 1 lần nữa, nói rõ lỗi (từng bị chặn oan vì số tự tính, dài hơn 3 từ)
         try:
             j = run(pr if not why else pr + "\n\nBẢN TRƯỚC BỊ CHẶN VÌ: " + why +
-                    ". Sửa đúng lỗi đó: số nào không có nguồn thì bỏ hoặc ghi vào new_facts kèm link (số tự tính thì ghi rõ phép tính"
-                    " trong claim và để url là link của các số gốc); giữ trong 80 đến 180 từ.")
+                    ". Sửa đúng lỗi đó: số nào đã kiểm chứng ra SAI thì bỏ hoặc thay bằng số đúng; số chưa kiểm chứng được thì cứ giữ"
+                    " (số tự tính thì ghi rõ phép tính trong claim); giữ trong 80 đến 180 từ.")
         except Exception as ex:
             return None, [], f"Claude lỗi: {str(ex)[:150]}"
         j = P.nodash(j) if isinstance(j, dict) else j
@@ -149,10 +160,8 @@ def rewrite(plan: dict, problems: list[str], run=None, check=None) -> tuple[dict
             why = "Claude không trả JSON"
             continue
         claimed = [f for f in j.get("new_facts") or [] if isinstance(f, dict)]
-        good = verify(claimed, run=check) if claimed else []
-        why = validate(plan, j, good)
-        if claimed and len(good) < len(claimed) and why:
-            why += f" ({len(claimed) - len(good)}/{len(claimed)} số mới trượt kiểm chứng)"
+        good, wrong = verify(claimed, run=check) if claimed else ([], [])
+        why = validate(plan, j, wrong)
         if not why:
             break
     if why:
@@ -169,6 +178,10 @@ def rewrite(plan: dict, problems: list[str], run=None, check=None) -> tuple[dict
     ch = list(j.get("changes") or [])
     for f in good:
         ch.append({"cu": "(số mới)", "moi": f"{f.get('value')}: {f.get('claim', '')}", "ly_do": f"đã kiểm chứng, nguồn {f.get('source', '')} {f.get('url', '')}"})
+    for f in claimed:
+        if f not in good and f not in wrong:
+            ch.append({"cu": "(số mới)", "moi": f"{f.get('value')}: {f.get('claim', '')}",
+                       "ly_do": "chưa kiểm chứng được nguồn, vẫn dùng (chỉ bỏ khi kiểm chứng ra sai)"})
     return new, ch, ""
 
 
