@@ -90,6 +90,16 @@ def validate(old: dict, new: dict, verified: list[dict] | None = None) -> str:
     extra = _nums(nar + " " + json.dumps(new["beats"], ensure_ascii=False)) - allowed
     if extra:
         return "có số mới chưa có nguồn đã kiểm chứng: " + ", ".join(sorted(extra)[:5])
+    # Trọng 27/11: bot viết lại từng để thẻ "versus" có left/right là chữ thay vì khung {label, value...}, làm dựng lỗi.
+    for b in new["beats"]:
+        if not isinstance(b, dict):
+            return "thẻ sai khung"
+        for f in ("left", "right"):
+            if b.get(f) is not None and not isinstance(b[f], dict):
+                return f"thẻ {b.get('type')} sai khung ở {f}"
+        for f in ("items", "cols"):
+            if b.get(f) is not None and not (isinstance(b[f], list) and all(isinstance(x, dict) for x in b[f])):
+                return f"thẻ {b.get('type')} sai khung ở {f}"
     low = re.sub(r"[^\w\s]", "", nar.lower())
     for b in new["beats"]:
         at = re.sub(r"[^\w\s]", "", str(b.get("at", "")).lower()).strip()

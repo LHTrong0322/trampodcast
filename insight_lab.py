@@ -394,7 +394,7 @@ def coin_data(lab: Path, plan: dict, data: dict):
         if b.get("type") == "chart" and b.get("ticker") and b.get("years"):
             want[str(b["ticker"]).lstrip("$").upper()] = max(400, min(100, int(b["years"])) * 365)
         for x in [b, b.get("left") or {}, b.get("right") or {}] + list(b.get("items") or []) + list(b.get("cols") or []):   # logo coin trong nhịp hình
-            if x.get("logo"):
+            if isinstance(x, dict) and x.get("logo"):
                 tick.append(str(x["logo"]).lstrip("$").upper())
         if b.get("type") == "chart" and b.get("ticker"):
             tick.append(str(b["ticker"]).lstrip("$").upper())

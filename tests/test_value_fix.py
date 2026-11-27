@@ -70,3 +70,13 @@ def test_so_moi_khong_link_thi_bi_chan():
     nolink = lambda prompt: {**_writer(prompt), "new_facts": [{**FACT, "url": ""}]}
     new, ch, why = VF.rewrite(json.loads(json.dumps(OLD)), ["x"], run=nolink, check=lambda p: {"results": []})
     assert new is None and "chưa có nguồn" in why
+
+
+def test_chan_the_sai_khung():
+    """Trọng 27/11: bot viết lại để thẻ versus có left/right là chữ, dựng lỗi 'str' object has no attribute 'get'."""
+    bad = {"narration": NAR, "beats": [{"at": "ETF bị rút", "type": "versus", "left": "Quý 3", "right": "Tháng 11"}]}
+    assert "sai khung" in VF.validate(OLD, bad)
+    bad2 = {"narration": NAR, "beats": [{"at": "ETF bị rút", "type": "logos", "items": ["BTC"]}]}
+    assert "sai khung" in VF.validate(OLD, bad2)
+    ok = {"narration": NAR, "beats": [{"at": "ETF bị rút", "type": "versus", "left": {"label": "Quý 3"}, "right": {"label": "Tháng 11"}}]}
+    assert VF.validate(OLD, ok) == ""
