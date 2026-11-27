@@ -1,0 +1,14 @@
+{
+ "story": "Bài 1/7 chuỗi Phân tích kỹ thuật từ số 0: vì sao cần phân tích kỹ thuật",
+ "why": "Trọng duyệt chuỗi 7 short dạy lý thuyết Dow (27/11), làm từng bài, duyệt xong bài 1 mới làm bài 2",
+ "importance": "-",
+ "viral": "-",
+ "title": "Vì sao cần phân tích kỹ thuật? 3 lý do kể cả khi đầu tư dài hạn",
+ "sources": [
+  "https://en.wikipedia.org/wiki/Technical_analysis",
+  "https://en.wikipedia.org/wiki/Dow_theory"
+ ],
+ "sources_name": "Smart Penguin Insights",
+ "text": "Fundamental analysis answers what to buy; technical analysis answers when to buy, where the plan is wrong and when to exit. Three reasons even long term investors use it: a map of the trend (up, down or just a bounce), a plan before entering, discipline against FOMO and panic. Example: in 2025 BTC weekly highs and lows were still rising; BTC all-time high above $126K in October 2025; in 2026 a lower high then a break of the prior low. All technical analysis tools are built on Dow theory.",
+ "script": "scripts/dow-series/01-vi-sao-ptkt.json"
+}

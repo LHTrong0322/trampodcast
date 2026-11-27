@@ -9,7 +9,7 @@ import {Sticker, ThumbIcon} from './Thumb';
 // Nhãn kênh: YouTube là @smartpenguininsights, @Trong0322 là X (Trọng 26/11).
 // Ảnh này cũng là khung hình đầu của short (InsightShort), nên giữ gọn, đọc được khi thu nhỏ trong lưới video.
 export type ShortThumbProps = {text: string; stat?: string; label?: string; points?: string[]; accent?: string;
-  projectLogo?: string | null; brand: string; icon?: ThumbIcon; news?: boolean; vs?: {label: string; value: string; tone?: string; logo?: string | null}[]};
+  projectLogo?: string | null; brand: string; icon?: ThumbIcon; news?: boolean; tag?: string; tagline?: string; vs?: {label: string; value: string; tone?: string; logo?: string | null}[]};
 
 const RED = '#E5383B', GREEN = '#1F9D63', YEL = '#FFD84D', INK = '#141833', MUTED = '#5A6080';
 const valueColor = (v: string) => (/^\s*[-−]/.test(v) ? RED : /^\s*\+/.test(v) ? GREEN : INK);
@@ -24,7 +24,8 @@ const numColor = (w: string, prev: string, accent: string) => {
 const fit = (t: string, maxW: number, maxSize: number, em = 0.6) => Math.round(Math.min(maxSize, maxW / Math.max(1, (t || '').length * em)));
 const card: React.CSSProperties = {background: '#FFFFFF', borderRadius: 36, boxShadow: '0 24px 60px rgba(20,24,51,0.12), 0 2px 6px rgba(20,24,51,0.05)'};
 
-export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat = '', label = '', points = [], accent: acIn = '#4F5BD5', projectLogo, brand, vs = [], news = false, icon = 'none'}) => {
+export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat = '', label = '', points = [], accent: acIn = '#4F5BD5', projectLogo, brand, vs = [], news = false, tag = '', tagline = '', icon = 'none'}) => {
+  // Trọng 27/11: short bài học (chuỗi Phân tích kỹ thuật từ số 0) không gắn nhãn "Tin nóng"
   // Trọng 26/11 (ghi nhớ bằng code): nhắc dự án thì có logo, chủ đề khớp hình dán thì có hình dán.
   const stk = icon && icon !== 'none' ? icon : null;
   const accent = tone(acIn);
@@ -58,7 +59,7 @@ export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat = '', label = 
         <div style={{position: 'absolute', left: 70, top: 250, display: 'flex', alignItems: 'center', gap: 16, fontSize: 32, fontWeight: 700, color: MUTED}}>
           <Img src={staticFile('logo.png')} style={{width: 72, height: 72, borderRadius: 99, border: '4px solid #FFFFFF', boxShadow: '0 6px 16px rgba(20,24,51,0.15)'}} />
           {brand}
-          {news ? <span style={{marginLeft: 8, background: RED, color: '#FFFFFF', borderRadius: 14, padding: '6px 18px', fontSize: 30, fontWeight: 800}}>Tin nóng</span> : null}
+          {news || tag ? <span style={{marginLeft: 8, background: tag ? '#4F5BD5' : RED, color: '#FFFFFF', borderRadius: 14, padding: '6px 18px', fontSize: 30, fontWeight: 800}}>{tag || 'Tin nóng'}</span> : null}
         </div>
         <div style={{position: 'absolute', left: 70, right: 70, top, fontSize: size, lineHeight: 1.18, letterSpacing: '-0.02em',
           display: 'flex', flexWrap: 'wrap', columnGap: size * 0.26}}>
@@ -111,7 +112,7 @@ export const ShortThumb: React.FC<ShortThumbProps> = ({text, stat = '', label = 
 
         <div style={{position: 'absolute', left: 70, bottom: 460, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 14}}>
           <span style={{background: YEL, borderRadius: 20, padding: '12px 30px', fontSize: 42, boxShadow: '0 12px 30px rgba(20,24,51,0.12)'}}>
-            {news ? 'Tin nóng hôm nay' : 'Xem full trên YouTube'}</span>
+            {tagline || (news ? 'Tin nóng hôm nay' : 'Xem full trên YouTube')}</span>
           <span style={{fontSize: 34, fontWeight: 700, color: MUTED}}>@smartpenguininsights</span>
         </div>
       </AbsoluteFill>

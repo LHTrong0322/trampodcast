@@ -1,0 +1,174 @@
+{
+ "title": "Vì sao cần phân tích kỹ thuật? 3 lý do kể cả khi đầu tư dài hạn",
+ "description": "Bài 1/7 chuỗi Phân tích kỹ thuật từ số 0: phân tích cơ bản trả lời mua gì, phân tích kỹ thuật trả lời mua khi nào, sai thì thoát ở đâu. 3 lý do người đầu tư dài hạn cũng cần phân tích kỹ thuật: bản đồ, kế hoạch, kỷ luật. Ví dụ BTC khung tuần 2025 và 2026. Không phải lời khuyên đầu tư.",
+ "theme": "Phân tích kỹ thuật từ số 0",
+ "video_series": "Phân tích kỹ thuật",
+ "hook": "Đầu tư dài hạn có cần xem chart không?",
+ "hook_stat": "3",
+ "hook_label": "lý do cần phân tích kỹ thuật",
+ "intro": "",
+ "sections": [
+  {
+   "heading": "Vì sao cần phân tích kỹ thuật",
+   "key_stat": "3",
+   "key_label": "lý do: bản đồ, kế hoạch, kỷ luật",
+   "narration": "Phân tích cơ bản cho bạn biết mua gì. Còn mua lúc nào, sai thì thoát ở đâu, đó là việc của phân tích kỹ thuật. Có 3 lý do mà kể cả người đầu tư dài hạn cũng cần nó. Một: bản đồ. Bạn biết thị trường đang tăng, đang giảm, hay chỉ là một nhịp hồi. Hai: kế hoạch. Trước khi bấm mua, bạn đã biết mua vùng nào, sai ở mốc nào, thoát khi nào. Ba: kỷ luật. Có kế hoạch sẵn, FOMO lúc hưng phấn hay hoảng loạn lúc giảm đều khó kéo bạn đi. Ví dụ, năm 2025, đỉnh và đáy khung tuần của BTC còn cao dần, người biết đọc chart cứ giữ. Năm 2026, đỉnh thấp hơn rồi thủng đáy, họ giảm rủi ro thay vì gồng từ đỉnh $126K. Mọi công cụ phân tích kỹ thuật đều xây trên một nền móng: lý thuyết Dow. Bài sau mình dạy nguyên lý đầu tiên. Bạn đầu tư có xem chart không? Có thì bình luận số 1, không thì số 2.",
+   "source_ids": [
+    0
+   ],
+   "bullets": [
+    "Bản đồ: đang ở đâu trong xu hướng",
+    "Kế hoạch: mua, sai, thoát ở đâu",
+    "Kỷ luật: tránh FOMO và hoảng loạn"
+   ],
+   "data": {
+    "type": "none",
+    "tickers": [
+     "BTC"
+    ],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "Bitcoin",
+    "ticker": "BTC"
+   },
+   "edu": "true",
+   "emphasis": "BÀI 1/7",
+   "beats": [
+    {
+     "at": "Phân tích cơ bản cho bạn biết",
+     "type": "flow",
+     "label": "Hai câu hỏi khi đầu tư",
+     "steps": [
+      "Cơ bản: mua gì",
+      "Kỹ thuật: mua khi nào"
+     ],
+     "step_at": [
+      "Phân tích cơ bản cho bạn biết",
+      "Còn mua lúc nào"
+     ]
+    },
+    {
+     "at": "sai thì thoát ở đâu",
+     "type": "logos",
+     "label": "Phân tích kỹ thuật: khi nào mua, khi nào thoát",
+     "items": [
+      {
+       "logo": "BTC",
+       "label": "Bitcoin"
+      }
+     ]
+    },
+    {
+     "at": "Có 3 lý do",
+     "type": "bignum",
+     "value": "3",
+     "label": "lý do cần phân tích kỹ thuật, kể cả khi đầu tư dài hạn",
+     "tone": "up"
+    },
+    {
+     "at": "Một: bản đồ",
+     "type": "statement",
+     "text": "1. Bản đồ: đang tăng, đang giảm hay chỉ hồi?"
+    },
+    {
+     "at": "Hai: kế hoạch",
+     "type": "flow",
+     "label": "2. Kế hoạch trước khi bấm mua",
+     "steps": [
+      "Mua vùng nào",
+      "Sai ở mốc nào",
+      "Thoát khi nào"
+     ],
+     "step_at": [
+      "mua vùng nào",
+      "sai ở mốc nào",
+      "thoát khi nào"
+     ]
+    },
+    {
+     "at": "Ba: kỷ luật",
+     "type": "statement",
+     "text": "3. Kỷ luật: không để FOMO, hoảng loạn kéo đi"
+    },
+    {
+     "at": "FOMO lúc hưng phấn",
+     "type": "flow",
+     "label": "Cảm xúc kế hoạch chặn được",
+     "steps": [
+      "FOMO lúc hưng phấn",
+      "Hoảng loạn lúc giảm"
+     ],
+     "step_at": [
+      "FOMO lúc hưng phấn",
+      "hoảng loạn lúc giảm"
+     ]
+    },
+    {
+     "at": "Ví dụ, năm 2025",
+     "type": "wma",
+     "label": "BTC khung tuần",
+     "tag": "2025 cao dần, 2026 thấp dần"
+    },
+    {
+     "at": "người biết đọc chart cứ giữ",
+     "type": "statement",
+     "text": "2025: đỉnh, đáy cao dần = cứ giữ"
+    },
+    {
+     "at": "Năm 2026, đỉnh thấp hơn",
+     "type": "statement",
+     "text": "2026: đỉnh thấp hơn, thủng đáy = giảm rủi ro"
+    },
+    {
+     "at": "gồng từ đỉnh $126K",
+     "type": "bignum",
+     "value": "$126K",
+     "label": "đỉnh BTC 10/2025, xu hướng đổi chiều sau đó",
+     "logo": "BTC",
+     "tone": "down"
+    },
+    {
+     "at": "xây trên một nền móng",
+     "type": "statement",
+     "text": "Nền móng: lý thuyết Dow"
+    },
+    {
+     "at": "Bạn đầu tư có xem chart không",
+     "type": "question",
+     "text": "Bạn có xem chart không?",
+     "sub": "1 = có, 2 = không"
+    }
+   ]
+  }
+ ],
+ "outro": "Đây là nội dung giáo dục, không phải lời khuyên đầu tư.",
+ "shorts": [
+  0
+ ],
+ "short_hooks": {
+  "0": "Đầu tư dài hạn có cần xem chart không?"
+ },
+ "short_title": "VÌ SAO CẦN PHÂN TÍCH KỸ THUẬT?",
+ "short_cta": "Theo dõi để học trọn chuỗi lý thuyết Dow nhé!",
+ "thumb_text": "có cần xem chart không?",
+ "thumb_stat": "3",
+ "thumb_tag": "BÀI 1/7",
+ "thumb_kicker": "Phân tích kỹ thuật từ số 0",
+ "thumb_style": "stat",
+ "thumb_logo": "BTC",
+ "format": "short",
+ "news": true,
+ "own_source": true,
+ "edu_label": "PTKT từ số 0",
+ "edu_tagline": "Bài 1/7: vì sao cần PTKT",
+ "source_label": "Smart Penguin Insights",
+ "source_post": {
+  "author": "Smart Penguin Insights",
+  "handle": "Trong0322",
+  "url": "https://en.wikipedia.org/wiki/Technical_analysis",
+  "title": "Vì sao cần phân tích kỹ thuật (bài 1/7, chuỗi lý thuyết Dow)",
+  "text": "Fundamental analysis answers what to buy; technical analysis answers when to buy, where the plan is wrong and when to exit. Three reasons even long term investors use it: a map of the trend (up, down or just a bounce), a plan before entering, discipline against FOMO and panic. Example: in 2025 BTC weekly highs and lows were still rising; BTC all-time high above $126K in October 2025; in 2026 a lower high then a break of the prior low. All technical analysis tools are built on Dow theory."
+ }
+}

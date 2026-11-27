@@ -591,7 +591,8 @@ def publish(lab: Path, res: dict, out: Path, data_dir: Path | None = None, draft
 def publish_news(gem, cfg, res, seo, covers, url, data_dir, tag, rv0: dict | None = None) -> dict:
     """Tin nóng (news_flash.py): chỉ gửi short 9:16 + caption + bot review, KHÔNG đăng tự động."""
     plan = res["plan"]
-    tg_text(f"⚡ TIN NÓNG · short đã dựng xong (giọng {res['voice'].split(':')[-1]})\n{plan.get('title', '')}\n"
+    head = f"📚 BÀI HỌC {plan['edu_label']}" if plan.get("edu_label") else "⚡ TIN NÓNG"   # Trọng 27/11: short bài học
+    tg_text(f"{head} · short đã dựng xong (giọng {res['voice'].split(':')[-1]})\n{plan.get('title', '')}\n"
             + (f"📦 File gốc: {url}" if url else "") + "\nXem rồi đăng tay nếu ổn nhé.")
     for j, s in enumerate(res["shorts"]):
         if j < len(covers) and covers[j]:

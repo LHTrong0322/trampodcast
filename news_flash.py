@@ -157,7 +157,8 @@ def draft_text(d: dict, plan: dict) -> str:
     scores = rv.get("scores") or {}
     n_words = len((hook + " " + sec.get("narration", "") + " " + plan.get("short_cta", "")).split())
     lines = [
-        f"⚡ KỊCH BẢN TIN NÓNG · mã {d['id']} · chờ Trọng duyệt",
+        (f"📚 KỊCH BẢN BÀI HỌC {plan['edu_label']}" if plan.get("edu_label") else "⚡ KỊCH BẢN TIN NÓNG")
+        + f" · mã {d['id']} · chờ Trọng duyệt",
         f"Tin: {d.get('story', '')}",
         f"Vì sao chọn: {d.get('why', '')}",
         f"Quan trọng {d.get('importance', '?')}/10 · Câu view {d.get('viral', '?')}/10",
@@ -328,7 +329,11 @@ def topic(out: Path, cfg: dict, brief: Path):
     post = {"author": b.get("sources_name", "tổng hợp"), "handle": "", "url": (b.get("sources") or [""])[0],
             "title": b.get("title", ""), "text": b["text"][:9000]}
     log(f"③ Viết kịch bản short theo chủ đề Trọng chọn: {b.get('story', '')}")
-    plan = write_script(post, did, b.get("notes"))
+    if b.get("script"):   # Trọng 27/11: kịch bản viết sẵn trong phiên code (vd chuỗi bài học Dow), vẫn gửi Telegram chờ duyệt
+        plan = json.loads(Path(b["script"]).read_text(encoding="utf-8"))
+        plan.setdefault("source_post", post)
+    else:
+        plan = write_script(post, did, b.get("notes"))
     d = {"id": did, "status": "waiting", "created": now_vn().isoformat(), "story": b.get("story", ""),
          "why": b.get("why", "Trọng chỉ định"), "importance": b.get("importance", "?"), "viral": b.get("viral", "?"),
          "sources": b.get("sources", []), "post": post, "manual": True,

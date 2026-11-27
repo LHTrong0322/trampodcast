@@ -58,7 +58,9 @@ def props_for(plan: dict, sec_idx: int, title: str, logos: dict | None = None) -
     if len(text) > 60:   # lỗi 24/11: cắt cứng 60 ký tự làm mất "%" ("HƠN 30"), giờ cắt ở ranh giới từ
         text = text[:60].rsplit(" ", 1)[0]
     stat = (plan.get("thumb_stat") if news else "") or s.get("key_stat", "")
+    edu = P.nodash(str(plan.get("edu_label") or ""))[:24]   # Trọng 27/11: short bài học, không ghi "Tin nóng"
     return {"comp": "ShortThumb", "width": 1080, "height": 1920, "news": news,
+            "tag": edu, "tagline": P.nodash(str(plan.get("edu_tagline") or ""))[:30] if edu else "",
             "text": text,
             "stat": "" if vs else P.nodash(V.en_money(stat))[:10],
             "vs": vs,
