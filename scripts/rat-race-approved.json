@@ -1,0 +1,888 @@
+{
+ "title": "Rat race là gì? Lý do bạn mãi không thể giàu lên được và 3 lối thoát",
+ "video_series": "Sách tài chính 5 phút",
+ "description": "Rat race (vòng quay chuột) từ cuốn Cha Giàu Cha Nghèo: vì sao lương tăng mà vẫn hết tiền, tài sản và tiêu sản khác nhau thế nào, khi nào bạn thật sự thoát, và 3 lối thoát cho người Việt: kinh doanh nhỏ, đầu tư dài hạn bắt đầu từ 2 triệu mỗi tháng, và kiến thức tài chính.",
+ "theme": "Sách tài chính 5 phút",
+ "own_source": true,
+ "source_post": {
+  "author": "Smart Penguin Insights",
+  "handle": "Trong0322",
+  "url": "https://www.nso.gov.vn/tin-tuc-thong-ke/2026/10/thong-cao-bao-chi-ve-tinh-hinh-lao-dong-viec-lam-quy-iii-va-9-thang-nam-2026/",
+  "title": "Cục Thống kê: lao động việc làm quý 3/2026, CPI 10 tháng 2026; Rich Dad Poor Dad (1997)",
+  "text": "Cục Thống kê: thu nhập bình quân người lao động quý 3/2026 đạt 9.2 triệu đồng/tháng, tăng 9.9% so với cùng kỳ. CPI bình quân 10 tháng năm 2026 tăng 4.57%. Rich Dad Poor Dad của Robert Kiyosaki xuất bản năm 1997, bán hơn 32 triệu bản (Wikipedia). Kiyosaki: tài sản bỏ tiền vào túi, tiêu sản lấy tiền ra; thoát rat race khi thu nhập thụ động lớn hơn chi phí; Cashflow Quadrant E S B I; trả cho mình trước. Tính toán của kênh: 100 triệu sau 10 năm lạm phát 4.5%/năm còn khoảng 64 triệu sức mua; DCA 2 triệu/tháng giả định 10%/năm: 10 năm bỏ 240 triệu thành khoảng 410 triệu, 20 năm bỏ 480 triệu thành khoảng 1.5 tỷ."
+ },
+ "sources": [
+  {
+   "value": "9.2 triệu",
+   "claim": "Thu nhập bình quân quý 3/2026",
+   "source": "Cục Thống kê",
+   "url": "https://www.nso.gov.vn/tin-tuc-thong-ke/2026/10/thong-cao-bao-chi-ve-tinh-hinh-lao-dong-viec-lam-quy-iii-va-9-thang-nam-2026/",
+   "quote": "thu nhập bình quân của người lao động đạt 9,2 triệu đồng/tháng"
+  },
+  {
+   "value": "9.9%",
+   "claim": "Tăng so với cùng kỳ",
+   "source": "Cục Thống kê",
+   "url": "https://daibieunhandan.vn/thu-nhap-cua-lao-dong-tiep-tuc-tang-trong-quy-iii-10433108.html",
+   "quote": "tương ứng 9,9% so với cùng kỳ năm 2025"
+  },
+  {
+   "value": "4.57%",
+   "claim": "CPI bình quân 10 tháng 2026",
+   "source": "Cục Thống kê",
+   "url": "https://nhandan.vn/10-thang-nam-2026-cpi-tang-457-so-voi-cung-ky-post999862.html",
+   "quote": "10 tháng năm 2026, CPI tăng 4,57% so với cùng kỳ"
+  },
+  {
+   "value": "32 triệu",
+   "claim": "Rich Dad Poor Dad đã bán",
+   "source": "Wikipedia",
+   "url": "https://en.wikipedia.org/wiki/Rich_Dad_Poor_Dad",
+   "quote": "Rich Dad Poor Dad has sold over 32 million copies"
+  }
+ ],
+ "hook_screen": "Lương +9.9%, vẫn hết tiền?",
+ "hook_stat": "+9.9%",
+ "hook_label": "thu nhập bình quân quý 3/2026",
+ "hook": "Lương người Việt tăng gần 10% một năm, mà cuối tháng vẫn hết tiền. Đó là rat race, vòng quay chuột. Hết video, bạn sẽ biết vì sao càng tăng lương càng kẹt, và 3 lối thoát từ 2 triệu mỗi tháng.",
+ "hook_beats": [
+  {
+   "at": "lương người việt tăng",
+   "type": "bignum",
+   "value": "+9.9%",
+   "label": "Thu nhập bình quân quý 3/2026",
+   "tone": "up",
+   "source": "Cục Thống kê"
+  },
+  {
+   "at": "cuối tháng vẫn hết tiền",
+   "type": "statement",
+   "text": "Lương tăng, ví vẫn rỗng cuối tháng"
+  },
+  {
+   "at": "đó là rat race",
+   "type": "statement",
+   "text": "Rat race: chạy mãi, vẫn đứng yên"
+  },
+  {
+   "at": "càng tăng lương càng kẹt",
+   "type": "flow",
+   "label": "Hết video bạn sẽ biết",
+   "steps": [
+    "Vì sao lương tăng vẫn kẹ",
+    "3 lối thoát",
+    "Từ 2 triệu mỗi tháng"
+   ],
+   "step_at": [
+    "càng tăng lương càng kẹt",
+    "lối thoát",
+    "mỗi tháng"
+   ]
+  }
+ ],
+ "intro": "Chào mừng mọi người quay lại Smart Penguin Insights.",
+ "agenda_label": "3 LỐI THOÁT",
+ "visual_queries": [
+  "hamster running wheel",
+  "office workers commute city"
+ ],
+ "sections": [
+  {
+   "heading": "Rat race là gì",
+   "edu": true,
+   "key_stat": "32 triệu",
+   "key_label": "bản Cha Giàu Cha Nghèo đã bán",
+   "bullets": [
+    "Chạy nhanh, vẫn đứng yên",
+    "Vòng lặp 4 bước",
+    "Tiền không có lối ra"
+   ],
+   "narration": "Năm 1997, Robert Kiyosaki ra cuốn Cha Giàu Cha Nghèo, đến nay bán hơn 32 triệu bản. Ý tưởng nổi tiếng nhất của cuốn sách là rat race, vòng quay chuột. Hình dung con chuột chạy trên bánh xe: chạy rất nhanh mà vẫn đứng yên một chỗ. Với con người, vòng quay đó có 4 bước. Đi làm, nhận lương. Lương về thì chi tiêu tăng theo. Chi tiêu vượt lương thì trả góp, quẹt thẻ. Có nợ thì lại phải đi làm tiếp, không dám nghỉ. Rồi vòng lặp quay lại từ đầu. Vậy thì sao? Vấn đề không nằm ở lương thấp hay cao. Vấn đề là toàn bộ tiền của bạn chỉ chảy theo một vòng tròn, không có lối ra.",
+   "beats": [
+    {
+     "at": "robert kiyosaki ra cuốn",
+     "type": "statement",
+     "text": "Cha Giàu Cha Nghèo, Robert Kiyosaki",
+     "sub": "Xuất bản năm 1997"
+    },
+    {
+     "at": "đến nay bán hơn",
+     "type": "bignum",
+     "value": "32 triệu bản",
+     "label": "Sách tài chính cá nhân bán chạy hàng đầu thế giới",
+     "tone": "up",
+     "source": "Wikipedia"
+    },
+    {
+     "at": "vòng quay chuột",
+     "type": "statement",
+     "text": "Rat race = vòng quay chuột"
+    },
+    {
+     "at": "hình dung con chuột",
+     "type": "photo",
+     "label": "Chạy rất nhanh, vẫn đứng yên",
+     "query": "hamster wheel"
+    },
+    {
+     "at": "vòng quay đó có",
+     "type": "flow",
+     "label": "Vòng quay chuột 4 bước",
+     "steps": [
+      "Đi làm, nhận lương",
+      "Chi tiêu tăng theo",
+      "Trả góp, quẹt thẻ",
+      "Có nợ, phải làm tiếp"
+     ],
+     "step_at": [
+      "đi làm, nhận lương",
+      "chi tiêu tăng theo",
+      "trả góp, quẹt thẻ",
+      "có nợ thì lại"
+     ],
+     "hold": 4
+    },
+    {
+     "at": "vòng lặp quay lại từ đầu",
+     "type": "statement",
+     "text": "Và vòng lặp quay lại từ đầu"
+    },
+    {
+     "at": "không nằm ở lương thấp",
+     "type": "statement",
+     "text": "Không phải lương thấp hay cao"
+    },
+    {
+     "at": "chỉ chảy theo một vòng tròn",
+     "type": "statement",
+     "text": "Tiền chạy vòng tròn, không có lối ra"
+    }
+   ],
+   "visual_queries": [
+    "hamster running wheel",
+    "tired office worker"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Vì sao tăng lương vẫn kẹt",
+   "edu": false,
+   "key_stat": "4.57%",
+   "key_label": "lạm phát bình quân 10 tháng 2026",
+   "bullets": [
+    "Thu nhập 9.2 triệu (+9.9%)",
+    "Lạm phát ăn một nửa",
+    "Chi tiêu tăng nhanh hơn lương"
+   ],
+   "narration": "Nhưng lương đang tăng mà, sao vẫn kẹt? Quý 3 năm 2026, thu nhập bình quân người lao động Việt Nam là 9.2 triệu mỗi tháng, tăng 9.9%. Nghe tốt. Nhưng có hai cái bẫy. Bẫy thứ nhất: lạm phát. 10 tháng đầu năm nay, giá tiêu dùng tăng 4.57%. Một nửa phần tăng lương đã bị giá cả ăn mất. Bẫy thứ hai nguy hiểm hơn: chi tiêu tăng nhanh hơn lương. Tăng lương 1 triệu, bạn đổi điện thoại trả góp 1.5 triệu mỗi tháng. Lương tăng, mà tiền dư lại giảm. Còn nếu bạn để 100 triệu nằm im, sau 10 năm với lạm phát khoảng 4.5% một năm, sức mua chỉ còn chừng 64 triệu. Vậy thì sao? Chăm chỉ thôi chưa đủ. Bạn đang chạy nhanh hơn, nhưng bánh xe cũng quay nhanh hơn.",
+   "beats": [
+    {
+     "at": "sao vẫn kẹt",
+     "type": "bignum",
+     "text": "Lương tăng mà, sao vẫn kẹt?",
+     "value": "+9.9%",
+     "label": "Lương tăng mà, sao vẫn kẹt?",
+     "tone": "up"
+    },
+    {
+     "at": "thu nhập bình quân người lao động",
+     "type": "bignum",
+     "value": "9.2 triệu",
+     "label": "Thu nhập bình quân mỗi tháng, quý 3/2026",
+     "source": "Cục Thống kê"
+    },
+    {
+     "at": "có hai cái bẫy",
+     "type": "flow",
+     "label": "2 cái bẫy",
+     "steps": [
+      "Bẫy 1: lạm phát",
+      "Bẫy 2: chi tiêu tăng"
+     ],
+     "step_at": [
+      "bẫy thứ nhất",
+      "bẫy thứ hai"
+     ]
+    },
+    {
+     "at": "giá tiêu dùng tăng",
+     "type": "bignum",
+     "value": "+4.57%",
+     "label": "CPI bình quân 10 tháng 2026",
+     "tone": "down",
+     "tone_lock": true,
+     "source": "Cục Thống kê"
+    },
+    {
+     "at": "một nửa phần tăng lương",
+     "type": "dots",
+     "total": 10,
+     "hit": 5,
+     "label": "Khoảng một nửa phần tăng lương bị giá cả ăn mất"
+    },
+    {
+     "at": "chi tiêu tăng nhanh hơn lương",
+     "type": "statement",
+     "text": "Chi tiêu chạy nhanh hơn lương"
+    },
+    {
+     "at": "bạn đổi điện thoại",
+     "type": "versus",
+     "left": {
+      "label": "Lương tăng",
+      "value": "+1 triệu",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Trả góp mới",
+      "value": "-1.5 triệu",
+      "tone": "down"
+     },
+     "sub": "Tiền dư mỗi tháng giảm 500 nghìn",
+     "hold": 3.5
+    },
+    {
+     "at": "nằm im",
+     "type": "versus",
+     "left": {
+      "label": "Hôm nay",
+      "value": "100 triệu",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "Sau 10 năm",
+      "value": "~64 triệu",
+      "tone": "down"
+     },
+     "sub": "Giả định lạm phát 4.5%/năm, kênh tự tính",
+     "hold": 4,
+     "music": 2
+    },
+    {
+     "at": "chăm chỉ thôi chưa đủ",
+     "type": "photo",
+     "text": "Chăm chỉ thôi chưa đủ",
+     "label": "Chăm chỉ thôi chưa đủ",
+     "query": "tired worker night office"
+    }
+   ],
+   "visual_queries": [
+    "inflation supermarket prices",
+    "smartphone installment shopping"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Tài sản và tiêu sản",
+   "edu": true,
+   "key_stat": "2 định nghĩa",
+   "key_label": "bài học cốt lõi của cuốn sách",
+   "bullets": [
+    "Tài sản: bỏ tiền vào túi",
+    "Tiêu sản: lấy tiền ra",
+    "Tiền dư chảy về đâu"
+   ],
+   "narration": "Vậy lối ra nằm ở đâu? Kiyosaki đưa ra một định nghĩa rất đơn giản. Tài sản là thứ bỏ tiền vào túi bạn. Tiêu sản là thứ lấy tiền ra khỏi túi bạn. Chỉ vậy thôi. Theo định nghĩa này, chiếc xe trả góp là tiêu sản. Ngay cả căn nhà bạn ở, nếu mỗi tháng phải trả ngân hàng mà không tạo ra đồng nào, cũng đang lấy tiền ra khỏi túi. Nhìn 3 dòng tiền. Người nghèo: lương về, tiêu hết. Người trung lưu: lương về, trả góp những thứ họ tưởng là tài sản. Người giàu: lương về, phần dư đi mua tài sản, rồi tài sản trả chi phí cho họ. Vậy thì sao? Khác biệt không phải ai kiếm nhiều hơn, mà là tiền dư chảy về đâu.",
+   "beats": [
+    {
+     "at": "lối ra nằm ở đâu",
+     "type": "statement",
+     "text": "Lối ra nằm ở một định nghĩa"
+    },
+    {
+     "at": "tài sản là thứ",
+     "type": "flow",
+     "label": "Định nghĩa của Kiyosaki",
+     "steps": [
+      "Tài sản: tiền vào túi",
+      "Tiêu sản: lấy tiền ra"
+     ],
+     "step_at": [
+      "tài sản là thứ",
+      "tiêu sản là thứ"
+     ],
+     "hold": 3.5
+    },
+    {
+     "at": "chiếc xe trả góp",
+     "type": "photo",
+     "text": "Xe trả góp: tiêu sản",
+     "sub": "Mỗi tháng lấy tiền ra khỏi túi",
+     "label": "Xe trả góp: tiêu sản",
+     "query": "motorbike scooter Vietnam street"
+    },
+    {
+     "at": "ngay cả căn nhà",
+     "type": "photo",
+     "text": "Nhà để ở, còn trả ngân hàng: đang lấy tiền ra",
+     "sub": "Theo định nghĩa của Kiyosaki",
+     "label": "Nhà để ở, còn trả ngân hàng: đang lấy tiền ra",
+     "query": "apartment house keys"
+    },
+    {
+     "at": "nhìn 3 dòng tiền",
+     "type": "flow",
+     "label": "3 dòng tiền",
+     "steps": [
+      "Nghèo: tiêu hết",
+      "Trung lưu: trả góp",
+      "Giàu: mua tài sản"
+     ],
+     "step_at": [
+      "người nghèo",
+      "người trung lưu",
+      "người giàu"
+     ],
+     "hold": 4
+    },
+    {
+     "at": "rồi tài sản trả chi phí",
+     "type": "dots",
+     "text": "Tài sản trả chi phí thay bạn",
+     "total": 3,
+     "hit": 1,
+     "label": "Chỉ 1 trong 3 dòng tiền đưa bạn ra khỏi rat race"
+    },
+    {
+     "at": "khác biệt không phải",
+     "type": "statement",
+     "text": "Không phải kiếm bao nhiêu, mà tiền dư đi đâu"
+    }
+   ],
+   "visual_queries": [
+    "house mortgage keys",
+    "car loan dealership"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ],
+   "emphasis": "ĐỊNH NGHĨA ĐỔI CẢ CÁCH TIÊU TIỀN"
+  },
+  {
+   "heading": "Khi nào bạn thoát rat race",
+   "edu": true,
+   "key_stat": "~1.8 tỷ",
+   "key_label": "cần có nếu chi 9 triệu/tháng, tài sản sinh 6%/năm",
+   "bullets": [
+    "Thu nhập thụ động > chi phí",
+    "Chi 9 triệu = 108 triệu/năm",
+    "Mỗi triệu là một phần tự do"
+   ],
+   "narration": "Vậy khi nào là thoát? Kiyosaki có một thước đo rõ ràng: khi thu nhập thụ động lớn hơn chi phí sinh hoạt. Thu nhập thụ động là tiền tự về dù bạn không đi làm, như cổ tức, tiền cho thuê, lãi từ một việc kinh doanh chạy được mà không cần bạn. Ví dụ: bạn tiêu 9 triệu mỗi tháng, tức 108 triệu một năm. Nếu tài sản sinh ra 6% một năm, bạn cần khoảng 1.8 tỷ. Nghe rất xa. Nhưng bạn không cần đủ trong một lần. Mỗi 1 triệu thu nhập thụ động là bạn đã mua lại được một phần thời gian của mình. Đây là cú móc của video: lối thoát thứ 2 sẽ cho bạn thấy 2 triệu mỗi tháng có thể đi xa đến đâu.",
+   "beats": [
+    {
+     "at": "khi nào là thoát",
+     "type": "statement",
+     "text": "Thoát khi thu nhập thụ động > chi phí"
+    },
+    {
+     "at": "thu nhập thụ động là tiền",
+     "type": "flow",
+     "label": "Thu nhập thụ động",
+     "steps": [
+      "Cổ tức",
+      "Tiền cho thuê",
+      "Kinh doanh tự chạy"
+     ],
+     "step_at": [
+      "như cổ tức",
+      "tiền cho thuê",
+      "lãi từ một việc kinh doanh"
+     ]
+    },
+    {
+     "at": "bạn tiêu",
+     "type": "versus",
+     "left": {
+      "label": "Mỗi tháng",
+      "value": "9 triệu",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "Mỗi năm",
+      "value": "108 triệu",
+      "tone": "down"
+     },
+     "sub": "Chi phí cần thu nhập thụ động bù lại",
+     "hold": 3.5
+    },
+    {
+     "at": "nếu tài sản sinh ra",
+     "type": "bignum",
+     "value": "~1.8 tỷ",
+     "label": "Tài sản cần có, nếu sinh 6%/năm",
+     "tone": "up"
+    },
+    {
+     "at": "nghe rất xa",
+     "type": "photo",
+     "text": "Không cần đủ trong một lần",
+     "label": "Không cần đủ trong một lần",
+     "query": "mountain path steps"
+    },
+    {
+     "at": "mỗi 1 triệu thu nhập thụ động",
+     "type": "dots",
+     "total": 9,
+     "hit": 1,
+     "label": "Mỗi 1 triệu thụ động: mua lại 1/9 tháng tự do"
+    },
+    {
+     "at": "đây là cú móc",
+     "type": "statement",
+     "text": "2 triệu mỗi tháng đi xa đến đâu?",
+     "sub": "Câu trả lời ở lối thoát thứ 2"
+    }
+   ],
+   "visual_queries": [
+    "dividend income passive",
+    "freedom beach laptop"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Lối thoát 1: kinh doanh nhỏ",
+   "edu": true,
+   "key_stat": "E S B I",
+   "key_label": "4 ô kiếm tiền của Kiyosaki",
+   "bullets": [
+    "Rat race ở ô E và S",
+    "3 hướng vốn nhỏ",
+    "Test nhỏ, có lãi mới tăng"
+   ],
+   "narration": "Lối thoát đầu tiên là tăng dòng tiền vào bằng kinh doanh. Trong cuốn sách tiếp theo, Kiyosaki chia người kiếm tiền thành 4 ô. E là làm thuê. S là tự làm, như freelancer hay chủ quán, nghỉ là mất thu nhập. B là chủ doanh nghiệp, có hệ thống chạy thay mình. I là nhà đầu tư, tiền làm việc thay mình. Rat race nằm ở ô E và S. Muốn ra, bạn đi dần sang B và I. Với người mới, vốn nhỏ, có 3 hướng dễ bắt đầu. Một: bán hàng online, trên TikTok Shop hay Shopee, bán thứ bạn hiểu rõ. Hai: bán kỹ năng, như thiết kế, edit video, dạy kèm, viết nội dung. Ba: làm content, xây kênh về đúng thứ bạn giỏi. Nguyên tắc chung: test với vốn nhỏ, có lãi thật rồi mới tăng, và từng bước biến việc mình làm thành quy trình, để sau này người khác hoặc công cụ AI chạy thay mình.",
+   "beats": [
+    {
+     "at": "lối thoát đầu tiên",
+     "type": "statement",
+     "text": "Lối thoát 1: tăng dòng tiền vào"
+    },
+    {
+     "at": "chia người kiếm tiền thành",
+     "type": "flow",
+     "label": "4 ô kiếm tiền (Cashflow Quadrant)",
+     "steps": [
+      "E: làm thuê",
+      "S: tự làm",
+      "B: chủ hệ thống",
+      "I: nhà đầu tư"
+     ],
+     "step_at": [
+      "e là làm thuê",
+      "s là tự làm",
+      "b là chủ doanh nghiệp",
+      "i là nhà đầu tư"
+     ],
+     "hold": 4
+    },
+    {
+     "at": "rat race nằm ở ô",
+     "type": "dots",
+     "total": 4,
+     "hit": 2,
+     "label": "2 trong 4 ô là rat race: E và S"
+    },
+    {
+     "at": "có 3 hướng dễ bắt đầu",
+     "type": "flow",
+     "label": "3 hướng vốn nhỏ",
+     "steps": [
+      "Bán hàng online",
+      "Bán kỹ năng",
+      "Làm content"
+     ],
+     "step_at": [
+      "bán hàng online",
+      "bán kỹ năng",
+      "làm content"
+     ],
+     "hold": 3
+    },
+    {
+     "at": "tiktok shop hay shopee",
+     "type": "logos",
+     "label": "Bán thứ bạn hiểu rõ",
+     "items": [
+      {
+       "label": "TikTok Shop",
+       "value": "",
+       "logo": "TIKTOK"
+      },
+      {
+       "label": "Shopee",
+       "value": "",
+       "logo": "SHOPEE"
+      }
+     ]
+    },
+    {
+     "at": "như thiết kế",
+     "type": "photo",
+     "text": "Thiết kế, edit video, dạy kèm, viết nội dung",
+     "label": "Bán kỹ năng: thiết kế, edit video, dạy kèm",
+     "query": "video editing laptop"
+    },
+    {
+     "at": "xây kênh về đúng thứ",
+     "type": "photo",
+     "text": "Làm content về đúng thứ bạn giỏi",
+     "label": "Làm content về đúng thứ bạn giỏi",
+     "query": "content creator camera"
+    },
+    {
+     "at": "test với vốn nhỏ",
+     "type": "flow",
+     "label": "Nguyên tắc chung",
+     "steps": [
+      "Test vốn nhỏ",
+      "Có lãi thật mới tăng",
+      "Biến thành quy trình"
+     ],
+     "step_at": [
+      "test với vốn nhỏ",
+      "có lãi thật",
+      "biến việc mình làm"
+     ]
+    },
+    {
+     "at": "công cụ ai chạy thay mình",
+     "type": "statement",
+     "text": "Từ ô S sang ô B: việc chạy không cần bạn"
+    }
+   ],
+   "visual_queries": [
+    "online shop packing orders",
+    "freelancer laptop design"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Lối thoát 2: đầu tư",
+   "edu": true,
+   "key_stat": "~1.5 tỷ",
+   "key_label": "2 triệu/tháng x 20 năm, giả định 10%/năm",
+   "bullets": [
+    "Trả cho mình trước 20%",
+    "Lãi kép làm phần nặng",
+    "Giả định, không đảm bảo"
+   ],
+   "narration": "Lối thoát thứ hai là cho tiền làm việc thay bạn. Bí quyết đầu tiên trong sách là trả cho mình trước: lương về, trích ra một phần để đầu tư trước khi tiêu, chứ không đợi cuối tháng còn gì mới để. Lấy 20% của mức thu nhập 9.2 triệu, khoảng 2 triệu mỗi tháng. Giả sử bạn DCA đều 2 triệu vào một kênh tăng trưởng khoảng 10% một năm. Sau 10 năm, bạn bỏ vào 240 triệu, tài khoản thành khoảng 410 triệu. Sau 20 năm, bạn bỏ vào 480 triệu, tài khoản thành khoảng 1.5 tỷ. Phần chênh lệch là lãi kép, tiền đẻ ra tiền. Kênh cho người mới thường là quỹ chỉ số, mua cả rổ cổ phiếu thay vì đoán từng mã, như video index fund trên kênh. Một phần nhỏ có thể vào crypto như BTC, nếu bạn chịu được biến động mạnh. Lưu ý: 10% một năm chỉ là giả định để minh hoạ, không có kênh nào đảm bảo mức lãi đó.",
+   "beats": [
+    {
+     "at": "lối thoát thứ hai",
+     "type": "statement",
+     "text": "Lối thoát 2: cho tiền làm việc thay bạn"
+    },
+    {
+     "at": "trả cho mình trước",
+     "type": "flow",
+     "label": "Trả cho mình trước",
+     "steps": [
+      "Lương về",
+      "Trích đầu tư trước",
+      "Còn lại mới tiêu"
+     ],
+     "step_at": [
+      "lương về",
+      "trích ra một phần",
+      "trước khi tiêu"
+     ]
+    },
+    {
+     "at": "của mức thu nhập",
+     "type": "bignum",
+     "value": "~2 triệu/tháng",
+     "label": "20% của thu nhập 9.2 triệu",
+     "tone": "up"
+    },
+    {
+     "at": "giả sử bạn dca",
+     "type": "bignum",
+     "text": "DCA 2 triệu/tháng, giả định 10%/năm",
+     "value": "10%/năm",
+     "label": "Giả định tăng trưởng để minh hoạ, không đảm bảo",
+     "tone": "up"
+    },
+    {
+     "at": "sau 10 năm",
+     "type": "versus",
+     "left": {
+      "label": "Bỏ vào (10 năm)",
+      "value": "240 triệu",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "Tài khoản",
+      "value": "~410 triệu",
+      "tone": "up"
+     },
+     "sub": "Giả định 10%/năm, kênh tự tính",
+     "hold": 4
+    },
+    {
+     "at": "sau 20 năm",
+     "type": "versus",
+     "left": {
+      "label": "Bỏ vào (20 năm)",
+      "value": "480 triệu",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "Tài khoản",
+      "value": "~1.5 tỷ",
+      "tone": "up"
+     },
+     "sub": "Giả định 10%/năm, kênh tự tính",
+     "hold": 4,
+     "music": 2
+    },
+    {
+     "at": "phần chênh lệch là lãi kép",
+     "type": "dots",
+     "total": 10,
+     "hit": 7,
+     "label": "Khoảng 2/3 tài khoản sau 20 năm đến từ lãi kép"
+    },
+    {
+     "at": "quỹ chỉ số",
+     "type": "chart",
+     "ticker": "SPX",
+     "label": "S&P 500 30 năm: rổ cổ phiếu lớn nhất nước Mỹ",
+     "years": 30,
+     "hold": 4
+    },
+    {
+     "at": "một phần nhỏ có thể vào crypto",
+     "type": "chart",
+     "ticker": "BTC",
+     "label": "BTC 1 năm: lợi suất cao, biến động mạnh",
+     "days": 365,
+     "hold": 4
+    },
+    {
+     "at": "chỉ là giả định",
+     "type": "statement",
+     "text": "10%/năm là giả định, không đảm bảo"
+    }
+   ],
+   "visual_queries": [
+    "compound interest savings jar",
+    "stock market long term"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Lối thoát 3: kiến thức tài chính",
+   "edu": true,
+   "key_stat": "3 bẫy",
+   "key_label": "kéo bạn quay lại vòng quay chuột",
+   "bullets": [
+    "Vay nợ đầu tư khi chưa hiểu",
+    "Khoá học làm giàu nhanh",
+    "Hứa lãi cố định mỗi tháng"
+   ],
+   "narration": "Lối thoát thứ ba quan trọng nhất: kiến thức tài chính. Vì khi bắt đầu có tiền dư, bạn sẽ gặp 3 cái bẫy kéo bạn quay lại vòng quay chuột. Một: vay nợ để đầu tư khi chưa hiểu mình mua gì. Hai: khoá học làm giàu nhanh, hứa thoát rat race trong vài tháng. Ba: dự án hứa lãi cố định mỗi tháng, đó thường là dấu hiệu lừa đảo. Và phải công bằng với chính cuốn sách. Đến nay chưa ai chứng minh được người cha giàu có thật. Một số lời khuyên, như dùng nhiều nợ để mua bất động sản, rất rủi ro với người mới. Cách đọc đúng là lấy tư duy về tài sản và dòng tiền, còn chiến thuật thì tự kiểm chứng.",
+   "beats": [
+    {
+     "at": "lối thoát thứ ba",
+     "type": "statement",
+     "text": "Lối thoát 3: kiến thức tài chính"
+    },
+    {
+     "at": "bạn sẽ gặp 3 cái bẫy",
+     "type": "flow",
+     "label": "3 cái bẫy khi có tiền dư",
+     "steps": [
+      "Vay nợ đầu tư",
+      "Khoá học làm giàu nhanh",
+      "Hứa lãi cố định"
+     ],
+     "step_at": [
+      "vay nợ để đầu tư",
+      "khoá học làm giàu nhanh",
+      "dự án hứa lãi cố định"
+     ],
+     "hold": 4
+    },
+    {
+     "at": "dấu hiệu lừa đảo",
+     "type": "bignum",
+     "text": "Hứa lãi cố định mỗi tháng = dấu hiệu lừa đảo",
+     "value": "Lãi cố định",
+     "label": "Hứa lãi cố định mỗi tháng: dấu hiệu lừa đảo",
+     "tone": "down"
+    },
+    {
+     "at": "công bằng với chính cuốn sách",
+     "type": "photo",
+     "text": "Công bằng với cuốn sách",
+     "label": "Công bằng với chính cuốn sách",
+     "query": "reading book finance"
+    },
+    {
+     "at": "chưa ai chứng minh",
+     "type": "statement",
+     "text": "Người cha giàu: chưa được chứng minh có thật",
+     "sub": "Nguồn: Wikipedia"
+    },
+    {
+     "at": "dùng nhiều nợ",
+     "type": "statement",
+     "text": "Nhiều nợ mua bất động sản: rủi ro với người mới"
+    },
+    {
+     "at": "cách đọc đúng",
+     "type": "flow",
+     "label": "Cách đọc đúng",
+     "steps": [
+      "Lấy tư duy dòng tiền",
+      "Tự thử chiến thuật"
+     ],
+     "step_at": [
+      "lấy tư duy",
+      "còn chiến thuật"
+     ]
+    }
+   ],
+   "visual_queries": [
+    "scam warning phone",
+    "reading finance book"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  }
+ ],
+ "outro": "Tóm lại, thoát rat race có 3 bước. Cắt bớt tiêu sản. Trả cho mình trước 20% lương. Biến tiền dư thành tài sản tạo dòng tiền, bằng kinh doanh nhỏ hoặc đầu tư dài hạn. Đây là nội dung giáo dục, không phải lời khuyên đầu tư. Bình luận cho mình biết: bạn đang ở ô nào, E, S, B hay I?",
+ "outro_points": [
+  "Cắt tiêu sản",
+  "Trả cho mình trước 20%",
+  "Tiền dư thành tài sản"
+ ],
+ "outro_cta": "BẠN ĐANG Ở Ô NÀO: E, S, B HAY I?",
+ "shorts": [
+  1,
+  5
+ ],
+ "short_spans": [
+  {
+   "from": "bẫy thứ hai nguy hiểm hơn",
+   "to": "bánh xe cũng quay nhanh hơn"
+  },
+  {
+   "from": "giả sử bạn dca",
+   "to": "tiền đẻ ra tiền"
+  }
+ ],
+ "short_hooks": {
+  "1": "Tăng lương 1 triệu, nợ thêm 1.5 triệu?",
+  "5": "2 triệu/tháng thành 1.5 tỷ?"
+ },
+ "short_cta": "Bạn đang ở ô nào: E, S, B hay I? Bình luận nhé!",
+ "pinned_comment": "Bạn đang ở ô nào: E làm thuê, S tự làm, B chủ hệ thống hay I nhà đầu tư? Và bạn muốn đi sang ô nào trong 3 năm tới?",
+ "thumb_stat": "1.5 tỷ",
+ "thumb_text": "thoát vòng quay chuột?",
+ "thumb_tag": "CHA GIÀU CHA NGHÈO",
+ "thumb_kicker": "Rat race: 3 lối thoát",
+ "thumb_points": [],
+ "thumb_vs": [],
+ "thumb_before": {
+  "value": "2 triệu/tháng",
+  "label": "Bỏ vào đều"
+ },
+ "thumb_after": {
+  "value": "1.5 tỷ",
+  "label": "Sau 20 năm"
+ },
+ "thumb_style": "before",
+ "thumb_subject": "penguin",
+ "thumb_icon": "hourglass",
+ "thumb_warn": false
+}
