@@ -27,3 +27,14 @@ def test_may_do_loi_khong_lam_hong_luot_dung(tmp_path, monkeypatch):
     monkeypatch.setattr(LL, "run", boom)
     r = LL.check({}, tmp_path)
     assert r["ok"] is None and r["issues"] == []
+
+
+def test_luat_da_dang_hinh():
+    import video_lint as VL
+    st = lambda: {"type": "statement", "at": "x", "text": "a"}
+    plan = {"sections": [{"beats": [st(), st(), st()]}, {"beats": [{"type": "chart", "at": "y"}, st()]}]}
+    bad = " ".join(VL.variety_issues(plan))
+    assert "chiếm" in bad and "3 hình liền nhau" in bad and "Phần 1 chỉ có" in bad
+    ok = {"sections": [{"beats": [{"type": "chart", "at": "a"}, {"type": "versus", "at": "b"}, {"type": "bignum", "at": "c"}]},
+                       {"beats": [{"type": "flow", "at": "d"}, {"type": "statement", "at": "e"}, {"type": "dots", "at": "f"}]}]}
+    assert VL.variety_issues(ok) == []

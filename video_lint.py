@@ -50,6 +50,40 @@ def _anchors(words: list[str], beats: list[dict]) -> list[tuple[int, dict]]:
 LIMITS = {"vs_label": 26, "vs_value": 11, "bignum_label": 60, "statement": 56, "flow_step": 24, "dots_label": 48}
 
 
+MOVING = ("chart", "wma", "trend", "race", "dow", "flow", "versus", "dots", "logos", "matrix")
+
+
+def variety_issues(plan: dict) -> list[str]:
+    """Trọng 28/11: "video nào cứ lặp đi lặp lại chán ngắt, đừng rập khuôn sách giáo khoa".
+    Không kiểu hình nào quá 1/3 video, thẻ chữ tối đa 25%, không 3 hình liền nhau cùng kiểu, mỗi phần có ít nhất 1 hình động,
+    2 phần liền nhau không được cùng một chuỗi kiểu hình."""
+    bad = []
+    secs = plan.get("sections") or []
+    all_beats = list(plan.get("hook_beats") or []) + [b for s in secs for b in s.get("beats") or []]
+    types = [b.get("type") for b in all_beats if isinstance(b, dict)]
+    if not types:
+        return bad
+    top = max(set(types), key=types.count)
+    if types.count(top) > max(3, len(types) / 3):
+        bad.append(f"Kiểu hình '{top}' chiếm {types.count(top)}/{len(types)} hình (tối đa 1/3), đổi bớt sang kiểu khác cho đỡ lặp.")
+    if types.count("statement") > max(2, len(types) * 0.25):
+        bad.append(f"Thẻ chữ (statement) chiếm {types.count('statement')}/{len(types)} hình (tối đa 25%): giống đọc sách, "
+                   "đổi sang hình có số, so sánh hoặc biểu đồ.")
+    for i in range(len(types) - 2):
+        if types[i] == types[i + 1] == types[i + 2]:
+            bad.append(f"3 hình liền nhau cùng kiểu '{types[i]}' (hình {i + 1} đến {i + 3}), xen kiểu khác vào.")
+            break
+    prev = None
+    for k, s in enumerate(secs, 1):
+        st = [b.get("type") for b in s.get("beats") or [] if isinstance(b, dict)]
+        if st and not any(t in MOVING for t in st):
+            bad.append(f"Phần {k} chỉ có thẻ chữ/số tĩnh, thêm ít nhất 1 hình động (biểu đồ, so sánh, sơ đồ, logo).")
+        if st and prev and st == prev and len(st) >= 2:
+            bad.append(f"Phần {k} dùng y hệt chuỗi hình của phần {k - 1} ({', '.join(st)}), đổi bố cục cho khác.")
+        prev = st
+    return bad
+
+
 def layout_issues(beats: list) -> list[str]:
     bad = []
     for b in beats:
@@ -217,9 +251,7 @@ def lint(plan: dict) -> list[str]:
     if not any(b.get("type") in ("chart", "race", "wma", "trend", "dow") for b in all_beats):
         bad.append("Cả video chưa có biểu đồ giá nào. Thêm ít nhất 1 hình 'race' hoặc 'chart' (giá thật của coin đang nói tới).")
     bad += layout_issues(all_beats)
-    types = [b.get("type") for b in all_beats]
-    if types and max(types.count(t) for t in set(types)) > max(4, len(types) * 0.4):
-        bad.append("Một kiểu hình lặp quá nhiều, đổi bớt sang kiểu khác (versus, chart, dots, flow, logos).")
+    bad += variety_issues(plan)
     hook = plan.get("hook", "")
     m = re.search(r"\b(hai|ba|bốn|năm|sáu|[2-6])\s+câu hỏi", hook.lower())
     if m:

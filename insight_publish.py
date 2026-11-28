@@ -230,12 +230,23 @@ Trả JSON:
 {{
   "score": điểm tổng 1-10 (số thập phân),
   "scores": {{"hook_3s": 1-10, "hinh_anh_ro_rang": 1-10, "mau_sac_brand": 1-10, "nhip_do": 1-10, "phu_de": 1-10,
-              "du_lieu_lien_quan": 1-10, "thumbnail": 1-10, "short_9x16": 1-10}},
+              "du_lieu_lien_quan": 1-10, "thumbnail": 1-10, "short_9x16": 1-10, "dang_xem": 1-10}},
   "tot": ["2-3 điểm đang làm tốt"],
   "can_sua": ["3-6 việc cần sửa, mỗi việc nêu rõ ở đâu (giây/khung) và sửa thế nào"],
   "script_tips": ["2-3 mẹo cho LỜI ĐỌC lần sau (hook, độ dài, cách kể), sẽ được đưa thẳng vào hướng dẫn viết kịch bản"],
-  "retention_risk": "đoạn nào dễ làm người xem bỏ đi và vì sao"
+  "retention_risk": "đoạn nào dễ làm người xem bỏ đi và vì sao",
+  "nguoi_xem": {{"xem_toi_giay": số giây bạn (vai người xem) bấm thoát, hoặc xem hết thì ghi độ dài video,
+                "ly_do_thoat": "vì sao thoát ở đó", "doan_chan": ["giây/khung: chỗ khô, dài, giảng như sách giáo khoa"],
+                "doan_lap": ["giây/khung: hình hoặc ý lặp lại kiểu cũ"], "dang_xem": true hoặc false,
+                "nhan_xet": "2 đến 3 câu nói thật như người xem để lại bình luận"}}
 }}
+VAI NGƯỜI XEM (Trọng 28/11: "video bạn làm ra bạn còn thấy không oke thì làm sao user xem được"): SAU khi chấm kiểu biên tập viên,
+hãy đóng vai một người xem thật: 22 tuổi, mới vào crypto 6 tháng, lướt YouTube buổi tối, có 10 giây là bấm sang video khác nếu chán.
+Xem lần lượt từng khung theo giây và trả lời THẬT LÒNG: tới giây nào bạn thoát, vì sao; đoạn nào khô khan như sách giáo khoa;
+hình nào lặp lại kiểu cũ (cùng một bố cục chữ trái thẻ phải nhiều lần là lặp); xem xong có thấy đáng thời gian không.
+Chấm thêm điểm "dang_xem" (1-10) trong scores: video có đáng để người xem này ngồi xem hết không. Thoát trước 50% độ dài thì
+dang_xem tối đa 5. Mỗi chỗ chán, lặp, xấu ghi thêm vào can_sua, bắt đầu bằng "NGƯỜI XEM:" (giây/khung, vì sao, đổi thành gì cho cuốn hơn,
+ví dụ đổi sang biểu đồ, so sánh, câu chuyện, câu hỏi bất ngờ, đừng chỉ thêm chữ). Không khen xã giao.
 SOÁT TRÌNH BÀY BẮT BUỘC (Trọng 23/11, lỗi nào cũng phải ghi vào can_sua, ghi rõ khung nào, và trừ điểm hinh_anh_ro_rang
 xuống tối đa 6 nếu có dù chỉ 1 lỗi): chữ đè lên nhau; chữ tràn hoặc bị cắt mép; lỗi font (ô vuông, mất dấu tiếng Việt);
 nhãn bị máy tự ngắt dòng giữa cụm (vd "lãi / 10%/năm"); 2 con số trong thẻ so sánh không thẳng hàng; nguồn số liệu viết liền
@@ -291,7 +302,7 @@ def claude_review_cli(prompt: str, imgs: list[tuple[str, bytes]]) -> dict:
     env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
     env["CLAUDE_CODE_OAUTH_TOKEN"] = tok
     model = (V.load_cfg().get("insight") or {}).get("review_model_cli", "sonnet")
-    r = subprocess.run(["claude", "-p", ask, "--allowedTools", "Read", "--max-turns", "40", "--model", model,
+    r = subprocess.run(["claude", "-p", ask, "--allowedTools", "Read", "--max-turns", str(len(imgs) + 25), "--model", model,
                         "--output-format", "text"], cwd=d, env=env, capture_output=True, text=True, timeout=900)
     txt = r.stdout.strip()
     m = re.search(r"\{.*\}", txt, re.S)
@@ -327,9 +338,10 @@ def review(gem, cfg, res: dict, thumb: Path | None) -> dict:
     plan = res["plan"]
     words = sum(len(s["narration"].split()) for s in plan["sections"])
     wpm = int(words / max(1, res["duration"]) * 60 * 1.1)
-    N = 18   # Trọng 22/11: review nhìn nhiều khung hơn, kèm giây + lời đang đọc, để chấm nhịp và dữ liệu cho đúng
-    imgs = [(f"long_{i}", b) for i, b in enumerate(frames_of(res["long"], N))]
     dur = res["duration"]
+    # Trọng 28/11: 18 khung cho video 6 phút (20 giây 1 khung) bỏ sót quá nhiều. Giờ khoảng 8 giây 1 khung, 18 đến 45 khung
+    N = int(min(45, max(18, dur / 8)))
+    imgs = [(f"long_{i}", b) for i, b in enumerate(frames_of(res["long"], N, 800))]
     times = [1.5 if k == 0 else dur * k / N for k in range(N)]
     def said(t):
         for sc in res.get("scenes") or []:
@@ -384,7 +396,7 @@ def review_text(rv: dict) -> str:
     sc = rv.get("scores") or {}
     names = {"hook_3s": "Hook 3 giây đầu", "hinh_anh_ro_rang": "Hình rõ ràng", "mau_sac_brand": "Màu & brand",
              "nhip_do": "Nhịp độ", "phu_de": "Phụ đề", "du_lieu_lien_quan": "Dữ liệu đúng ý", "thumbnail": "Ảnh bìa",
-             "short_9x16": "Video ngắn"}
+             "short_9x16": "Video ngắn", "dang_xem": "Đáng xem (vai người xem)"}
     lines = [f"🧐 BOT REVIEW · điểm tổng {rv.get('score', '?')}/10", ""]
     lines += [f"• {names.get(k, k)}: {v}/10" for k, v in sc.items()]
     if rv.get("tot"):
@@ -395,6 +407,13 @@ def review_text(rv: dict) -> str:
         lines += ["", "⚠️ Dễ mất người xem: " + rv["retention_risk"]]
     if rv.get("script_tips"):
         lines += ["", "✍️ Mẹo kịch bản:"] + [f"• {x}" for x in rv["script_tips"]]
+    nx = rv.get("nguoi_xem") if isinstance(rv.get("nguoi_xem"), dict) else {}
+    if nx:
+        lines += ["", f"👀 Vai người xem: xem tới giây {nx.get('xem_toi_giay', '?')}, "
+                  + ("ĐÁNG xem" if nx.get("dang_xem") else "KHÔNG đáng xem") + (f". Thoát vì: {nx['ly_do_thoat']}" if nx.get("ly_do_thoat") else "")]
+        if nx.get("nhan_xet"):
+            lines.append(f"💬 \"{nx['nhan_xet']}\"")
+        lines += [f"• Chán: {x}" for x in (nx.get("doan_chan") or [])[:4]] + [f"• Lặp: {x}" for x in (nx.get("doan_lap") or [])[:4]]
     return P.nodash("\n".join(lines))
 
 

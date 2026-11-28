@@ -28,4 +28,8 @@ def test_review_avg_averages(monkeypatch):
 
 
 def test_below_target():
-    assert insight.below({"scores": {"a": 7, "b": 6.5, "c": 8}}) == ["b 6.5"]
+    assert insight.below({"score": 7.2, "scores": {"a": 7, "b": 6.5, "c": 8}}) == ["b 6.5"]
+    # Trọng 28/11: điểm tổng, máy đo bố cục và vai người xem cũng chặn
+    assert insight.below({"score": 6.5, "scores": {}}) == ["tổng 6.5"]
+    assert "máy đo" in insight.below({"score": 8, "scores": {}, "layout_serious": 2})[0]
+    assert "không đáng xem" in insight.below({"score": 8, "scores": {}, "nguoi_xem": {"dang_xem": False}})[0]

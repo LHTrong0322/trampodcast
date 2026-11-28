@@ -33,7 +33,10 @@ Luật bắt buộc (Trọng đã nhắc, không tái phạm):
 - Mỗi beat có "at" là 3-5 chữ CHÉP NGUYÊN từ lời đọc của chính phần đó (sai chữ là hình hiện sai lúc).
 - Kiểu beat: bignum, versus, dots, flow, logos, race, chart, wma, trend, matrix, statement. KHÔNG dùng "question".
 - Beat "wma" (biểu đồ BTC tuần + đường 200WMA/350WMA, Trọng yêu cầu 23/11) phải GIỮ NGUYÊN nếu kịch bản đang có.
-- Tối đa 8 giây lời đọc (khoảng 26 chữ) phải có hình mới; không 2 beat liền nhau cùng kiểu; thẻ chữ (statement) không quá 40% số beat.
+- Tối đa 8 giây lời đọc (khoảng 26 chữ) phải có hình mới; không 2 beat liền nhau cùng kiểu; thẻ chữ (statement) không quá 25% số beat.
+- ĐA DẠNG, KHÔNG RẬP KHUÔN (Trọng 28/11: "video nào cứ lặp đi lặp lại chán ngắt, đừng rập khuôn sách giáo khoa"): mỗi phần phải
+  có ít nhất 1 hình "động" (chart, wma, trend, race, flow, versus, dots) và không phần nào giống bố cục phần trước. Chỗ người xem
+  thấy chán thì đổi thẻ chữ thành hình có số, so sánh, biểu đồ, hoặc câu hỏi bất ngờ, đừng chỉ viết lại chữ.
 - Số liệu trên hình phải đúng với lời đọc; số giá từ đầu năm dùng ô điền {{YTD:TICKER}} / {{YTDS:TICKER}} như kịch bản đang có.
 - Hình "chart" và "race" dùng được cho coin crypto lẫn cổ phiếu/chỉ số (NVDA, SPY, S&P, VIX...): ghi đúng ticker, "days" theo giai đoạn lời đọc nói.
 - Nhắc dự án nào thì gắn logo dự án đó ("logo": "TICKER"). Nền luôn trắng sạch, không thêm màu nền.
@@ -78,6 +81,10 @@ def improve(plan: dict, rv: dict, locked: bool = True) -> tuple[dict, list[str]]
     plan = base_plan(plan)
     fixes = ([f"[Nên sửa] {x}" for x in as_list(rv.get("can_sua"))] + [f"[Dễ mất người xem] {x}" for x in as_list(rv.get("retention_risk"))]
              + [f"[Mẹo kịch bản] {x}" for x in as_list(rv.get("script_tips"))])
+    nx = rv.get("nguoi_xem") if isinstance(rv.get("nguoi_xem"), dict) else {}   # Trọng 28/11: vai người xem
+    fixes += [f"[Người xem thấy chán] {x}" for x in as_list(nx.get("doan_chan"))] + [f"[Người xem thấy lặp] {x}" for x in as_list(nx.get("doan_lap"))]
+    if nx.get("ly_do_thoat"):
+        fixes.append(f"[Người xem thoát ở giây {nx.get('xem_toi_giay', '?')}] {nx['ly_do_thoat']}")
     # Trọng 23/11: lỗi trình bày máy tự soát (nhãn dài, nguồn viết liền...) cũng phải sửa trước khi dựng bản chính
     beats = list(plan.get("hook_beats") or []) + [b for s in plan.get("sections") or [] for b in s.get("beats") or []]
     fixes += [f"[Lỗi trình bày] {x}" for x in VL.layout_issues(beats)]

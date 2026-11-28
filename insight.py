@@ -439,14 +439,23 @@ TARGET = 7.0   # Trọng: mọi mục (nhịp độ, phụ đề, dữ liệu, �
 
 
 def below(rv: dict) -> list:
-    """Các mục chấm dưới chuẩn TARGET."""
-    return [f"{k} {v}" for k, v in (rv.get("scores") or {}).items() if float(v) < TARGET]
+    """Các mục chấm dưới chuẩn TARGET, cộng điểm tổng dưới chuẩn và lỗi máy đo bố cục (Trọng 28/11)."""
+    out = [f"{k} {v}" for k, v in (rv.get("scores") or {}).items() if float(v) < TARGET]
+    if float(rv.get("score") or 0) < TARGET:
+        out.append(f"tổng {rv.get('score')}")
+    if rv.get("layout_serious"):
+        out.append(f"máy đo bố cục còn {rv['layout_serious']} lỗi chữ đè/che/cắt")
+    nx = rv.get("nguoi_xem") if isinstance(rv.get("nguoi_xem"), dict) else {}
+    if nx and nx.get("dang_xem") is False:
+        out.append("vai người xem: không đáng xem")
+    return out
 
 
 def quality_gate(src, tips, draft: dict, lab, res):
-    """Trọng 23/11 ("sao chính còn thua bản nháp?"): bản chính phải chấm lại (2 lần, lấy trung bình).
-    Thua bản nháp thì bot sửa tiếp theo góp ý của chính bản đó, dựng lại (giọng đã đọc dùng lại, không tốn lượt),
-    rồi chọn bản điểm cao nhất. Tối đa 1 vòng sửa thêm."""
+    """Trọng 23/11 ("sao chính còn thua bản nháp?") + 28/11 ("phải ép model nâng cao chất lượng sau mỗi video"):
+    bản chính chấm lại (2 lần, lấy trung bình, kèm máy đo bố cục và vai người xem). Thua nháp hoặc còn mục dưới chuẩn
+    thì bot sửa theo góp ý của chính bản đó, dựng lại, chấm lại; tối đa insight.fix_rounds vòng (mặc định 2).
+    Chọn bản điểm cao nhất. Hết vòng vẫn chưa đạt thì báo rõ "CHƯA ĐẠT", không coi là bản xong."""
     import insight_lab as L
     import insight_render as R
     import insight_publish as PB
@@ -454,43 +463,55 @@ def quality_gate(src, tips, draft: dict, lab, res):
     d = draft["review"]
     rv = PB.review_draft(lab, res, Path("render_out"), label="Bản chính")
     gate = [f"Nháp: {d.get('score')} · Bản chính: {rv.get('score')} (các lần chấm {rv.get('runs')})"]
-    bad = worse(d, rv)
-    low = below(rv)
-    if not bad and not low:
-        gate.append(f"✅ Bản chính không thua bản nháp và mọi mục đạt từ {TARGET} trở lên")
+    if not worse(d, rv) and not below(rv):
+        gate.append(f"✅ ĐẠT: không thua bản nháp, mọi mục từ {TARGET} trở lên, máy đo bố cục sạch, người xem thấy đáng xem")
         return lab, res, rv, gate
-    why = (["thua nháp: " + "; ".join(bad)] if bad else []) + (["dưới chuẩn " + str(TARGET) + ": " + "; ".join(low)] if low else [])
-    log(f"🚦 Bản chính chưa đạt ({' | '.join(why)}), bot sửa thêm 1 vòng")
-    gate.append("⚠️ Chưa đạt: " + " | ".join(why) + ". Bot sửa thêm 1 vòng theo góp ý của bản chính")
-    try:   # Trọng 24/11: xong lượt nào gửi lượt đó, không bắt chờ vòng sửa thêm
-        PB.tg_video(Path(res["long"]), f"🎙 LƯỢT 2 XONG: bản CHÍNH, {rv.get('score', '?')} điểm (nháp {d.get('score', '?')}).\n"
-                                       f"Chưa đạt ({' | '.join(why)[:300]}), bot đang sửa thêm 1 vòng rồi dựng lại, xong sẽ gửi.")
-    except Exception as ex:
-        log(f"   ! gửi bản chính lượt 2 lên Telegram lỗi: {ex}")
-    try:
-        cur = os.getenv("INSIGHT_SCRIPT", "").strip()
-        base = json.loads(Path(cur).read_text(encoding="utf-8")) if cur else json.loads((lab / "plan.json").read_text(encoding="utf-8"))
-        new, changes = IM.improve(base, rv, locked=bool(cur))
-        fx = Path("lab_sua") / "kich-ban-sua-vong-2.json"
-        fx.parent.mkdir(exist_ok=True)
-        fx.write_text(json.dumps(new, ensure_ascii=False, indent=1), encoding="utf-8")
-        os.environ["INSIGHT_SCRIPT"] = str(fx)
-        lab2 = L.prepare(src, Path("lab_sua"), notes=tips)
-        res2 = R.render(lab2, Path("render_sua"))
-        rv2 = PB.review_draft(lab2, res2, Path("render_sua"), label="Bản sửa vòng 2")
-        gate.append(f"Bản sửa vòng 2: {rv2.get('score')} (các lần chấm {rv2.get('runs')}), {len(changes)} sửa")
-        if float(rv2.get("score") or 0) > float(rv.get("score") or 0):
-            # đưa file ra đúng thư mục render_out để Release/Telegram dùng như bình thường
-            gate.append("➡️ Chọn bản sửa vòng 2")
-            return lab2, res2, rv2, gate
-        gate.append("➡️ Giữ bản chính (vòng 2 không tốt hơn)")
-    except Exception as ex:
-        log(f"   ! vòng sửa thêm lỗi: {str(ex)[:200]}")
-        gate.append(f"! vòng sửa thêm lỗi: {str(ex)[:120]}")
+    rounds = int((V.load_cfg().get("insight") or {}).get("fix_rounds", 2))
+    best = (lab, res, rv)
+    for k in range(1, rounds + 1):
+        cur_rv = best[2]
+        bad, low = worse(d, cur_rv), below(cur_rv)
+        if not bad and not low:
+            break
+        why = (["thua nháp: " + "; ".join(bad)] if bad else []) + (["dưới chuẩn " + str(TARGET) + ": " + "; ".join(low)] if low else [])
+        log(f"🚦 Chưa đạt ({' | '.join(why)}), bot sửa vòng {k}/{rounds}")
+        gate.append(f"⚠️ Vòng {k}: chưa đạt: " + " | ".join(why))
+        if k == 1:
+            try:   # Trọng 24/11: xong lượt nào gửi lượt đó, không bắt chờ vòng sửa thêm
+                PB.tg_video(Path(res["long"]), f"🎙 LƯỢT 2 XONG: bản CHÍNH, {rv.get('score', '?')} điểm (nháp {d.get('score', '?')}).\n"
+                                               f"Chưa đạt ({' | '.join(why)[:300]}), bot đang sửa thêm rồi dựng lại, xong sẽ gửi.")
+            except Exception as ex:
+                log(f"   ! gửi bản chính lượt 2 lên Telegram lỗi: {ex}")
+        try:
+            cur = os.getenv("INSIGHT_SCRIPT", "").strip()
+            base = json.loads(Path(cur).read_text(encoding="utf-8")) if cur else json.loads((best[0] / "plan.json").read_text(encoding="utf-8"))
+            new, changes = IM.improve(base, cur_rv, locked=bool(cur))
+            wd = Path(f"lab_sua{k}")
+            wd.mkdir(exist_ok=True)
+            fx = wd / f"kich-ban-sua-vong-{k + 1}.json"
+            fx.write_text(json.dumps(new, ensure_ascii=False, indent=1), encoding="utf-8")
+            os.environ["INSIGHT_SCRIPT"] = str(fx)
+            lab2 = L.prepare(src, wd, notes=tips)
+            res2 = R.render(lab2, Path(f"render_sua{k}"))
+            rv2 = PB.review_draft(lab2, res2, Path(f"render_sua{k}"), label=f"Bản sửa vòng {k}")
+            gate.append(f"Bản sửa vòng {k}: {rv2.get('score')} (các lần chấm {rv2.get('runs')}), {len(changes)} sửa")
+            if float(rv2.get("score") or 0) > float(best[2].get("score") or 0):
+                gate.append(f"➡️ Chọn bản sửa vòng {k}")
+                best = (lab2, res2, rv2)
+            else:
+                gate.append(f"➡️ Vòng {k} không tốt hơn, giữ bản trước")
+        except Exception as ex:
+            log(f"   ! vòng sửa {k} lỗi: {str(ex)[:200]}")
+            gate.append(f"! vòng sửa {k} lỗi: {str(ex)[:120]}")
+            break
+    lab, res, rv = best
     if worse(d, rv):
         gate.append("❗ Vẫn thua bản nháp sau khi sửa, Trọng nên chọn giữa 2 bản (cả 2 đều gửi kèm)")
     if below(rv):
-        gate.append("❗ Còn mục dưới chuẩn: " + "; ".join(below(rv)) + " (thường do khuôn dựng, xem góp ý để sửa code)")
+        gate.append("⛔ CHƯA ĐẠT, chưa nên đăng: " + "; ".join(below(rv)) + " (lỗi khuôn dựng thì cần sửa code, xem góp ý)")
+        rv["chua_dat"] = True
+    else:
+        gate.append("✅ ĐẠT sau khi sửa")
     return lab, res, rv, gate
 
 
