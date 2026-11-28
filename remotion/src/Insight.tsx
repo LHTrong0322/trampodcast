@@ -114,7 +114,7 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null; data?: any}> = ({sc, p
   const {fps} = useVideoConfig();
   const ac = useAccent();
   const t = f / fps;
-  const pts = (sc.points || []).slice(0, 5);
+  const pts = (sc.points || []).slice(0, 8);   // Trọng 28/11: mục lục 7 phần chỉ hiện 5, giờ hiện đủ
   const agendaAt = Math.min(5.5, sc.dur * 0.38);
   const k = interpolate(t - agendaAt, [0, 0.7], [0, 1], {...clamp, easing: (x: number) => 1 - Math.pow(1 - x, 3)});
   const pop = useSpring(2, 14);
@@ -122,7 +122,9 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null; data?: any}> = ({sc, p
   const words = (sc.title || '').split(/\s+/).filter(Boolean);
   // Trọng 23/11 "dựng xấu": tiêu đề dài ở cỡ 112 vỡ 4 dòng, gạch chân lạc chỗ. Tiêu đề càng dài chữ càng nhỏ, tối đa 3 dòng
   const titleLen = words.join(' ').length;
-  const titleFs = titleLen > 44 ? 80 : titleLen > 32 ? 94 : 112;
+  // Trọng 28/11: có thẻ bên phải thì tiêu đề chỉ được chiếm nửa trái (trước đây rộng 980 đè lên thẻ)
+  const side = !!(water || (sc.hidePost && sc.beats?.length));
+  const titleFs = side ? (titleLen > 44 ? 68 : titleLen > 32 ? 80 : 96) : (titleLen > 44 ? 80 : titleLen > 32 ? 94 : 112);
   const cardW = Math.min(330, (1700 - (pts.length - 1) * 22) / Math.max(1, pts.length));
   const per = Math.max(0.5, (sc.dur - agendaAt - 0.8) / Math.max(1, pts.length));
   return (
@@ -150,7 +152,7 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null; data?: any}> = ({sc, p
         </div>
       </div>
       {/* tiêu đề tập: lớn giữa màn → thu nhỏ lên trái */}
-      <div style={{position: 'absolute', left: 110, width: water || (sc.hidePost && sc.beats?.length) ? 980 : 1700, top: interpolate(k, [0, 1], [330, 200]),
+      <div style={{position: 'absolute', left: 110, width: side ? 860 : 1700, top: interpolate(k, [0, 1], [330, 200]),
         display: 'flex', flexWrap: 'wrap', columnGap: 24, rowGap: 4, transformOrigin: 'left top',
         opacity: 1 - interpolate(k, [0, 0.6], [0, 1], clamp),
         transform: `scale(${interpolate(k, [0, 1], [1, 0.8])})`}}>
@@ -181,11 +183,11 @@ const IntroScene: React.FC<{sc: Scene; post: Post | null; data?: any}> = ({sc, p
         {pts.map((p, i) => {
           const s = interpolate(t - agendaAt - 0.25 - i * 0.12, [0, 0.45], [0, 1], {...clamp, easing: (x: number) => 1 - Math.pow(1 - x, 3)});
           const on = t >= agendaAt + 0.6 + i * per;
-          return <div key={i} style={{width: cardW, minHeight: 300, padding: '26px 26px', borderRadius: 26, background: '#FFFFFF',
+          return <div key={i} style={{width: cardW, minHeight: 300, padding: pts.length > 5 ? '22px 18px' : '26px 26px', borderRadius: 26, background: '#FFFFFF',
             border: `2px solid ${on ? ac : C.line}`, boxShadow: on ? `0 18px 44px ${ac}33` : '0 10px 28px rgba(40,50,110,0.10)',
             opacity: s, transform: `translateY(${(1 - s) * 120}px) scale(${on ? 1.03 : 1})`, display: 'flex', flexDirection: 'column', gap: 16}}>
-            <div style={{fontFamily: FONT, fontWeight: 900, fontSize: 76, lineHeight: 1, color: on ? ac : `${ac}66`}}>{String(i + 1).padStart(2, '0')}</div>
-            <div style={{fontFamily: FONT, fontWeight: 800, fontSize: pts.length > 4 ? 30 : 34, lineHeight: 1.25, color: C.ink}}>{p}</div>
+            <div style={{fontFamily: FONT, fontWeight: 900, fontSize: pts.length > 5 ? 60 : 76, lineHeight: 1, color: on ? ac : `${ac}66`}}>{String(i + 1).padStart(2, '0')}</div>
+            <div style={{fontFamily: FONT, fontWeight: 800, fontSize: pts.length > 6 ? 24 : pts.length > 5 ? 27 : pts.length > 4 ? 30 : 34, lineHeight: 1.25, color: C.ink}}>{p}</div>
           </div>;
         })}
       </div> : null}
