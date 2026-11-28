@@ -40,12 +40,29 @@ const SourceLine: React.FC<{text: string}> = ({text}) => text ? (
 const toneColor = (t?: string) => (t === 'down' ? C.red : t === 'up' ? C.green : C.ink);
 
 // Trọng 22/11: VĨNH VIỄN chỉ dùng nền sạch (trắng). Không thẻ nền màu đậm/gradient.
+// Trọng 28/11 (ảnh: thẻ "Hôm nay" 5 bước bị cắt mất tiêu đề và dòng cuối): thẻ có overflow hidden nên nội dung cao hơn thẻ
+// bị xén cả trên lẫn dưới. Giờ mỗi khung hình đo chiều cao THẬT của nội dung; cao hơn chỗ trống thì thu nhỏ cả khối cho vừa.
+// Tính lại ở mọi khung (không lưu state) nên kết quả giống nhau dù Remotion dựng song song nhiều tab.
 const Card: React.FC<{w: number; h: number; children: React.ReactNode; pad?: number}> = ({w, h, children, pad = 40}) => {
   const ac = useAccent();
+  const box = React.useRef<HTMLDivElement>(null);
+  const inner = React.useRef<HTMLDivElement>(null);
+  React.useLayoutEffect(() => {
+    const o = box.current, i = inner.current;
+    if (!o || !i) return;
+    i.style.transform = '';
+    const cs = getComputedStyle(o);
+    const availH = o.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    const availW = o.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const k = Math.min(1, availH / Math.max(1, i.scrollHeight), availW / Math.max(1, i.scrollWidth));
+    if (k < 0.995) i.style.transform = `scale(${k.toFixed(4)})`;
+  });
   return (
-    <div style={{width: w, height: h, borderRadius: 28, background: C.panel, border: `1px solid ${C.line}`, borderTop: `5px solid ${ac}`,
+    <div ref={box} style={{width: w, height: h, borderRadius: 28, background: C.panel, border: `1px solid ${C.line}`, borderTop: `5px solid ${ac}`,
       boxShadow: '0 20px 56px rgba(40,50,110,0.14)', padding: pad, boxSizing: 'border-box', fontFamily: FONT, position: 'relative',
-      overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>{children}</div>
+      overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+      <div ref={inner} style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', transformOrigin: 'left center', flexShrink: 0}}>{children}</div>
+    </div>
   );
 };
 

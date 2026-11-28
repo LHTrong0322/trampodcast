@@ -38,7 +38,9 @@ const FONTS: [string, string][] = [
   ['400', 'fonts/BeVietnamPro-Regular.ttf'],
   ['600', 'fonts/BeVietnamPro-SemiBold.ttf'],
   ['700', 'fonts/BeVietnamPro-Bold.ttf'],
-  ['800', 'fonts/BeVietnamPro-ExtraBold.ttf'],
+  // Trọng 28/11: code dùng fontWeight 900 ở 18 chỗ mà BVP không có nét 900, trình duyệt tự tô đậm giả làm chữ nhoè, dấu rời.
+  // Khai báo ExtraBold phủ cả 800 đến 900 để 900 dùng đúng nét thật.
+  ['800 900', 'fonts/BeVietnamPro-ExtraBold.ttf'],
 ];
 // phông tiêu đề cho ảnh bìa (Trọng 22/11: thử phông đậm, hẹp, đọc rõ khi thu nhỏ; đều có đủ dấu tiếng Việt, giấy phép OFL)
 const DISPLAY: [string, string, string][] = [
