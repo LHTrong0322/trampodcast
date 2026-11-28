@@ -1,0 +1,323 @@
+{
+ "title": "Mua BTC đỉnh $126K, lỗ 50%: 3 lý do cần phân tích kỹ thuật",
+ "description": "Bài 1/7 chuỗi Phân tích kỹ thuật từ số 0. BTC từ đỉnh $126K (10/2025) về khoảng $61K (27/11/2026). 3 thứ phân tích kỹ thuật cho bạn: bản đồ (BTC dưới đường trung bình 200 tuần $68.3K), mốc sai đặt trước (đáy $57.7K bị thủng ngày 21/11/2026), kỷ luật (RSI ngày về 17 ngày 20/11/2026). Không phải lời khuyên đầu tư.",
+ "theme": "Phân tích kỹ thuật từ số 0",
+ "video_series": "Phân tích kỹ thuật",
+ "hook": "Phân tích kỹ thuật không đoán đỉnh $126K.",
+ "hook_stat": "-51%",
+ "hook_label": "BTC từ đỉnh $126K",
+ "intro": "",
+ "sections": [
+  {
+   "heading": "Vì sao cần phân tích kỹ thuật",
+   "key_stat": "-51%",
+   "key_label": "BTC từ đỉnh $126K",
+   "narration": "Phân tích kỹ thuật không đoán đỉnh $126K. Đáy tháng 7/2026 là $57.7K. Người có kế hoạch nói trước: thủng mốc này là tôi sai, ví dụ mua $61.4K, mốc sai $57.7K, lỗ tối đa khoảng 6%. Ngày 21/11, BTC thủng xuống $55.2K, thấp hơn mốc sai 4%. Người có kế hoạch đã thoát, người ôm tiếp mất thêm $2.5K mỗi BTC. Hôm nay, BTC nằm dưới đường giá trung bình 200 tuần $68.3K, thấp hơn 10%. Không phải lời khuyên đầu tư. Việc làm ngay: lấy giá mua trừ 6% là mốc sai của bạn. Bình luận mốc sai của bạn bên dưới, bài 2 nói cách lập kế hoạch trước khi mua đỉnh.",
+   "source_ids": [
+    0
+   ],
+   "bullets": [
+    "Bản đồ: BTC dưới 200WMA",
+    "Mốc sai: thủng $57.7K là thoát",
+    "Kỷ luật: RSI 17 vẫn theo kế hoạch"
+   ],
+   "data": {
+    "type": "none",
+    "tickers": [
+     "BTC"
+    ],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "Bitcoin",
+    "ticker": "BTC"
+   },
+   "edu": "true",
+   "emphasis": "BÀI 1/7",
+   "beats": [
+    {
+     "at": "đỉnh $126K",
+     "type": "versus",
+     "label": "Mua ở đỉnh, không có kế hoạch",
+     "left": {
+      "label": "Đỉnh 10/2025",
+      "value": "$126K",
+      "tone": "up"
+     },
+     "right": {
+      "label": "27/11/2026",
+      "value": "~$61K",
+      "tone": "down",
+      "note": "-51%"
+     },
+     "sub": "Nguồn: CoinDesk, CoinGecko"
+    },
+    {
+     "at": "Đáy tháng 7/2026 là $57.7K",
+     "type": "bignum",
+     "value": "$57.7K",
+     "label": "Đáy 7/2026",
+     "logo": "BTC",
+     "tone": "flat",
+     "source": "Nguồn: KuCoin News, Cryptonews (CryptoQuant)"
+    },
+    {
+     "at": "ví dụ mua $61.4K",
+     "type": "versus",
+     "label": "Ví dụ kế hoạch viết trước",
+     "left": {
+      "label": "Điểm vào giả định",
+      "value": "$61.4K",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "Mốc sai",
+      "value": "$57.7K",
+      "tone": "down",
+      "note": "thấp hơn giá mua $3.7K"
+     },
+     "sub": "Ví dụ minh hoạ, số tự tính. Nguồn: CoinGecko, Cryptonews (CryptoQuant)"
+    },
+    {
+     "at": "thủng xuống $55.2K",
+     "type": "versus",
+     "label": "Mốc sai bị thủng",
+     "left": {
+      "label": "Đáy 7/2026",
+      "value": "$57.7K",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "21/11/2026",
+      "value": "$55.2K",
+      "tone": "down",
+      "note": "thấp hơn 4%"
+     },
+     "sub": "Nguồn: KuCoin News"
+    },
+    {
+     "at": "mất thêm $2.5K mỗi BTC",
+     "type": "bignum",
+     "value": "$2.5K",
+     "label": "Người ôm tiếp mất thêm mỗi BTC so với người thoát ở mốc sai",
+     "tone": "down",
+     "source": "Số tự tính: $57.7K trừ $55.2K. Nguồn: KuCoin News"
+    },
+    {
+     "at": "BTC nằm dưới",
+     "type": "wma",
+     "label": "BTC khung tuần",
+     "tag": "Dưới 200WMA",
+     "sub": "Nguồn: CoinGecko, nến tuần, trục log"
+    },
+    {
+     "at": "trung bình 200 tuần $68.3K",
+     "type": "versus",
+     "label": "Giá so với trung bình 200 tuần",
+     "left": {
+      "label": "200WMA",
+      "value": "$68.3K",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "Giá BTC",
+      "value": "$61.4K",
+      "tone": "down",
+      "note": "thấp hơn 10%"
+     },
+     "sub": "Nguồn: CoinGecko"
+    },
+    {
+     "at": "giá mua trừ 6%",
+     "type": "bignum",
+     "value": "-6%",
+     "label": "Công thức mốc sai: giá mua trừ 6%",
+     "tone": "down",
+     "source": "Ví dụ minh hoạ, số tự tính. Không phải lời khuyên đầu tư"
+    }
+   ]
+  }
+ ],
+ "outro": "",
+ "shorts": [
+  0
+ ],
+ "short_hooks": {
+  "0": "Mua đỉnh $126K không kế hoạch: lỗ 50%"
+ },
+ "short_title": "KHÔNG KẾ HOẠCH, LỖ 50%: VÌ SAO CẦN PTKT?",
+ "short_cta": "Theo dõi để học trọn chuỗi lý thuyết Dow nhé!",
+ "thumb_text": "thiếu kế hoạch, lỗ 50%?",
+ "thumb_stat": "-51%",
+ "thumb_tag": "BÀI 1/7",
+ "thumb_kicker": "Phân tích kỹ thuật từ số 0",
+ "thumb_style": "stat",
+ "thumb_logo": "BTC",
+ "format": "short",
+ "news": true,
+ "own_source": true,
+ "edu_label": "PTKT từ số 0",
+ "edu_tagline": "Bài 1/7: vì sao cần PTKT",
+ "source_label": "Smart Penguin Insights",
+ "source_post": {
+  "author": "Smart Penguin Insights",
+  "handle": "Trong0322",
+  "url": "https://en.wikipedia.org/wiki/Technical_analysis",
+  "title": "Vì sao cần phân tích kỹ thuật (bài 1/7, chuỗi lý thuyết Dow)",
+  "text": "Bài 1/7 chuỗi Phân tích kỹ thuật từ số 0. BTC từ đỉnh $126K (10/2025) về khoảng $61K (27/11/2026). 3 thứ phân tích kỹ thuật cho bạn: bản đồ (BTC dưới đường trung bình 200 tuần $68.3K), mốc sai đặt trước (đáy $57.7K bị thủng ngày 21/11/2026), kỷ luật (RSI ngày về 17 ngày 20/11/2026). Không phải lời khuyên đầu tư. BTC xuống $55,150 ngày 21/11/2026, thủng đáy tháng 7 $57,700; RSI ngày đóng cửa thứ Sáu ở 17, thấp nhất từ 2/2026"
+ },
+ "sources": [
+  {
+   "value": "$126K",
+   "claim": "BTC lập đỉnh trên $126K tháng 10/2025",
+   "source": "CoinDesk",
+   "url": "https://www.coindesk.com/"
+  },
+  {
+   "value": "$61.4K, $68.3K",
+   "claim": "giá BTC tuần khoảng $61.4K, 200WMA khoảng $68.3K ngày 27/11/2026 (dữ liệu CoinGecko của bot)",
+   "source": "CoinGecko",
+   "url": "https://www.coingecko.com/en/coins/bitcoin"
+  },
+  {
+   "value": "$57.7K, $55.2K, RSI 17",
+   "claim": "BTC xuống $55,150 ngày 21/11/2026, thủng đáy tháng 7 $57,700; RSI ngày đóng cửa thứ Sáu ở 17, thấp nhất từ 2/2026",
+   "source": "KuCoin News",
+   "url": "https://www.kucoin.com/news/flash/bitcoin-breaks-july-low-eyes-50-000-support"
+  },
+  {
+   "value": "$57.7K",
+   "claim": "CryptoQuant đặt đáy 2026 quanh $57,700",
+   "source": "Cryptonews",
+   "url": "https://cryptonews.net/news/bitcoin/33785383/"
+  },
+  {
+   "value": "51%",
+   "claim": "Số tự tính: giá ~$61.4K so đỉnh $126K, 61.4/126, 1 = -51,3%, làm tròn -51%",
+   "source": "CoinGecko, CoinDesk",
+   "url": "https://www.coingecko.com/en/coins/bitcoin"
+  },
+  {
+   "value": "$68.3K",
+   "claim": "200WMA của BTC khoảng $68.3K ngày 27/11/2026",
+   "source": "CoinGecko",
+   "url": "https://www.coingecko.com/en/coins/bitcoin"
+  },
+  {
+   "value": "10%",
+   "claim": "Số tự tính: $61.4K so $68.3K, 61.4/68.3, 1 = -10,1%, tức thấp hơn khoảng 10%",
+   "source": "CoinGecko",
+   "url": "https://www.coingecko.com/en/coins/bitcoin"
+  },
+  {
+   "value": "$55.2K",
+   "claim": "BTC thủng đáy tháng 7 ($57,700), xuống $55,150 ngày 21/11/2026",
+   "source": "KuCoin News",
+   "url": "https://www.kucoin.com/news/flash/bitcoin-breaks-july-low-eyes-50-000-support"
+  },
+  {
+   "value": "$57.7K",
+   "claim": "Đáy tháng 7/2026 của BTC quanh $57,700",
+   "source": "Cryptonews (CryptoQuant)",
+   "url": "https://cryptonews.net/news/bitcoin/33785383/"
+  },
+  {
+   "value": "17",
+   "claim": "RSI ngày của BTC về 17 khi đóng cửa thứ Sáu 20/11/2026, thấp nhất từ tháng 2/2026",
+   "source": "KuCoin News",
+   "url": "https://www.kucoin.com/news/flash/bitcoin-breaks-july-low-eyes-50-000-support"
+  },
+  {
+   "value": "6%",
+   "claim": "Số tự tính: mua $61.4K, mốc sai $57.7K, 57.7/61.4, 1 = -6,0%, lỗ tối đa khoảng 6%. Giá gốc $61.4K từ CoinGecko, mốc $57.7K từ Cryptonews (CryptoQuant)",
+   "source": "Cryptonews (CryptoQuant), CoinGecko",
+   "url": "https://cryptonews.net/news/bitcoin/33785383/"
+  },
+  {
+   "value": "4%",
+   "claim": "Số tự tính: $55.2K so mốc sai $57.7K, 55.2/57.7, 1 = -4,3%, tức thấp hơn khoảng 4%",
+   "source": "KuCoin News",
+   "url": "https://www.kucoin.com/news/flash/bitcoin-breaks-july-low-eyes-50-000-support"
+  },
+  {
+   "value": "51%",
+   "claim": "Số tự tính: 61.4/126, 1 = -51,3%, BTC thấp hơn đỉnh $126K khoảng 51%",
+   "source": "CoinGecko, CoinDesk",
+   "url": "https://www.coingecko.com/en/coins/bitcoin"
+  },
+  {
+   "value": "10%",
+   "claim": "Số tự tính: 61.4/68.3, 1 = -10,1%, giá thấp hơn 200WMA khoảng 10%",
+   "source": "CoinGecko",
+   "url": "https://www.coingecko.com/en/coins/bitcoin"
+  },
+  {
+   "value": "$3.7K",
+   "claim": "Số tự tính: giá mua giả định $61.4K trừ mốc sai $57.7K = $3.7K",
+   "source": "Cryptonews (CryptoQuant), CoinGecko",
+   "url": "https://cryptonews.net/news/bitcoin/33785383/"
+  },
+  {
+   "value": "$2.5K",
+   "claim": "Số tự tính: mốc sai $57.7K trừ giá $55.2K (xuống $55,150) = khoảng $2.5K mỗi BTC",
+   "source": "KuCoin News",
+   "url": "https://www.kucoin.com/news/flash/bitcoin-breaks-july-low-eyes-50-000-support"
+  }
+ ],
+ "lint": [
+  "Phần 1: từ 'đáy tháng 7 2026 là $57...' có 8 giây không đổi hình (tối đa 6 giây), thêm 1 hình số liệu, ảnh hoặc ví dụ.",
+  "Phần 1: từ 'thủng xuống $55 2k thấp hơn...' có 7 giây không đổi hình (tối đa 6 giây), thêm 1 hình số liệu, ảnh hoặc ví dụ.",
+  "Phần 1: từ 'mốc sai của bạn ở đâu...' có 7 giây không đổi hình (tối đa 6 giây), thêm 1 hình số liệu, ảnh hoặc ví dụ.",
+  "Phần 1: thẻ câu hỏi đứng một mình 7 giây, cho số liệu hoặc ví dụ hiện sớm hơn.",
+  "Hình so sánh 'lỗ tối đa khoảng 6%': nhãn 2 bên lệch độ dài (17 và 7 ký tự) nên lệch dòng, viết cả 2 nhãn ≤ 16 ký tự."
+ ],
+ "posts": [
+  {
+   "author": "Smart Penguin Insights",
+   "handle": "Trong0322",
+   "url": "https://en.wikipedia.org/wiki/Technical_analysis",
+   "title": "Vì sao cần phân tích kỹ thuật (bài 1/7, chuỗi lý thuyết Dow)",
+   "text": "Bài 1/7 chuỗi Phân tích kỹ thuật từ số 0. BTC từ đỉnh $126K (10/2025) về khoảng $61K (27/11/2026). 3 thứ phân tích kỹ thuật cho bạn: bản đồ (BTC dưới đường trung bình 200 tuần $68.3K), mốc sai đặt trước (đáy $57.7K bị thủng ngày 21/11/2026), kỷ luật (RSI ngày về 17 ngày 20/11/2026). Không phải lời khuyên đầu tư. BTC xuống $55,150 ngày 21/11/2026, thủng đáy tháng 7 $57,700; RSI ngày đóng cửa thứ Sáu ở 17, thấp nhất từ 2/2026"
+  }
+ ],
+ "images": {
+  "intro": [
+   "intro_1.jpg",
+   "intro_3.jpg"
+  ],
+  "s0": []
+ },
+ "image_credits": {
+  "intro_0.jpg": "motlancuoi2018 / Pixabay",
+  "intro_1.jpg": "PriismaDesign / Pixabay",
+  "intro_2.jpg": "Pixelkult / Pixabay",
+  "intro_3.jpg": "MichaelWuensch / Pixabay",
+  "intro_4.jpg": "RonaldCandonga / Pixabay",
+  "intro_5.jpg": "11082974 / Pixabay",
+  "s0_0.jpg": "Pexels / Pixabay",
+  "s0_1.jpg": "geralt / Pixabay",
+  "s0_2.jpg": "geralt / Pixabay",
+  "s0_3.jpg": "StartupStockPhotos / Pixabay",
+  "s0_4.jpg": "JoshuaWoroniecki / Pixabay",
+  "s0_5.jpg": "TheDigitalArtist / Pixabay"
+ },
+ "parts": [
+  {
+   "key": "hook",
+   "text": "Phân tích kỹ thuật không đoán đỉnh $126K."
+  },
+  {
+   "key": "s0",
+   "text": "Phân tích kỹ thuật không đoán đỉnh $126K. Đáy tháng 7/2026 là $57.7K. Người có kế hoạch nói trước: thủng mốc này là tôi sai, ví dụ mua $61.4K, mốc sai $57.7K, lỗ tối đa khoảng 6%. Ngày 21/11, BTC thủng xuống $55.2K, thấp hơn mốc sai 4%: người có kế hoạch đã thoát, người không có thì ôm lỗ. Hôm nay, BTC nằm dưới đường giá trung bình 200 tuần $68.3K, thấp hơn 10%. Không phải lời khuyên đầu tư. Mốc sai của bạn ở đâu? Bình luận bên dưới, theo dõi bài 2 để có kế hoạch trước khi mua đỉnh lần sau."
+  },
+  {
+   "key": "short_cta",
+   "text": "Theo dõi để học trọn chuỗi lý thuyết Dow nhé!"
+  }
+ ],
+ "voices": {
+  "gemini:Ludo@kol": "gemini_Ludo_kol"
+ },
+ "voice": "gemini:Ludo@kol"
+}

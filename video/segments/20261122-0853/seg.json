@@ -1,0 +1,122 @@
+{
+ "episode": "20261122-0853",
+ "date": "2026-11-22T00:00:00+07:00",
+ "items": [
+  {
+   "headline": "Bitcoin rơi về 55,000 đô, quét sạch hơn 2 tỷ đô lệnh phái sinh",
+   "hook": "Bitcoin sập mạnh hàng tỷ đô bay màu",
+   "key_stat": "$2.38B",
+   "key_label": "Tổng vị thế bị thanh lý",
+   "narration": "Bitcoin vừa có cú rơi sâu về vùng 55,106 đô la trên sàn Coinbase, mức thấp nhất kể từ tháng 9 năm nay. Áp lực bán tháo cực lớn đã khiến hơn 343 nghìn nhà đầu tư bị thanh lý lệnh với tổng giá trị lên tới 2,38 tỷ đô la trong 24 giờ, trong đó các lệnh long chiếm đến 92 phần trăm. Chuyên gia Arthur Hayes nhận định đây là kết quả của việc bán tháo tài sản crypto để bù đắp margin call cho các khoản lỗ từ cổ phiếu công nghệ khi thị trường chuyển sang trạng thái rủi ro. Làn sóng thanh lý quy mô lớn này có thể tạo ra hiệu ứng hòn tuyết lăn, gây áp lực giảm giá ngắn hạn cực lớn cho toàn thị trường.",
+   "visual_query": "bear market chart",
+   "visual_fallback": "finance",
+   "visual_queries": [
+    "red candle chart",
+    "anxious trader face",
+    "bitcoin physical coin",
+    "falling graph arrow"
+   ],
+   "category": "Thị trường",
+   "importance": 5,
+   "tickers": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "XRP"
+   ],
+   "is_update": true,
+   "sources": [
+    {
+     "name": "CoinDesk",
+     "url": "https://www.coindesk.com/markets/2026/11/21/bitcoin-bounces-9-from-two-year-low-to-retake-usd60-000-as-traders-eye-monday-s-stock-open"
+    },
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/markets/bitcoin-rebounds-10-before-slipping-below-60-000"
+    },
+    {
+     "name": "Telegram @WatcherGuru",
+     "url": "https://t.me/WatcherGuru/16237"
+    },
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/markets/bitcoin-hits-55-106-on-coinbase-lowest-since-september-2024"
+    }
+   ],
+   "t0": 0.0,
+   "t1": 34.9
+  },
+  {
+   "headline": "Nga chính thức cho phép các sàn giao dịch niêm yết crypto",
+   "hook": "Nga mở cửa hoàn toàn cho sàn crypto",
+   "key_stat": "1st",
+   "key_label": "Bước ngoặt pháp lý từ Nga",
+   "narration": "Chính phủ Nga đã chính thức cấp phép cho các sàn giao dịch triển khai hoạt động dưới sự phê duyệt và giám sát của Ngân hàng Trung ương. Đây là bước ngoặt pháp lý quan trọng sau thời gian dài Nga duy trì thái độ cứng rắn với tài sản kỹ thuật số, nhằm tạo kênh thanh toán thay thế trong bối cảnh bị cấm vận quốc tế. Việc một quốc gia lớn như Nga hợp pháp hóa giao dịch sàn sẽ mở ra dòng vốn mới và tăng tính ứng dụng thực tế của crypto trong thanh toán xuyên biên giới. Đây được xem là tín hiệu tích cực giúp củng cố vị thế của crypto trên bản đồ tài chính toàn cầu.",
+   "visual_query": "Russian central bank",
+   "visual_fallback": "government",
+   "visual_queries": [
+    "Moscow city skyline",
+    "government building facade",
+    "digital payment icon",
+    "crypto trading interface"
+   ],
+   "category": "Pháp lý",
+   "importance": 5,
+   "tickers": [
+    "BTC"
+   ],
+   "is_update": false,
+   "sources": [
+    {
+     "name": "Telegram @WatcherGuru",
+     "url": "https://t.me/WatcherGuru/16241"
+    }
+   ],
+   "t0": 34.9,
+   "t1": 62.66
+  },
+  {
+   "headline": "Giao thức Chainflip bị hack 4.86 triệu đô, giá token giảm sâu",
+   "hook": "Chainflip bị exploit gần 5 triệu đô",
+   "key_stat": "$4.86M",
+   "key_label": "Thiệt hại từ vụ exploit",
+   "narration": "Giao thức cross-chain Chainflip vừa phải tạm dừng hoạt động sau khi bị hacker chiếm quyền điều khiển vault và rút đi khoảng 4,86 triệu đô la tài sản. Lượng tài sản bị mất bao gồm hơn 122 Bitcoin và một lượng lớn Ethereum, khiến giá token FLIP bốc hơi hơn 1 phần 3 giá trị chỉ trong vài giờ. Dự án đã đưa ra đề nghị trả 10 phần trăm tiền thưởng nếu hacker chịu hoàn trả tài sản trước ngày 23 tháng 11. Sự cố này tiếp tục là hồi chuông cảnh báo về rủi ro bảo mật tại các cầu nối cross-chain và các giao thức swap không qua trung gian, vốn luôn là mục tiêu hàng đầu của hacker.",
+   "visual_query": "hacker laptop dark",
+   "visual_fallback": "technology",
+   "visual_queries": [
+    "hacker hoodie dark",
+    "digital security lock",
+    "server hardware lights",
+    "cryptocurrency wallet app"
+   ],
+   "category": "Bảo mật",
+   "importance": 4,
+   "tickers": [
+    "FLIP",
+    "BTC",
+    "ETH"
+   ],
+   "is_update": false,
+   "sources": [
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/hacks/chainflip-offers-10-bounty-for-return-of-stolen-funds"
+    },
+    {
+     "name": "CoinDesk",
+     "url": "https://www.coindesk.com/business/2026/11/21/cross-chain-protocol-chainflip-s-flip-tanks-30-after-suspected-usd4-86-million-vault-drain"
+    },
+    {
+     "name": "The Block",
+     "url": "https://www.theblock.co/news/defi/2026-11-21-chainflips-flip-drops-34-after-attacker-drains-4-86-million-from-vault-with-suspected-key-compromise-444804"
+    },
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/security/chainflip-halts-swaps-over-potential-vault-exploit"
+    }
+   ],
+   "t0": 62.66,
+   "t1": 96.42
+  }
+ ]
+}

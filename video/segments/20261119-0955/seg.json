@@ -1,0 +1,127 @@
+{
+ "episode": "20261119-0955",
+ "date": "2026-11-19T00:00:00+07:00",
+ "items": [
+  {
+   "headline": "Thống đốc Fed cảnh báo tăng lãi suất 0.5 phần trăm tháng 12",
+   "hook": "Fed dọa tăng lãi suất mạnh tay tháng tới",
+   "key_stat": "0.5%",
+   "key_label": "Dự báo tăng lãi suất tháng 12",
+   "narration": "Thống đốc Fed Christopher Waller vừa cảnh báo cơ quan này có thể tăng lãi suất không phẩy năm phần trăm ngay trong tháng mười hai nếu lạm phát không hạ nhiệt rõ rệt. Thông tin này lập tức gây áp lực bán tháo lên Bitcoin và các cổ phiếu công nghệ do lo ngại dòng tiền vào crypto sẽ bị thắt chặt hơn nữa. Nhà đầu tư cần đặc biệt chú ý vì kịch bản hạ cánh mềm đang bị đe dọa và rủi ro thị trường sẽ tăng cao trong những tuần tới.",
+   "visual_query": "Federal Reserve building",
+   "visual_fallback": "finance",
+   "visual_queries": [
+    "US central bank office",
+    "trader looking stressed",
+    "interest rate chart up",
+    "red stock market"
+   ],
+   "category": "Vĩ mô & Chính trị",
+   "importance": 5,
+   "tickers": [
+    "BTC"
+   ],
+   "is_update": false,
+   "sources": [
+    {
+     "name": "Cointelegraph",
+     "url": "https://cointelegraph.com/markets/fed-officials-saw-october-rate-hold-as-close-call-minutes-show?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound"
+    },
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/markets/waller-backs-half-point-december-hike-unless-fed-signals-a-january-increase"
+    },
+    {
+     "name": "Telegram @ThuanCapital",
+     "url": "https://t.me/ThuanCapital/33709"
+    },
+    {
+     "name": "Decrypt",
+     "url": "https://decrypt.co/383566/fed-waller-50-basis-point-rate-hike-tokenized-finance-banks"
+    }
+   ],
+   "t0": 0.0,
+   "t1": 22.25
+  },
+  {
+   "headline": "Anthropic chốt giá IPO 83 đô, định giá 1.5 nghìn tỷ đô",
+   "hook": "Siêu IPO ngành AI hút cạn tiền crypto",
+   "key_stat": "$1.5T",
+   "key_label": "Định giá khủng của Anthropic",
+   "narration": "Công ty AI Anthropic đã chính thức chốt giá IPO ở mức tám mươi ba đô một cổ phiếu, đưa định giá công ty lên tới một phẩy năm nghìn tỷ đô. Với sự cam kết đầu tư hai mươi tỷ đô từ Nvidia và Google, mã cổ phiếu ANT dự kiến sẽ bắt đầu giao dịch trên Nasdaq vào đêm nay. Sự kiện này đang thu hút sự quan tâm cực lớn từ các quỹ lớn, trực tiếp gây ảnh hưởng đến thanh khoản của thị trường crypto khi dòng tiền bị rút ra để đổ vào lĩnh vực AI.",
+   "visual_query": "AI technology center",
+   "visual_fallback": "technology",
+   "visual_queries": [
+    "Nvidia Google partnership",
+    "Nasdaq trading screen",
+    "AI robot hand globe",
+    "investor signing contract"
+   ],
+   "category": "Vĩ mô & Chính trị",
+   "importance": 5,
+   "tickers": [
+    "BTC"
+   ],
+   "is_update": false,
+   "sources": [
+    {
+     "name": "Telegram @Fivemincryptoann",
+     "url": "https://t.me/Fivemincryptoann/14990"
+    },
+    {
+     "name": "Telegram @Fivemincryptoann",
+     "url": "https://t.me/Fivemincryptoann/14989"
+    },
+    {
+     "name": "Telegram @Fivemincryptoann",
+     "url": "https://t.me/Fivemincryptoann/14988"
+    },
+    {
+     "name": "Telegram @WatcherGuru",
+     "url": "https://t.me/WatcherGuru/16146"
+    }
+   ],
+   "t0": 22.25,
+   "t1": 46.73
+  },
+  {
+   "headline": "Binance nhận lệnh phong tỏa 6.5 tỷ đô để thu hồi tài sản",
+   "hook": "Lệnh phong tỏa 6.5 tỷ đô toàn cầu",
+   "key_stat": "$6.5B",
+   "key_label": "Tài sản bị tòa án phong tỏa",
+   "narration": "Tòa án Abu Dhabi vừa ban hành lệnh phong tỏa tài sản trị giá sáu phẩy năm tỷ đô trên phạm vi toàn cầu nhằm hỗ trợ Binance thu hồi số tiền bị đánh cắp. Lệnh này cho phép phong tỏa hơn hai mươi sáu nghìn địa chỉ ví liên quan và gửi thông báo pháp lý trực tiếp qua blockchain. Đây là một bước tiến quan trọng cho thấy sự phối hợp hiệu quả giữa các sàn CEX và cơ quan tư pháp quốc tế trong việc truy vết và bảo vệ tài sản cho người dùng trong không gian crypto.",
+   "visual_query": "courtroom gavel justice",
+   "visual_fallback": "government",
+   "visual_queries": [
+    "Binance logo office",
+    "blockchain tracking map",
+    "digital assets locked",
+    "cyber security vault"
+   ],
+   "category": "Bảo mật",
+   "importance": 5,
+   "tickers": [],
+   "is_update": true,
+   "sources": [
+    {
+     "name": "Telegram @Fivemincryptoann",
+     "url": "https://t.me/Fivemincryptoann/14990"
+    },
+    {
+     "name": "Cointelegraph",
+     "url": "https://cointelegraph.com/news/binance-says-won-65b-worldwide-freezing-order-after-hack?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound"
+    },
+    {
+     "name": "The Block",
+     "url": "https://www.theblock.co/news/business/2026-11-18-binance-freezing-court-order-adgm-crypto-october-hack-443491"
+    },
+    {
+     "name": "Bitcoin Magazine",
+     "url": "https://bitcoinmagazine.com/news/binance-abu-dhabi-order-recover-frozen"
+    }
+   ],
+   "t0": 46.73,
+   "t1": 70.65
+  }
+ ]
+}

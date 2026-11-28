@@ -1,0 +1,189 @@
+{
+ "title": "Vì sao cần phân tích kỹ thuật? 3 lý do kể cả khi đầu tư dài hạn",
+ "description": "Bài 1/7 chuỗi Phân tích kỹ thuật từ số 0: phân tích cơ bản trả lời mua gì, phân tích kỹ thuật trả lời mua khi nào, sai thì thoát ở đâu. 3 lý do người đầu tư dài hạn cũng cần phân tích kỹ thuật: bản đồ, kế hoạch, kỷ luật. Ví dụ BTC khung tuần 2025 và 2026. Không phải lời khuyên đầu tư.",
+ "theme": "Phân tích kỹ thuật từ số 0",
+ "video_series": "Phân tích kỹ thuật",
+ "hook": "BTC rớt 50% từ đỉnh $126K: người có mốc sai biết lúc nào thoát.",
+ "hook_stat": "3",
+ "hook_label": "lý do cần phân tích kỹ thuật",
+ "intro": "",
+ "sections": [
+  {
+   "heading": "Vì sao cần phân tích kỹ thuật",
+   "key_stat": "3",
+   "key_label": "lý do: bản đồ, kế hoạch, kỷ luật",
+   "narration": "BTC rớt 50% từ đỉnh $126K: người có mốc sai biết lúc nào thoát. Ba lý do: bản đồ, kế hoạch, kỷ luật. Cơ bản cho biết mua gì. Kỹ thuật cho biết mua lúc nào, sai thì thoát ở đâu. Bạn biết thị trường đang tăng, giảm hay chỉ hồi. Hai: kế hoạch. Bạn biết mua vùng nào, sai ở mốc nào, thoát khi nào. Ba: kỷ luật. Có kế hoạch sẵn, FOMO hay hoảng loạn khó kéo bạn đi. Khung tuần: mỗi nến là một tuần. Năm 2025, đỉnh đáy khung tuần BTC cao dần tới $126K, cứ giữ. Năm 2026, đỉnh thấp hơn rồi thủng đáy về $62K, nhiều người chọn giảm rủi ro. Không phải lời khuyên đầu tư. Việc làm ngay: mở khung tuần BTC, đánh dấu đỉnh đáy gần nhất, viết ra mốc sai trước khi mua. Bài sau: lý thuyết Dow, chart đi theo xu hướng, mỗi sóng có đỉnh và đáy. Vậy đầu tư dài hạn có cần xem chart không? Bình luận 1 là có, 2 là không.",
+   "source_ids": [
+    0
+   ],
+   "bullets": [
+    "Bản đồ: đang ở đâu trong xu hướng",
+    "Kế hoạch: mua, sai, thoát ở đâu",
+    "Kỷ luật: tránh FOMO và hoảng loạn"
+   ],
+   "data": {
+    "type": "none",
+    "tickers": [
+     "BTC"
+    ],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "Bitcoin",
+    "ticker": "BTC"
+   },
+   "edu": "true",
+   "emphasis": "BÀI 1/7",
+   "beats": [
+    {
+     "at": "BTC rớt 50%",
+     "type": "bignum",
+     "value": "~50%",
+     "label": "BTC giảm từ đỉnh $126K (10/2025) xuống vùng $62K (11/2026)",
+     "logo": "BTC",
+     "tone": "down"
+    },
+    {
+     "at": "Cơ bản cho biết mua gì",
+     "type": "flow",
+     "label": "Hai câu hỏi khi đầu tư",
+     "steps": [
+      "Cơ bản: mua gì",
+      "Kỹ thuật: mua khi nào, thoát ở đâu"
+     ],
+     "step_at": [
+      "Cơ bản cho biết mua gì",
+      "Kỹ thuật cho biết mua lúc nào"
+     ]
+    },
+    {
+     "at": "sai thì thoát ở đâu",
+     "type": "wma",
+     "label": "Kế hoạch vẽ trên nến BTC",
+     "tag": "3 vạch: điểm vào, cắt lỗ dưới đáy gần nhất, chốt tại đỉnh cũ"
+    },
+    {
+     "at": "đang tăng",
+     "type": "flow",
+     "label": "Bản đồ: 3 trạng thái của BTC",
+     "steps": [
+      "Tăng: 2025, đỉnh mới $126K",
+      "Giảm: 2026, đáy mới $62K",
+      "Hồi: nhịp ngược, chưa phá xu hướng"
+     ],
+     "step_at": [
+      "đang tăng",
+      "giảm",
+      "chỉ hồi"
+     ]
+    },
+    {
+     "at": "Có kế hoạch sẵn",
+     "type": "flow",
+     "label": "Hoảng loạn và có mốc sai: khác nhau bao nhiêu",
+     "steps": [
+      "Bán ở $62K: lỗ khoảng 50%",
+      "Có mốc sai từ trước: thoát sớm, lỗ nhỏ hơn"
+     ],
+     "step_at": [
+      "Có kế hoạch sẵn",
+      "hoảng loạn"
+     ]
+    },
+    {
+     "at": "Năm 2025",
+     "type": "wma",
+     "label": "BTC khung tuần (mỗi nến là một tuần)",
+     "tag": "2025: đỉnh $126K. 2026: đáy $62K"
+    },
+    {
+     "at": "cứ giữ",
+     "type": "statement",
+     "text": "2025: đỉnh, đáy cao dần = cứ giữ"
+    },
+    {
+     "at": "thủng đáy",
+     "type": "statement",
+     "text": "2026: đỉnh thấp hơn, thủng đáy = giảm rủi ro"
+    },
+    {
+     "at": "mở khung tuần BTC",
+     "type": "flow",
+     "label": "Việc làm được ngay",
+     "steps": [
+      "Mở khung tuần BTC",
+      "Đánh dấu đỉnh, đáy gần nhất",
+      "Viết ra mốc sai"
+     ],
+     "step_at": [
+      "mở khung tuần BTC",
+      "đánh dấu đỉnh đáy gần nhất",
+      "viết ra mốc sai"
+     ]
+    },
+    {
+     "at": "lý thuyết Dow",
+     "type": "flow",
+     "label": "Lý thuyết Dow: xu hướng tăng",
+     "steps": [
+      "Đỉnh sau cao hơn đỉnh trước",
+      "Đáy sau cao hơn đáy trước"
+     ],
+     "step_at": [
+      "chart đi theo xu hướng",
+      "mỗi sóng có đỉnh và đáy"
+     ]
+    },
+    {
+     "at": "Vậy đầu tư dài hạn có cần xem chart không",
+     "type": "question",
+     "text": "Bạn có xem chart không?",
+     "sub": "1 = có, 2 = không"
+    }
+   ]
+  }
+ ],
+ "outro": "Đây là nội dung giáo dục, không phải lời khuyên đầu tư.",
+ "shorts": [
+  0
+ ],
+ "short_hooks": {
+  "0": "Đầu tư dài hạn có cần xem chart không?"
+ },
+ "short_title": "VÌ SAO CẦN PHÂN TÍCH KỸ THUẬT?",
+ "short_cta": "Theo dõi để học trọn chuỗi lý thuyết Dow nhé!",
+ "thumb_text": "có cần xem chart không?",
+ "thumb_stat": "3",
+ "thumb_tag": "BÀI 1/7",
+ "thumb_kicker": "Phân tích kỹ thuật từ số 0",
+ "thumb_style": "stat",
+ "thumb_logo": "BTC",
+ "format": "short",
+ "news": true,
+ "own_source": true,
+ "edu_label": "PTKT từ số 0",
+ "edu_tagline": "Bài 1/7: vì sao cần PTKT",
+ "source_label": "Smart Penguin Insights",
+ "source_post": {
+  "author": "Smart Penguin Insights",
+  "handle": "Trong0322",
+  "url": "https://en.wikipedia.org/wiki/Technical_analysis",
+  "title": "Vì sao cần phân tích kỹ thuật (bài 1/7, chuỗi lý thuyết Dow)",
+  "text": "Fundamental analysis answers what to buy; technical analysis answers when to buy, where the plan is wrong and when to exit. Three reasons even long term investors use it: a map of the trend (up, down or just a bounce), a plan before entering, discipline against FOMO and panic. Example: in 2025 BTC weekly highs and lows were still rising; BTC all-time high above $126K in October 2025; in 2026 a lower high then a break of the prior low. All technical analysis tools are built on Dow theory."
+ },
+ "sources": [
+  {
+   "value": "~$62K / gần một nửa so với đỉnh",
+   "claim": "BTC giảm về khoảng $62,428 ngày 18/11/2026, giảm khoảng 50% từ đỉnh $126K",
+   "source": "Coinotag",
+   "url": "https://en.coinotag.com/bitcoin-btc-falls-below-half-of-record-high"
+  },
+  {
+   "value": "$126K",
+   "claim": "Đỉnh BTC tháng 10/2025, khoảng $126,198",
+   "source": "ifyouspent",
+   "url": "https://news.ifyouspent.com/en/news/bitcoin-40-percent-below-record-november-2026-explained"
+  }
+ ]
+}

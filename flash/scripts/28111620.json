@@ -1,0 +1,148 @@
+{
+ "title": "Dự án nhà Trump sụp đổ? WLFI giảm 60% và cáo buộc lừa đảo",
+ "description": "Cập nhật nóng về dự án World Liberty Financial khi token WLFI lao dốc và stablecoin USD1 mất peg nghiêm trọng.",
+ "theme": "Biến động dự án nhà Trump",
+ "hook": "Dự án tiền mã hóa của gia đình tổng thống vừa bốc hơi 60% giá trị chỉ trong vài giờ.",
+ "hook_stat": "-60%",
+ "hook_label": "giá trị WLFI bốc hơi",
+ "intro": "Chào mọi người, mình là Smart Penguin Insights. Hôm nay chúng ta phải nói về biến cố cực lớn liên quan đến dự án World Liberty Financial của gia đình ông Donald Trump.",
+ "sections": [
+  {
+   "heading": "Cáo buộc lừa đảo và làn sóng thanh lý WLFI",
+   "key_stat": "-60%",
+   "key_label": "giá token WLFI",
+   "narration": "Dự án World Liberty Financial của gia đình ông Donald Trump đang đối mặt với sóng gió lớn khi token WLFI giảm sâu hơn 60% giá trị. Cùng lúc đó, stablecoin USD1 của dự án cũng mất peg nghiêm trọng, có thời điểm rơi về mức 0.94 đô la. Theo WatcherGuru, Justin Sun đã công khai cáo buộc đội ngũ dự án có hành vi gian lận và kêu gọi các sàn giao dịch delist ngay lập tức. Các dữ liệu on-chain cho thấy insider có thể đã dùng WLFI để thế chấp vay trên Dolomite, một nền tảng lending, và đang bị thanh lý hàng loạt. Đội ngũ thậm chí đã bán lỗ hơn 12.121 ETH để ký quỹ thêm nhưng không ngăn được đà giảm. Nhiều bài viết trên mạng xã hội của dự án đang bị xóa một cách bí ẩn. Mọi người nghĩ đây là lỗi kỹ thuật hay một cú úp bô thực thụ từ insider?",
+   "visual_queries": [
+    "red finance chart crash",
+    "stablecoin depeg graph red",
+    "digital fraud alert screen",
+    "crypto trader panic computer"
+   ],
+   "source_ids": [
+    0
+   ],
+   "bullets": [
+    "WLFI giảm hơn 60% giá trị",
+    "Stablecoin USD1 mất peg nghiêm trọng",
+    "Nghi vấn insider bị thanh lý"
+   ],
+   "quote": "Justin Sun cáo buộc dự án gian lận và yêu cầu delist ngay lập tức",
+   "data": {
+    "type": "coin_chart",
+    "tickers": [
+     "WLFI"
+    ],
+    "items": [],
+    "title": "Biến động giá WLFI"
+   },
+   "project": {
+    "name": "World Liberty Financial",
+    "ticker": "WLFI"
+   },
+   "edu": false,
+   "emphasis": "TIN NÓNG",
+   "beats": [
+    {
+     "at": "World Liberty Financial",
+     "type": "logos",
+     "logo": "WLFI"
+    },
+    {
+     "at": "giảm sâu hơn 60%",
+     "type": "bignum",
+     "value": "-60%",
+     "label": "WLFI Price Crash",
+     "tone": "down"
+    },
+    {
+     "at": "mất peg nghiêm trọng",
+     "type": "chart",
+     "ticker": "USD1",
+     "days": "1"
+    },
+    {
+     "at": "0.94 đô la",
+     "type": "bignum",
+     "value": "$0.94",
+     "label": "Giá USD1 thấp nhất",
+     "tone": "down"
+    },
+    {
+     "at": "Justin Sun đã công khai",
+     "type": "statement",
+     "text": "Justin Sun cáo buộc gian lận đầu tư"
+    },
+    {
+     "at": "Dolomite",
+     "type": "photo",
+     "query": "decentralized finance lending platform",
+     "label": "Giao thức Dolomite"
+    },
+    {
+     "at": "thanh lý hàng loạt",
+     "type": "bignum",
+     "value": "Liquidation",
+     "label": "WLFI bị thanh lý",
+     "tone": "down"
+    },
+    {
+     "at": "12.121 ETH",
+     "type": "versus",
+     "left": {
+      "label": "ETH Bán Lỗ",
+      "value": "12,121",
+      "logo": "ETH",
+      "tone": "down"
+     },
+     "right": {
+      "label": "Ký Quỹ",
+      "value": "Thất Bại",
+      "logo": "WLFI",
+      "tone": "down"
+     }
+    },
+    {
+     "at": "xóa các bài viết",
+     "type": "photo",
+     "query": "delete social media posts icon",
+     "label": "Xóa dấu vết thông tin"
+    },
+    {
+     "at": "mọi người nghĩ đây",
+     "type": "statement",
+     "text": "Lỗi kỹ thuật hay insider úp bô?"
+    }
+   ]
+  }
+ ],
+ "outro": "Đây là bài học lớn về việc theo đuổi các dự án có tính tập trung cao. Thông tin này không phải lời khuyên đầu tư. Đừng quên đăng ký kênh để cập nhật những diễn biến mới nhất nhé.",
+ "shorts": [
+  0
+ ],
+ "short_hooks": {
+  "0": "Token của nhà Trump bốc hơi 60%, insider bị thanh lý hàng loạt?"
+ },
+ "thumb_stat": "-60%",
+ "thumb_text": "Dự án nhà Trump sập?",
+ "thumb_tag": "TIN NÓNG",
+ "thumb_kicker": "Biến động cực mạnh WLFI",
+ "short_title": "Dự án nhà Trump giảm 60% và nghi vấn lừa đảo",
+ "format": "short",
+ "news": true,
+ "own_source": true,
+ "short_cta": "Theo dõi Smart Penguin Insights để không lỡ tin nóng nhé!",
+ "script_score": null,
+ "script_review": {
+  "score": null,
+  "scores": null,
+  "nhan_xet": null,
+  "pass": null
+ },
+ "source_post": {
+  "author": "Telegram @WatcherGuru, Telegram @Fivemincryptoann, The Defiant",
+  "handle": "",
+  "url": "https://t.me/WatcherGuru/16376",
+  "title": "JUST IN: Tron founder Justin Sun accuses Trump's family crypto project World Liberty Financial of investor fraud, calls for exchanges to delist $WLFI and USD1.",
+  "text": "Nguồn: Telegram @WatcherGuru (14:43 28/11 giờ VN)\nJUST IN: Tron founder Justin Sun accuses Trump's family crypto project World Liberty Financial of investor fraud, calls for exchanges to delist $WLFI and USD1.\nJUST IN: Tron founder Justin Sun accuses Trump's family crypto project World Liberty Financial of investor fraud, calls for exchanges to delist $WLFI and USD1.\n\n\"Members of the team involved have already begun mass-deleting social media posts and related communications in an attempt to cover up their crimes.\"\n\n$WLFI is down 45% today and USD1 depegged from the US dollar.\n\n📰 https://watcherguru.com\n\n@WatcherGuru\n\nNguồn: Telegram @Fivemincryptoann (14:55 28/11 giờ VN)\nTới công chiện nhà Trump rồi!! Stablecoin USD1 mất peg xuống 0,94 USD $WLFI cũng đã rơi hơn 60% sau tin đồn đội ngũ dự án đã dùng $WLFI để vay thế chấp trên Dol\nTới công chiện nhà Trump rồi!! Stablecoin USD1 mất peg xuống 0,94 USD $WLFI cũng đã rơi hơn 60% sau tin đồn đội ngũ dự án đã dùng $WLFI để vay thế chấp trên Dolomite và hiện tại đang bị thanh lý. Dự án nhà Trump úp bô ngày cuối tuần à AE? ✅Update: Hiện…\n\nNguồn: Telegram @WatcherGuru (14:23 28/11 giờ VN)\nJUST IN: Trump family's World Liberty Financial $USD1 crypto stablecoin depegs from the US dollar.\nJUST IN: Trump family's World Liberty Financial $USD1 crypto stablecoin depegs from the US dollar.\n\n📰 https://watcherguru.com/\n\n@WatcherGuru\n\nNguồn: Telegram @Fivemincryptoann (14:11 28/11 giờ VN)\nDự án khỉ gió nhà Trump sập mạnh gần 60% Đồn đoán cho rằng đội ngũ này đã dùng WLFI để vay thế chấp trên Dolomite và hiện tại đang bị thanh lý cưỡng bức. Vài gi\nDự án khỉ gió nhà Trump sập mạnh gần 60% Đồn đoán cho rằng đội ngũ này đã dùng WLFI để vay thế chấp trên Dolomite và hiện tại đang bị thanh lý cưỡng bức. Vài giờ trước dữ liệu onchain cho thấy đội này cũng chấp nhận bán lỗ khoảng 12.121 ETH để ký quỹ thêm…\n\nNguồn: The Defiant (13:26 28/11 giờ VN)\nUSD1 Trades at $0.9967 on Coinbase After WLFI Selloff\nUSD1 Trades at $0.9967 on Coinbase After WLFI Selloff. Binance and OKX spot prices were still below one USDT roughly 90 minutes after the initial dip."
+ }
+}

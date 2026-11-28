@@ -1,0 +1,147 @@
+{
+ "title": "Bitcoin thủng mốc 60,000 đô la: Vì sao đi ngược chứng khoán Mỹ?",
+ "description": "Bitcoin đột ngột giảm sâu dưới mốc 60,000 đô la trong khi thị trường chứng khoán và vàng đang phục hồi mạnh mẽ sau tin tức từ Nvidia.",
+ "theme": "Biến động thị trường Bitcoin",
+ "hook": "Bitcoin bất ngờ thủng mốc 60,000 đô la bất chấp chứng khoán Mỹ đang xanh ngát.",
+ "hook_stat": "$60,000",
+ "hook_label": "Mốc giá Bitcoin vừa đánh mất",
+ "intro": "Chào mọi người, mình là Smart Penguin. Hôm nay chúng ta sẽ cùng phân tích cú quay xe bất ngờ của Bitcoin khi thị trường tài chính truyền thống đang có những diễn biến trái ngược.",
+ "sections": [
+  {
+   "heading": "Bitcoin đi ngược dòng chứng khoán và vàng",
+   "key_stat": "$60,000",
+   "key_label": "Mốc hỗ trợ tâm lý",
+   "narration": "Theo ghi nhận từ The Defiant, Bitcoin vừa bất ngờ lao dốc xuống dưới mốc 60,000 đô la, xóa sạch nỗ lực hồi phục của những ngày đầu tuần. Cùng lúc đó, thị trường chứng khoán Mỹ lại xanh ngát nhờ tin sếp Jensen Huang quay lại giúp Nvidia tăng mạnh 32 phần trăm. Trong khi vàng cũng đã hồi phục lên mức 3,650 đô la, thì Bitcoin lại có lối đi riêng đầy rủi ro khi vọt lên gần 65,000 đô la rồi nhanh chóng quay xe. Tâm điểm lúc này là dữ liệu lạm phát PCE tháng 10 sẽ được công bố vào tối mai. PCE là chỉ số chi tiêu tiêu dùng cá nhân, thước đo lạm phát ưa thích của Fed, tức Cục Dự trữ Liên bang Mỹ để quyết định lãi suất. Retail lúc này cần cực kỳ cẩn trọng trước các biến động mạnh từ tin tức vĩ mô. Theo mọi người, đây là cơ hội mua thêm hay là tín hiệu xấu cho giai đoạn cuối năm?",
+   "visual_queries": [
+    "bitcoin price crash chart",
+    "nvidia logo corporate building",
+    "gold bars stacks wealth",
+    "trader looking at red charts"
+   ],
+   "source_ids": [
+    0
+   ],
+   "bullets": [
+    "BTC thủng mốc 60,000 đô la",
+    "Nvidia tăng 32 phần trăm",
+    "Chờ dữ liệu lạm phát PCE"
+   ],
+   "quote": "Bitcoin xóa sạch đà tăng dù chứng khoán Mỹ có phiên tốt nhất từ đầu năm",
+   "data": {
+    "type": "coin_chart",
+    "tickers": [
+     "BTC"
+    ],
+    "items": [],
+    "title": "Biểu đồ giá Bitcoin 24 giờ qua"
+   },
+   "project": {
+    "name": "Bitcoin",
+    "ticker": "BTC"
+   },
+   "edu": "true",
+   "emphasis": "TIN NÓNG THỊ TRƯỜNG",
+   "beats": [
+    {
+     "at": "Theo ghi nhận",
+     "type": "logos",
+     "logo": "BTC"
+    },
+    {
+     "at": "60,000 đô la",
+     "type": "bignum",
+     "value": "$60,000",
+     "label": "Mốc giá quan trọng",
+     "tone": "down"
+    },
+    {
+     "at": "chứng khoán Mỹ",
+     "type": "photo",
+     "query": "stock market green board",
+     "label": "S&P 500 và Nasdaq xanh ngát"
+    },
+    {
+     "at": "Nvidia",
+     "type": "logos",
+     "logo": "NVDA"
+    },
+    {
+     "at": "32 phần trăm",
+     "type": "bignum",
+     "value": "+32%",
+     "label": "Nvidia tăng trưởng kỷ lục",
+     "tone": "up"
+    },
+    {
+     "at": "vàng",
+     "type": "chart",
+     "ticker": "XAUUSD",
+     "days": "1"
+    },
+    {
+     "at": "65,000 đô la",
+     "type": "bignum",
+     "value": "$65,000",
+     "label": "Đỉnh cao nhất trong tuần",
+     "tone": "flat"
+    },
+    {
+     "at": "lạm phát PCE",
+     "type": "photo",
+     "query": "federal reserve building",
+     "label": "Chờ đợi tin tức từ Fed"
+    },
+    {
+     "at": "tối mai",
+     "type": "statement",
+     "text": "Công bố chỉ số PCE vào 20 giờ 30 ngày 25/11"
+    },
+    {
+     "at": "Fed",
+     "type": "logos",
+     "logo": "FED"
+    },
+    {
+     "at": "Retail",
+     "type": "photo",
+     "query": "anxious trader laptop",
+     "label": "Retail cần cẩn trọng"
+    },
+    {
+     "at": "mọi người",
+     "type": "statement",
+     "text": "MUA THÊM HAY BÁN RA?"
+    }
+   ]
+  }
+ ],
+ "outro": "Thị trường đang ở giai đoạn nhạy cảm với nhiều tin tức vĩ mô đan xen. Đây không phải lời khuyên đầu tư, mọi người hãy quản trị rủi ro thật tốt. Đừng quên nhấn theo dõi để cập nhật những insight mới nhất từ Smart Penguin nhé.",
+ "shorts": [
+  0
+ ],
+ "short_hooks": {
+  "0": "Bitcoin rơi sâu dưới 60,000 đô la bất chấp chứng khoán thăng hoa."
+ },
+ "thumb_text": "BTC THỦNG 60K",
+ "thumb_stat": "60,000",
+ "short_title": "Bitcoin thủng 60,000 đô la: Chuyện gì đang diễn ra?",
+ "thumb_tag": "TIN NÓNG",
+ "format": "short",
+ "news": true,
+ "own_source": true,
+ "short_cta": "Theo dõi Smart Penguin Insights để không lỡ tin nóng nhé!",
+ "script_score": null,
+ "script_review": {
+  "score": null,
+  "scores": null,
+  "nhan_xet": null,
+  "pass": null
+ },
+ "source_post": {
+  "author": "Telegram @WatcherGuru, The Defiant, Telegram @Fivemincryptoann, Telegram @ThuanCapital",
+  "handle": "",
+  "url": "https://t.me/WatcherGuru/16299",
+  "title": "JUST IN: Bitcoin crashes under $60,000 again as ETH falls below $1,700",
+  "text": "Nguồn: Telegram @WatcherGuru (10:08 24/11 giờ VN)\nJUST IN: Bitcoin crashes under $60,000 again as ETH falls below $1,700\nJUST IN: Bitcoin crashes under $60,000 again as ETH falls below $1,700\n\n📰 https://watcherguru.com\n\n@WatcherGuru\n\nNguồn: The Defiant (10:28 24/11 giờ VN)\nBitcoin Falls Below $60,000, Erasing Monday's Rebound\nBitcoin Falls Below $60,000, Erasing Monday's Rebound. The evening low on Coinbase was 8% below Monday's peak and 30% below its Oct. 21 high, but remained above the weekend trough.\n\nNguồn: Telegram @Fivemincryptoann (10:05 24/11 giờ VN)\nBTC giảm xuống $60,003.55 rồi AE ơi 🙈\nBTC giảm xuống $60,003.55 rồi AE ơi 🙈\n-Bot tự động-\n---------------------\n📍 Đọc Dự báo thị trường - Phân tích Bitcoin\n\nNguồn: Telegram @Fivemincryptoann (08:05 24/11 giờ VN)\nCụ Bê ơi cụ làm sao vậy? Mọi người đang ăn tiệc mình cụ đi về\nCụ Bê ơi cụ làm sao vậy? Mọi người đang ăn tiệc mình cụ đi về\n\nTin sếp Jensen Huang trở lại như làn gió mát vực dậy thị trường sau đợt bán tháo. Cả chứng Mỹ, BTC và vàng đều bật mạnh:\n\n• Chứng khoán Mỹ xanh ngát, Nasdaq và S&P 500 có phiên tốt nhất kể từ T4/2025. Riêng Nvidia đón sếp cũ +32%, phiên tăng mạnh nhất 23 năm qua và đứng TOP3 kể từ ngày lên sàn.\n\n• Vàng cũng ké tâm lí tích cực, hồi phục lên $3650.\n\n• Cụ Bê lại có lối đi riêng, lúc đầu vọt rất mạnh lên gần $65K, nhưng giờ đã trở về vạch xuất phát $61K.\n\nTâm điểm tiếp theo là lạm phát PCE 🇺🇸 tháng 10 vào 20h30 ngày mai (25/11). Chủ tịch Fed New York cho rằng lạm phát vẫn còn cao, nên các dữ liệu mới này sẽ quyết định tháng 12 có tăng lãi không.\n\nNguồn: Telegram @ThuanCapital (07:58 24/11 giờ VN)\n2616 - ANH ĐÃ TRỞ LẠI... MÀ SAO BITCOIN VẪN CÒN ĐI XA QUÁ...\n2616 - ANH ĐÃ TRỞ LẠI... MÀ SAO BITCOIN VẪN CÒN ĐI XA QUÁ...\n\n👉Youtube: https://youtu.be/suNGRJ3CFRo\n🎙Podcast: https://open.spotify.com/episode/6z1KrhFmfUx9G8eHzS2xJi?si=BYFOOYB5QQaTHMc-p8ng0A\n\n●▬▬▬▬▬ Referrals Links: ▬▬▬▬▬●\nCác Sàn Giao Dịch Nếu Bạn Quan Tâm\n🔥OKX [Giảm 20% Phí] 👉 https://thuancapital.com/pages/san-giao-dich-okx\n🔥Bybit [$3,500 Bonus] 👉 https://thuancapital.com/pages/san-bybit\n🔥Binance [Giảm 20% Phí] 👉 https://thuancapital.com/pages/san-giao-dich-binance\n🔥XM [$10,600 Bonus] 👉 https://thuancapital.com/pages/xm-san-giao-dich-ngoai-hoi\n🔥HFM [Hoàn phí ~40%] 👉 https://thuancapital.com/pages/san-hfm\n🔥Taurex [10% Bonus] 👉 https://go.taurex.asia/vi/thuancapital/\n🔥Bitget [Giảm 20% Phí GD] 👉 https://thuancapital.com/pages/san-bitget\n🔥PrimeXBT [VIP 4 2 tuần] 👉 https://thuancapital.com/pages/primexbt-san-giao-dich-da-tai-san\n🔥Exness 👉 https://thuancapital.com/pages/san-exness\n⚠️ Đừng lưu trữ quá nhiều tiền trên sàn, hãy tìm hiểu tự giữ Crypto của mình\n——————————————————\n💰 Các BONUS Khác 👉 https://thuancapital.com/pages/san-giao-dich\n——————————————————\n🚨 Facebook, Twitter, Telegram 👉 https://thuancapital.com/info/\n——————————————————\nThông tin chỉ mang tính giới thiệu sản phẩm/dị"
+ }
+}

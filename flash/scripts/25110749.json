@@ -1,0 +1,145 @@
+{
+ "title": "Trump tuyên bố sẵn sàng ân xá cho CEO Nvidia Jensen Huang",
+ "description": "Thông tin bất ngờ về việc Donald Trump trực tiếp vận động hội đồng quản trị Nvidia và đề nghị ân xá cho Jensen Huang.",
+ "theme": "Chính trị và công nghệ AI",
+ "hook": "Tổng thống Trump tuyên bố sẵn sàng ân xá cho CEO Nvidia Jensen Huang nếu cần thiết",
+ "hook_stat": "",
+ "hook_label": "",
+ "intro": "Chào mọi người, mình là biên kịch của Smart Penguin Insights. Hôm nay chúng ta sẽ nói về một thông tin rất đặc biệt liên quan đến mối quan hệ giữa tổng thống Trump và vị thuyền trưởng của gã khổng lồ Nvidia.",
+ "sections": [
+  {
+   "heading": "Trump và kế hoạch bảo vệ CEO Nvidia",
+   "key_stat": "NVDA",
+   "key_label": "Mã cổ phiếu tâm điểm",
+   "narration": "Theo tin từ tờ Wall Street Journal và các nguồn tin quốc tế, tổng thống Trump vừa tiết lộ ông từng trực tiếp vận động hội đồng quản trị Nvidia để đưa Jensen Huang quay trở lại vị trí lãnh đạo. Điều gây bất ngờ nhất là tuyên bố ông sẵn sàng ban lệnh ân xá cho vị CEO này nếu cần thiết, ngay cả khi các cuộc điều tra độc lập của công ty vẫn chưa kết thúc. Trump cho biết chính việc giá cổ phiếu Nvidia sụt giảm mạnh vào thời điểm đó đã tạo điều kiện để ông thuyết phục các giám đốc đưa ra quyết định tái bổ nhiệm. Hành động này cho thấy Nvidia hiện không chỉ là một công ty sản xuất chip, mà đã trở thành một biểu tượng công nghệ mang tính chiến lược quốc gia. Với những insider trong ngành, đây là tín hiệu cho thấy sự ủng hộ chính trị có thể trở thành bệ đỡ cho cả thị trường AI truyền thống lẫn các dự án AI trong crypto. Mọi người thấy sao về việc chính trị gia can thiệp sâu vào nhân sự cấp cao của một tập đoàn như vậy.",
+   "visual_queries": [
+    "financial news report",
+    "business boardroom meeting",
+    "computer processor chip",
+    "american flag office"
+   ],
+   "source_ids": [
+    0
+   ],
+   "bullets": [
+    "Trump vận động Nvidia",
+    "Sẵn sàng ân xá CEO",
+    "Chiến lược bảo vệ AI"
+   ],
+   "quote": "Tôi sẵn sàng ân xá cho Jensen Huang nếu điều đó là cần thiết cho công ty",
+   "data": {
+    "type": "coin_chart",
+    "tickers": [
+     "NVDA"
+    ],
+    "items": [],
+    "title": "Biến động cổ phiếu Nvidia"
+   },
+   "project": {
+    "name": "Nvidia",
+    "ticker": "NVDA"
+   },
+   "edu": "true",
+   "emphasis": "TIN NÓNG",
+   "beats": [
+    {
+     "at": "Theo tin từ",
+     "type": "photo",
+     "query": "financial news report",
+     "label": "Thông tin từ WSJ"
+    },
+    {
+     "at": "vận động hội đồng",
+     "type": "statement",
+     "text": "Trump tác động ban quản trị Nvidia"
+    },
+    {
+     "at": "Jensen Huang",
+     "type": "logos",
+     "logo": "NVDA",
+     "label": "CEO Jensen Huang"
+    },
+    {
+     "at": "lệnh ân xá",
+     "type": "bignum",
+     "value": "PARDON",
+     "label": "Lệnh ân xá Tổng thống"
+    },
+    {
+     "at": "điều tra độc lập",
+     "type": "photo",
+     "query": "legal law documents",
+     "label": "Đang điều tra độc lập"
+    },
+    {
+     "at": "giá cổ phiếu",
+     "type": "chart",
+     "ticker": "NVDA",
+     "days": "365",
+     "label": "Biến động giá cổ phiếu"
+    },
+    {
+     "at": "tái bổ nhiệm",
+     "type": "photo",
+     "query": "business handshake agreement",
+     "label": "Quyết định tái bổ nhiệm"
+    },
+    {
+     "at": "biểu tượng công nghệ",
+     "type": "photo",
+     "query": "artificial intelligence chip",
+     "label": "Trụ cột công nghệ AI"
+    },
+    {
+     "at": "Insider trong ngành",
+     "type": "versus",
+     "left": {
+      "label": "Chính trị",
+      "value": "Ủng hộ",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Thị trường",
+      "value": "Tâm lý",
+      "tone": "up"
+     }
+    },
+    {
+     "at": "crypto",
+     "type": "logos",
+     "logo": "BTC",
+     "label": "Ảnh hưởng tâm lý AI Crypto"
+    }
+   ]
+  }
+ ],
+ "outro": "Đây là một động thái cho thấy tầm quan trọng của AI trong mắt giới chính trị Mỹ. Cảm ơn mọi người đã theo dõi và đừng quên đây không phải lời khuyên đầu tư.",
+ "shorts": [
+  0
+ ],
+ "short_hooks": {
+  "0": "Trump tuyên bố sẵn sàng ân xá cho CEO Nvidia nếu cần thiết"
+ },
+ "thumb_text": "TRUMP ÂN XÁ CEO NVIDIA?",
+ "thumb_stat": "NVDA",
+ "short_title": "Trump sẵn sàng ân xá CEO Nvidia Jensen Huang",
+ "thumb_tag": "TIN NÓNG",
+ "format": "short",
+ "news": true,
+ "own_source": true,
+ "short_cta": "Theo dõi Smart Penguin Insights để không lỡ tin nóng nhé!",
+ "script_score": null,
+ "script_review": {
+  "score": null,
+  "scores": null,
+  "nhan_xet": null,
+  "pass": null
+ },
+ "source_post": {
+  "author": "The Defiant, Telegram @WatcherGuru",
+  "handle": "",
+  "url": "https://thedefiant.io/frontier/ai/trump-says-he-lobbied-nvidia-board-for-huang-s-return",
+  "title": "Trump Says He Lobbied Nvidia Board for Huang’s Return",
+  "text": "Nguồn: The Defiant (07:20 25/11 giờ VN)\nTrump Says He Lobbied Nvidia Board for Huang’s Return\nTrump Says He Lobbied Nvidia Board for Huang’s Return. The president told the WSJ that Nvidia’s falling stock helped his push. Directors reinstated Huang while their independent inquiry remained open.\n\nNguồn: Telegram @WatcherGuru (05:58 25/11 giờ VN)\nJUST IN: 🇺🇸 President Trump says he is willing to pardon Nvidia $NVDA CEO Jensen Huang if necessary.\nJUST IN: 🇺🇸 President Trump says he is willing to pardon Nvidia $NVDA CEO Jensen Huang if necessary.\n\n📰 https://watcherguru.com\n\n@WatcherGuru"
+ }
+}

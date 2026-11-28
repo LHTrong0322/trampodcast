@@ -1,0 +1,467 @@
+[
+ {
+  "tag": "20261124-0000",
+  "at": "2026-11-24T00:43+07:00",
+  "score": 5.0,
+  "scores": {
+   "hook_3s": 5.5,
+   "hinh_anh_ro_rang": 4.0,
+   "mau_sac_brand": 7.5,
+   "nhip_do": 5.5,
+   "phu_de": 6.0,
+   "du_lieu_lien_quan": 4.5,
+   "thumbnail": 4.5,
+   "short_9x16": 4.5
+  },
+  "tot": [
+   "Bố cục 9:16 gọn, sạch. Mỗi thẻ chỉ có một ý chính và chữ số lớn như \"+30%\" và \"-23%\" đọc được ngay trên điện thoại. Màu xanh cho tăng, đỏ cho giảm rõ nghĩa.",
+   "Phụ đề nằm trong khung nền tối, tương phản tốt. Từ khoá được tô vàng (\"doanh\", \"2008\"). Có thanh tiến độ xanh lá ở đáy khung.",
+   "Thương hiệu nhất quán: tên kênh, thẻ Nvidia và logo Nvidia. Đoạn kể có mạch rõ: Huang quay lại, rồi cú sập, rồi rủi ro còn lại, rồi câu hỏi chốt."
+  ],
+  "can_sua": [
+   "LỖI TRÌNH BÀY (ở mọi khung short0_0 đến short0_9): tiêu đề trên đầu bị thẻ trắng đè lên. Dòng 3 \"hơn 30%\" chỉ hiện ra như một vệt chữ bị cắt ở giây đầu (short0_0 đến short0_1, short0_3 đến short0_9), và chỉ thấy đủ ở short0_2. Cách sửa: rút tiêu đề còn 2 dòng (vd \"Huang về sau 11 ngày, NVDA +30%\") hoặc đẩy thẻ xuống thấp hơn khoảng 40px. Khoảng trống dưới phụ đề đang bỏ phí, có thể dùng để dời thẻ xuống.",
+   "LỖI TRÌNH BÀY (short0_5, thẻ so sánh): hai cột không thẳng hàng. Cột trái \"Revenue kỷ lục\" một dòng, cột phải \"Giá từ đỉnh $239.24\" hai dòng, nên nhãn lệch nhau. \"$115.8B\" dính sát chữ \"VS\". Cách sửa: cả hai nhãn đều 2 dòng hoặc đều 1 dòng, cùng cỡ chữ, cùng baseline cho số, và chừa khoảng cách quanh \"VS\".",
+   "LỖI TRÌNH BÀY (phụ đề): short0_5 có chữ mồ côi \"đó.\" ở dòng cuối. short0_8 có chữ mồ côi \"tra,\" ở dòng cuối. Cách sửa: ngắt dòng theo cụm (\"cùng California / vẫn đang điều tra,\") hoặc giới hạn mỗi dòng phụ đề khoảng 3 đến 5 từ để cụm nào cũng nằm gọn trên một dòng.",
+   "LỖI KHỚP CHỮ VÀ LỜI ĐỌC: short0_3 cho thấy biểu đồ 60 ngày giảm -25.9%, $166.69, trong khi lời đọc đang nói về ý bật +30%. Biểu đồ không chứng minh được ý \"rủi ro lãnh đạo, không phải kinh doanh xấu\". Ở short0_2 biểu đồ còn trống, chỉ thấy một vạch nhỏ, vì phụ đề \"Vì sao thị trường phản ứng mạnh vậy?\" xuất hiện trước khi đường vẽ xong. Cách sửa: vẽ xong đường trong khoảng 1,5 giây, đặt lời \"phản ứng mạnh\" khớp lúc có mũi tên +30% hồi phục. Thêm nhãn \"+30% hồi phục\" ở đoạn cuối đường.",
+   "LỖI KHỚP CHỮ VÀ LỜI ĐỌC: short0_6 và short0_7 hiện thẻ \"Chính phủ Mỹ đứng sau Nvidia\" trong khi lời đọc chỉ là \"nhận ý kiến từ chính phủ\" và \"Trump nói không có rủi ro an ninh quốc gia\". Thẻ khẳng định mạnh hơn nguồn nói và dễ gây hiểu sai. Cách sửa: đổi thành \"Trump: không có rủi ro an ninh quốc gia\". Ở short0_5, thẻ \"-48% giá từ đỉnh\" xuất hiện khi lời đọc là \"Huang gỡ đúng nút thắt đó\" và lời đọc không hề nhắc con số -48%, nên cần cho khớp.",
+   "Thẻ \"SEC VS California\" ở short0_8 có hai bên cùng \"Đang điều tra\" nên dấu VS vô nghĩa, không có gì để so sánh. Cách sửa: dùng 2 thẻ nối tiếp hoặc một thẻ \"SEC + California: đang điều tra, chưa kết luận\" để khớp câu \"chưa kết luận vi phạm\". Ở short0_0 và short0_1, thẻ \"+30%\" đứng yên 6 đến 7 giây. Nên thêm số động (đếm từ 0 lên 30) hoặc đổi hình mỗi 3 đến 4 giây.",
+   "Hook chưa đủ mạnh. Giây 0 đến 2 phụ đề chỉ là \"Nvidia vừa đưa Jensen Huang\", cắt nửa câu, và tiêu đề lại bị cắt. Cách sửa: mở bằng câu gây tò mò, ví dụ \"11 ngày ngồi ghế trống, NVDA mất 23%\". Hiện cả đoạn đầu chưa nói tại sao điều này quan trọng với nhà đầu tư."
+  ],
+  "script_tips": [
+   "Mở bằng một con số kèm mâu thuẫn trong 2 giây đầu, vd \"Doanh thu kỷ lục mà cổ phiếu vẫn sập 23% — vì sao?\". Không mở bằng câu thuật tin dài và bị cắt giữa chừng như \"Nvidia vừa đưa Jensen Huang...\".",
+   "Viết mỗi câu là một cụm tự đứng được, tối đa 8 đến 10 từ, để phụ đề không phải ngắt dòng giữa cụm và không để lại chữ mồ côi. Mỗi con số trong lời đọc nên có đúng một thẻ hình riêng cùng lúc xuất hiện.",
+   "Mỗi short chỉ giữ một ý chính (vì sao cổ phiếu bật mạnh) và 3 số liệu tối đa. Đọc nguồn (CNN, Yahoo Finance) bằng một câu ngắn, rồi chốt bằng câu hỏi bình luận cụ thể (\"Anh em mua hay chờ?\") thay vì câu chung \"còn hấp dẫn không\"."
+  ],
+  "retention_risk": "Rủi ro lớn nhất nằm ở giây 0 đến 8: tiêu đề bị cắt, thẻ +30% đứng yên lâu, chưa có hình động nào, và phụ đề mở đầu bị cắt nửa câu. Tiếp theo là giây 20 đến 28, khi biểu đồ -25.9% đang trống hoặc đi ngược ý \"+30%\" và người xem dễ thấy rối. Đoạn giữa (thẻ \"Chính phủ Mỹ đứng sau Nvidia\") cũng dễ khiến người xem bỏ đi vì hình đứng yên hơn 6 giây, chỉ có chữ, không có số liệu mới.",
+  "by": "Claude"
+ },
+ {
+  "tag": "20261124-0330",
+  "at": "2026-11-24T03:41+07:00",
+  "score": 6.3,
+  "scores": {
+   "hook_3s": 5.5,
+   "hinh_anh_ro_rang": 6,
+   "mau_sac_brand": 7.5,
+   "nhip_do": 7,
+   "phu_de": 6.5,
+   "du_lieu_lien_quan": 6.5,
+   "thumbnail": 5.5,
+   "short_9x16": 6.3
+  },
+  "tot": [
+   "Short 9:16 có bố cục nhất quán. Header thương hiệu, tiêu đề cố định và thẻ trắng ở giữa đều dễ nhìn. Số liệu lớn (+30%, -23%, $130B, 11 ngày) đọc được ngay trên điện thoại. Màu xanh/đỏ đúng nghĩa tăng/giảm.",
+   "Phụ đề bám sát lời đọc, tô vàng đúng từ khóa (doanh, 2008, 130B). Thanh tiến trình xanh ở đáy giúp người xem biết video còn bao lâu.",
+   "Nhịp đổi hình nhanh và khác nhau giữa các khung: số lớn, biểu đồ, trích dẫn, ảnh. Video dài đổi hình khoảng 17 lần/phút, gấp đôi chuẩn 8 lần/phút."
+  ],
+  "can_sua": [
+   "short0_5 (giây ~40, ảnh phòng họp): chữ chú thích 'HĐQT quay xe sau ý kiến chính phủ' có độ tương phản rất thấp trên nền trắng và bị ngắt dòng, chỉ còn từ mồ côi 'phủ' ở dòng cuối. Có thể ghi sai chữ so với lời đọc. Cần thêm lớp nền tối mờ dưới chữ hoặc đổi sang thẻ chữ. Viết ngắn lại thành 'HĐQT quay xe' để vừa một dòng.",
+   "short0_0 (giây 0–2, hook): khung đầu là tấm ảnh bo mạch xanh chung chung, kèm chú thích 'CEO Nvidia trở lại ghế nóng' và phụ đề lặp lại tiêu đề. Cả ba dòng nói cùng một ý, mà con số +30% là điểm gây sốc nhất lại chưa xuất hiện. Hãy mở bằng số '+30%' thật lớn cùng 'Huang quay lại sau 11 ngày' ngay giây đầu, bỏ ảnh bo mạch.",
+   "short0_3 (biểu đồ 60 ngày): đường giá kết thúc ở một cú bật rất ngắn ở mép phải, trong khi phụ đề lúc đó là 'không phải kinh doanh xấu' nên không liên quan đến biểu đồ. Số '-26.1%' nổi bật trong khi ý chính của short là +30%. Cần đánh dấu rõ điểm bật '+30%' trên biểu đồ. Ghép biểu đồ vào đúng lúc lời đọc nói về cú sập hoặc cú bật. Chữ nguồn 'Dữ liệu thật · Yahoo Finance' đang lặp hai lần (góc trên và chú thích dưới), chỉ giữ một dòng nhỏ riêng.",
+   "short0_1 / short0_4 (thẻ số liệu): chữ phụ 'chưa đầy, từ lúc từ chức đến lúc trở lại' ngắt dòng giữa cụm và để 'lúc trở lại' lẻ ở dòng cuối. short0_4 ghi '$130B' mà lời đọc nói 'khoảng 130B', nên số trên hình và lời đọc không khớp hoàn toàn. Hãy viết lại 'Dưới 2 tuần từ lúc từ chức'. Khóa mỗi nhãn một dòng. Dùng cùng một cách ghi ('~$130B') ở cả hình lẫn lời đọc.",
+   "Short thiếu số $115.8B (revenue kỷ lục) so với -23%, đây là phần đối lập hay nhất của câu chuyện, nhưng chỉ có trong video dài (long_9). Thêm một thẻ so sánh cạnh nhau ngay sau short0_4. Khoảng 40% khung nửa dưới của short còn trống (từ y~770 đến 960). Phụ đề đang đặt quá cao so với vùng an toàn của TikTok/Reels, nên hãy dời xuống cho thẳng hàng.",
+   "Video dài, long_0 (giây 2): dòng chữ lớn bị che mất nửa dưới ở 'hơn 30%' (nhìn thấy 'hơn 30%' bị cắt mép). Chữ 'NVDA bật sau tin phục chức' và tiêu đề chồng sát nhau. long_3 (giây 11): tiêu đề hiện 'Huang trở lại vị trí CEO' còn thẻ 01 ghi 'bật gần 30%' trong khi lời đọc là 'hơn 30%', chữ không khớp lời. long_17 (giây 62): trang 'Tóm lại' gần như trống, chỉ có một dòng, nút 'ĐĂNG KÝ' đè sát dòng đầu.",
+   "short0_7 và short0_8: mỗi trang chỉ có một câu trích dẫn lớn kèm dấu ngoặc ‘“’. Câu 'NVDA còn hấp dẫn không?' ở short0_8 dùng dấu trích dẫn dù không phải lời trích của ai. Bỏ dấu trích dẫn ở trang kết. Nút kêu gọi 'Comment cho mình biết nhé' nên to và đậm hơn."
+  ],
+  "script_tips": [
+   "Mở bằng con số và hành động trong tối đa 2 giây, ví dụ: 'Huang quay lại sau 11 ngày, NVDA bật 30%'. Không đọc lại tiêu đề ở câu thứ hai.",
+   "Một ý chính cho mỗi câu, mỗi câu dưới 12 từ. Dùng cặp tương phản: doanh thu kỷ lục $115.8B nhưng giá giảm 23%. Đọc đúng số đang hiện trên hình, không làm tròn khác nhau giữa lời và chữ.",
+   "Kết bằng một câu hỏi để người xem bình luận, rồi mới nói cảnh báo. Giữ lời cảnh báo 'không phải lời khuyên đầu tư' ngắn gọn và đưa vào đoạn cuối, không thêm ý mới ở đó."
+  ],
+  "retention_risk": "Hai điểm dễ mất người xem. Thứ nhất là giây 0–3: ảnh bo mạch chung chung cùng phụ đề lặp lại tiêu đề, chưa có con số 30% gây tò mò. Thứ hai là đoạn giữa đến cuối, từ khoảng giây 40 trở đi (HĐQT quay xe, Trump, SEC): ba khung toàn chữ, không có số liệu hay biểu đồ, ảnh phòng họp lại có chữ mờ nên người xem dễ lướt qua.",
+  "by": "Claude"
+ },
+ {
+  "tag": "20261124-0344",
+  "at": "2026-11-24T04:22+07:00",
+  "score": 6.0,
+  "scores": {
+   "hook_3s": 6,
+   "hinh_anh_ro_rang": 6,
+   "mau_sac_brand": 8,
+   "nhip_do": 7,
+   "phu_de": 6,
+   "du_lieu_lien_quan": 5,
+   "thumbnail": 6,
+   "short_9x16": 6
+  },
+  "tot": [
+   "Số to, rõ, đọc được trên điện thoại (+30%, -23%, <2 tuần, ~$130B). Màu xanh/đỏ phân biệt tăng/giảm dễ hiểu. Mỗi khung chỉ có một ý.",
+   "Giữ nhận diện thương hiệu nhất quán: logo kênh, thẻ Nvidia, tiêu đề cố định, thanh tiến độ ở đáy. Nguồn nằm ở dòng nhỏ riêng trên cùng.",
+   "Nhịp đổi hình hợp với short: cứ vài giây lại có thẻ mới (số, câu hỏi, biểu đồ, ảnh). Các khung đổi dạng thẻ khá đa dạng nên ít bị đơn điệu."
+  ],
+  "can_sua": [
+   "Biểu đồ (short0_3, khoảng giây 24-28): biểu đồ đỏ ghi $165.67, -26.4% trong 60 ngày, trong khi tiêu đề và hook nói NVDA bật hơn 30%. Chữ trên hình không khớp lời đọc lúc đó ('không phải kinh doanh xấu'). Hãy đổi thành biểu đồ thể hiện cú giảm 23% rồi bật 30% với nhãn rõ, hoặc đổi thẻ này sang số liệu revenue $115.8B. Đồng thời kéo dài nhịp vẽ biểu đồ để đường bật lên cuối cùng không bị cụt.",
+   "Chú thích biểu đồ (short0_3, dưới chart): nguồn và lời cảnh báo bị viết liền trong một câu ('Dữ liệu thật Yahoo Finance, 60 ngày. Không phải tín hiệu mua bán'), lại lặp lại nguồn đã có ở góc phải trên. Hãy tách nguồn thành một dòng nhỏ riêng và bỏ phần lặp.",
+   "Thẻ $130B (short0_4, khoảng giây 35): thẻ nói về revenue dự phóng ~$130B, nhưng phụ đề lúc đó là 'Huang trở lại gỡ đúng nút thắt đó', nên chữ trên hình không khớp lời đọc. Hãy đồng bộ thẻ số với câu nói về $115.8B và $130B, hoặc đổi nhãn thẻ thành 'Huang gỡ nút thắt'. Nên thêm số $115.8B làm cặp so sánh.",
+   "Khung thẻ ảnh (short0_7, short0_5 và short0_6): nhãn 'Chưa kết luận vi phạm' hiện khi phụ đề đang đọc 'cùng California vẫn đang điều tra,'. Thẻ 'SEC và California vẫn đang điều tra' (short0_6) lại có dấu ngoặc kép như trích dẫn nhưng không có nguồn trích. Hãy bỏ dấu ngoặc kép hoặc ghi rõ người nói, và đặt nhãn hiện đúng lúc câu đó được đọc.",
+   "Thẻ câu hỏi (short0_2 và short0_8): phụ đề lặp y nguyên chữ to trong thẻ nên người xem đọc cùng một câu hai lần, tốn chỗ mà không thêm thông tin. Hãy để thẻ nêu ý chính ngắn hơn (ví dụ 'Vì sao bật mạnh?') hoặc ẩn phụ đề ở các khung này.",
+   "Hook và bố cục (short0_0, short0_1): hook chỉ có '+30%' tĩnh, không có yếu tố gây tò mò (11 ngày, ghế CEO) và phụ đề cắt giữa câu ('Nvidia vừa đưa Jensen Huang'). Khoảng 35% dưới màn hình còn trống, dễ chồng với giao diện TikTok. Hãy làm số +30% to và có chuyển động ngay giây 0, thêm '11 ngày' vào thẻ hook, và đưa phụ đề lên cao hơn một chút. Ảnh minh họa chung chung (phòng họp, cột đá) nên thay bằng ảnh Jensen Huang hoặc ảnh có liên quan."
+  ],
+  "script_tips": [
+   "Mở bằng một mâu thuẫn có con số trong 2 giây: 'Ông ấy từ chức, cổ phiếu sập 23%. 11 ngày sau ông quay lại, NVDA bật 30%.' Không mở bằng câu giới thiệu tin.",
+   "Mỗi câu chỉ chứa một con số, và con số đó phải có thẻ hình tương ứng hiện đúng lúc. Với $115.8B và $130B, hãy kể thành một cặp so sánh thay vì đọc dồn một câu.",
+   "Kết bằng câu hỏi mở kèm rủi ro cụ thể (SEC và California điều tra), giữ dưới 50 giây. Để dòng 'không phải lời khuyên đầu tư' thành chú thích nhỏ trên hình thay vì đọc to cuối clip."
+  ],
+  "retention_risk": "Đoạn giữa (khoảng giây 20-35) dễ làm người xem bỏ đi. Có hai thẻ câu hỏi lặp phụ đề, rồi biểu đồ đỏ giảm 26.4% mâu thuẫn với tin tốt trong hook. Người xem có thể không hiểu thông điệp, trong khi hình lại im và giống nhau. Đoạn cuối với ảnh cột đá chung chung cũng ít thông tin mới, nên người xem dễ lướt qua trước khi đến câu hỏi cuối.",
+  "by": "Claude"
+ },
+ {
+  "tag": "20261124-0716",
+  "at": "2026-11-24T07:42+07:00",
+  "score": 6.3,
+  "scores": {
+   "hook_3s": 5.5,
+   "hinh_anh_ro_rang": 5.5,
+   "mau_sac_brand": 7.5,
+   "nhip_do": 7.5,
+   "phu_de": 7,
+   "du_lieu_lien_quan": 6.5,
+   "thumbnail": 5.5,
+   "short_9x16": 6
+  },
+  "tot": [
+   "Bố cục 9:16 gọn, đồng nhất. Tiêu đề cố định phía trên, thẻ trắng ở giữa, phụ đề nền tối phía dưới. Mỗi thẻ chỉ có một ý lớn nên đọc nhanh trên điện thoại.",
+   "Thẻ số liệu (+30% màu xanh, -23% màu đỏ, ~$130B) dùng màu xanh/đỏ đúng nghĩa tăng/giảm. Chữ số rất to, nhìn qua là hiểu. Phụ đề có tô vàng từ khóa (CEO, CNN, 2008, 130B) khớp với lời đọc.",
+   "Nhịp đổi thẻ đều, khoảng 3-5 giây một thẻ, đúng chuẩn short. Thanh tiến độ xanh lá dưới đáy giúp người xem biết video còn bao lâu. Màu brand nhất quán xuyên suốt."
+  ],
+  "can_sua": [
+   "short0_5 (khoảng giây 29-33, lúc đọc 'Hội đồng còn quay xe'): thẻ trắng biến mất, cả vùng giữa màn hình trống, chỉ còn phụ đề. Cần giữ một thẻ nền suốt câu này, ví dụ 'Hội đồng quay xe sau ý kiến chính phủ Mỹ'. Nếu thẻ đang fade, hãy để thẻ mới xuất hiện trước khi thẻ cũ tắt.",
+   "short0_7 (câu 'chưa kết luận vi phạm'): nhãn 'Chưa kết / luận vi phạm' bị ngắt dòng giữa cụm 'kết luận'. Chữ trong thẻ còn đang mờ xám lúc phụ đề đã đọc xong. Sửa thành 'Chưa kết luận / vi phạm' hoặc cỡ chữ nhỏ hơn để 'Chưa kết luận' nằm trọn một dòng. Thẻ phải hiện rõ ngay từ đầu câu.",
+   "short0_7: chữ trên thẻ 'Chưa kết luận vi phạm' không khớp lời đọc lúc đó ('cùng California vẫn đang điều tra'). Thẻ cũng không nhắc SEC, trong khi SEC là ý chính của rủi ro. Đổi thẻ thành 'SEC + California vẫn điều tra' rồi mới sang 'chưa kết luận'.",
+   "short0_0 đến short0_9, dòng đầu: nguồn viết liền với tên kênh ('@Trong0322 · Nguồn: NVIDIA, CNN, CNBC, Yahoo Finance') ở cỡ chữ rất nhỏ, gần như không đọc được trên điện thoại. Tách nguồn ra một dòng nhỏ riêng. Tốt nhất đặt nguồn dưới mỗi thẻ số liệu (ví dụ thẻ +30%: 'Nguồn: CNN, Yahoo Finance').",
+   "short0_0 (hook 0-2 giây): thẻ đầu 'Jensen Huang trở lại ghế CEO Nvidia' chỉ lặp lại tiêu đề ngay phía trên. Phụ đề thì cắt dở 'Nvidia vừa đưa Jensen Huang'. Hook chưa có con số hay mâu thuẫn. Hãy đưa +30% hoặc '11 ngày' lên thẻ đầu, ví dụ 'CEO từ chức 11 ngày, NVDA +30% khi ông quay lại'.",
+   "short0_2 và short0_4: dấu mũi tên ▲▼ rất nhỏ, lệch xuống so với số lớn. Nhãn '-23%' thiếu chủ thể ('NVDA giảm'), nên người xem lướt sẽ không rõ cái gì giảm. Thẻ +30% thì lặp 'NVDA tăng hơn 30%' đúng ngay dòng tiêu đề. Phóng to mũi tên và canh giữa theo chiều dọc với số. Đổi nhãn thành 'NVDA giảm tuần trước, tệ nhất từ 2008'.",
+   "short0_0 đến short0_9, nửa dưới màn hình (từ khoảng 80% chiều cao trở xuống) bỏ trống, trong khi thẻ chính nằm hơi cao. Dịch cụm thẻ + phụ đề xuống gần giữa khung. Làm thẻ lớn hơn, hoặc thêm biểu đồ giá nhỏ hay logo Huang để đỡ trống. Đồng thời tránh để phụ đề rơi vào vùng nút giao diện của TikTok.",
+   "Ba thẻ chữ (short0_0, 3, 6) đều có dấu ngoặc kép “ nhưng không phải lời trích dẫn. Chỉ để dấu ngoặc cho câu thật sự của Trump hoặc Huang. Với các thẻ còn lại, bỏ dấu ngoặc để đỡ rối mắt."
+  ],
+  "script_tips": [
+   "Mở bằng một con số và một mâu thuẫn trong dưới 8 từ, ví dụ: 'Từ chức 11 ngày, quay lại một cái là NVDA bật 30%.' Đừng mở bằng câu chung chung 'Nvidia vừa đưa Jensen Huang trở lại'.",
+   "Mỗi câu chỉ chứa một con số và đứng riêng thành một thẻ. Đọc xong con số thì ngắt ngay sang ý kế tiếp, tránh ghép nhiều số vào một câu (như 23%, 2008, 115.8B, 130B). Nếu số nào không có thẻ hình thì cắt khỏi lời đọc.",
+   "Đặt câu hỏi 'còn hấp dẫn không?' sớm hơn, khoảng giây 20-25, để giữ người xem. Kết bằng một nhận định rõ (ví dụ 'rủi ro còn lại là SEC') thay vì chỉ hỏi và dừng. Câu miễn trừ đầu tư nên nằm dưới dạng chữ nhỏ, không đọc to."
+  ],
+  "retention_risk": "Đoạn dễ mất người xem nhất là khoảng giây 29-33 (short0_5), khi thẻ trống chỉ còn dòng phụ đề 'Hội đồng còn quay xe'. Không có hình hay số liệu để bám nên người xem dễ lướt đi, và đây lại là chỗ chuyển từ tin tốt sang rủi ro. Đoạn từ short0_6 đến short0_7 (Trump, rồi SEC/California) toàn chữ, không có số hay hình mới, nên cũng dễ chán. Hook đầu video lặp lại tiêu đề, chưa tạo được lý do dừng lại trong 2 giây đầu.",
+  "by": "Claude"
+ },
+ {
+  "tag": "20261124-1405",
+  "at": "2026-11-24T14:41+07:00",
+  "score": 5.3,
+  "scores": {
+   "hook_3s": 4,
+   "hinh_anh_ro_rang": 5,
+   "mau_sac_brand": 7,
+   "nhip_do": 6.5,
+   "phu_de": 6,
+   "du_lieu_lien_quan": 5.5,
+   "thumbnail": 5,
+   "short_9x16": 5
+  },
+  "tot": [
+   "Bố cục dọc nhất quán và dễ nhìn: thẻ trắng ở giữa, số lớn $60,000 (đỏ) và 32% (xanh lá) đọc được ngay trên điện thoại. Màu đỏ/xanh gợi đúng cảm giác giảm/tăng.",
+   "Nhịp đổi hình nhanh, mỗi ý một thẻ (60,000 → chứng khoán xanh → Nvidia 32% → PCE → Fed → câu hỏi). Có thanh tiến trình màu cam ở đáy khung.",
+   "Kết bằng câu hỏi tương tác 'MUA THÊM HAY BÁN RA?' kèm lời kêu gọi bình luận. Phụ đề chữ trắng trên nền tối có nhấn vàng ở $65,000 và PCE, rất dễ đọc."
+  ],
+  "can_sua": [
+   "Lỗi trình bày, mọi khung (short0_0 đến short0_9): dòng tiêu đề 'Nvidia tăng 32%' bị mép trên của thẻ trắng đè vào phần chân chữ. Cần đẩy thẻ xuống ít nhất 20-30px hoặc co khoảng cách tiêu đề.",
+   "Lỗi trình bày, mọi khung: dòng nguồn ở đầu video dài 2 dòng và dồn nguồn vào cùng dòng với tên tài khoản. '@Fivemincryptoa' bị rớt xuống dòng 2 thành từ mồ côi. Nên bỏ handle cá nhân '@Trong0322', rút nguồn còn 'Nguồn: The Defiant' và đưa thành một dòng nhỏ riêng ở dưới hoặc cuối video.",
+   "short0_4 (đoạn 'vọt lên gần $65,000'): khung trống hoàn toàn, thẻ và hình biến mất, chỉ còn phụ đề. Đây là chỗ dễ bỏ đi nhất. Cần thẻ số '$65,000' kèm mũi tên lên rồi gập xuống, hoặc biểu đồ giá có đỉnh 65k.",
+   "short0_1 (biểu đồ 30 ngày): biểu đồ gần như chưa vẽ, chỉ có một vạch đỏ ngắn bên trái trong khi thẻ đã hiện giá $60,457 và -24.8%. Cũng ghi 'Dữ liệu thật CoinGecko' hai lần (trên phải và dưới). Phải vẽ xong đường giá trước khi chuyển cảnh, giữ thẻ đủ lâu rồi mới cắt, và chỉ giữ một dòng nguồn.",
+   "short0_3 (lời 'Trong khi vàng cũng đã...'): hình là thẻ Nvidia 32% nhưng lời đang nói về vàng. Chữ trên hình không khớp lời đọc. Hãy đổi sang thẻ vàng $3,650, hoặc cắt thẻ Nvidia đúng lúc lời nhắc Nvidia.",
+   "short0_6 và short0_7: phụ đề đổi sang khung 2 dòng, rộng hơn và nhảy lên (y≈683 so với 718), nên chữ nhảy vị trí giữa các khung. Cố định một ô phụ đề cao bằng nhau, tối đa 2 dòng, và ngắt dòng theo cụm. Ở short0_7 thẻ ảnh người xem biểu đồ là ảnh stock chung chung, caption 'Retail cần cực kỳ cẩn trọng' đè lên phần tối của ảnh. Nên thay bằng biểu đồ BTC thật hoặc thẻ cảnh báo.",
+   "Hook và nhãn thương hiệu: short0_0 mở đầu bằng 'Theo ghi nhận từ The Defiant' (nguồn tin), không phải hook. Cần câu gây sốc ngay giây 1-2, ví dụ 'Bitcoin thủng $60,000 trong lúc Nvidia tăng 32%!'. Thẻ cuối ghi 'Bình luận cho Trạm biết' lệch tên so với 'Smart Penguin Insights', cần thống nhất. Ngoài ra thẻ có dấu nháy kép trang trí (short0_2, 5, 6) dù không phải trích dẫn, nên bỏ."
+  ],
+  "script_tips": [
+   "Mở bằng kết quả gây sốc trong một câu dưới 10 chữ, ví dụ 'Bitcoin thủng $60,000 trong khi Nvidia tăng 32%. Vì sao?'. Đưa nguồn tin và lời chào thương hiệu xuống sau giây 5 hoặc cuối video.",
+   "Mỗi câu ứng với một thẻ hình riêng và một con số riêng. Khi nói gì thì hình phải hiện đúng thứ đó (nói vàng thì hiện vàng, nói $65,000 thì hiện thẻ $65,000), để chữ trên hình luôn khớp lời đọc.",
+   "Giữ video short dưới 45 giây, chỉ một ý chính: BTC đi ngược chứng khoán, chờ PCE. Bỏ bớt giải thích PCE dài, rút còn một câu rồi kết bằng câu hỏi để kéo bình luận."
+  ],
+  "retention_risk": "Dễ bỏ đi nhất ở đoạn đầu (giây 0-3), vì câu mở là nguồn tin 'Theo ghi nhận từ The Defiant' và biểu đồ 30 ngày gần như trống. Tiếp theo là đoạn 'vọt lên gần $65,000' khi màn hình trống không có hình, và đoạn giải thích PCE/Fed ở giữa video, chỉ có chữ trên thẻ trắng, không có hình ảnh hay số liệu mới.",
+  "by": "Claude"
+ },
+ {
+  "tag": "20261126-0728",
+  "at": "2026-11-26T07:59+07:00",
+  "score": 6.0,
+  "scores": {
+   "hook_3s": 5.5,
+   "hinh_anh_ro_rang": 5.5,
+   "mau_sac_brand": 7.5,
+   "nhip_do": 6.5,
+   "phu_de": 6.5,
+   "du_lieu_lien_quan": 5.5,
+   "thumbnail": 5.5,
+   "short_9x16": 5.5
+  },
+  "tot": [
+   "Thẻ so sánh ở short0_0: $4.94B và $4.51B đặt thẳng hàng, màu đỏ nổi bật trên nền trắng. Người xem hiểu ngay ý 'vượt kỷ lục cũ'.",
+   "Chữ trong thẻ to và dễ đọc trên điện thoại (short0_2 đến short0_8). Mỗi thẻ chỉ có một ý, và từ khóa trong phụ đề được tô vàng (altcoin, crypto, 12).",
+   "Giao diện nhất quán: header thương hiệu, tiêu đề cố định, thanh tiến trình, màu navy-đỏ-vàng. Thẻ đổi khoảng 4–6 giây một lần, đúng chuẩn video ngắn."
+  ],
+  "can_sua": [
+   "LỖI TRÌNH BÀY, short0_0 và short0_1: nguồn số liệu ('Nguồn: Cointelegraph, Decrypt') bị viết liền trong chú thích 'Vượt kỷ lục tháng 6. Nguồn: ...'. Nguồn còn lặp lại ở header. Hãy tách nguồn thành một dòng nhỏ riêng dưới thẻ và bỏ bản ở header.",
+   "LỖI TRÌNH BÀY, short0_0 (giây đầu): chữ trên hình không khớp lời đọc. Lời đọc mở đầu là 'Bitcoin ETFs vừa ghi nhận kỷ lục rút vốn…', còn phụ đề lại là 'Bitcoin đang trải qua một…'. Sửa phụ đề cho khớp lời đọc, hoặc sửa lời đọc cho khớp.",
+   "LỖI TRÌNH BÀY, short0_4: thẻ 'AI ↓ / Cổ phiếu AI giảm…' hiện lúc lời đọc đã sang 'Hệ quả trực tiếp là…'. Ý nguyên nhân đã nói xong mà thẻ vẫn còn. Cho thẻ đổi trước 0,3–0,5 giây so với câu, và ở đây đổi sang thẻ giá BTC dưới $59K.",
+   "LỖI TRÌNH BÀY, short0_5: thẻ 'ALTCOIN CŨNG BỊ KÉO XUỐNG' đang mờ dần nên chữ xám nhạt, gần như không đọc được. Rút ngắn hiệu ứng fade xuống 0,15 giây, hoặc dùng cắt thẳng thay vì fade.",
+   "Dữ liệu thiếu và lệch: thẻ cố định ghi 'Hyperliquid' từ short0_0 (cả khi nói về ETF), nhưng không có thẻ nào cho HYPE giảm 8% hay giá BTC dưới $59K. Đây là hai con số mạnh nhất. Hãy bỏ nhãn Hyperliquid ở đoạn đầu, thêm thẻ '$59K' và thẻ 'HYPE −8%' (thay thẻ chữ ở short0_6 và short0_7), và đưa tên nhãn vào đúng lúc nhắc tới.",
+   "Hook yếu: short0_0 đến short0_2 mất khoảng 5 giây cho cùng một con số, và thẻ thứ hai chỉ là mảnh câu 'RIÊNG TRONG THÁNG 11' không có thông tin. Gộp thành một thẻ so sánh, cắt thẻ short0_2, rồi chuyển sang đoạn nguyên nhân.",
+   "Bố cục 9:16: phụ đề nằm ở khoảng 77% chiều cao và thanh tiến trình sát đáy, đều trong vùng giao diện TikTok/Shorts (tên kênh, nút bấm). Đẩy phụ đề lên khoảng 60–65% và chừa 20% đáy. Chỗ trống phía trên và dưới thẻ có thể dùng để phóng to chữ hoặc thêm biểu đồ.",
+   "short0_7 và short0_6: dòng phụ ('Thị trường đổi chiều rất nhanh', 'Abraxas Capital') lặp lại ý tiêu đề hoặc chỉ là tên riêng nhỏ. Thay bằng số liệu cụ thể như '−8% HYPE' hoặc 'Rút vốn khỏi Hyperliquid'."
+  ],
+  "script_tips": [
+   "Mở bằng một câu có con số và hậu quả, tối đa khoảng 12 từ, không chào hỏi. Ví dụ: 'ETF Bitcoin vừa mất gần 5 tỷ đô trong một tháng, kỷ lục mới'. Bỏ câu giới thiệu kênh ở đầu và để lời chào ở cuối.",
+   "Chỉ kể một mạch: số kỷ lục, nguyên nhân (AI), hậu quả (BTC dưới $59K, HYPE −8%), rồi câu hỏi chốt. Mỗi câu chỉ mang một con số, để mỗi thẻ có một số lớn.",
+   "Giữ tổng lời đọc dưới 130–150 từ cho khoảng 50 giây. Chuẩn hóa cách đọc số ($4,94 tỷ thay vì '4B $940M') để phụ đề và thẻ trùng đúng từng chữ. Kết bằng câu hỏi để kéo bình luận."
+  ],
+  "retention_risk": "Giây 0–10: hook và thẻ đầu lặp cùng một con số qua 3 thẻ (short0_0 đến short0_2) và có thẻ mảnh câu không thông tin, nên dễ bỏ đi. Đoạn giữa (short0_5 đến short0_7) toàn thẻ chữ, không có số hay biểu đồ cho BTC dưới $59K và HYPE −8%, nên thiếu điểm bám mắt. Nếu hook mở bằng chào hỏi thì người xem lướt đi trước khi tới con số.",
+  "by": "Claude"
+ },
+ {
+  "tag": "20261126-1528",
+  "at": "2026-11-26T15:56+07:00",
+  "score": 5.4,
+  "scores": {
+   "hook_3s": 4.5,
+   "hinh_anh_ro_rang": 4.5,
+   "mau_sac_brand": 7.5,
+   "nhip_do": 6.5,
+   "phu_de": 7,
+   "du_lieu_lien_quan": 3.5,
+   "thumbnail": 5,
+   "short_9x16": 5
+  },
+  "tot": [
+   "Bố cục dọc sạch và nhất quán: tiêu đề cố định ở trên, thẻ trắng ở giữa, phụ đề nền tối chữ trắng với số/từ khóa tô vàng (4B $940M, 8%, 59K). Đọc được trên điện thoại, không thấy chữ đè nhau hay lỗi font tiếng Việt.",
+   "Thẻ 1 ý, chữ rất to (\"Cổ phiếu AI bị bán tháo\", \"Đã bán tháo xong chưa?\"). Nhìn lướt cũng hiểu. Câu hỏi chốt ở short0_6 và short0_7 kích thích bình luận.",
+   "Có thanh tiến trình ở đáy, màu nhận diện ổn (xanh tím, cam BTC, đỏ cho số xấu), và có khung kêu gọi theo dõi ở cuối."
+  ],
+  "can_sua": [
+   "short0_2 (khoảng giây 16-19): thẻ so sánh ghi $4.93B vs $4.43B, nhưng tiêu đề ghi $4.94B và lời đọc là 4B940M vs 4B510M. Cả hai số trong thẻ đều lệch. Sửa thành $4.94B vs $4.51B, dùng một nguồn số duy nhất cho tiêu đề, thẻ và lời đọc.",
+   "short0_2: hai số trong thẻ không cân. $4.93B đỏ nhỏ hơn $4.43B đen và nhãn nằm lệch (\"Kỷ lục mới\" chỉ có bên trái, màu hồng rất nhạt, gần như không đọc được). Đặt hai số cùng cỡ chữ và cùng baseline. Thêm nhãn \"Kỷ lục cũ\" cho bên phải. Tô đậm nhãn \"Kỷ lục mới\".",
+   "short0_4 (khoảng giây 27): thẻ hiện \"<$52K\" trong khi dòng nhỏ bên dưới và phụ đề đều nói \"dưới $59K\". Chữ trên hình không khớp lời đọc. Đây có thể là số đang chạy đếm, nên hãy khóa số cuối ngay từ khung đầu của thẻ, hoặc chỉ hiện số khi đã đúng $59K.",
+   "short0_5 (khoảng giây 29-30): lời đọc đã chuyển sang \"Hyperliquid giảm hơn 8%\" nhưng thẻ vẫn là BTC <$59K cũ, chỉ có thêm nhãn Hyperliquid ở trên. Đổi thẻ ngay khi lời đọc đổi: logo Hyperliquid và số \"-8%\" thật to. Thẻ BTC cũ không còn liên quan.",
+   "short0_0 và short0_1 (giây 0-4, hook): nửa giữa màn hình trống trơn trong lúc nghe câu mở đầu quan trọng nhất. Đặt ngay một thẻ lớn \"-$4.94B\" cùng logo/biểu tượng ETF hoặc mũi tên đỏ ở giây 0. Tiêu đề trên đầu chỉ là chữ nhỏ cố định nên không đủ làm hook. Phụ đề cũng bị cắt vụn (\"Bitcoin ETF vừa bị rút\" / \"ròng 4B $940M\"). Nên gộp thành cụm ý trọn vẹn, và đọc/viết số là \"4,94 tỷ đô\" cho dễ nhìn.",
+   "short0_3 đến short0_7 (thẻ giữa): kích thước thẻ không ổn định giữa các khung. Ở short0_5 và short0_7 thẻ rộng hơn và lệch so với short0_3, short0_4 và short0_6, trông như bị giật. Thẻ cũng sát chân tiêu đề, và phụ đề 2 dòng ở short0_3 và short0_6 dày hơn các khung còn lại. Cố định một kích thước thẻ và một vị trí phụ đề (1 dòng hoặc 2 dòng, tối đa 2).",
+   "short0_8 (khung cuối): màn kêu gọi theo dõi không có phụ đề và không có câu lưu ý \"không phải lời khuyên đầu tư\". Thêm dòng này bằng chữ nhỏ ở đây, và đưa lời kêu gọi bình luận lên cùng khung để người xem có việc để làm."
+  ],
+  "script_tips": [
+   "Mở bằng một câu có số kèm hậu quả, tối đa khoảng 8 từ, ví dụ: \"Quỹ ETF vừa rút 4,94 tỷ đô khỏi Bitcoin. Chưa từng có.\". Đọc số làm tròn dễ nghe, không đọc kiểu \"4 tỷ 940 triệu\". Đưa tên kênh xuống cuối, không chen vào đầu.",
+   "Mỗi câu chỉ chứa một con số hoặc một ý. Số trong lời đọc phải giống hệt số hiện trên hình và tiêu đề (4,94 và 4,51, không để 4,93 hay 4,43). Mỗi câu ứng với đúng một thẻ hình.",
+   "Giữ một mạch nhân quả: ETF rút vốn, vì AI bị bán, nên BTC rớt, nên altcoin giảm theo. Sau đó chốt bằng một câu hỏi có hai lựa chọn rõ (\"đã xong hay còn tiếp?\"). Dòng kêu gọi bình luận và dòng không phải lời khuyên đầu tư để ở 3-4 giây cuối. Tổng độ dài nên dưới 40 giây."
+  ],
+  "retention_risk": "Giây 0-4: nửa màn hình trống trong lúc nghe hook, nên người xem dễ lướt đi. Giây 16-19: thẻ so sánh sai số so với lời đọc và tiêu đề, làm giảm độ tin cậy. Giây 27-30: thẻ nói BTC trong khi lời đọc đã chuyển sang Hyperliquid, nên hình và tiếng lệch nhau và người xem mất mạch.",
+  "by": "Claude"
+ },
+ {
+  "tag": "20261126-1604",
+  "at": "2026-11-26T16:32+07:00",
+  "score": 6.2,
+  "scores": {
+   "hook_3s": 6.5,
+   "hinh_anh_ro_rang": 5,
+   "mau_sac_brand": 7,
+   "nhip_do": 6.5,
+   "phu_de": 7.5,
+   "du_lieu_lien_quan": 5.5,
+   "thumbnail": 6,
+   "short_9x16": 6
+  },
+  "tot": [
+   "Số liệu lớn, chữ đậm, tương phản cao ở short0_0–2 và short0_5 (-$4.94B, $4.94B vs $4.51B, -8%). Xem trên điện thoại vẫn đọc được ngay. Thẻ so sánh ở short0_2 có 2 số thẳng hàng và nguồn nằm ở dòng nhỏ riêng.",
+   "Phụ đề đặt ở khoảng 3/4 chiều cao khung. Chữ trắng trên nền navy, từ khóa số liệu tô vàng (ETF, $4.94B, 8%, 12), và khớp với lời đọc ở từng khung.",
+   "Bố cục nhất quán: logo kênh, tiêu đề cố định, thẻ trắng ở giữa. Mỗi khung chỉ có một ý nên rất dễ theo dõi. Nội dung ngắn gọn, đúng một câu chuyện."
+  ],
+  "can_sua": [
+   "short0_4 (đoạn chart BTC, lúc đọc 'dưới $59K'): chart ghi $60,812 và -4.5%, trong khi tiêu đề và lời đọc nói 'dưới $59K'. Người xem sẽ thấy hai con số lệch nhau và nghi ngờ tin. Hãy ghim một nhãn 'Đáy 7 ngày ~$58.xK' ngay tại điểm thấp nhất của chart (khoảng x=157, y=575), hoặc đổi tiêu đề thành 'BTC có lúc dưới $59K'. Nếu không, hãy đổi tâm điểm sang mức giá thật tại thời điểm đó.",
+   "short0_4: nguồn số liệu bị lặp. Dòng 'Dữ liệu thật · CoinGecko' ở góc phải trên, rồi 'Dữ liệu thật CoinGecko, 7 ngày. Không phải tín hiệu mua bán' viết liền ở chú thích dưới. Đây là lỗi nguồn nằm trong chú thích. Hãy bỏ dòng ở góc, tách 'Nguồn: CoinGecko' thành dòng nhỏ riêng như ở short0_2, và đưa disclaimer ra chỗ khác.",
+   "short0_9 (khung kết): tiêu đề ngắt dòng làm từ 'NHÉ!' đứng một mình ở dòng cuối (từ mồ côi). Hãy rút gọn thành 'THEO DÕI ĐỂ KHÔNG LỠ TIN NÓNG' hoặc đặt xuống dòng thủ công thành 'THEO DÕI SMART PENGUIN INSIGHTS / ĐỂ KHÔNG LỠ TIN NÓNG'. Nền trắng phẳng của khung này khác hẳn nền gradient xanh tím của các khung trước, nên hãy dùng lại nền chung. Khung này cũng chưa nhắc lời kêu gọi bình luận và disclaimer đang được đọc.",
+   "short0_0–1 (hook, 0–5 giây): khung đầu và khung thứ hai gần như giống hệt, chỉ khác phụ đề. Không có chuyển động hay điểm nhấn nào bắt mắt. Hãy cho số '-$4.94B' đếm nhanh từ 0 lên, tô đỏ (đang là navy trung tính), và thêm chữ 'KỶ LỤC' dạng tem nghiêng. Đưa chữ 'kỷ lục' lên đầu câu đọc để kéo người xem trong 1–2 giây đầu.",
+   "short0_7 và short0_8: cùng một câu hỏi 'Bán tháo xong, hay tháng 12 còn tiếp?' nằm trên màn hình hơn 2 khung liên tiếp, chỉ khác độ zoom nhẹ. Nhịp bị chững ở cuối, khung hình đứng yên. Hãy đổi hình giữa chừng (ví dụ hiện 2 lựa chọn 'Xong rồi' / 'Còn tiếp' để người xem bình chọn trong bình luận) thay vì lặp lại nguyên câu.",
+   "short0_5–6 (Hyperliquid): ở short0_5 mũi tên đỏ, '-8%' và logo xếp lệch nhau, nhãn 'Hyperliquid giảm hơn' đọc như câu cụt vì số đã nằm phía trên. Đổi nhãn thành 'Hyperliquid giảm hơn 8% sau đợt rút vốn' hoặc căn giữa lại cụm logo + số. Ở short0_6, khung phụ đề 2 dòng cao tới sát mép thẻ phía trên (khoảng 10px). Hãy hạ phụ đề xuống hoặc ép về 1 dòng. Một nửa dưới khung (từ y~750 trở xuống) đang để trống, nên có thể dời thẻ xuống giữa màn hình hoặc phóng to nội dung.",
+   "short0_3: dấu ngoặc kép “ ” gợi ý đây là một câu trích dẫn, nhưng 'Cổ phiếu AI cũng bị bán tháo' không có nguồn kèm theo. Hãy bỏ dấu ngoặc, hoặc thêm dòng nguồn nhỏ như các thẻ khác, và thêm một hình minh họa (icon, mũi tên đỏ) để khung này không chỉ là chữ."
+  ],
+  "script_tips": [
+   "Mở bằng một câu khẳng định gây sốc, ngắn dưới 8 từ, kèm số: 'Quỹ ETF Bitcoin vừa bị rút 4,94 tỷ đô, kỷ lục mới.' Bỏ chữ 'vừa bị' lặp nhiều lần, đi thẳng vào con số và chữ 'kỷ lục' trong 1,5 giây đầu.",
+   "Mỗi câu chỉ chứa một con số, và con số phải xuất hiện đúng lúc được đọc. Với giá BTC, hãy đọc đúng số đang hiện trên chart (ví dụ 'từng chạm đáy 58 nghìn, hiện quanh 60 nghìn') để chữ và lời không mâu thuẫn.",
+   "Kết thúc bằng một câu hỏi hai lựa chọn rõ ràng để kéo bình luận ('Xong rồi hay còn tiếp? Gõ 1 hoặc 2'). Đọc disclaimer thật ngắn, dưới 3 giây, và đừng dùng nó để lấp phần cuối."
+  ],
+  "retention_risk": "Rủi ro lớn nhất ở giữa video, từ khung short0_3 đến short0_4 (khoảng giây 12–20). Cổ phiếu AI chỉ là một khung chữ, rồi đến chart BTC có con số $60,812 lệch với 'dưới $59K'. Người xem dễ nghi ngờ tính chính xác và lướt đi. Phần cuối (short0_7–9) cũng dễ mất người xem vì câu hỏi bị lặp hai khung rồi chuyển sang khung kết nền trắng, không còn nhịp và không có cú chốt.",
+  "by": "Claude"
+ },
+ {
+  "tag": "20261126-1635",
+  "at": "2026-11-26T16:43+07:00",
+  "score": 6.2,
+  "scores": {
+   "hook_3s": 6.5,
+   "hinh_anh_ro_rang": 5.0,
+   "mau_sac_brand": 6.0,
+   "nhip_do": 6.8,
+   "phu_de": 6.2,
+   "du_lieu_lien_quan": 5.5,
+   "thumbnail": 6.0,
+   "short_9x16": 6.5
+  },
+  "tot": [
+   "Bố cục sạch sẽ, phân cấp thông tin rõ ràng giữa tiêu đề và nội dung chính",
+   "Nhịp đổi hình nhanh (17 lần/phút) phù hợp với tiêu chuẩn giữ chân người xem video ngắn"
+  ],
+  "can_sua": [
+   "short0_4: Lỗi dữ liệu không khớp. Lời đọc và phụ đề ghi 'dưới $59K' nhưng biểu đồ lại hiển thị con số '$60,726'. Cần cắt biểu đồ đúng thời điểm giá chạm đáy.",
+   "short0_3: Hình ảnh minh họa linh kiện RAM quá khô khan cho cụm 'cổ phiếu AI bị bán tháo'. Nên thay bằng biểu đồ nến đỏ của Nvidia hoặc mã chứng khoán AI.",
+   "short0_0: Tiêu đề phía trên quá sát mép. Cần hạ thấp xuống 10% để tránh bị che bởi giao diện ứng dụng (safe zone).",
+   "short0_6: Thẻ trích dẫn có nhãn 'Hyperliquid' phía trên bị lặp lại không cần thiết khi nội dung chính đã nêu rõ tên quỹ và dự án.",
+   "short0_2: Cụm 'Kỷ lục mới' và 'Kỷ lục cũ' cỡ chữ hơi nhỏ, khó đọc nhanh trên màn hình điện thoại."
+  ],
+  "script_tips": [
+   "Thay vì liệt kê số liệu khô khan, hãy bắt đầu bằng câu hỏi: 'Tại sao cá mập vừa tháo chạy 5 tỷ đô khỏi Bitcoin?'",
+   "Kết thúc video bằng một lựa chọn cụ thể (Ví dụ: 'Tháng 12 hồi hay sập tiếp? Chọn 1 hoặc 2') để tăng tỷ lệ bình luận."
+  ],
+  "retention_risk": "Đoạn từ short0_4 sang short0_5 dễ mất người xem do chuyển cảnh từ Bitcoin sang Hyperliquid quá đột ngột, thiếu câu dẫn liên kết giữa hai sự kiện.",
+  "by": "Gemini"
+ },
+ {
+  "tag": "20261127-0020",
+  "at": "2026-11-27T01:01+07:00",
+  "score": 6.3,
+  "scores": {
+   "hook_3s": 6.5,
+   "hinh_anh_ro_rang": 5.5,
+   "mau_sac_brand": 8,
+   "nhip_do": 6,
+   "phu_de": 7,
+   "du_lieu_lien_quan": 5.5,
+   "thumbnail": 6.5,
+   "short_9x16": 6
+  },
+  "tot": [
+   "Bố cục 9:16 gọn, một ý mỗi cảnh. Tiêu đề cố định ở trên, thẻ trắng ở giữa, phụ đề nền tối bên dưới. Số lớn màu đỏ (-$5B, -$4.94B, $59K) đọc được ngay trên điện thoại. Màu thương hiệu (xanh navy, đỏ, cam BTC) nhất quán.",
+   "Khung short0_3 so sánh $4.94B và $4.51B rất rõ. Hai số cùng cỡ chữ, thẳng hàng, và có nhãn \"Kỷ lục mới/cũ\" khác màu. Phụ đề có tô vàng từ khóa (ETF, tháng 6, $59K, số 2) giúp giữ mắt người xem.",
+   "Hook mở thẳng bằng con số lớn (-$5B) cùng câu hỏi \"Vì sao…\". Cuối video có câu hỏi tương tác (bình luận số 1/số 2) và lời nhắc quản trị rủi ro."
+  ],
+  "can_sua": [
+   "short0_5 (khoảng giây 40): thẻ giữa trống hoàn toàn khi lời đọc là \"altcoin còn chịu nặng hơn\". Màn hình chỉ có tiêu đề và phụ đề, nên chữ trên hình không khớp lời đọc và người xem thấy như video lỗi. Hãy chèn thẻ \"Altcoin chịu nặng hơn\" kèm con số, ví dụ Hyperliquid -8%. Nếu không có thẻ thì gộp cảnh này vào cảnh Hyperliquid liền sau.",
+   "short0_8 (biểu đồ BTC 30 ngày): thẻ hiện $60,504 và -24.9%, trong khi cảnh trước nói \"thủng $59K\" và cả video nói về \"một tháng\". Số trên biểu đồ lệch lời đọc và không có điểm đánh dấu mốc $59K. Hãy vẽ đường ngang $59K hoặc đánh dấu đáy trên biểu đồ. Ghi rõ mức giảm 24.9% là của CoinGecko 30 ngày, không phải của dòng vốn ETF. Biểu đồ cũng nên ở lại đến hết câu \"hồi lại hay giảm tiếp\" và vẽ xong rồi mới cắt.",
+   "short0_8 (chân thẻ): nguồn bị viết liền trong chú thích \"Dữ liệu thật CoinGecko, 30 ngày. Không phải tín hiệu mua bán\", lại lặp thêm ở góc trên phải. Hãy tách nguồn thành một dòng nhỏ riêng (như \"Nguồn: CoinGecko\" ở các thẻ khác) và để chú thích \"Không phải tín hiệu mua bán\" ở dòng khác. Chữ chú thích cũng rất nhỏ, cần tăng cỡ để đọc được trên điện thoại.",
+   "short0_0 và short0_1 (giây 0–4): hai khung gần như giống hệt nhau, chỉ phụ đề đổi, nên hook bị đứng hình khoảng 3–4 giây. Tiêu đề cố định đã có $4.94B, thẻ lại ghi \"-$5B\", thành hai số khác nhau trong cùng một màn hình. Hãy thống nhất một con số, hoặc làm số nhảy từ 0 lên -$4.94B, và đổi cảnh ở giây 2.",
+   "short0_4 (thẻ AI): thẻ chỉ có câu trích 3 dòng, không có số liệu hay hình minh họa. Khoảng một phần ba màn hình bên dưới cũng bỏ trống ở mọi khung. Hãy thêm một con số hoặc biểu tượng cho thẻ (ví dụ mũi tên đỏ \"AI bán tháo\"). Nếu có thể, dời thẻ và phụ đề xuống thấp hơn một chút để lấp khoảng trống.",
+   "short0_1, short0_2 và short0_4 (phụ đề): phụ đề bị cắt cụm giữa chừng. Ví dụ \"ETF chỉ trong một tháng?\" mở đầu bằng từ lửng, và \"khỏi Bitcoin cùng lúc.\" là đuôi của câu trước. Hãy ngắt phụ đề theo cụm trọn nghĩa, 3–5 từ mỗi lần, để mắt không phải ghép câu."
+  ],
+  "script_tips": [
+   "Mở bằng một con số kèm hậu quả, không mở bằng câu hỏi chung. Ví dụ: \"$4.94B vừa rút khỏi Bitcoin ETF, kỷ lục mọi thời đại.\" Hook gọn 8–10 từ trong 2 giây đầu, chưa cần giới thiệu kênh. Câu \"Mình là Smart Penguin Insights\" nên dời xuống cuối hoặc bỏ.",
+   "Mỗi cảnh lời đọc chỉ nên có một con số duy nhất, và cảnh hình phải có sẵn con số đó. Hãy viết kịch bản kèm gợi ý hình cho từng câu, đặc biệt câu \"altcoin chịu nặng hơn\" phải đi cùng một số cụ thể (Hyperliquid -8%). Không để câu nào đọc lúc màn hình trống.",
+   "Giữ khoảng 7–8 cảnh, mỗi cảnh 5–6 giây theo thứ tự: số kỷ lục, so sánh, nguyên nhân, giá BTC, tác động altcoin, câu hỏi cuối. Lời đọc nên bám đúng phạm vi dữ liệu trên hình (ví dụ nói rõ \"BTC giảm 24.9% trong 30 ngày\"), để số trên biểu đồ không lệch với lời đọc."
+  ],
+  "retention_risk": "Rủi ro lớn nhất là giây 2–4, vì short0_0 và short0_1 gần như đứng hình với hai con số khác nhau (-$5B và $4.94B). Tiếp theo là cảnh altcoin ở khoảng giây 40, nơi thẻ trống nên người xem dễ lướt đi. Sau đó là cảnh biểu đồ, vì số $60,504 và -24.9% lệch với \"thủng $59K\". Nhịp đổi hình chỉ khoảng 13 lần mỗi phút, ổn nhưng không đều: đầu video đứng quá lâu, cuối thì dồn nhiều cảnh.",
+  "by": "Claude"
+ },
+ {
+  "tag": "20261127-0420",
+  "at": "2026-11-27T04:40+07:00",
+  "score": 5.5,
+  "scores": {
+   "hook_3s": 5.5,
+   "hinh_anh_ro_rang": 5.5,
+   "mau_sac_brand": 7.5,
+   "nhip_do": 6,
+   "phu_de": 6.5,
+   "du_lieu_lien_quan": 7,
+   "thumbnail": 5.5,
+   "short_9x16": 5.5
+  },
+  "tot": [
+   "Thẻ so sánh 2 bên (Quý 3 +$6.34B vs cả năm −$4.57B; $75K vs $58.9K kèm −21%; $58.9K vs $53K) vẽ đúng con số đang đọc. Số to, xanh/đỏ dễ phân biệt. Nguồn nằm ở dòng nhỏ riêng, không viết liền vào chú thích.",
+   "Bộ màu thống nhất: nền sáng, chữ navy, nhấn vàng ở phụ đề, xanh/đỏ cho tăng/giảm. Tiêu đề, logo và tên kênh cố định nên nhận diện thương hiệu rõ.",
+   "Phụ đề chữ lớn, nền tối, tô vàng đúng con số quan trọng, đọc được trên điện thoại. Số liệu có liên quan trực tiếp đến luận điểm \"giá chỉ cách giá vốn 11%\"."
+  ],
+  "can_sua": [
+   "Chữ đè lên nhau ở short0_9 (cuối video): thẻ chốt \"THEO DÕI SMART PENGUIN INSIGHTS ĐỂ KHÔNG LỠ TIN NÓNG NHÉ!\" và logo đang mờ dần chồng lên thẻ câu hỏi \"Có về $53K không? Có: 1, Không: 2\". Chữ chồng chữ, không đọc được, nhìn như lỗi. Hãy cho thẻ câu hỏi tắt hẳn rồi mới hiện thẻ chốt (không cross-fade chồng), hoặc bỏ thẻ chốt.",
+   "Nhãn bị máy tự ngắt dòng giữa cụm ở short0_8 và short0_9: \"Có về $53K / không? Có: / 1, Không: 2\". Câu hỏi bị cắt giữa chừng và \"Có:\" bị tách khỏi \"1\". Viết lại thành 3 dòng chủ động: \"Về $53K không?\" / \"Có → bình luận 1\" / \"Không → bình luận 2\".",
+   "Hai số trong thẻ so sánh không thẳng hàng ở short0_3 (giây ~3 của đoạn giá): \"$75K\" nằm cao hơn \"$58.9K\" khoảng 7px, nhãn \"9/11\" và \"25/11\" lệch dòng, \"$58.9K\" còn mờ hồng khác với khung sau. Cố định cùng một baseline cho cả hai cột và không cho cột phải trượt vào lệch.",
+   "Chữ trên hình không khớp lời đọc ở short0_3: phụ đề đang nói \"Giờ cả năm 2026 đã âm 4.57B\" nhưng thẻ đã chuyển sang $75K vs $58.9K. Thẻ đang chạy trước lời khoảng 1 câu. Dời thời điểm chuyển thẻ về đúng lúc câu \"Bitcoin từ $75K…\" bắt đầu, và giữ thẻ −$4.57B cho tới hết câu.",
+   "KHÔNG ĐÁNG: short0_0 → short0_1, thẻ \"~$5B / ETF Bitcoin bị rút ròng tháng 11\" đứng yên qua 2 khung. Phụ đề \"Bitcoin ETF vừa bị rút\" lại không nói chữ \"kỷ lục\" đang có ở tiêu đề. Đập đi thay bằng 1 thẻ hook có số mới: \"−$4.94B\" cạnh \"kỷ lục từ ngày ra mắt\", hoặc so với tháng trước, rồi chuyển ngay sang thẻ sau.",
+   "KHÔNG ĐÁNG: short0_7 (\"−15% / Đáy 2022 thủng sâu dưới giá vốn\") chép lại nửa phải của thẻ short0_6 (\"Đáy 2022 −15% Dưới giá vốn\"), không thêm số hay hình mới. Gộp short0_6 và short0_7 thành một thẻ, hoặc thay short0_7 bằng biểu đồ giá với 3 vạch ngang: giá hiện tại $58.9K, giá vốn $53K, đáy 2022 (khoảng $45K).",
+   "KHÔNG ĐÁNG: short0_9 thẻ chốt \"Theo dõi… để không lỡ tin nóng nhé!\" chỉ là câu đệm kêu gọi chung chung, không có thông tin mới. Thẻ câu hỏi short0_8 cũng chép lại y nguyên phụ đề \"Theo bạn, Bitcoin có về $53K không?\". Bỏ thẻ theo dõi. Thẻ câu hỏi chỉ giữ lại để dẫn bình luận 1/2, kèm 1 số mới (khoảng cách −10% từ $58.9K xuống $53K).",
+   "Bố cục 9:16 chưa tận dụng chiều cao: thẻ trắng chỉ chiếm khoảng 1/3 màn hình, nửa dưới (từ y~730 đến hết) trống, phụ đề nằm giữa màn hình. Phần trống trên cùng (khoảng 130px) cũng thừa. Phóng thẻ to hơn khoảng 30%, cho số chiếm hết chiều ngang, và đặt phụ đề trong vùng an toàn (cách đáy khoảng 20%) để không bị nút TikTok/Shorts che.",
+   "Hook 1–2 giây yếu: giây đầu chỉ có tiêu đề nhỏ và số \"~$5B\" mà không có chữ \"kỷ lục\" ở chỗ nổi bật nhất. Phụ đề đầu \"Bitcoin ETF vừa bị rút\" bị cắt giữa câu, không có gì gây sốc. Làm chữ \"KỶ LỤC\" to, tô vàng ngay thẻ đầu và cho số \"$4.94B\" nhảy vào mạnh ở 1 giây đầu."
+  ],
+  "script_tips": [
+   "Mở bằng 1 số và 1 so sánh trong ≤ 10 chữ, ví dụ \"ETF Bitcoin vừa bị rút kỷ lục gần 5 tỷ đô, hơn cả 3 tháng trước cộng lại\". Phải có chữ \"kỷ lục\" trong câu đầu và đừng nói câu \"Cùng xem…\" nữa, vì đó là câu đệm.",
+   "Mỗi câu chỉ mang 1 con số hoặc 1 so sánh và không nhắc lại số đã nói. Thẻ hình vẽ đúng con số đó. Câu nào không có gì để vẽ thì bỏ hoặc viết lại cho có số, ví dụ \"đáy 2022 thủng giá vốn 15%\" thay cho \"đáy các chu kỳ trước đều quanh mức này\".",
+   "Giữ video dưới 45 giây với một mạch: dòng tiền rút → giá rơi → còn cách giá vốn 11% → đáy lịch sử → câu hỏi. Câu kết phải là một câu hỏi có 2 lựa chọn rõ ràng, thêm 1 số cụ thể (ví dụ \"cần giảm thêm 10%\"). Bỏ câu kêu gọi theo dõi chung chung."
+  ],
+  "retention_risk": "Hai điểm dễ làm người xem bỏ đi. (1) Giây 0–3: thẻ ~$5B đứng yên qua 2 khung, phụ đề không có chữ \"kỷ lục\", không có chuyển động hay con số gây sốc, nên người xem lướt đi. (2) Đoạn cuối (short0_6 → short0_9): thẻ đáy 2022 −15% lặp lại 2 lần, rồi thẻ câu hỏi bị thẻ theo dõi mờ chồng lên làm rối. Nhịp 14 lần đổi hình mỗi phút là ổn, nhưng nhiều khung gần giống nhau nên cảm giác vẫn chậm.",
+  "by": "Claude"
+ },
+ {
+  "tag": "20261127-1258",
+  "at": "2026-11-27T13:35+07:00",
+  "score": 5.0,
+  "scores": {
+   "hook_3s": 4.0,
+   "hinh_anh_ro_rang": 5.0,
+   "mau_sac_brand": 7.0,
+   "nhip_do": 5.5,
+   "phu_de": 7.0,
+   "du_lieu_lien_quan": 5.0,
+   "thumbnail": 4.5,
+   "short_9x16": 5.0
+  },
+  "tot": [
+   "Bố cục 9:16 sạch, nhất quán: logo kênh và tiêu đề cố định phía trên, thẻ trắng ở giữa, phụ đề nền tối ở dưới. Màu chủ đạo xanh tím và cam đồng bộ, dễ nhận diện thương hiệu.",
+   "Thẻ danh sách (short0_0 đến short0_4) làm nổi mục đang được nói bằng chữ đậm to và mờ các mục còn lại. Mắt người xem dễ theo dõi, và nội dung khớp lời đọc.",
+   "Phụ đề chữ trắng trên nền tối, to và đọc rõ trên điện thoại. Chữ vàng nhấn vào '2026' và '1' (short0_5, short0_8) đúng chỗ cần nhấn."
+  ],
+  "can_sua": [
+   "LỖI TRÌNH BÀY, short0_4 và short0_5 (biểu đồ BTC): nhãn đỏ '2025: cao dần, 2026: thủng đáy' bị cắt mép trái, chỉ còn thấy '025: cao dần...'. Ngay bên dưới, một nhãn khác ('Đáy 2022'?) bị nhãn đỏ đè lên, chỉ thấy nửa chữ. Cách sửa: đặt nhãn đỏ vào trong khung, canh giữa hoặc canh phải. Dời nhãn đáy 2022 lên trên điểm tròn, tránh vùng nhãn đỏ.",
+   "LỖI TRÌNH BÀY, short0_4 và short0_5: nhãn đỏ ghi '2025: cao dần, 2026: thủng đáy' nhưng biểu đồ vẽ từ 2021 đến 2026 và không có điểm đánh dấu đỉnh 2025 hay đáy 2026. Chữ trên hình không khớp lời đọc lúc đó ('mỗi nến là một tuần'). Cách sửa: ghim 2 điểm tròn đúng chỗ, đỉnh $126K ghi bằng số, đáy 2026 ghi bằng số. Tách nhãn thành 2 chip nhỏ, mỗi chip hiện đúng lúc lời đọc nhắc tới.",
+   "LỖI TRÌNH BÀY, short0_4 và short0_5: dòng 'Dữ liệu thật: giá BTC đóng cửa theo tuần, trục giá dạng log' là chú thích chung chung, không nêu nguồn cụ thể (sàn hay nhà cung cấp dữ liệu), chữ rất nhỏ. Cách sửa: thay bằng một dòng nguồn riêng, ví dụ 'Nguồn: Binance, nến tuần'. Chữ nhỏ nhưng phải đọc được trên điện thoại.",
+   "LỖI TRÌNH BÀY, short0_4, short0_5 và short0_6: biểu đồ có 3 đường (BTC, 200WMA, 350WMA), nhưng lời đọc không nhắc WMA lần nào. Người xem không biết WMA là gì. Cách sửa: bỏ 350WMA, hoặc thêm một câu giải thích ngắn. Trong short0_5, biểu đồ cũng bị chân phụ đề che mép dưới, cần chừa khoảng cách giữa thẻ và phụ đề.",
+   "KHÔNG ĐÁNG: short0_6 (khoảng giây 32 đến 35), thẻ '$96K vs $68K' có chữ 'Từ' và 'Xuống' mà dùng chữ 'vs' (so sánh hai bên). Thẻ chỉ lặp lại con số trong lời đọc mà không thêm gì mới. Đập đi thay bằng: số to '-29%' (từ 96K xuống 68K), thêm mũi tên đỏ đi xuống và một dòng nhỏ 'mất 28.000 USD mỗi BTC'. Đổi 'vs' thành mũi tên.",
+   "KHÔNG ĐÁNG: short0_7 (khoảng giây 41 đến 43), thẻ 'Bước 1: đánh dấu đỉnh và đáy tuần' chép nguyên câu chữ của phụ đề ('đánh dấu đỉnh và đáy gần nhất'). Dấu ngoặc kép lớn phía trên cũng không có nghĩa gì, vì đây không phải lời trích dẫn. Đập đi thay bằng ảnh biểu đồ tuần với 2 đường ngang vẽ vào đỉnh và đáy gần nhất, kèm giá cụ thể. Bỏ dấu ngoặc kép.",
+   "KHÔNG ĐÁNG: short0_0 đến short0_3 (giây 0 đến khoảng 12), phần mở dùng 3 thẻ liên tiếp 'Hai câu hỏi khi đầu tư', 'Ba lý do ở đây', 'Kế hoạch trước khi bấm mua' chỉ nhắc lại chữ trong lời đọc, không có con số hay hình mới. Đập đi thay bằng một hook có số: lấy ngay mốc '$126K xuống $68K' ở giây đầu, rồi mới nói 3 lý do.",
+   "KHÔNG ĐÁNG: short0_8 (giây 47 đến 49), thẻ 'Thoát sớm hay gồng?' kèm dòng '1 = thoát sớm, 2 = gồng' lặp lại gần như nguyên văn lời đọc 'Bình luận 1 là thoát sớm, 2 là gồng'. Câu hỏi này chưa gắn với số liệu nào để người xem có cơ sở chọn. Đập đi thay bằng: 'Đỉnh $96K, đáy $68K: bạn đã thoát ở đâu?' để người xem có mốc cụ thể mà trả lời.",
+   "Lời đọc cuối 'Đây là nội dung giáo dục, không phải lời khuyên đầu tư' không có khung hình nào trong short0_0 đến short0_9, hình cuối vẫn là thẻ câu hỏi. Cần có dòng miễn trừ nhỏ trên màn hình để khớp lời đọc, hoặc cắt câu này khỏi lời đọc."
+  ],
+  "script_tips": [
+   "Mở bằng một con số gây sốc trong 2 giây đầu, ví dụ 'BTC từ $126K xuống $68K, bạn thoát ở đâu?'. Đừng mở bằng định nghĩa 'Phân tích cơ bản cho bạn biết mua gì', vì câu này không có số và không tạo tò mò.",
+   "Mỗi câu chỉ mang 1 con số hoặc 1 so sánh, và thẻ hình vẽ đúng con số đó (số to, mũi tên %, đường vẽ trên biểu đồ). Không viết câu mà hình chỉ chép lại chữ.",
+   "Rút gọn còn 1 ý chính: lấy ví dụ BTC năm 2025 và 2026 làm xương sống. Nói 3 lý do trong 1 câu ngắn rồi dành phần lớn thời gian cho ví dụ, thay vì kể danh sách rồi mới đến ví dụ. Câu kết có việc làm cụ thể kèm mốc giá để người xem bình luận."
+  ],
+  "retention_risk": "Khoảng giây 0 đến 12 (short0_0 đến short0_3) dễ làm người xem bỏ đi nhất. Cả đoạn là danh sách chữ trên nền trắng, không có số liệu hay hình biểu đồ, hook chỉ là một định nghĩa chung. Khoảng giây 27 đến 31 (short0_4, short0_5) cũng rủi ro: biểu đồ có 3 đường WMA không được giải thích, nhãn đỏ bị cắt mép khiến người xem không đọc được kết luận chính.",
+  "by": "Claude"
+ },
+ {
+  "tag": "20261127-1409",
+  "at": "2026-11-27T14:18+07:00",
+  "score": 5.8,
+  "scores": {
+   "hook_3s": 6.5,
+   "hinh_anh_ro_rang": 4.0,
+   "mau_sac_brand": 6.0,
+   "nhip_do": 5.5,
+   "phu_de": 6.0,
+   "du_lieu_lien_quan": 5.0,
+   "thumbnail": 6.0,
+   "short_9x16": 5.5
+  },
+  "tot": [
+   "Cấu trúc thẻ so sánh trực quan, dễ hiểu",
+   "Hook đánh trúng nỗi sợ thua lỗ của nhà đầu tư"
+  ],
+  "can_sua": [
+   "short0_3: Chữ 'thấp hơn giá mua $3.7K' bị cắt mép phải, cần thu nhỏ lề",
+   "short0_5: Lỗi từ mồ côi 'BTC' đứng một mình ở dòng cuối, cần chỉnh lại ngắt dòng",
+   "short0_1: Hình ảnh bị trễ, lời đọc đã sang mốc $57.7K nhưng hình vẫn hiện $126K",
+   "KHÔNG ĐÁNG: short0_5 chép lại nguyên văn lời đọc, thay bằng số $2.5K kích thước lớn",
+   "KHÔNG ĐÁNG: short0_9 giữ hình cũ quá lâu, thay bằng ảnh bìa 'Bài 2' để dẫn dắt",
+   "short0_7: Thẻ so sánh không khớp hoàn toàn với câu lệnh 'việc làm ngay'"
+  ],
+  "script_tips": [
+   "Ưu tiên cấu trúc 'Nếu... thì...' để tăng tính cam kết cho con số",
+   "Lược bỏ các từ đệm như 'ví dụ', 'khoảng' để đẩy nhanh tốc độ truyền tin"
+  ],
+  "retention_risk": "Đoạn từ giây thứ 3 đến 5 dễ mất người xem do hình ảnh minh họa không khớp với con số đáy $57.7K đang đọc.",
+  "by": "Gemini"
+ }
+]

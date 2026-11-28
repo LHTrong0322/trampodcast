@@ -1,0 +1,105 @@
+{
+ "episode": "20261117-1118",
+ "date": "2026-11-17T00:00:00+07:00",
+ "items": [
+  {
+   "headline": "HĐQT Nvidia bác bỏ việc phục chức cho Jensen Huang",
+   "hook": "Nvidia chấn động khi bác bỏ Jensen Huang",
+   "key_stat": "4 phần trăm",
+   "key_label": "Mức sụt giảm của cổ phiếu Nvidia",
+   "narration": "Hội đồng quản trị Nvidia vừa chính thức bác bỏ khả năng phục chức cho ông Jensen Huang để tập trung điều tra các sai phạm cá nhân. Ngay lập tức, cổ phiếu Nvidia đã lao dốc 4 phần trăm, kéo theo sự sụt giảm của toàn bộ chỉ số Nasdaq và thị trường crypto. Sự bất ổn tại đầu tàu AI này đang gây ra tâm lý lo ngại, khiến dòng tiền tháo chạy khỏi các tài sản rủi ro bao gồm cả Bitcoin và các dự án AI crypto.",
+   "visual_query": "corporate boardroom meeting",
+   "visual_fallback": "technology",
+   "category": "Vĩ mô & Chính trị",
+   "importance": 5,
+   "tickers": [
+    "BTC",
+    "NVDA"
+   ],
+   "is_update": true,
+   "sources": [
+    {
+     "name": "Cointelegraph",
+     "url": "https://cointelegraph.com/news/nvidia-shares-fall-4-as-board-reportedly-rules-out-huang-return?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound"
+    },
+    {
+     "name": "Telegram @WatcherGuru",
+     "url": "https://t.me/WatcherGuru/16074"
+    },
+    {
+     "name": "Telegram @WatcherGuru",
+     "url": "https://t.me/WatcherGuru/16072"
+    },
+    {
+     "name": "Cointelegraph",
+     "url": "https://cointelegraph.com/markets/bitcoin-price-fails-to-hold-65k-us-stocks-drop-on-ai-nerves?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound"
+    }
+   ],
+   "t0": 0.0,
+   "t1": 21.02
+  },
+  {
+   "headline": "Cá voi Bitcoin ngắn hạn lỗ kỷ lục 8 tỷ đô",
+   "hook": "Cá voi Bitcoin gánh lỗ kỷ lục 8 tỷ đô",
+   "key_stat": "8 tỷ đô",
+   "key_label": "Khoản lỗ chưa thực hiện của cá voi",
+   "narration": "Dữ liệu on-chain cho thấy các cá voi ngắn hạn đang gánh khoản lỗ chưa thực hiện lên tới gần 8 tỷ đô, mức cao nhất trong lịch sử. Việc giá Bitcoin xuyên thủng các ngưỡng hỗ trợ quan trọng và chạm đáy 4 tháng tại vùng 62,000 đô đã khiến nhiều vị thế leverage bị quét sạch. Mức lỗ lớn của các tay chơi lớn thường dẫn đến áp lực bán tháo hoảng loạn nếu giá Bitcoin không sớm lấy lại các mốc hỗ trợ tâm lý quan trọng.",
+   "visual_query": "whale underwater deep sea",
+   "visual_fallback": "finance",
+   "category": "Thị trường",
+   "importance": 5,
+   "tickers": [
+    "BTC"
+   ],
+   "is_update": false,
+   "sources": [
+    {
+     "name": "Decrypt",
+     "url": "https://decrypt.co/383366/bitcoin-2-billion-liquidation-weekend-traders-watching-60000"
+    },
+    {
+     "name": "Decrypt",
+     "url": "https://decrypt.co/383301/morning-minute-crypto-hits-extreme-fear-as-bitcoin-plunges"
+    },
+    {
+     "name": "CoinDesk",
+     "url": "https://www.coindesk.com/markets/2026/11/16/bitcoin-slips-to-usd64-000-after-usd2-billion-weekend-flush"
+    },
+    {
+     "name": "Telegram @wublockchainenglish",
+     "url": "https://t.me/wublockchainenglish/26837"
+    }
+   ],
+   "t0": 21.02,
+   "t1": 42.42
+  },
+  {
+   "headline": "Bitcoin ETF bị rút ròng hơn 1 tỷ đô trong tuần qua",
+   "hook": "Bitcoin ETF bị rút ròng nghìn tỷ đô",
+   "key_stat": "1,07 tỷ đô",
+   "key_label": "Số tiền rút ròng khỏi Bitcoin ETF",
+   "narration": "Các quỹ ETF Bitcoin tại Mỹ vừa kết thúc tuần qua với mức âm 1,07 tỷ đô, đánh dấu tuần thứ 3 liên tiếp đỏ lửa. Đáng chú ý khi quỹ IBIT của BlackRock dẫn đầu đà bán ra, trong khi ETF Ethereum cũng mất thêm gần 400 triệu đô. Việc lực mua từ các tổ chức qua ETF đang yếu đi rõ rệt cho thấy dòng tiền mới vào thị trường đang bị đình trệ, một tín hiệu mà nhà đầu tư cần đặc biệt lưu tâm.",
+   "visual_query": "stock trading screen red bearish",
+   "visual_fallback": "government",
+   "category": "Dòng tiền & ETF",
+   "importance": 5,
+   "tickers": [
+    "BTC",
+    "ETH"
+   ],
+   "is_update": true,
+   "sources": [
+    {
+     "name": "Telegram @unfolded",
+     "url": "https://t.me/unfolded/20580"
+    },
+    {
+     "name": "Telegram @wublockchainenglish",
+     "url": "https://t.me/wublockchainenglish/26839"
+    }
+   ],
+   "t0": 42.42,
+   "t1": 64.29
+  }
+ ]
+}

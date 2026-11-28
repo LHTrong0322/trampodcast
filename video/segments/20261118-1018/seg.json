@@ -1,0 +1,114 @@
+{
+ "episode": "20261118-1018",
+ "date": "2026-11-18T00:00:00+07:00",
+ "items": [
+  {
+   "headline": "Nvidia báo lãi kỷ lục nhưng Hội đồng quản trị vẫn bác bỏ Jensen Huang",
+   "hook": "Nvidia lãi kỷ lục nhưng vẫn gạt bỏ nhà sáng lập",
+   "key_stat": "115,8 tỷ đô",
+   "key_label": "Doanh thu quý 3 của Nvidia",
+   "narration": "Nvidia vừa công bố doanh thu quý 3 đạt mức kỷ lục 115,8 tỷ đô, tăng 103 phần trăm so với cùng kỳ năm ngoái. Tuy nhiên, bất chấp kết quả kinh doanh ấn tượng, hội đồng quản trị vẫn kiên quyết bác bỏ mong muốn quay lại của Jensen Huang và đang ráo riết tìm kiếm CEO mới. Đáng chú ý là SEC đã chính thức vào cuộc điều tra vụ từ chức đầy bất ngờ này. Đây là tín hiệu quan trọng mà giới crypto cần theo dõi sát sao, vì bất ổn tại đầu tàu công nghệ như Nvidia thường kéo theo áp lực bán lan tỏa lên Bitcoin và các tài sản mạo hiểm.",
+   "visual_query": "Nvidia building exterior",
+   "visual_fallback": "technology",
+   "category": "Vĩ mô & Chính trị",
+   "importance": 5,
+   "tickers": [
+    "NVDA",
+    "BTC"
+   ],
+   "is_update": true,
+   "sources": [
+    {
+     "name": "Telegram @ThuanCapital",
+     "url": "https://t.me/ThuanCapital/33699"
+    },
+    {
+     "name": "Cointelegraph",
+     "url": "https://cointelegraph.com/markets/nvidia-board-rejects-huang-comeback-amid-record-116b-quarter?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound"
+    },
+    {
+     "name": "Decrypt",
+     "url": "https://decrypt.co/383513/nvidia-board-shuts-down-jensen-huang-comeback"
+    },
+    {
+     "name": "Telegram @ThuanCapital",
+     "url": "https://t.me/ThuanCapital/33696"
+    }
+   ],
+   "t0": 0.0,
+   "t1": 31.42
+  },
+  {
+   "headline": "Các ngân hàng Mỹ đồng loạt tăng gấp đôi tỷ trọng Bitcoin ETF",
+   "hook": "Phố Wall âm thầm gom mạnh Bitcoin ETF",
+   "key_stat": "2,35 tỷ đô",
+   "key_label": "Wells Fargo nắm giữ Bitcoin ETF",
+   "narration": "Các báo cáo tài chính quý 3 cho thấy làn sóng gom hàng Bitcoin cực mạnh từ các tổ chức hàng đầu. Wells Fargo đã tăng gấp đôi lượng nắm giữ quỹ ETF của BlackRock lên mức 2,35 tỷ đô, trong khi Goldman Sachs cũng nâng giá trị nắm giữ Bitcoin lên 1,28 tỷ đô và sở hữu hơn 1,2 tỷ đô Ethereum. Thậm chí quỹ phòng hộ Brevan Howard đã tăng gấp ba lần vị thế của mình tại IBIT. Việc các định chế tài chính lớn liên tục gia tăng tỷ trọng bất chấp biến động giá cho thấy niềm tin dài hạn vào crypto đang trở thành xu hướng chủ lưu tại Phố Wall.",
+   "visual_query": "Wall Street bull statue",
+   "visual_fallback": "finance",
+   "category": "Dòng tiền & ETF",
+   "importance": 5,
+   "tickers": [
+    "BTC",
+    "ETH",
+    "IBIT"
+   ],
+   "is_update": false,
+   "sources": [
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/converge/tradfi-and-fintech/brevan-howard-triples-ibit-stake-to-1-1-billion"
+    },
+    {
+     "name": "Bitcoin Magazine",
+     "url": "https://bitcoinmagazine.com/news/wells-fargo-ibit-stake-doubles-strategy-cut"
+    },
+    {
+     "name": "Bitcoin Magazine",
+     "url": "https://bitcoinmagazine.com/news/goldman-sachs-bitcoin-etf-holdings"
+    },
+    {
+     "name": "Telegram @Fivemincryptoann",
+     "url": "https://t.me/Fivemincryptoann/14973"
+    }
+   ],
+   "t0": 31.42,
+   "t1": 62.7
+  },
+  {
+   "headline": "World Bank hợp tác cùng Circle thử nghiệm dùng USDC giải ngân",
+   "hook": "World Bank dùng USDC giải ngân cho 96 quốc gia",
+   "key_stat": "96 quốc gia",
+   "key_label": "Phạm vi dự án thử nghiệm USDC",
+   "narration": "Ngân hàng Thế giới đang bắt tay cùng Circle và Citi để nghiên cứu sử dụng stablecoin USDC nhằm tăng tốc độ và giảm chi phí giải ngân các quỹ phát triển. Nền tảng mang tên FundsChain dự kiến sẽ phục vụ hơn 350 dự án tại 96 quốc gia, thay thế các phương thức chuyển tiền truyền thống chậm chạp. Đây là một bước tiến khổng lồ, khẳng định tính thực tiễn và pháp lý của stablecoin bảo chứng bằng đô la Mỹ. Sự công nhận từ một tổ chức đa phương như World Bank sẽ tạo tiền đề vững chắc cho việc ứng dụng công nghệ blockchain vào hệ thống tài chính chính thống.",
+   "visual_query": "World Bank building headquarters",
+   "visual_fallback": "government",
+   "category": "Pháp lý",
+   "importance": 5,
+   "tickers": [
+    "USDC"
+   ],
+   "is_update": false,
+   "sources": [
+    {
+     "name": "Telegram @Fivemincryptoann",
+     "url": "https://t.me/Fivemincryptoann/14979"
+    },
+    {
+     "name": "Telegram @unfolded",
+     "url": "https://t.me/unfolded/20583"
+    },
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/converge/tradfi-and-fintech/dbs-circle-add-24-7-institutional-usdc-access-in-asia"
+    },
+    {
+     "name": "Decrypt",
+     "url": "https://decrypt.co/383485/world-bank-circle-citi-test-stablecoins-development-payments"
+    }
+   ],
+   "t0": 62.7,
+   "t1": 93.95
+  }
+ ]
+}

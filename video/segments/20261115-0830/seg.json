@@ -1,0 +1,115 @@
+{
+ "episode": "20261115-0830",
+ "date": "2026-11-15T00:00:00+07:00",
+ "items": [
+  {
+   "headline": "Bitcoin rơi xuống đáy 3 tháng, hơn 2 tỷ đô bị thanh lý",
+   "hook": "Bitcoin rơi đáy 3 tháng, 2 tỷ đô bốc hơi",
+   "key_stat": "2,05 tỷ đô",
+   "key_label": "Tổng giá trị thanh lý toàn thị trường",
+   "narration": "Bitcoin vừa có cú lao dốc xuyên thủng mốc 63.000 đô, ghi nhận mức giảm hơn 24 phần trăm so với đỉnh tháng 10. Trong 24 giờ qua, toàn thị trường đã bị quét sạch hơn 2 tỷ đô lệnh thanh lý, với 95 phần trăm là các lệnh long bị tiêu diệt khi giá giảm sâu không có nhịp hồi. Đây là đợt rũ bỏ đòn bẩy lớn nhất từ đầu năm 2026, buộc nhà đầu tư phải đánh giá lại ngưỡng hỗ trợ dài hạn và rủi ro từ các quỹ ETF.",
+   "visual_query": "cryptocurrency market crash charts",
+   "visual_fallback": "finance",
+   "category": "Thị trường",
+   "importance": 5,
+   "tickers": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "XRP"
+   ],
+   "is_update": true,
+   "sources": [
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/markets/binance-liquidations-near-800-million-as-bitcoin-sinks"
+    },
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/markets/bitcoin-sinks-below-63-000-as-multiweek-slide-deepens"
+    },
+    {
+     "name": "Telegram @WatcherGuru",
+     "url": "https://t.me/WatcherGuru/16044"
+    },
+    {
+     "name": "Telegram @Fivemincryptoann",
+     "url": "https://t.me/Fivemincryptoann/14947"
+    }
+   ],
+   "t0": 0.0,
+   "t1": 22.55
+  },
+  {
+   "headline": "Chiến dịch đòi ghế CEO Nvidia cho Jensen Huang vượt 100.000 chữ ký",
+   "hook": "100 ngàn người đòi CEO Nvidia trở lại",
+   "key_stat": "100.000",
+   "key_label": "Chữ ký ủng hộ Jensen Huang",
+   "narration": "Sau khi Jensen Huang từ chức, đơn kiến nghị phục chức cho ông đã bùng nổ lên hơn 100.000 chữ ký. Elon Musk và các cổ đông lớn nắm giữ hơn 2 tỷ đô cổ phiếu Nvidia cũng đã công khai yêu cầu Hội đồng quản trị đưa ông trở lại, trong khi giới chức Mỹ vẫn đang chia rẽ về các cáo buộc. Sự bất ổn của tập đoàn chip AI lớn nhất thế giới này đang tác động trực tiếp đến nhóm AI token và tâm lý chung của thị trường tài chính.",
+   "visual_query": "corporate office building exterior",
+   "visual_fallback": "technology",
+   "category": "Vĩ mô & Chính trị",
+   "importance": 5,
+   "tickers": [
+    "NVDA"
+   ],
+   "is_update": true,
+   "sources": [
+    {
+     "name": "Decrypt",
+     "url": "https://decrypt.co/383280/the-week-jensen-huang-fell-how-spy-scandal-toppled-nvidia-ceo"
+    },
+    {
+     "name": "Telegram @WatcherGuru",
+     "url": "https://t.me/WatcherGuru/16039"
+    },
+    {
+     "name": "Telegram @WatcherGuru",
+     "url": "https://t.me/WatcherGuru/16037"
+    },
+    {
+     "name": "Telegram @WatcherGuru",
+     "url": "https://t.me/WatcherGuru/16033"
+    }
+   ],
+   "t0": 22.55,
+   "t1": 43.95
+  },
+  {
+   "headline": "ETF Bitcoin rút ròng 7 phiên liên tiếp, BlackRock mất đà",
+   "hook": "Dòng vốn ETF Bitcoin rút ròng 7 ngày qua",
+   "key_stat": "185 triệu đô",
+   "key_label": "Số tiền rút ròng trong một ngày",
+   "narration": "Các quỹ ETF Bitcoin tại Mỹ tiếp tục mất thêm 185 triệu đô vào ngày 13 tháng 11, đánh dấu chuỗi rút ròng 7 phiên liên tiếp. Đáng chú ý, quỹ của BlackRock dẫn đầu đà rút vốn với 144 triệu đô, trong khi các quỹ ETF Ethereum chỉ thu hút được hơn 2 triệu đô ít ỏi. Việc dòng vốn tổ chức quay đầu mạnh mẽ cho thấy sự thận trọng cực độ của các nhà đầu tư lớn trước những biến động vĩ mô hiện tại.",
+   "visual_query": "institutional investor office trading",
+   "visual_fallback": "government",
+   "category": "Dòng tiền & ETF",
+   "importance": 4,
+   "tickers": [
+    "BTC",
+    "ETH"
+   ],
+   "is_update": true,
+   "sources": [
+    {
+     "name": "The Block",
+     "url": "https://www.theblock.co/news/markets/2026-11-14-bitcoin-etfs-lose-1-billion-for-the-second-week-in-a-row-as-crypto-funds-except-one-continue-bleeding-440337"
+    },
+    {
+     "name": "Telegram @ThuanCapital",
+     "url": "https://t.me/ThuanCapital/33653"
+    },
+    {
+     "name": "Cointelegraph",
+     "url": "https://cointelegraph.com/markets/bitcoin-etf-outflows-2-35-billion-blackrock-11-session-streak?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound"
+    },
+    {
+     "name": "Telegram @wublockchainenglish",
+     "url": "https://t.me/wublockchainenglish/26826"
+    }
+   ],
+   "t0": 43.95,
+   "t1": 64.39
+  }
+ ]
+}

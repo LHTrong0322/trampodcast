@@ -1,0 +1,108 @@
+{
+ "episode": "20261116-0832",
+ "date": "2026-11-16T00:00:00+07:00",
+ "items": [
+  {
+   "headline": "CZ phủ nhận tin Binance xả coin khi thị trường thanh lý 5,9 tỷ đô",
+   "hook": "CZ ra tay cứu vãn tâm lý thị trường",
+   "key_stat": "5,9 tỷ đô",
+   "key_label": "Tổng giá trị thanh lý tuần qua",
+   "narration": "Sau khi giá Bitcoin xuyên thủng mốc 63.000 đô, toàn bộ thị trường đã ghi nhận con số thanh lý khổng lồ lên tới 5,9 tỷ đô chỉ trong một tuần. Trước những tin đồn về việc Binance bán tháo gây áp lực lên giá, nhà sáng lập CZ đã lên tiếng khẳng định sàn không hề xả crypto. Thậm chí, ông còn tiết lộ vừa dùng stablecoin để mua thêm Bitcoin với niềm tin vào sự tăng trưởng dài hạn. Động thái này của CZ đã giúp dập tắt tin đồn và tạo điểm tựa tâm lý quan trọng cho các investor giữa lúc áp lực bán từ Mỹ đang tăng cao.",
+   "visual_query": "crypto exchange graph",
+   "visual_fallback": "finance",
+   "category": "Thị trường",
+   "importance": 5,
+   "tickers": [
+    "BTC"
+   ],
+   "is_update": true,
+   "sources": [
+    {
+     "name": "Telegram @Fivemincryptoann",
+     "url": "https://t.me/Fivemincryptoann/14953"
+    },
+    {
+     "name": "The Block",
+     "url": "https://www.theblock.co/news/markets/2026-11-15-cz-denies-binance-sold-crypto-as-bitcoin-bounces-from-four-month-low-near-62000-440807"
+    },
+    {
+     "name": "Telegram @wublockchainenglish",
+     "url": "https://t.me/wublockchainenglish/26836"
+    },
+    {
+     "name": "Telegram @WatcherGuru",
+     "url": "https://t.me/WatcherGuru/16051"
+    }
+   ],
+   "t0": 0.0,
+   "t1": 27.98
+  },
+  {
+   "headline": "Bitcoin ETF bị rút ròng 7 phiên liên tiếp với 2,1 tỷ đô trong tháng 11",
+   "hook": "Dòng tiền Bitcoin ETF tháo chạy mạnh mẽ",
+   "key_stat": "2,1 tỷ đô",
+   "key_label": "Số tiền rút ròng trong tháng 11",
+   "narration": "Làn sóng rút vốn khỏi các quỹ ETF Bitcoin tại Mỹ vẫn chưa có dấu hiệu dừng lại khi vừa ghi nhận phiên rút ròng thứ 7 liên tiếp. Tổng cộng trong tháng 11, các quỹ này đã bị rút khoảng 2,1 tỷ đô, riêng quỹ Bitcoin ETF trong tuần qua âm hơn 1 tỷ đô và Ethereum ETF cũng bị rút gần 399 triệu đô. Dòng tiền từ các tổ chức đang quay đầu mạnh mẽ do áp lực từ lạm phát PPI cao, đồng thời có sự chuyển dịch vốn sang các thương vụ IPO lớn khác, khiến thị trường crypto gặp nhiều thách thức trong ngắn hạn.",
+   "visual_query": "investment fund chart",
+   "visual_fallback": "finance",
+   "category": "Dòng tiền & ETF",
+   "importance": 5,
+   "tickers": [
+    "BTC",
+    "ETH"
+   ],
+   "is_update": true,
+   "sources": [
+    {
+     "name": "Decrypt",
+     "url": "https://decrypt.co/383282/bitcoin-etfs-lose-2-1-billion-november-outflow-streak-seven-days"
+    },
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/markets/us-bitcoin-etfs-shed-1-91-billion-in-seven-sessions"
+    },
+    {
+     "name": "Telegram @ThuanCapital",
+     "url": "https://t.me/ThuanCapital/33662"
+    },
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/markets/bitcoin-hits-four-month-low-as-etf-outflows-persist"
+    }
+   ],
+   "t0": 27.98,
+   "t1": 55.83
+  },
+  {
+   "headline": "Hacker chiếm quyền 64.000 máy đào Bitcoin để điều hướng hashrate",
+   "hook": "Vụ tấn công hạ tầng khai thác cực lớn",
+   "key_stat": "64.000",
+   "key_label": "Số lượng máy đào bị chiếm quyền",
+   "narration": "Một vụ tấn công nghiêm trọng vừa nhắm vào hạ tầng khai thác khi hacker chiếm quyền điều khiển của 64.000 máy đào Bitcoin và điều hướng lượng hashrate khổng lồ sang một pool khác. Dù hacker đã thay đổi địa chỉ nhận thưởng nhưng sự cố đã được khắc phục kịp thời và chưa có block nào bị khai thác trái phép. Đơn vị cung cấp phần mềm bị nghi có lỗ hổng là Luxor đã cam kết bồi thường toàn bộ doanh thu bị mất cho khách hàng. Đây là lời cảnh báo sắc lẹm cho các miner về rủi ro bảo mật khi sử dụng các phần mềm quản lý tập trung.",
+   "visual_query": "computer server room",
+   "visual_fallback": "technology",
+   "category": "Bảo mật",
+   "importance": 4,
+   "tickers": [
+    "BTC"
+   ],
+   "is_update": false,
+   "sources": [
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/hacks/luxor-pledges-full-compensation-for-commander-hijack"
+    },
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/hacks/corex-reports-bitcoin-mining-power-hijacked-to-ocean"
+    },
+    {
+     "name": "Telegram @wublockchainenglish",
+     "url": "https://t.me/wublockchainenglish/26835"
+    }
+   ],
+   "t0": 55.83,
+   "t1": 82.64
+  }
+ ]
+}

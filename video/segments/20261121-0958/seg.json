@@ -1,0 +1,131 @@
+{
+ "episode": "20261121-0958",
+ "date": "2026-11-21T00:00:00+07:00",
+ "items": [
+  {
+   "headline": "Bitcoin rơi về đáy 57,778 USD, Nasdaq tệ nhất từ 2020",
+   "hook": "Bitcoin thủng mốc 60,000 đô rồi cả nhà ơi",
+   "key_stat": "$1.57B",
+   "key_label": "Tổng giá trị thanh lý trong 24 giờ",
+   "narration": "Chào buổi sáng cả nhà, Mai Hương đã quay trở lại với những cập nhật nóng nhất đây. Tiếp đà giảm từ các phiên trước, giá Bitcoin đã chính thức xuyên thủng ngưỡng hỗ trợ tâm lý 60,000 đô và chạm đáy mới tại vùng 57,778 đô. Cú sập này diễn ra trong bối cảnh chỉ số Nasdaq trải qua tuần tồi tệ nhất kể từ tháng 3 năm 2020 khi giới đầu tư tháo chạy khỏi cổ phiếu AI. Đã có hơn 1,57 tỷ đô bị thanh lý trên toàn thị trường crypto, trong đó phe long chiếm tới 90 phần trăm, cho thấy áp lực bán đang cực kỳ khủng khiếp.",
+   "visual_query": "stock market crash",
+   "visual_fallback": "finance",
+   "visual_queries": [
+    "red stock chart",
+    "stressed trader office",
+    "digital numbers falling",
+    "Nasdaq building exterior"
+   ],
+   "category": "Thị trường",
+   "importance": 5,
+   "tickers": [
+    "BTC",
+    "ETH"
+   ],
+   "is_update": true,
+   "sources": [
+    {
+     "name": "Telegram @Fivemincryptoann",
+     "url": "https://t.me/Fivemincryptoann/15013"
+    },
+    {
+     "name": "Telegram @Fivemincryptoann",
+     "url": "https://t.me/Fivemincryptoann/15012"
+    },
+    {
+     "name": "Telegram @wublockchainenglish",
+     "url": "https://t.me/wublockchainenglish/26902"
+    },
+    {
+     "name": "Telegram @unfolded",
+     "url": "https://t.me/unfolded/20592"
+    }
+   ],
+   "t0": 0.0,
+   "t1": 30.32
+  },
+  {
+   "headline": "Hacker Binance tẩu tán 600 triệu USD Ethereum",
+   "hook": "600 triệu đô Ethereum đang bị tẩu tán",
+   "key_stat": "$600M",
+   "key_label": "Ethereum bị hacker di chuyển",
+   "narration": "Thông tin chấn động về vụ hack sàn Binance đang có diễn biến mới cực kỳ phức tạp. Bất chấp lệnh phong tỏa 6,5 tỷ đô từ tòa án, các báo cáo on-chain cho thấy hacker đã bắt đầu chiến dịch rửa tiền quy mô lớn khi di chuyển gần 600 triệu đô Ethereum qua THORChain và Chainflip chỉ trong 2 ngày. Đáng lo ngại là sau 3 tuần điều tra, các cơ quan chức năng mới chỉ thu hồi được vỏn vẹn 32 triệu đô. Việc tài sản bị tẩu tán nhanh chóng đang đặt ra thách thức cực lớn cho công tác khắc phục hậu quả ở quy mô lớn.",
+   "visual_query": "cyber security breach",
+   "visual_fallback": "technology",
+   "visual_queries": [
+    "hacker code matrix",
+    "digital wallet security",
+    "money transfer animation",
+    "court house building"
+   ],
+   "category": "Bảo mật",
+   "importance": 5,
+   "tickers": [
+    "ETH",
+    "BTC"
+   ],
+   "is_update": true,
+   "sources": [
+    {
+     "name": "Telegram @Fivemincryptoann",
+     "url": "https://t.me/Fivemincryptoann/15012"
+    },
+    {
+     "name": "Telegram @wublockchainenglish",
+     "url": "https://t.me/wublockchainenglish/26904"
+    },
+    {
+     "name": "Cointelegraph",
+     "url": "https://cointelegraph.com/news/binance-hacker-600m-eth-routes-thorchain-chainflip?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound"
+    },
+    {
+     "name": "Telegram @wublockchainenglish",
+     "url": "https://t.me/wublockchainenglish/26895"
+    }
+   ],
+   "t0": 30.32,
+   "t1": 58.51
+  },
+  {
+   "headline": "Bitcoin ETF rút ròng kỷ lục 582 triệu USD",
+   "hook": "Các ông lớn tháo chạy khỏi Bitcoin ETF",
+   "key_stat": "$582M",
+   "key_label": "Tổng mức rút ròng trong ngày",
+   "narration": "Áp lực bủa vây thị trường crypto khi các quỹ Bitcoin ETF giao ngay tại Mỹ ghi nhận ngày rút ròng mạnh nhất trong 3 tuần qua với hơn 582 triệu đô. Điểm bất ngờ nhất chính là quỹ IBIT của BlackRock, vốn luôn dẫn đầu về dòng tiền vào, lần đầu tiên ghi nhận mức rút ròng kỷ lục 541 triệu đô trong một phiên. Động thái thoái vốn đồng loạt từ các tổ chức lớn là tín hiệu cho thấy phe bò đang tạm thời rút lui để chờ đợi mức giá thấp hơn hoặc sự ổn định từ các yếu tố vĩ mô.",
+   "visual_query": "institutional investment office",
+   "visual_fallback": "investment",
+   "visual_queries": [
+    "modern bank interior",
+    "ETF trading screen",
+    "BlackRock logo building",
+    "businessman walking away"
+   ],
+   "category": "Dòng tiền & ETF",
+   "importance": 4,
+   "tickers": [
+    "BTC"
+   ],
+   "is_update": false,
+   "sources": [
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/markets/bitcoin-etf-outflows-hit-582-million-most-since-oct-30"
+    },
+    {
+     "name": "The Block",
+     "url": "https://www.theblock.co/news/markets/2026-11-20-us-spot-bitcoin-etfs-see-582-million-in-daily-net-outflows-as-november-total-nears-3-5-billion-444217"
+    },
+    {
+     "name": "Cointelegraph",
+     "url": "https://cointelegraph.com/markets/blackrock-ibit-record-single-day-outflow?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound"
+    },
+    {
+     "name": "Telegram @wublockchainenglish",
+     "url": "https://t.me/wublockchainenglish/26892"
+    }
+   ],
+   "t0": 58.51,
+   "t1": 85.78
+  }
+ ]
+}

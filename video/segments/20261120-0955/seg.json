@@ -1,0 +1,130 @@
+{
+ "episode": "20261120-0955",
+ "date": "2026-11-20T00:00:00+07:00",
+ "items": [
+  {
+   "headline": "Anthropic IPO lớn nhất lịch sử với định giá 2 nghìn tỷ đô la",
+   "hook": "Thương vụ IPO lớn nhất lịch sử gọi tên Anthropic",
+   "key_stat": "$2T",
+   "key_label": "Định giá cao nhất khi chào sàn",
+   "narration": "Cổ phiếu Anthropic đã chính thức chào sàn Nasdaq với mức giá mở cửa 111,5 đô la, tăng 34 phần trăm so với mức giá chốt IPO ban đầu. Mặc dù đà tăng đã hạ nhiệt về cuối phiên, nhưng đây vẫn là một bài kiểm tra sức mạnh quan trọng cho nhóm cổ phiếu AI và ảnh hưởng trực tiếp đến thanh khoản toàn cầu. Đối với giới đầu tư crypto, việc sàn FTX từng bán hớ số cổ phần này với giá chỉ hơn 1 tỷ đô la trong khi giá trị thực tế hiện tại lên tới 40 tỷ đô la là một tổn thất vô cùng đáng tiếc cho quá trình bồi thường chủ nợ.",
+   "visual_query": "stock exchange trading floor",
+   "visual_fallback": "technology",
+   "visual_queries": [
+    "Nasdaq building exterior",
+    "trader celebrating screen",
+    "AI technology visualization",
+    "stock price graph up"
+   ],
+   "category": "Vĩ mô & Chính trị",
+   "importance": 5,
+   "tickers": [
+    "ANT"
+   ],
+   "is_update": true,
+   "sources": [
+    {
+     "name": "Telegram @Fivemincryptoann",
+     "url": "https://t.me/Fivemincryptoann/15002"
+    },
+    {
+     "name": "Telegram @Fivemincryptoann",
+     "url": "https://t.me/Fivemincryptoann/15000"
+    },
+    {
+     "name": "Telegram @WatcherGuru",
+     "url": "https://t.me/WatcherGuru/16171"
+    },
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/frontier/ai/anthropic-falls-below-100-after-34-nasdaq-debut-pop"
+    }
+   ],
+   "t0": 0.0,
+   "t1": 29.15
+  },
+  {
+   "headline": "Bitcoin rơi xuống đáy 61.200 đô la do các quỹ ETF bị rút ròng",
+   "hook": "Bitcoin thủng đáy khi cá voi rút tiền",
+   "key_stat": "$61,220",
+   "key_label": "Mức giá thấp nhất từ tháng 7",
+   "narration": "Bitcoin vừa xuyên thủng ngưỡng hỗ trợ quan trọng để chạm mức thấp nhất kể từ tháng 7 tại vùng giá 61.220 đô la trên sàn Coinbase. Áp lực bán tháo chủ yếu đến từ việc các quỹ Bitcoin ETF tại Mỹ ghi nhận thêm hơn 306 triệu đô la rút ròng, dẫn đầu bởi quỹ IBIT của BlackRock. Đà giảm mạnh đi kèm với việc dòng tiền tổ chức tháo chạy cho thấy tâm lý lo ngại rủi ro đang tăng cao, các nhà đầu tư cần đặc biệt cẩn trọng với các lệnh leverage trong vùng biến động mạnh này.",
+   "visual_query": "red stock market chart",
+   "visual_fallback": "finance",
+   "visual_queries": [
+    "digital currency falling graph",
+    "man stressed at computer",
+    "Bitcoin physical coin crack",
+    "institutional office building"
+   ],
+   "category": "Thị trường",
+   "importance": 5,
+   "tickers": [
+    "BTC"
+   ],
+   "is_update": false,
+   "sources": [
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/markets/bitcoin-sets-new-selloff-low-of-61-220-on-coinbase"
+    },
+    {
+     "name": "Bitcoin Magazine",
+     "url": "https://bitcoinmagazine.com/markets/bitcoin-price-slumps-under-62000"
+    },
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/markets/bitcoin-falls-below-62-000-to-its-lowest-since-july-on-coinbase"
+    },
+    {
+     "name": "Telegram @WatcherGuru",
+     "url": "https://t.me/WatcherGuru/16173"
+    }
+   ],
+   "t0": 29.15,
+   "t1": 54.42
+  },
+  {
+   "headline": "Stablecoin USDS bốc hơi 1,5 tỷ đô la vì hacker Triều Tiên",
+   "hook": "Hacker Triều Tiên khiến stablecoin USDS chao đảo",
+   "key_stat": "$1.5B",
+   "key_label": "Vốn hóa bốc hơi sau báo cáo",
+   "narration": "Vốn hóa của stablecoin USDS, trước đây là DAI, đã sụt giảm 35 phần trăm sau khi một báo cáo tiết lộ hệ thống của dự án đã xử lý hàng trăm triệu đô la liên quan đến hacker Triều Tiên. Những lo ngại về việc các cơ quan quản lý như OFAC có thể đóng băng tài sản dự trữ đã khiến người dùng ồ ạt rút vốn, buộc dự án phải tăng lợi suất staking lên tới hơn 24 phần trăm để giữ chân dòng tiền. Sự cố này không chỉ đe dọa tính phi tập trung của dự án mà còn đặt USDS vào tầm ngắm pháp lý nghiêm ngặt trong thời gian tới.",
+   "visual_query": "hacker laptop dark",
+   "visual_fallback": "security",
+   "visual_queries": [
+    "cyber security threat code",
+    "digital coins disappearing",
+    "government building flags",
+    "user panic smartphone"
+   ],
+   "category": "Dự án",
+   "importance": 5,
+   "tickers": [
+    "USDS",
+    "DAI"
+   ],
+   "is_update": false,
+   "sources": [
+    {
+     "name": "Telegram @Fivemincryptoann",
+     "url": "https://t.me/Fivemincryptoann/15001"
+    },
+    {
+     "name": "CoinDesk",
+     "url": "https://www.coindesk.com/business/2026/11/19/sky-s-usds-stablecoin-shrinks-35-as-usd1-5-billion-exits-reserves-after-illicit-finance-report"
+    },
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/defi/sky-raises-stusds-yield-to-24-74-app-shows-0-liquidity"
+    },
+    {
+     "name": "The Defiant",
+     "url": "https://thedefiant.io/news/defi/sky-s-usdc-exit-reserve-falls-1-69-billion-in-hours"
+    }
+   ],
+   "t0": 54.42,
+   "t1": 81.77
+  }
+ ]
+}
