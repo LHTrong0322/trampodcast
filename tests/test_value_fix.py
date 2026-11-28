@@ -16,11 +16,10 @@ def test_loc_loi_khong_dang():
     assert VF.problems_from(rv, pre) == ["KHÔNG ĐÁNG: thẻ 2 lặp phụ đề", "KHÔNG ĐÁNG: câu đệm"]
 
 
-def test_so_moi_chua_kiem_chung_van_dung():
-    """Trọng 27/11 14:10: số chưa kiểm chứng được vẫn dùng, chỉ chặn số đã kiểm chứng ra sai."""
+def test_so_moi_khong_bi_chan():
+    """Trọng 28/11: bỏ kiểm chứng nguồn, số mới không bị chặn."""
     new = {"narration": NAR + " Giá có thể về 42 nghìn.", "beats": [{"at": "ETF bị rút", "type": "bignum"}]}
     assert VF.validate(OLD, new) == ""
-    assert "sai" in VF.validate(OLD, new, wrong=[{"value": "42 nghìn"}])
 
 
 def test_chan_the_khong_bam_loi_doc():
@@ -56,32 +55,14 @@ def _writer(prompt):
             "changes": [{"cu": "a", "moi": "b", "ly_do": "c"}], "new_facts": [FACT]}
 
 
-def test_so_moi_co_nguon_da_kiem_chung_thi_duoc_dung():
-    ok = lambda prompt: {"results": [{"i": 0, "ok": True}]}
-    new, ch, why = VF.rewrite(json.loads(json.dumps(OLD)), ["x"], run=_writer, check=ok)
-    assert why == "" and new["sources"][0]["url"].startswith("https") and any("kiểm chứng" in c["ly_do"] for c in ch)
-
-
-def test_so_moi_kiem_chung_ra_sai_thi_giu_ban_cu():
-    bad = lambda prompt: {"results": [{"i": 0, "verdict": "sai", "why": "giá vốn thật là $45K"}]}
-    new, ch, why = VF.rewrite(json.loads(json.dumps(OLD)), ["x"], run=_writer, check=bad)
-    assert new is None and "kiểm chứng ra sai" in why
-
-
-def test_so_moi_chua_kiem_chung_duoc_van_dung():
-    """Trọng 27/11 14:10: tra không ra nguồn (hoặc không có link) không phải là sai, vẫn dùng và ghi chú."""
-    unk = lambda prompt: {"results": [{"i": 0, "verdict": "chua_ro", "why": "không tìm thấy bài"}]}
-    new, ch, why = VF.rewrite(json.loads(json.dumps(OLD)), ["x"], run=_writer, check=unk)
-    assert why == "" and new is not None and any("chưa kiểm chứng" in c["ly_do"] for c in ch)
+def test_tu_do_sang_tao_khong_kiem_chung():
+    """Trọng 28/11: không còn bot kiểm chứng; số có link thì lưu nguồn, không link vẫn dùng."""
+    new, ch, why = VF.rewrite(json.loads(json.dumps(OLD)), ["x"], run=_writer)
+    assert why == "" and new["sources"][0]["url"].startswith("https")
     nolink = lambda prompt: {**_writer(prompt), "new_facts": [{**FACT, "url": ""}]}
-    new, ch, why = VF.rewrite(json.loads(json.dumps(OLD)), ["x"], run=nolink, check=lambda p: {"results": []})
-    assert why == "" and new is not None
-
-
-def test_kieu_tra_cu_ok_false_khong_coi_la_sai():
-    old_style = lambda prompt: {"results": [{"i": 0, "ok": False, "why": "bài không có số này"}]}
-    good, wrong = VF.verify([FACT], run=old_style)
-    assert good == [] and wrong == []
+    new, ch, why = VF.rewrite(json.loads(json.dumps(OLD)), ["x"], run=nolink)
+    assert why == "" and new is not None and not new.get("sources")
+    assert not hasattr(VF, "verify") and not hasattr(VF, "VERIFY")
 
 
 def test_chan_the_sai_khung():

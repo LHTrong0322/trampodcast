@@ -89,16 +89,12 @@ Xác minh nâng cao YouTube không làm giảm reach, đã xác minh. 8 luật d
 - PHÁT HIỆN LÀ SỬA NGAY (Trọng 27/11, value_fix.py, test tests/test_value_fix.py):
   A. news_flash.value_gate_script: MỌI kịch bản (kể cả viết tay, đã duyệt) chấm "đáng xem" TRƯỚC khi đọc giọng; dưới 8 thì viết lại câu không đáng.
   B. Sau review (xem trước hoặc sau dựng) còn lỗi "KHÔNG ĐÁNG" thì viết lại lời đọc, đọc giọng lại, dựng lại (tối đa 1 lần mỗi lượt).
-  Chốt an toàn: thẻ bám đúng cụm lời đọc, không gạch dài. SỐ MỚI (Trọng 27/11): ĐƯỢC thêm nếu làm video giá trị hơn, bot tra bằng
-  WebSearch/WebFetch, mỗi số kèm link + trích dẫn, rồi bot thứ hai (value_fix.verify) mở đúng link xác nhận; số không link hoặc trượt
-  kiểm chứng thì cả bản viết lại bị bỏ, giữ bản cũ. Số đã kiểm chứng lưu ở plan["sources"], tin "✂️" liệt kê kèm link.
+  Chốt an toàn: thẻ bám đúng cụm lời đọc, không gạch dài, độ dài, khung thẻ. Số có link thì lưu ở plan["sources"] cho mô tả video.
   Mỗi lần viết lại đều báo Telegram "✂️" kèm câu cũ, câu mới, lý do. Tắt bằng env VALUE_FIX=0.
-- ĐÚNG SỰ THẬT > ĐÚNG NGUỒN (Trọng 27/11): đừng chăm chăm đúng nguồn được đưa. Số chứng minh được ở bất kỳ nguồn uy tín nào là hợp lệ;
-  bot chấm và bot viết lại KHÔNG được xoá số chỉ vì "không có trong nguồn", phải tra web, chỉ bỏ khi số sai hoặc tra kỹ không ra.
-  Dữ liệu lịch sử phổ biến (đáy/đỉnh chu kỳ trước, ATH, FTX, Luna, halving) là kiến thức chung: giữ, tra không ra cũng không được bỏ.
-  Kịch bản viết tay nên kèm plan["sources"] (value, claim, source, url, quote) để bot biết số đã có chứng cứ.
+- BỎ KIỂM CHỨNG NGUỒN (Trọng 28/11, thay luật 27/11): "bỏ verify source ra khỏi code, Claude tự do sáng tạo hơn thay vì rập khuôn".
+  Không còn bot kiểm chứng (value_fix.verify đã xoá). Bot viết và bot chấm KHÔNG đòi nguồn, KHÔNG xoá số vì thiếu nguồn,
+  được thêm số liệu, ví dụ, câu chuyện; chỉ không nói điều biết chắc là sai.
 - Luật giá trị + khớp lời đọc không còn đá nhau: mỗi câu lời đọc mang 1 con số, thẻ hình VẼ con số đó, không chép câu chữ.
-- SỐ CHƯA KIỂM CHỨNG (Trọng 27/11 14:10): số/ý chưa kiểm chứng được nguồn VẪN DÙNG bình thường (ghi chú "chưa kiểm chứng" trong tin Telegram). CHỈ bỏ số đã kiểm chứng ra SAI hoặc nói quá. value_fix.verify trả (đúng, sai); validate chỉ chặn số sai.
 - Bố cục short sau review 27/11 (ETF 5.5): khung kết nền trắng che ngay khung đầu (hết chồng chữ lên thẻ câu hỏi); câu phụ của thẻ chữ/câu hỏi
   tách mỗi câu 1 dòng, không ngắt giữa "Có: 1"; thẻ so sánh 2 bên hiện cùng lúc (hết lệch hàng); thẻ cao 600 (trước 560), phụ đề bottom 430;
   beats_for khớp được cả khi giọng đọc chép số khác ("75 nghìn" thành "75.000"/"bảy mươi lăm"), test tests/test_beat_timing.py.
