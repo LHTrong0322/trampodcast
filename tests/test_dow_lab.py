@@ -34,3 +34,22 @@ def test_trang_thai_khong_nhin_truoc_tuong_lai():
     # cắt dữ liệu tới nến t thì trạng thái tại t không đổi
     for t in (30, 40, 50):
         assert DL.states(UP[:t + 1])[t] == st[t]
+
+
+def test_dow_khung_ngay(monkeypatch):
+    """Trọng 28/11: Dow khung D, cắt đúng đoạn from/to, khoá dữ liệu khớp beats.tsx."""
+    import datetime as dt
+    import insight_lab as L
+    px = UP + DOWN[1:]
+    d0 = dt.date(2025, 1, 1)
+    rows = [((d0 + dt.timedelta(days=i)).isoformat(), p) for i, p in enumerate(px * 3)]
+    monkeypatch.setattr(L, "_btc_daily", lambda: rows)
+    b = {"type": "dow", "tf": "D", "from": "2025-02", "to": "2025-05", "k": 4}
+    plan = {"sections": [{"beats": [b]}]}
+    data = {}
+    L.dow_data(plan, data)
+    key = L.dow_key(b)
+    assert key == "2025-02:4:D:2025-05"
+    d = data["dow"][key]
+    assert d["tf"] == "D" and d["dates"][0].startswith("2025-02") and d["dates"][-1].startswith("2025-05")
+    assert all(0 <= s["i"] < len(d["price"]) for s in d["swings"])

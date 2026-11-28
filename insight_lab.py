@@ -564,6 +564,33 @@ def _btc_weekly() -> list:
     return []
 
 
+def _btc_daily() -> list:
+    """Trọng 28/11: Dow khung D. Giá đóng cửa BTC theo NGÀY: Yahoo, dự phòng Binance 1d (1000 nến gần nhất)."""
+    import time as _t
+    try:
+        r = requests.get("https://query1.finance.yahoo.com/v8/finance/chart/BTC-USD",
+                         params={"period1": 1577836800, "period2": int(_t.time()), "interval": "1d"},
+                         headers={"User-Agent": "Mozilla/5.0"}, timeout=40)
+        res = ((r.json().get("chart") or {}).get("result") or [{}])[0]
+        ts = res.get("timestamp") or []
+        cl = (((res.get("indicators") or {}).get("quote") or [{}])[0].get("close")) or []
+        out = [(datetime.utcfromtimestamp(t).strftime("%Y-%m-%d"), c) for t, c in zip(ts, cl) if c]
+        if len(out) > 400:
+            return out
+        log(f"   ! Yahoo BTC ngày chỉ có {len(out)} điểm")
+    except Exception as ex:
+        log(f"   ! Yahoo BTC ngày: {ex}")
+    try:
+        js = requests.get("https://data-api.binance.vision/api/v3/klines",
+                          params={"symbol": "BTCUSDT", "interval": "1d", "limit": 1000}, timeout=30).json()
+        out = [(datetime.utcfromtimestamp(k[0] / 1000).strftime("%Y-%m-%d"), float(k[4])) for k in js if isinstance(k, list)]
+        if len(out) > 200:
+            return out[:-1]   # bỏ nến ngày đang chạy
+    except Exception as ex:
+        log(f"   ! Binance BTC ngày: {ex}")
+    return []
+
+
 def _gtrends(keyword: str, since: str = "2019-01-01") -> list:
     """Google Trends (toàn cầu) cho 1 từ khoá: [(ngày 'YYYY-MM-DD', điểm 0-100)], theo tuần/tháng tuỳ độ dài.
     Gọi thẳng API của trang trends.google.com (cách pytrends làm), thử lại khi bị 429. Lỗi thì trả []."""
@@ -644,28 +671,52 @@ def wma_data(plan: dict, data: dict):
                 log("   ! bỏ biểu đồ 200WMA: không lấy được giá BTC theo tuần")
 
 
+def dow_key(b: dict) -> str:
+    """Khoá dữ liệu của 1 beat dow, khớp với beats.tsx: "from:k" (khung tuần) hoặc "from:k:D[:to]" (khung ngày)."""
+    tf = str(b.get("tf") or "W").upper()
+    k = f"{b.get('from') or '2018'}:{int(b.get('k') or 4)}"
+    return k if tf != "D" else k + ":D" + (f":{b['to']}" if b.get("to") else "")
+
+
 def dow_data(plan: dict, data: dict):
-    """Trọng 27/11: chart lý thuyết Dow trên giá BTC tuần thật (beat type "dow": đỉnh đáy HH, HL, LH, LL, xu hướng tăng/giảm).
-    Beat: {"type": "dow", "from": "2018", "k": 4}. Trọng 28/11: BỎ backtest. Không lấy được giá thì bỏ beat (ghi log)."""
+    """Trọng 27/11: chart lý thuyết Dow trên giá BTC thật (beat type "dow": đỉnh đáy HH, HL, LH, LL).
+    Beat: {"type": "dow", "from": "2018" hoặc "2025-06", "k": 4, "tf": "W" | "D", "to": "2025-10" (tuỳ chọn)}.
+    Trọng 28/11: bỏ backtest; thêm khung D (giá ngày). Không lấy được giá thì bỏ beat (ghi log)."""
     import dow_lab as DL
     secs = [("hook_beats", plan), ("intro_beats", plan)] + [("beats", s) for s in plan.get("sections", [])]
-    keys = {(str(b.get("from") or "2018"), int(b.get("k") or 4)) for k, s in secs for b in (s.get(k) or []) if b.get("type") == "dow"}
-    if not keys:
+    beats = [b for k, s in secs for b in (s.get(k) or []) if b.get("type") == "dow"]
+    if not beats:
         return
-    rows = _btc_weekly()
-    if len(rows) < 200:
+    rows = {"W": None, "D": None}
+    data["dow"] = {}
+    drop = set()
+    for b in beats:
+        tf = "D" if str(b.get("tf") or "W").upper() == "D" else "W"
+        if rows[tf] is None:
+            rows[tf] = _btc_daily() if tf == "D" else _btc_weekly()
+        r = rows[tf]
+        if len(r) < 200:
+            drop.add(id(b))
+            log(f"   ! bỏ chart Dow khung {tf}: không lấy được giá BTC")
+            continue
+        key = dow_key(b)
+        if key in data["dow"]:
+            continue
+        frm, to, k = str(b.get("from") or "2018"), str(b.get("to") or "9999"), int(b.get("k") or 4)
+        keep = [(i, d, p) for i, (d, p) in enumerate(r) if d[:len(frm)] >= frm and d[:len(to)] <= to]
+        if len(keep) < 30:
+            drop.add(id(b))
+            continue
+        lo, hi = keep[0][0], keep[-1][0]
+        px = [p for _, p in r[:hi + 1]]
+        sw = [{**x, "i": x["i"] - lo} for x in DL.label_swings(DL.pivots(px, k)) if x["i"] >= lo]
+        data["dow"][key] = {"dates": [d for _, d, _ in keep], "price": [p for _, _, p in keep], "swings": sw,
+                            "states": DL.states(px, k)[lo:], "tf": tf}
+        log(f"   Dow BTC khung {tf} {frm} tới {keep[-1][1]} (k={k}): {len(sw)} đỉnh đáy")
+    if drop:
         for k, s in secs:
             if s.get(k):
-                s[k] = [b for b in s[k] if b.get("type") != "dow"]
-        log("   ! bỏ chart Dow: không lấy được giá BTC theo tuần")
-        return
-    dates, px = [d for d, _ in rows], [p for _, p in rows]
-    data["dow"] = {}
-    for yr, k in sorted(keys):
-        start = next((i for i, d in enumerate(dates) if d >= f"{yr}-01-01"), 0)
-        sw = [{**x, "i": x["i"] - start} for x in DL.label_swings(DL.pivots(px, k)) if x["i"] >= start]
-        data["dow"][f"{yr}:{k}"] = {"dates": dates[start:], "price": px[start:], "swings": sw, "states": DL.states(px, k)[start:]}
-        log(f"   Dow BTC tuần từ {yr} (k={k}): {len(sw)} đỉnh đáy")
+                s[k] = [b for b in s[k] if id(b) not in drop]
 
 
 def _stock_series(t: str, days: int) -> list:

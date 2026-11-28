@@ -9,7 +9,7 @@ export type Side = {label: string; value: string; logo?: string | null; tone?: '
 export type Beat = {
   s: number;
   type: 'bignum' | 'versus' | 'dots' | 'flow' | 'statement' | 'chart' | 'logos' | 'question' | 'race' | 'matrix' | 'wma' | 'trend' | 'photo' | 'dow';
-  from?: string; k?: number; mode?: 'swings'; n?: number;
+  from?: string; k?: number; mode?: 'swings'; n?: number; tf?: 'W' | 'D'; to?: string;
   src?: string;
   value?: string; label?: string; logo?: string | null; tone?: 'up' | 'down' | 'flat';
   left?: Side; right?: Side;
@@ -297,7 +297,7 @@ export const BeatPanel: React.FC<{beats: Beat[]; t: number; sceneDur: number; da
       case 'matrix': return <Matrix b={b} w={w} h={h} />;
       case 'race': return <Race b={b} w={w} h={h} data={data} />;
       case 'trend': return data?.trends?.[b.keyword || 'Bitcoin']?.values?.length ? <Trend b={b} w={w} h={h} data={data} /> : <Statement b={{...b, text: b.label || 'Google Trends'}} w={w} h={h} />;
-      case 'dow': { const dk = `${b.from || '2018'}:${b.k || 4}`;
+      case 'dow': { const dk = `${b.from || '2018'}:${b.k || 4}` + (b.tf === 'D' ? `:D${b.to ? ':' + b.to : ''}` : '');
         return data?.dow?.[dk]?.price?.length ? <Dow b={b} w={w} h={h} d={data.dow[dk]} /> : <Statement b={{...b, text: b.label || 'Lý thuyết Dow'}} w={w} h={h} />; }
       case 'wma': return data?.wma?.price?.length ? <Wma b={b} w={w} h={h} data={data} /> : <Statement b={{...b, text: b.label || '200WMA'}} w={w} h={h} />;
       case 'chart': {
@@ -424,14 +424,30 @@ export const Dow: React.FC<{b: Beat; w: number; h: number; d: any}> = ({b, w, h,
   const m = Math.max(2, Math.round(n * prog));
   const line = px.slice(0, m).map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
   const shown = (i: number) => i < m;
-  const years = dates.map((dt, i) => [dt.slice(0, 4), i] as [string, number]).filter(([yr], j, a) => j > 0 && yr !== a[j - 1][0])
-    .filter(([yr]) => big || Number(yr) % 2 === 0);
-  const sw: any[] = (d.swings || []).slice(-(b.n || (big ? 14 : 10)));
+  // Trọng 28/11 (khung D): đoạn ngắn dưới 2 năm thì mốc theo quý (vd 7/2025), dài hơn thì mốc theo năm
+  const shortSpan = n > 1 && (Date.parse(dates[n - 1]) - Date.parse(dates[0])) < 2 * 365 * 864e5;
+  const years = shortSpan
+    ? dates.map((dt, i) => [`${Number(dt.slice(5, 7))}/${dt.slice(0, 4)}`, i, dt.slice(5, 7)] as [string, number, string])
+      .filter(([, , mo], j, a) => j > 0 && mo !== a[j - 1][2] && ['01', '04', '07', '10'].includes(mo)).map(([l, i]) => [l, i] as [string, number])
+    : dates.map((dt, i) => [dt.slice(0, 4), i] as [string, number]).filter(([yr], j, a) => j > 0 && yr !== a[j - 1][0])
+      .filter(([yr]) => big || Number(yr) % 2 === 0);
+  // Trọng 28/11: khung D có rất nhiều đỉnh đáy, nhãn chồng nhau (HHHHHH). Chọn đỉnh đáy RÕ nhất trước (lệch giá lớn nhất
+  // so với 2 đỉnh đáy kề bên), bỏ nhãn quá sát nhãn đã đặt, tối đa b.n nhãn, rồi xếp lại theo thời gian.
+  const all: any[] = d.swings || [];
+  const prom = (j: number) => Math.max(...[all[j - 1], all[j + 1]].filter(Boolean).map((o: any) => Math.abs(Math.log(all[j].v) - Math.log(o.v))), 0);
+  const cap = b.n || (big ? 14 : 10), gap = big ? 86 : 70;
+  const sw: any[] = [];
+  all.map((s, j) => ({s, p: prom(j)})).sort((p, q) => q.p - p.p).forEach(({s}) => {
+    if (sw.length >= cap) return;
+    if (sw.some((o) => Math.abs(x(o.i) - x(s.i)) < gap && (o.tp === s.tp || Math.abs(y(o.v) - y(s.v)) < 60))) return;
+    sw.push(s);
+  });
+  sw.sort((p, q) => p.i - q.i);
   const BTC = '#F7931A';
   return (
     <Card w={w} h={h} pad={0}>
       <div style={{position: 'absolute', left: 40, top: 28, right: 40, fontSize: big ? 42 : 38, fontWeight: 800, color: C.ink}}>
-        {b.label || 'BTC khung tuần: đỉnh và đáy'}</div>
+        {b.label || (d.tf === 'D' ? 'BTC khung ngày: đỉnh và đáy' : 'BTC khung tuần: đỉnh và đáy')}</div>
       <svg width={w} height={h} style={{position: 'absolute', inset: 0}}>
         {years.map(([yr, i]) => <g key={yr}>
           <line x1={x(i)} x2={x(i)} y1={pad.t} y2={pad.t + H} stroke={C.line} strokeWidth={2} />
@@ -443,7 +459,7 @@ export const Dow: React.FC<{b: Beat; w: number; h: number; d: any}> = ({b, w, h,
             fill={/^H[HL]$/.test(s.label) ? C.green : C.red} fontFamily={FONT}>{s.label}</text></g> : null)}
       </svg>
       <div style={{position: 'absolute', left: 40, bottom: 14, fontSize: 24, fontWeight: 600, color: C.muted}}>
-        {b.sub || 'Dữ liệu thật: BTC đóng cửa tuần, đỉnh đáy xác định tự động theo Dow'}</div>
+        {b.sub || `Dữ liệu thật: BTC đóng cửa ${d.tf === 'D' ? 'ngày' : 'tuần'}, đỉnh đáy xác định tự động theo Dow`}</div>
     </Card>
   );
 };
