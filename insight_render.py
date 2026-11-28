@@ -341,6 +341,15 @@ def prep_public(lab: Path):
         shutil.copytree(ROOT / "assets" / "stickers", RD / "stickers")
 
 
+def lint_layout(props: dict, work: Path, ic: dict) -> dict | None:
+    """Trọng 28/11: máy đo bố cục chạy trước khi xuất (chữ đè, bị che, bị cắt). Tắt bằng insight.layout_lint: false."""
+    if ic.get("layout_lint", True) is False or os.getenv("LAYOUT_LINT", "1") == "0":
+        return None
+    import layout_lint as LL
+    log("📐 Máy đo bố cục (không dùng AI)")
+    return LL.check(props, work)
+
+
 def run_remotion(props: dict, out: Path, frames: str = ""):
     pj = ROOT / "remotion" / "props.json"
     pj.write_text(json.dumps(props, ensure_ascii=False), encoding="utf-8")
@@ -467,9 +476,11 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     tag = lab.name
     long_path = out_dir / f"smart-penguin-{tag}-16x9.mp4"
     log(f"Dựng video dài · {total / 60:.1f} phút · giọng {voice}")
-    run_remotion(_guard(props), long_path, frames)
+    _guard(props)
+    layout = lint_layout(props, out_dir / "layout-long", ic) if not frames else None
+    run_remotion(props, long_path, frames)
     res = {"long": long_path, "shorts": [], "chapters": chapters, "duration": total, "voice": voice, "plan": plan, "data": data,
-           "scenes": scenes}
+           "scenes": scenes, "layout": layout}
     if not shorts or frames:
         return res
     # ---- video ngắn 9:16: mỗi insight hay nhất 1 video, cắt ở cuối câu, ≤ shorts_max_seconds ----
@@ -536,8 +547,10 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
         _guard(sprops)
         import preflight as PF   # Trọng 24/11: soát hình bằng mắt (Claude) trước khi dựng, tự sửa chữ trên thẻ nếu xấu
         pre = PF.check_short(sprops, out_dir / f"preflight{n + 1}")
-        run_remotion(_guard(sprops), sp)
-        res["shorts"].append({"path": sp, "section": i, "title": sprops["shortTitle"], "preflight": pre})
+        _guard(sprops)
+        lay = lint_layout(sprops, out_dir / f"layout-short{n + 1}", ic)
+        run_remotion(sprops, sp)
+        res["shorts"].append({"path": sp, "section": i, "title": sprops["shortTitle"], "preflight": pre, "layout": lay})
     return res
 
 

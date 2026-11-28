@@ -475,7 +475,30 @@ def review_avg(gem, cfg, res: dict, thumb: Path | None, n: int = 2) -> dict:
                                / max(1, sum(1 for r in runs if k in r["scores"])) * 2) / 2 for k in keys}
     base["score"] = round(sum(float(r.get("score") or 0) for r in runs) / len(runs), 2)
     base["runs"] = [r.get("score") for r in runs]
-    return base
+    return with_layout(base, res)
+
+
+def with_layout(rv: dict, res: dict) -> dict:
+    """Trọng 28/11: lỗi máy đo bố cục là lỗi CHẮC CHẮN (đo vị trí chữ thật, không phải AI đoán).
+    Đưa lên đầu can_sua để bot sửa, và hạ điểm: còn lỗi nặng thì hình rõ ràng tối đa 5, điểm tổng tối đa 6."""
+    lays = [("video dài", res.get("layout"))] + [(f"short {j + 1}", s.get("layout")) for j, s in enumerate(res.get("shorts") or [])]
+    found, serious = [], 0
+    for name, lay in lays:
+        if not lay:
+            continue
+        serious += int(lay.get("serious") or 0)
+        found += [f"LỖI TRÌNH BÀY (máy đo, chắc chắn) {name}, {x}" for x in (lay.get("lines") or [])[:6]]
+    if not found:
+        return rv
+    rv = dict(rv)
+    rv["can_sua"] = found + list(rv.get("can_sua") or [])
+    rv["layout_serious"] = serious
+    if serious:
+        sc = dict(rv.get("scores") or {})
+        sc["hinh_anh_ro_rang"] = min(5.0, float(sc.get("hinh_anh_ro_rang", 5) or 5))
+        rv["scores"] = sc
+        rv["score"] = min(6.0, float(rv.get("score") or 6))
+    return rv
 
 
 def review_draft(lab: Path, res: dict, out: Path, label: str = "Bản nháp") -> dict:

@@ -1,3 +1,4 @@
+import {LayoutProbe} from './probe';
 import React from 'react';
 import {AbsoluteFill, Audio, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {ShortThumb} from './ShortThumb';
@@ -71,6 +72,7 @@ export const InsightShort: React.FC<InsightProps> = (props) => {
         {cover && f < 40 ? <AbsoluteFill style={{opacity: interpolate(f, [26, 40], [1, 0], clamp)}}><ShortThumb {...cover} /></AbsoluteFill> : null}
         <div style={{position: 'absolute', left: 0, bottom: 0, height: 8, width: (f / durationInFrames) * width, background: ac}} />
         {cta && f >= cta.from * 30 ? <EndCard text={cta.text} t={f - cta.from * 30} /> : null}
+        {(props as any).lint ? <LayoutProbe /> : null}
       </AbsoluteFill>
     </AccentCtx.Provider>
   );

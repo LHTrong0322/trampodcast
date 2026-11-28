@@ -1,3 +1,4 @@
+import {LayoutProbe} from './probe';
 import React from 'react';
 import {AbsoluteFill, Audio, Img, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {HookImpact} from './HookImpact';
@@ -369,6 +370,7 @@ export const Insight: React.FC<InsightProps> = (props) => {
         </Sequence>
       ))}
       <AccentCtx.Provider value={tone(cur?.project?.color || DEFAULT_ACCENT)}><Chrome /></AccentCtx.Provider>
+      {(props as any).lint ? <LayoutProbe /> : null}
     </AbsoluteFill>
   );
 };
