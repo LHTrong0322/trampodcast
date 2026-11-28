@@ -9,7 +9,7 @@ export type Side = {label: string; value: string; logo?: string | null; tone?: '
 export type Beat = {
   s: number;
   type: 'bignum' | 'versus' | 'dots' | 'flow' | 'statement' | 'chart' | 'logos' | 'question' | 'race' | 'matrix' | 'wma' | 'trend' | 'photo' | 'dow';
-  from?: string; k?: number; mode?: 'swings' | 'backtest'; n?: number;
+  from?: string; k?: number; mode?: 'swings'; n?: number;
   src?: string;
   value?: string; label?: string; logo?: string | null; tone?: 'up' | 'down' | 'flat';
   left?: Side; right?: Side;
@@ -409,15 +409,13 @@ const Trend: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, d
 };
 
 // Trọng 27/11: chart lý thuyết Dow trên giá BTC tuần THẬT (insight_lab.dow_data, cùng quy tắc đỉnh đáy với dow() của radar-scanner).
-// mode "swings": đánh dấu đỉnh/đáy HH, HL (xanh) và LH, LL (đỏ). mode "backtest": tô nền xanh lúc Dow tăng (cầm BTC),
-// mũi tên mua/bán, bảng so sánh cầm khi Dow tăng với mua rồi giữ.
+// Đánh dấu đỉnh/đáy HH, HL (xanh) và LH, LL (đỏ). Trọng 28/11: bỏ hẳn kiểu backtest.
 export const Dow: React.FC<{b: Beat; w: number; h: number; d: any}> = ({b, w, h, d}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const px: number[] = d.price, dates: string[] = d.dates, n = px.length;
-  const bt = b.mode === 'backtest';
   const big = w >= 1300;
-  const pad = {l: 40, r: big ? 60 : 40, t: 120, b: bt ? (big ? 210 : 260) : 118};
+  const pad = {l: 40, r: big ? 60 : 40, t: 120, b: 118};
   const W = w - pad.l - pad.r, H = h - pad.t - pad.b;
   const lo = Math.log(Math.min(...px) * 0.9), hi = Math.log(Math.max(...px) * 1.08);
   const x = (i: number) => pad.l + (i / (n - 1)) * W;
@@ -429,38 +427,21 @@ export const Dow: React.FC<{b: Beat; w: number; h: number; d: any}> = ({b, w, h,
   const years = dates.map((dt, i) => [dt.slice(0, 4), i] as [string, number]).filter(([yr], j, a) => j > 0 && yr !== a[j - 1][0])
     .filter(([yr]) => big || Number(yr) % 2 === 0);
   const sw: any[] = (d.swings || []).slice(-(b.n || (big ? 14 : 10)));
-  const bands: [number, number][] = [];
-  if (bt) { let s0 = -1; (d.states || []).forEach((st: number, i: number) => {
-    if (st === 1 && s0 < 0) s0 = i; if (st !== 1 && s0 >= 0) { bands.push([s0, i]); s0 = -1; } });
-    if (s0 >= 0) bands.push([s0, n - 1]); }
-  const st = d.stats || {};
-  const pct = (v: number) => `${v >= 0 ? '+' : '-'}${Math.round(Math.abs(v)).toLocaleString('vi-VN')}%`;
-  const statsOn = interpolate(f, [Math.round(fps * 2.0), Math.round(fps * 2.6)], [0, 1], clamp);
   const BTC = '#F7931A';
   return (
     <Card w={w} h={h} pad={0}>
       <div style={{position: 'absolute', left: 40, top: 28, right: 40, fontSize: big ? 42 : 38, fontWeight: 800, color: C.ink}}>
-        {b.label || (bt ? 'Cầm BTC khi Dow tăng' : 'BTC khung tuần: đỉnh và đáy')}</div>
+        {b.label || 'BTC khung tuần: đỉnh và đáy'}</div>
       <svg width={w} height={h} style={{position: 'absolute', inset: 0}}>
-        {bands.map(([a, z], k) => shown(a) ? <rect key={k} x={x(a)} y={pad.t} width={Math.max(2, x(Math.min(z, m - 1)) - x(a))} height={H}
-          fill={C.green} opacity={0.13} /> : null)}
         {years.map(([yr, i]) => <g key={yr}>
           <line x1={x(i)} x2={x(i)} y1={pad.t} y2={pad.t + H} stroke={C.line} strokeWidth={2} />
           <text x={x(i) + 8} y={pad.t + H + 34} fontSize={28} fontWeight={700} fill={C.muted} fontFamily={FONT}>{yr}</text></g>)}
         <polyline points={line} fill="none" stroke={BTC} strokeWidth={5} strokeLinejoin="round" strokeLinecap="round" />
-        {!bt ? sw.map((s, k) => shown(s.i) ? <g key={k}>
+        {sw.map((s, k) => shown(s.i) ? <g key={k}>
           <circle cx={x(s.i)} cy={y(s.v)} r={11} fill="#fff" stroke={/^H[HL]$/.test(s.label) ? C.green : C.red} strokeWidth={5} />
           <text x={x(s.i)} y={y(s.v) + (s.tp === 'H' ? -22 : 44)} textAnchor="middle" fontSize={big ? 30 : 28} fontWeight={900}
-            fill={/^H[HL]$/.test(s.label) ? C.green : C.red} fontFamily={FONT}>{s.label}</text></g> : null) : null}
-        {bt ? (d.signals || []).map((s: any, k: number) => shown(s.i) ? <text key={k} x={x(s.i)} y={y(s.v) + (s.side === 'buy' ? 46 : -20)}
-          textAnchor="middle" fontSize={34} fontWeight={900} fill={s.side === 'buy' ? C.green : C.red} fontFamily={FONT}>
-          {s.side === 'buy' ? '▲' : '▼'}</text> : null) : null}
+            fill={/^H[HL]$/.test(s.label) ? C.green : C.red} fontFamily={FONT}>{s.label}</text></g> : null)}
       </svg>
-      {bt ? <div style={{position: 'absolute', left: 40, right: 40, bottom: 52, display: 'flex', flexDirection: big ? 'row' : 'column', gap: big ? 40 : 10,
-        fontSize: big ? 34 : 32, fontWeight: 800, opacity: statsOn}}>
-        <div style={{color: C.green}}>Cầm khi Dow tăng: {pct(st.ret || 0)} · sụt tối đa {pct(st.dd || 0)}</div>
-        <div style={{color: C.muted}}>Mua rồi giữ: {pct(st.bh || 0)} · sụt tối đa {pct(st.bhdd || 0)}</div>
-      </div> : null}
       <div style={{position: 'absolute', left: 40, bottom: 14, fontSize: 24, fontWeight: 600, color: C.muted}}>
         {b.sub || 'Dữ liệu thật: BTC đóng cửa tuần, đỉnh đáy xác định tự động theo Dow'}</div>
     </Card>

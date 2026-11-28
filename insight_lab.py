@@ -359,16 +359,6 @@ def live_numbers(plan: dict, data: dict):
                 raise RuntimeError(f"Giá {m.group(2)} từ 1/1 là {v:+.0f}% nhưng kịch bản viết '{before.strip()}', cần sửa kịch bản trước khi dựng")
             r = int(5 * round(abs(v) / 5)) if abs(v) >= 10 else round(abs(v))
             return (("+" if v >= 0 else "-") + str(r)) if m.group(1) == "YTDS" else str(r)
-        def rep_dow(m):   # Trọng 27/11: số backtest Dow tính lúc dựng, khớp chart
-            st = ((data.get("dow") or {}).get(f"{m.group(1)}:{int(m.group(2) or 4)}") or {}).get("stats")
-            if not st:
-                raise RuntimeError(f"Không có dữ liệu Dow để điền {m.group(0)}, dừng dựng (không xuất video có '?')")
-            v = st[m.group(3)]
-            if m.group(3) == "trades":
-                return str(int(v))
-            v = abs(v)
-            return str(int(round(v, -1))) if v >= 1000 else str(int(round(v)))   # không dấu chấm nghìn: giọng đọc dễ đọc nhầm "1.230"
-        x = DOW_RE.sub(rep_dow, x)
         return re.sub(r"\{(YTDS?):([A-Z0-9]+)(?:\|([^}]*))?\}", rep, x)
     plan = fill(plan)
     for t, c in coins.items():
@@ -654,17 +644,12 @@ def wma_data(plan: dict, data: dict):
                 log("   ! bỏ biểu đồ 200WMA: không lấy được giá BTC theo tuần")
 
 
-DOW_RE = re.compile(r"\{DOW:(\d{4})(?:/(\d+))?:(ret|bh|dd|bhdd|trades|inmkt)\}")
-
-
 def dow_data(plan: dict, data: dict):
-    """Trọng 27/11: chart + backtest lý thuyết Dow trên giá BTC tuần thật (beat type "dow", ô số {DOW:2018:ret}).
-    Beat: {"type": "dow", "from": "2018", "k": 4, "mode": "swings" | "backtest"}. Thuật toán: dow_lab (giống bot radar).
-    Không lấy được giá thì bỏ beat (ghi log); kịch bản có ô số {DOW:...} mà không có giá thì dừng dựng."""
+    """Trọng 27/11: chart lý thuyết Dow trên giá BTC tuần thật (beat type "dow": đỉnh đáy HH, HL, LH, LL, xu hướng tăng/giảm).
+    Beat: {"type": "dow", "from": "2018", "k": 4}. Trọng 28/11: BỎ backtest. Không lấy được giá thì bỏ beat (ghi log)."""
     import dow_lab as DL
     secs = [("hook_beats", plan), ("intro_beats", plan)] + [("beats", s) for s in plan.get("sections", [])]
     keys = {(str(b.get("from") or "2018"), int(b.get("k") or 4)) for k, s in secs for b in (s.get(k) or []) if b.get("type") == "dow"}
-    keys |= {(m.group(1), int(m.group(2) or 4)) for m in DOW_RE.finditer(json.dumps(plan, ensure_ascii=False))}
     if not keys:
         return
     rows = _btc_weekly()
@@ -678,14 +663,9 @@ def dow_data(plan: dict, data: dict):
     data["dow"] = {}
     for yr, k in sorted(keys):
         start = next((i for i, d in enumerate(dates) if d >= f"{yr}-01-01"), 0)
-        bt = DL.backtest(px, start=start, k=k)
         sw = [{**x, "i": x["i"] - start} for x in DL.label_swings(DL.pivots(px, k)) if x["i"] >= start]
-        data["dow"][f"{yr}:{k}"] = {"dates": dates[start:], "price": px[start:], "swings": sw,
-                                    "signals": [{**x, "i": x["i"] - start} for x in bt["signals"]],
-                                    "states": bt["states"], "equity": bt["equity"], "bh": bt["bh"], "stats": bt["stats"]}
-        st = bt["stats"]
-        log(f"   Dow BTC tuần từ {yr} (k={k}): cầm khi Dow tăng {st['ret']:+,.0f}% (sụt tối đa {st['dd']:.0f}%, "
-            f"{st['trades']} lần mua, {st['inmkt']:.0f}% thời gian cầm) | mua rồi giữ {st['bh']:+,.0f}% (sụt tối đa {st['bhdd']:.0f}%)")
+        data["dow"][f"{yr}:{k}"] = {"dates": dates[start:], "price": px[start:], "swings": sw, "states": DL.states(px, k)[start:]}
+        log(f"   Dow BTC tuần từ {yr} (k={k}): {len(sw)} đỉnh đáy")
 
 
 def _stock_series(t: str, days: int) -> list:
@@ -1103,7 +1083,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     md = market_data(lab)
     coin_data(lab, plan, md)
     wma_data(plan, md)   # biểu đồ BTC tuần + 200WMA/350WMA (Trọng 23/11)
-    dow_data(plan, md)   # chart + backtest lý thuyết Dow trên BTC tuần (Trọng 27/11)
+    dow_data(plan, md)   # chart lý thuyết Dow trên BTC tuần (Trọng 27/11, 28/11 bỏ backtest)
     trend_data(plan, md)   # biểu đồ Google Trends (Trọng 24/11)
     plan = live_numbers(plan, md)   # Trọng 22/11: hook, biểu đồ, ảnh bìa, short dùng CÙNG một bộ số giá thật
     (lab / "data.json").write_text(json.dumps(md, ensure_ascii=False), encoding="utf-8")
