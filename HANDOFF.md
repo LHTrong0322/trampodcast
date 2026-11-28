@@ -20,6 +20,14 @@
    (mặc định 2). Hết vòng vẫn chưa đạt thì Telegram ghi "⛔ CHƯA ĐẠT, chưa nên đăng".
 6. ĐA DẠNG (video_lint.variety_issues): 1 kiểu hình tối đa 1/3 video, thẻ chữ tối đa 25%, không 3 hình liền cùng kiểu, mỗi phần có 1 hình động,
    2 phần liền nhau không cùng chuỗi hình. Viết kịch bản: kể chuyện, ví dụ, so sánh bất ngờ; KHÔNG giảng như sách giáo khoa.
+8. Rút ra từ lượt dựng Dow v6 (28/11, 5.1 đến 6.0 điểm), đã sửa tận gốc:
+   - Thẻ (Card trong beats.tsx) xén nội dung cao hơn thẻ (thẻ "Hôm nay" mất tiêu đề và dòng cuối): giờ tự đo và thu nhỏ cho vừa mỗi khung.
+   - BVP không có nét 900 mà code dùng 900 ở 18 chỗ: trình duyệt tô đậm giả, chữ nhoè. ExtraBold giờ phủ 800 đến 900. Phông giữ BVP (Trọng: phông cũ ổn).
+   - Soát chính tả từng đổi nghĩa ("ngập mạng" thành "ngập mặt"): chỉ nhận sửa lỗi gõ (khác dấu, hoặc thiếu/thừa tối đa 2 ký tự trong 1 từ).
+   - Máy đo báo oan chữ nằm dưới khung kết/ảnh bìa short: giờ bỏ qua chữ bị lớp khác che hẳn.
+   - Bot xem trước short thêm ảnh kho lạc đề (guitar, cassette): bỏ quyền thêm ảnh kho.
+   - Vòng sửa bị bỏ trắng vì bản sửa sinh lỗi khung: giờ bot được sửa lại 1 lần, có danh sách lỗi nó vừa tạo.
+   - Short cụt chữ câu sau ("Những"): điểm cắt dừng trước chữ kế tiếp.
 7. Khuôn mở đầu (Insight.tsx IntroScene): có thẻ bên phải thì tiêu đề chỉ rộng 860; mục lục hiện tới 8 phần.
 
 ## 📈 TĂNG PHÂN PHỐI KÊNH MỚI (TRỌNG CHỐT 15:32 NGÀY 26/11, áp dụng cho MỌI video từ nay)
