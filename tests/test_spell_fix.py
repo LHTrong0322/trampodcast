@@ -31,3 +31,11 @@ def test_khong_nhan_gach_dai():
     SF._CACHE.clear()
     p, lines = SF.check(PROPS, run=lambda pr: {"sua": [{"sai": "Dow", "dung": "Dow — x"}]}, log=lambda *a: None)
     assert lines == []
+
+
+def test_chi_nhan_loi_go_khong_doi_nghia():
+    """Trọng 28/11: bot từng đổi 'ngập mạng' thành 'ngập mặt'."""
+    assert not SF.small_fix("tin tốt ngập mạng", "tin tốt ngập mặt")
+    assert SF.small_fix("Wall Street Journa", "Wall Street Journal")
+    assert SF.small_fix("thuyêt", "thuyết") and SF.small_fix("Lý thuyêt Dow", "Lý thuyết Dow")
+    assert not SF.small_fix("thị trường giá", "thị trường giảm giá")

@@ -547,11 +547,16 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
             log(f"   ! short {n + 1}: không thấy cụm bắt đầu '{sp_.get('from')}', lấy từ đầu phần")
         j1, ln = _hit(sp_.get("to"), j0 or 0)
         end = min(full_dur, w_full[j1 + ln - 1]["e"] + 0.25) if j1 is not None else full_dur
+        if j1 is not None and j1 + ln < len(w_full):   # Trọng 28/11: short bị cụt chữ "Những" của câu sau: dừng TRƯỚC chữ kế tiếp
+            end = min(end, w_full[j1 + ln]["s"] - 0.04)
         if sp_.get("to") and j1 is None:
             log(f"   ! short {n + 1}: không thấy cụm kết thúc '{sp_.get('to')}', lấy tới hết phần")
         if end - start > mx:
             ends = [x["e"] for x in w_full if re.search(r"[.!?…]$", x["t"]) and start < x["e"] <= start + mx]
             end = (ends[-1] + 0.25) if ends else start + mx
+            nxt = [x["s"] for x in w_full if x["s"] > end - 0.25 and x["s"] < end]
+            if nxt:
+                end = nxt[0] - 0.04
         body = orig[k][int(start * SR) * 2: int(end * SR) * 2]
         a = body + (cta_tail if cta_pcm else V.gap(1.2))
         V.pcm_to_wav(a, RD / f"short{n}.wav")

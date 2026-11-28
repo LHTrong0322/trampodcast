@@ -414,7 +414,8 @@ const Trend: React.FC<{b: Beat; w: number; h: number; data: any}> = ({b, w, h, d
           <circle cx={x(kMin)} cy={y(v[kMin])} r={15} fill="#fff" stroke={C.red} strokeWidth={6} />
         </g> : null}
       </svg>
-      {kMin >= 0 ? <div style={{position: 'absolute', right: Math.max(30, w - x(kMin) - 60), top: pad.t + 10, fontSize: w >= 1300 ? 40 : 32,
+      {kMin >= 0 ? <div style={{position: 'absolute', left: Math.min(Math.max(30, x(kMin) - 220), w - 520), width: 490, textAlign: x(kMin) > w / 2 ? 'right' : 'left', top: pad.t + 10,   // Trọng 28/11: nhãn tràn khỏi màn hình
+         fontSize: w >= 1300 ? 40 : 32,
         padding: '6px 18px', borderRadius: 14, background: '#fff', border: `3px solid ${C.red}`, boxShadow: '0 6px 18px rgba(40,50,110,0.12)',
         fontWeight: 900, color: C.red, opacity: on, whiteSpace: 'nowrap'}}>{b.tag || 'Thấp nhất từ 2020'} ↓</div> : null}
       {kMin >= 0 ? <svg width={w} height={h} style={{position: 'absolute', inset: 0, opacity: on}}>

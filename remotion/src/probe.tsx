@@ -61,18 +61,7 @@ const inter = (a: DOMRect, b: DOMRect) =>
 const measure = (W: number, H: number) => {
   const bs = textBoxes();
   const issues: {kind: string; text: string; other?: string}[] = [];
-  // 1) chữ đè chữ: 2 khối chữ (không lồng nhau) chồng lên nhau quá 12% diện tích khối nhỏ
-  for (let i = 0; i < bs.length; i++) {
-    for (let j = i + 1; j < bs.length; j++) {
-      const a = bs[i], b = bs[j];
-      if (a.el.contains(b.el) || b.el.contains(a.el)) continue;
-      // khung chữ của trình duyệt cao hơn nét chữ thật (chừa chỗ dấu, chân chữ): co 18% trên dưới để không báo oan số to sát nhãn
-      const ink = (r: DOMRect) => new DOMRect(r.left, r.top + r.height * 0.18, r.width, r.height * 0.64);
-      const ov = inter(ink(a.r), ink(b.r));
-      const small = Math.min(a.r.width * a.r.height, b.r.width * b.r.height);
-      if (small > 0 && ov / small > 0.12) issues.push({kind: 'de_chu', text: a.text.slice(0, 80), other: b.text.slice(0, 80)});
-    }
-  }
+  const hidden = new Set<Element>();
   // 1b) chữ bị một khối đặc (thẻ, ảnh) che: lấy phần tử nằm trên cùng tại vài điểm trong dòng chữ
   for (const b of bs) {
     const r = b.r;
@@ -97,10 +86,24 @@ const measure = (W: number, H: number) => {
     }
     // che hết = cố ý giấu (thẻ phóng to phủ lên), che một phần = lỗi xấu (chữ lòi ra mép thẻ)
     const frac = valid ? hits / valid : 0;
+    if (frac >= 0.9) hidden.add(b.el);   // nằm hẳn dưới lớp khác (vd khung kết, ảnh bìa đầu short): người xem không thấy
     if (frac > 0.08 && frac < 0.9) issues.push({kind: 'bi_che', text: b.text.slice(0, 80), other: by});
+  }
+  // 1) chữ đè chữ: 2 khối chữ (không lồng nhau) chồng lên nhau quá 12% diện tích khối nhỏ
+  for (let i = 0; i < bs.length; i++) {
+    for (let j = i + 1; j < bs.length; j++) {
+      const a = bs[i], b = bs[j];
+      if (a.el.contains(b.el) || b.el.contains(a.el) || hidden.has(a.el) || hidden.has(b.el)) continue;
+      // khung chữ của trình duyệt cao hơn nét chữ thật (chừa chỗ dấu, chân chữ): co 18% trên dưới để không báo oan số to sát nhãn
+      const ink = (r: DOMRect) => new DOMRect(r.left, r.top + r.height * 0.18, r.width, r.height * 0.64);
+      const ov = inter(ink(a.r), ink(b.r));
+      const small = Math.min(a.r.width * a.r.height, b.r.width * b.r.height);
+      if (small > 0 && ov / small > 0.12) issues.push({kind: 'de_chu', text: a.text.slice(0, 80), other: b.text.slice(0, 80)});
+    }
   }
   // 2) chữ bị cắt: nằm ngoài khung cha có overflow hidden, hoặc ra ngoài màn hình
   for (const b of bs) {
+    if (hidden.has(b.el)) continue;
     const r = b.r;
     if (r.left < -2 || r.top < -2 || r.right > W + 2 || r.bottom > H + 2) {
       issues.push({kind: 'tran_man_hinh', text: b.text.slice(0, 80)});

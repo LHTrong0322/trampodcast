@@ -88,6 +88,37 @@ def apply(props: dict, fixes: dict[str, str]) -> tuple[dict, set]:
     return out, n
 
 
+def _bare(t: str) -> str:
+    import unicodedata
+    return unicodedata.normalize("NFD", t.replace("đ", "d").replace("Đ", "D")).encode("ascii", "ignore").decode()
+
+
+def _dist(a: str, b: str) -> int:
+    p = list(range(len(b) + 1))
+    for i, x in enumerate(a, 1):
+        c = [i]
+        for j, y in enumerate(b, 1):
+            c.append(min(p[j] + 1, c[j - 1] + 1, p[j - 1] + (x != y)))
+        p = c
+    return p[-1]
+
+
+def small_fix(a: str, b: str) -> bool:
+    """Trọng 28/11: bot soát chính tả từng đổi "tin tốt ngập mạng" thành "ngập mặt" (đổi nghĩa, không phải sửa lỗi).
+    Chỉ nhận sửa kiểu lỗi gõ: chỉ khác dấu (cùng mặt chữ không dấu), hoặc thiếu/thừa tối đa 2 ký tự trong ĐÚNG MỘT từ
+    (vd "Journa" → "Journal"); các từ khác phải giữ nguyên."""
+    if _bare(a).lower() == _bare(b).lower():
+        return True
+    wa, wb = a.split(), b.split()
+    if len(wa) != len(wb):
+        return False
+    diff = [(x, y) for x, y in zip(wa, wb) if x != y]
+    if len(diff) != 1:
+        return False
+    x, y = (_bare(z).lower() for z in diff[0])
+    return _dist(x, y) <= 2 and (x in y or y in x)
+
+
 def check(props: dict, run=None, log=print) -> tuple[dict, list[str]]:
     """Soát và sửa. Trả (props đã sửa, danh sách 'sai → đúng' để báo Trọng)."""
     texts = [t for t in screen_texts(props) if t not in _CACHE]
@@ -99,8 +130,10 @@ def check(props: dict, run=None, log=print) -> tuple[dict, list[str]]:
             res = run(PROMPT.format(texts="\n".join(f"- {t}" for t in texts[:400])))
             for f in res.get("sua") or []:
                 a, b = str(f.get("sai") or ""), str(f.get("dung") or "")
-                if a and b and a != b and "—" not in b and "–" not in b and len(a) <= 80:
+                if a and b and a != b and "\u2014" not in b and "\u2013" not in b and len(a) <= 80 and small_fix(a, b):
                     _CACHE[a] = b
+                elif a and b and a != b:
+                    log(f"   🔤 bỏ qua đề xuất đổi chữ (không phải lỗi gõ): {a} → {b}")
             for t in texts:
                 _CACHE.setdefault(t, t)
         except Exception as ex:
