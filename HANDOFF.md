@@ -5,6 +5,23 @@
 
 
 
+## 🔒 CỬA CHẶN CHẤT LƯỢNG MỚI (TRỌNG CHỐT 13:43 NGÀY 28/11: "video quá tệ, sai chính tả, hình cẩu thả, hình và text không khớp, bot kiểm tra đang làm gì?")
+Áp cho MỌI video (dài và short), chạy tự động trong insight_render / insight.quality_gate:
+1. MÁY ĐO BỐ CỤC (layout_lint.py + remotion/lint.mjs + remotion/src/probe.tsx): trước khi xuất, dựng thử mỗi 0.5 giây và đo vị trí chữ THẬT.
+   Bắt chắc chắn: chữ đè chữ, chữ bị thẻ che một phần, chữ bị cắt, chữ tràn màn hình, từ mồ côi. Lỗi kéo dài từ 1 giây mới tính.
+   Còn lỗi nặng: hinh_anh_ro_rang tối đa 5, điểm tổng tối đa 6, lỗi đứng đầu can_sua. Tắt: insight.layout_lint: false.
+   Thấy lỗi lặp ở MỌI video thì đó là lỗi KHUÔN (remotion/src), phải sửa code, đừng chỉ sửa kịch bản.
+2. SOÁT CHÍNH TẢ (spell_fix.py): gom mọi chữ sẽ hiện trên hình, Claude chỉ lỗi chính tả, tự sửa vào thẻ và phụ đề. Tắt: insight.spell_fix: false.
+3. KHỚP GIÂY THẬT (word_align.py): mốc từng chữ lấy từ Whisper nghe lại giọng, thẻ hình và phụ đề hiện đúng lúc nói. Dưới 50% khớp thì dùng cách ước cũ.
+   Tắt: env REAL_WORD_TIMES=0.
+4. VAI NGƯỜI XEM trong bot review: người 22 tuổi mới vào crypto, có 10 giây là lướt đi. Trả xem tới giây nào, đoạn chán, đoạn lặp, có đáng xem không,
+   điểm "dang_xem". Review xem khoảng 8 giây 1 khung (18 đến 45 khung, rộng 800).
+5. ÉP SỬA: chưa đạt (mục nào dưới 7, tổng dưới 7, máy đo còn lỗi, người xem thấy không đáng) thì bot sửa và dựng lại tối đa insight.fix_rounds vòng
+   (mặc định 2). Hết vòng vẫn chưa đạt thì Telegram ghi "⛔ CHƯA ĐẠT, chưa nên đăng".
+6. ĐA DẠNG (video_lint.variety_issues): 1 kiểu hình tối đa 1/3 video, thẻ chữ tối đa 25%, không 3 hình liền cùng kiểu, mỗi phần có 1 hình động,
+   2 phần liền nhau không cùng chuỗi hình. Viết kịch bản: kể chuyện, ví dụ, so sánh bất ngờ; KHÔNG giảng như sách giáo khoa.
+7. Khuôn mở đầu (Insight.tsx IntroScene): có thẻ bên phải thì tiêu đề chỉ rộng 860; mục lục hiện tới 8 phần.
+
 ## 📈 TĂNG PHÂN PHỐI KÊNH MỚI (TRỌNG CHỐT 15:32 NGÀY 26/11, áp dụng cho MỌI video từ nay)
 
 Xác minh nâng cao YouTube không làm giảm reach, đã xác minh. 8 luật dưới đây (bỏ mục SEO đa ngôn ngữ):
