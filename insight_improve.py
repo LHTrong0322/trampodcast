@@ -74,7 +74,7 @@ def base_plan(plan: dict) -> dict:
     return p
 
 
-def improve(plan: dict, rv: dict, locked: bool = True) -> tuple[dict, list[str]]:
+def improve(plan: dict, rv: dict, locked: bool = True, _second: bool = False) -> tuple[dict, list[str]]:
     """Trả (kịch bản đã sửa hình, danh sách thay đổi). Lỗi gì cũng trả lại kịch bản cũ."""
     import script_review as SR
     import video_lint as VL
@@ -140,6 +140,13 @@ def improve(plan: dict, rv: dict, locked: bool = True) -> tuple[dict, list[str]]
             a["beats"] = sorted((a.get("beats") or []) + lost, key=lambda x: (low.find(str(x.get("at", "")).lower()) % 10**6))
     old_n, new_n = len(VL.lint(plan)), len(VL.lint(new))
     bad_at = [x for x in VL.lint(new) if "lời đọc không có cụm này" in x]
+    if (new_n > old_n or bad_at) and not _second:
+        # Trọng 28/11: log dựng Dow v6 cho thấy 2/2 vòng sửa bị bỏ trắng vì bản sửa sinh lỗi khung, nên vòng sửa không cải thiện gì.
+        # Giờ cho bot sửa lại 1 lần, nói rõ lỗi khung nó vừa tạo ra, thay vì bỏ cả vòng.
+        extra = [x for x in VL.lint(new) if x not in VL.lint(plan)]
+        log(f"   ! bản sửa sinh {len(extra)} lỗi khung mới, bot sửa lại 1 lần")
+        rv2 = {**rv, "can_sua": as_list(rv.get("can_sua")) + [f"KHÔNG ĐƯỢC tạo lỗi khung này (bản sửa trước bị loại vì nó): {x}" for x in extra[:10]]}
+        return improve(plan, rv2, locked, _second=True)
     if new_n > old_n or bad_at:
         log(f"   ! bản sửa tệ hơn ({old_n} → {new_n} lỗi khung, {len(bad_at)} hình gắn sai chữ): bỏ phần sửa hình lỗi")
         # giữ lời đọc đã sửa (nếu được phép) nhưng lấy lại hình cũ cho phần bị gắn sai chữ

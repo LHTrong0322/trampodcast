@@ -23,7 +23,9 @@ from pathlib import Path
 import podcast as P
 
 TEXT_KEYS = ("label", "text", "sub", "note")
-ADD_TYPES = ("statement", "bignum", "photo", "question")
+# Trọng 28/11: bot thêm ảnh kho theo từ khoá ra ảnh lạc đề (bao đàn guitar, băng cassette, cờ quân đội) và bị review chấm KHÔNG ĐÁNG.
+# Bỏ hẳn quyền thêm ảnh kho ở bước xem trước và bước sửa; hình phải là số liệu, so sánh, biểu đồ, sơ đồ.
+ADD_TYPES = ("statement", "bignum", "question")
 
 PROMPT = """Bạn là biên tập viên TikTok/YouTube Shorts kỳ cựu mảng crypto kiêm CHUYÊN GIA DỰNG VIDEO, đang XEM TRƯỚC một video ngắn 9:16 tiếng Việt
 của kênh Smart Penguin Insights TRƯỚC KHI dựng thật. Mục tiêu: sửa hết lỗi ngay bây giờ để bản dựng đạt từ 8/10.
@@ -80,7 +82,7 @@ LỆNH SỬA ("fixes", áp theo thứ tự). KHÔNG đổi lời đọc. Con s�
 - {{"i": n, "value": "..."}}: đổi số/chữ to của thẻ bignum (số mới phải có trong lời đọc, vd lời "chưa đầy 2 tuần" → "< 2 tuần")
 - {{"i": n, "to_statement": "câu ngắn ≤ 50 ký tự"}}: đổi thẻ n thành thẻ chữ
 - {{"i": n, "to_question": "câu hỏi ngắn ≤ 50 ký tự"}}: đổi thẻ n thành thẻ câu hỏi
-- {{"add": {{"s": giây, "type": "statement|bignum|question|photo", "text": "...", "value": "...", "label": "...", "query": "2-4 từ tiếng Anh cảnh/đồ vật, KHÔNG tên người"}}}}: thêm thẻ
+- {{"add": {{"s": giây, "type": "statement|bignum|question", "text": "...", "value": "...", "label": "..."}}}}: thêm thẻ (KHÔNG thêm ảnh kho: ảnh tìm theo từ khoá hay lạc đề)
 Trả về DUY NHẤT JSON:
 {{"score": điểm dự kiến 1-10 nếu dựng NGUYÊN TRẠNG,
   "ok": true nếu không còn lỗi nào đáng sửa,
@@ -303,7 +305,7 @@ CÁC THẺ HÌNH HIỆN TẠI (i, "at" = cụm từ trong lời đọc làm mố
 
 Loại thẻ: bignum (value, label, tone up/down), versus (left/right: label, value, note, tone; sub), statement (text, sub),
 question (text, sub, chỉ dùng cho câu hỏi cuối), chart (ticker, days, label; biểu đồ giá thật, % hiện là thay đổi trong đúng số
-ngày đó, chọn days sao cho chiều đi của giá KHỚP ý đang nói), photo (query: 2-4 từ tiếng Anh cảnh/đồ vật, KHÔNG tên người; label),
+ngày đó, chọn days sao cho chiều đi của giá KHỚP ý đang nói), KHÔNG dùng photo (ảnh kho hay lạc đề),
 logos, flow, dots. Nhãn ≤ 40 ký tự, versus nhãn ≤ 16. Số mới chỉ dùng khi lời đọc có số đó (note/sub được ghi số liệu nguồn kèm theo).
 Không dấu gạch ngang dài. Mỗi 3 đến 5 giây nên đổi thẻ; đọc khoảng 3.5 từ mỗi giây.
 
@@ -327,6 +329,8 @@ def plan_fix(plan: dict, rv: dict) -> list[str]:
             continue
         if b.get("type") == "bignum" and not _nums_ok(b.get("value", ""), nar):
             continue
+        if b.get("type") == "photo" and not b.get("src") and not any(x.get("type") == "photo" and x.get("query") == b.get("query") for x in sec["beats"]):
+            continue   # Trọng 28/11: không thêm ảnh kho mới
         if b.get("type") == "photo":
             q = str(b.get("query") or "")
             import insight_lab as L

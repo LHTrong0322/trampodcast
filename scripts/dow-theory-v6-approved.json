@@ -53,27 +53,7 @@
   }
  ],
  "intro": "Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Hôm nay là lý thuyết Dow, gốc rễ của phân tích kỹ thuật, và cũng là câu trả lời cho câu hỏi: vì sao người ta phải nhìn chart?",
- "intro_beats": [
-  {
-   "at": "gốc rễ của phân tích kỹ thuật",
-   "type": "flow",
-   "label": "Hôm nay",
-   "steps": [
-    "Giá biết trước tin",
-    "Thuỷ triều và sóng",
-    "Đọc đỉnh đáy",
-    "Case 1929",
-    "Dùng Dow đúng"
-   ],
-   "step_at": [
-    "gốc rễ",
-    "phân tích kỹ thuật",
-    "câu trả lời",
-    "vì sao người ta",
-    "nhìn chart"
-   ]
-  }
- ],
+ "intro_beats": [],
  "sections": [
   {
    "heading": "Giá biết trước tin tức",
@@ -89,11 +69,16 @@
    "beats": [
     {
      "at": "Nguyên lý đầu tiên của Dow",
-     "type": "bignum",
-     "value": "#1",
-     "label": "nguyên lý của Dow: giá phản ánh mọi thứ",
-     "tone": "flat",
-     "tone_lock": true
+     "type": "flow",
+     "label": "Nguyên lý số 1 của Dow",
+     "steps": [
+      "Giá phản ánh mọi thứ",
+      "Kể cả sợ hãi, lòng tham"
+     ],
+     "step_at": [
+      "phản ánh mọi thứ",
+      "nỗi sợ và lòng tham"
+     ]
     },
     {
      "at": "lý do phân tích kỹ thuật tồn tại",
@@ -460,7 +445,7 @@
      "at": "Ngày 25 tháng 10",
      "type": "bignum",
      "value": "25/10/1929",
-     "label": "Hamilton đăng A Turn in the Tide trên Wall Street Journa",
+     "label": "Hamilton đăng A Turn in the Tide trên báo WSJ",
      "tone": "down",
      "tone_lock": true
     },
