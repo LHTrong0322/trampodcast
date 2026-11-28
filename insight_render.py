@@ -371,6 +371,14 @@ def prep_public(lab: Path):
         shutil.copytree(ROOT / "assets" / "stickers", RD / "stickers")
 
 
+def spell_check(props: dict, ic: dict) -> tuple[dict, list[str]]:
+    """Trọng 28/11: soát chính tả mọi chữ trên hình trước khi dựng, tự sửa. Tắt bằng insight.spell_fix: false."""
+    if ic.get("spell_fix", True) is False or os.getenv("SPELL_FIX", "1") == "0":
+        return props, []
+    import spell_fix as SF
+    return SF.check(props, log=log)
+
+
 def lint_layout(props: dict, work: Path, ic: dict) -> dict | None:
     """Trọng 28/11: máy đo bố cục chạy trước khi xuất (chữ đè, bị che, bị cắt). Tắt bằng insight.layout_lint: false."""
     if ic.get("layout_lint", True) is False or os.getenv("LAYOUT_LINT", "1") == "0":
@@ -507,10 +515,11 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
     long_path = out_dir / f"smart-penguin-{tag}-16x9.mp4"
     log(f"Dựng video dài · {total / 60:.1f} phút · giọng {voice}")
     _guard(props)
+    props, spell = spell_check(props, ic) if not frames else (props, [])
     layout = lint_layout(props, out_dir / "layout-long", ic) if not frames else None
     run_remotion(props, long_path, frames)
     res = {"long": long_path, "shorts": [], "chapters": chapters, "duration": total, "voice": voice, "plan": plan, "data": data,
-           "scenes": scenes, "layout": layout}
+           "scenes": props["scenes"], "layout": layout, "spell": spell}
     if not shorts or frames:
         return res
     # ---- video ngắn 9:16: mỗi insight hay nhất 1 video, cắt ở cuối câu, ≤ shorts_max_seconds ----
@@ -578,6 +587,8 @@ def render(lab: Path, out_dir: Path, voice: str | None = None, frames: str = "",
         import preflight as PF   # Trọng 24/11: soát hình bằng mắt (Claude) trước khi dựng, tự sửa chữ trên thẻ nếu xấu
         pre = PF.check_short(sprops, out_dir / f"preflight{n + 1}")
         _guard(sprops)
+        sprops, sp_spell = spell_check(sprops, ic)
+        res["spell"] = res.get("spell", []) + [x for x in sp_spell if x not in res.get("spell", [])]
         lay = lint_layout(sprops, out_dir / f"layout-short{n + 1}", ic)
         run_remotion(sprops, sp)
         res["shorts"].append({"path": sp, "section": i, "title": sprops["shortTitle"], "preflight": pre, "layout": lay})
