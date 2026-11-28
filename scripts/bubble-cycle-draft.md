@@ -8,7 +8,7 @@ Video dài khoảng 7 phút, kiến thức evergreen cho newbie và Gen Z. Giọ
 2. 4 giai đoạn của mọi bong bóng: từ hoa tulip tới Bitcoin
 
 ## Hook + lời hứa (≤ 15 giây)
-Lời đọc: Nasdaq từng mất 78%. Nikkei của Nhật mất 34 năm mới về lại đỉnh. Bitcoin đã 4 lần sập hơn 75%. Lần nào đám đông cũng nói: lần này khác. Hết video, bạn sẽ biết 4 giai đoạn của mọi bong bóng, 2 con số để nhận ra nó, và 5 việc retail nên làm để không cháy tài khoản.
+Lời đọc: Nasdaq từng mất 78%. Nikkei mất 34 năm mới về lại đỉnh. Bitcoin 4 lần sập hơn 75%. Hết video, bạn sẽ biết 4 giai đoạn của mọi bong bóng, 2 con số để nhận ra nó, và 5 việc để không cháy tài khoản.
 Chữ trên hình (hook_screen): Nasdaq -78%. Lần này có khác?
 Thẻ số lần lượt theo lời đọc: -78% Nasdaq 2000 đến 2002 / 34 năm Nikkei 1989 đến 2024 / 4 lần BTC sập trên 75%
 
@@ -16,7 +16,7 @@ Thẻ số lần lượt theo lời đọc: -78% Nasdaq 2000 đến 2002 / 34 n�
 Chào mừng mọi người đã quay trở lại với Smart Penguin Insights.
 
 ## Phần 1: Nền kinh tế không đi thẳng, nó thở theo 4 nhịp
-Trước khi nói về bong bóng, bạn cần hiểu nhịp thở của nền kinh tế. Mọi chu kỳ đều có 4 nhịp. Một: mở rộng. Việc làm nhiều, lương tăng, ai cũng tự tin chi tiêu. Hai: đỉnh. Kinh tế quá nóng, giá cả leo thang, ngân hàng trung ương bắt đầu tăng lãi suất để hạ nhiệt. Ba: suy thoái. Tiền vay đắt, doanh nghiệp cắt giảm, người ta thắt lưng buộc bụng. Bốn: hồi phục. Lãi suất hạ lại, tiền rẻ quay về, và vòng lặp bắt đầu lại. Ví dụ ngay trong crypto: năm 2020, Fed hạ lãi suất về gần 0%, BTC lập đỉnh mới năm 2021. Năm 2022, Fed tăng lãi suất từ gần 0% lên trên 4% chỉ trong một năm, BTC mất 77%. Vậy thì sao? Giá coin của bạn không chỉ phụ thuộc vào dự án. Nó còn phụ thuộc vào việc tiền đang rẻ hay đang đắt.
+Nền kinh tế thở theo 4 nhịp: mở rộng, đỉnh, suy thoái, hồi phục. Chìa khoá xoay vòng là lãi suất: tiền rẻ thì mọi thứ tăng, tiền đắt thì mọi thứ giảm. Ví dụ ngay trong crypto: năm 2020, Fed hạ lãi suất về gần 0%, BTC lập đỉnh mới năm 2021. Năm 2022, Fed tăng lãi suất từ gần 0% lên trên 4% chỉ trong một năm, BTC mất 77%. Vậy thì sao? Giá coin của bạn không chỉ phụ thuộc vào dự án. Nó còn phụ thuộc vào việc tiền đang rẻ hay đang đắt.
 Chữ trên hình (sơ đồ vòng tròn 4 nhịp sáng dần theo lời đọc): Mở rộng / Đỉnh / Suy thoái / Hồi phục
 Thẻ so sánh: Lãi suất Fed 2021: ~0% vs 2022: trên 4% / note: BTC -77% trong 2022
 CHART: giá BTC 2020 đến 2022, đánh dấu đỉnh 2021 và đáy 2022
@@ -26,7 +26,7 @@ Nếu chu kỳ là nhịp thở, thì bong bóng là cơn sốt. Giá bay xa kh�
 Hình: icon não + chữ FOMO to (hiện khi đọc "FOMO"), rồi khi đọc "chỉ đọc tin tốt": cặp kính màu hồng che biểu đồ, nến đỏ mờ đi, chỉ còn lộ nến xanh
 Hình: icon đòn bẩy (bập bênh) + số "x5" khi đọc "Thứ gì mới thật sự bơm nó phình lên?" (500 nghìn đô / 100 nghìn vốn = đòn bẩy 5 lần)
 Thẻ so sánh đòn bẩy (2 phía): Nhà +20%: vốn +100% vs Nhà -20%: vốn về 0 (sub: Mua 500 nghìn đô, vay 400 nghìn)
-Thẻ số: 10% / Giá đi ngược 10%, lệnh đòn bẩy 10x bị thanh lý
+Hình: thanh margin tụt dần từ 100% về 0% theo nhịp giá đi ngược 2%, 5%, 8%, tới mốc 10% thì nháy chữ "Thanh lý" (lệnh 10x)
 Thẻ trích: "Sự ổn định sinh ra bất ổn" / Hyman Minsky
 
 ## Phần 3: 4 giai đoạn, lặp lại suốt 400 năm
