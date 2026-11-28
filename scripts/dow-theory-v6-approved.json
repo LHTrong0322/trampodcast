@@ -1,0 +1,655 @@
+{
+ "video_series": "Phân tích kỹ thuật",
+ "theme": "Phân tích kỹ thuật",
+ "own_source": true,
+ "source_post": {
+  "author": "Smart Penguin Insights",
+  "handle": "Trong0322",
+  "url": "https://en.wikipedia.org/wiki/Dow_theory",
+  "title": "Dow theory history (Wikipedia, TIME, thedowtheory.com, Cowles 1934, Brown Goetzmann Kumar 1998); BTC weekly price",
+  "text": "Charles H. Dow (1851 to 1902), co-founded Dow Jones & Company in 1882 with Edward Jones, first issue of The Wall Street Journal 1889, Dow Jones Industrial Average 26 May 1896 with 12 stocks, also a railroad average; about 255 editorials; Dow never used the term Dow theory. William Peter Hamilton published The Stock Market Barometer in 1922; Robert Rhea published The Dow Theory in 1932. On October 25, 1929 Hamilton wrote A Turn in the Tide: two days earlier the Dow Theory gave the signal for a bear market; the market dropped 86% from that point. DJIA peak 381.17 on 3 Sep 1929, low 41.22 on 8 Jul 1932 (-89%). Cowles 1934: buy and hold 15.5% annualized 1902 to 1929 vs Dow theory 12%. Brown, Goetzmann and Kumar 1998: Hamilton's timing yields positive risk adjusted returns. BTC: ATH about $126K Oct 2025, 2026 rally high $87.4K, July 2026 low $57.7K broken 21/11/2026 to $55.2K. Altcoin backtest (11/11/2026, 108 assets, about 1410 days): BTC above EMA200 only: 407 trades, win 32.4%, 69.59R, max DD 13.13R, second half 5.78R; EMA200 plus BTC 1D Dow uptrend: 239 trades, win 36.8%, 88.24R, max DD 9.93R, second half 10.99R; Dow 1D only: second half -1.83R."
+ },
+ "agenda_label": "LÝ THUYẾT DOW TỪ SỐ 0",
+ "thumb_logo": "BTC",
+ "thumb_icon": "crack",
+ "thumb_points": [],
+ "title": "Lý thuyết Dow: vì sao giá biết trước tin tức (đọc xu hướng bằng đỉnh và đáy)",
+ "description": "Lý thuyết Dow từ số 0 và vì sao phân tích kỹ thuật quan trọng: giá phản ánh mọi thứ trước tin tức, thuỷ triều sóng và gợn nước, trend is your friend, cách đọc đỉnh đáy HH HL LH LL trên chart BTC khung D, 3 giai đoạn của một xu hướng lớn, bài báo A Turn in the Tide năm 1929, điểm yếu của Dow và cách dùng đúng.",
+ "hook_screen": "GIÁ BIẾT TRƯỚC TIN TỨC",
+ "hook_stat": "-89%",
+ "hook_label": "chỉ số Dow Jones 1929 tới 1932",
+ "hook": "Bạn từng mua đúng đỉnh, lúc tin tức đẹp nhất? Năm 1929, cả nước Mỹ cũng vậy. Chỉ một người đọc ra trước: thuỷ triều đã đổi chiều. Hết video, bạn sẽ tự đọc được điều đó trên chart Bitcoin.",
+ "hook_beats": [
+  {
+   "at": "mua đúng đỉnh",
+   "type": "statement",
+   "text": "Mua đúng đỉnh, lúc tin đẹp nhất?"
+  },
+  {
+   "at": "cả nước Mỹ cũng vậy",
+   "type": "versus",
+   "label": "Chỉ số Dow Jones công nghiệp",
+   "left": {
+    "label": "Đỉnh 9/1929",
+    "value": "381",
+    "tone": "up"
+   },
+   "right": {
+    "label": "Đáy 7/1932",
+    "value": "41",
+    "tone": "down",
+    "note": "-89%"
+   },
+   "hold": 4
+  },
+  {
+   "at": "tự đọc được điều đó trên chart Bitcoin",
+   "type": "dow",
+   "tf": "D",
+   "label": "Hết video: bạn tự đọc được chart này",
+   "n": 6,
+   "from": "2025-09",
+   "k": 10
+  }
+ ],
+ "intro": "Chào mừng mọi người đã quay trở lại với Smart Penguin Insights. Hôm nay là lý thuyết Dow, gốc rễ của phân tích kỹ thuật, và cũng là câu trả lời cho câu hỏi: vì sao người ta phải nhìn chart?",
+ "intro_beats": [
+  {
+   "at": "gốc rễ của phân tích kỹ thuật",
+   "type": "flow",
+   "label": "Hôm nay",
+   "steps": [
+    "Giá biết trước tin",
+    "Thuỷ triều và sóng",
+    "Đọc đỉnh đáy",
+    "Case 1929",
+    "Dùng Dow đúng"
+   ],
+   "step_at": [
+    "gốc rễ",
+    "phân tích kỹ thuật",
+    "câu trả lời",
+    "vì sao người ta",
+    "nhìn chart"
+   ]
+  }
+ ],
+ "sections": [
+  {
+   "heading": "Giá biết trước tin tức",
+   "edu": true,
+   "key_stat": "$15.5K",
+   "key_label": "đáy BTC 11/2022, giữa tin FTX",
+   "bullets": [
+    "Giá phản ánh mọi thứ",
+    "Tin đẹp nhất có thể là đỉnh",
+    "Tin tệ nhất có thể là đáy"
+   ],
+   "narration": "Nguyên lý đầu tiên của Dow: giá đã phản ánh mọi thứ người ta biết, kể cả nỗi sợ và lòng tham. Đây chính là lý do phân tích kỹ thuật tồn tại. Nhìn Bitcoin là thấy. Tháng 11 năm 2021, tin tốt ngập mạng, BTC lập đỉnh 69 nghìn đô. Nhưng đỉnh đó chỉ cao hơn đỉnh tháng 4 có 6%, dù đã 7 tháng trôi qua. Lực mua cạn từ trước khi tin tức kịp xấu đi. Một năm sau, BTC mất 77%. Ngược lại, tháng 11 năm 2022, FTX sụp, tin tệ nhất lịch sử crypto, BTC về 15.5 nghìn. Và đó lại chính là đáy. Tin tức nói chuyện hôm qua. Chart cho bạn thấy tiền đang làm gì hôm nay. Phân tích cơ bản trả lời mua cái gì. Phân tích kỹ thuật trả lời mua lúc nào, và sai thì thoát ở đâu.",
+   "beats": [
+    {
+     "at": "Nguyên lý đầu tiên của Dow",
+     "type": "bignum",
+     "value": "#1",
+     "label": "nguyên lý của Dow: giá phản ánh mọi thứ",
+     "tone": "flat",
+     "tone_lock": true
+    },
+    {
+     "at": "lý do phân tích kỹ thuật tồn tại",
+     "type": "statement",
+     "text": "Vì vậy mới có phân tích kỹ thuật"
+    },
+    {
+     "at": "BTC lập đỉnh 69 nghìn đô",
+     "type": "versus",
+     "label": "Hai đỉnh BTC năm 2021",
+     "left": {
+      "label": "Đỉnh 4/2021",
+      "value": "$64.8K",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "Đỉnh 11/2021",
+      "value": "$69K",
+      "tone": "up",
+      "note": "chỉ +6% sau 7 tháng"
+     },
+     "hold": 5
+    },
+    {
+     "at": "Lực mua cạn",
+     "type": "statement",
+     "text": "Lực mua cạn trước khi tin xấu đi"
+    },
+    {
+     "at": "BTC mất 77%",
+     "type": "bignum",
+     "value": "-77%",
+     "label": "BTC từ đỉnh 11/2021 tới đáy 11/2022",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "FTX sụp",
+     "type": "bignum",
+     "value": "$15.5K",
+     "label": "đáy BTC 11/2022, đúng lúc FTX sụp",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "Tin tức nói chuyện hôm qua",
+     "type": "statement",
+     "text": "Tin tức: hôm qua. Chart: tiền đang chạy đâu"
+    },
+    {
+     "at": "Phân tích cơ bản trả lời",
+     "type": "flow",
+     "label": "Hai câu hỏi khác nhau",
+     "steps": [
+      "Cơ bản: mua cái gì",
+      "Kỹ thuật: mua lúc nào",
+      "Kỹ thuật: sai thì thoát"
+     ],
+     "step_at": [
+      "Phân tích cơ bản trả lời",
+      "Phân tích kỹ thuật trả lời",
+      "sai thì thoát ở đâu"
+     ]
+    }
+   ],
+   "visual_queries": [
+    "stock market news screen"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Thuỷ triều, sóng và gợn nước",
+   "edu": true,
+   "key_stat": "-33%",
+   "key_label": "nhịp sóng 2024 trong uptrend",
+   "bullets": [
+    "Thuỷ triều: 1 năm trở lên",
+    "Sóng: vài tuần tới vài tháng",
+    "Gợn nước: hằng ngày"
+   ],
+   "narration": "Người nghĩ ra cách nhìn này không phải trader, mà là một nhà báo: Charles Dow, đồng sáng lập tờ Wall Street Journal. Năm 1896, ông tạo chỉ số Dow Jones với 12 cổ phiếu, chỉ để trả lời một câu: thị trường nói chung đang lên hay xuống? Câu trả lời của ông là hình ảnh bãi biển. Thuỷ triều là xu hướng chính, kéo dài cả năm trở lên. Sóng là nhịp điều chỉnh, vài tuần tới vài tháng. Gợn nước là dao động hằng ngày, gần như vô nghĩa. Năm 2024, BTC từ 73.7 nghìn rơi về 49 nghìn, mất 33%. Người nhìn gợn nước thì bán tháo. Người nhìn thuỷ triều thấy đáy mới vẫn cao hơn đáy cũ, nên đó chỉ là một con sóng. Bốn tháng sau, BTC vượt 100 nghìn. Trend is your friend nghĩa là vậy: bơi theo thuỷ triều thì sóng ngược không nhấn chìm bạn. Bơi ngược thì con sóng nào cũng là cái bẫy.",
+   "beats": [
+    {
+     "at": "một nhà báo",
+     "type": "flow",
+     "label": "Người nghĩ ra lý thuyết",
+     "steps": [
+      "Nhà báo Charles Dow",
+      "Lập Wall Street Journal"
+     ],
+     "step_at": [
+      "một nhà báo",
+      "đồng sáng lập tờ"
+     ]
+    },
+    {
+     "at": "Năm 1896",
+     "type": "bignum",
+     "value": "12",
+     "label": "cổ phiếu trong chỉ số Dow Jones năm 1896",
+     "tone": "flat",
+     "tone_lock": true
+    },
+    {
+     "at": "thị trường nói chung đang lên",
+     "type": "statement",
+     "text": "Câu hỏi của Dow: thị trường lên hay xuống?"
+    },
+    {
+     "at": "hình ảnh bãi biển",
+     "type": "flow",
+     "label": "3 xu hướng của Dow",
+     "steps": [
+      "Thuỷ triều: 1 năm+",
+      "Sóng: vài tuần, tháng",
+      "Gợn nước: hằng ngày"
+     ],
+     "step_at": [
+      "Thuỷ triều là xu hướng chính",
+      "Sóng là nhịp điều chỉnh",
+      "Gợn nước là dao động"
+     ]
+    },
+    {
+     "at": "BTC từ 73.7 nghìn",
+     "type": "versus",
+     "label": "Một con sóng năm 2024",
+     "left": {
+      "label": "Đỉnh 3/2024",
+      "value": "$73.7K",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Đáy 8/2024",
+      "value": "$49K",
+      "tone": "down",
+      "note": "-33%"
+     },
+     "hold": 4
+    },
+    {
+     "at": "Người nhìn thuỷ triều",
+     "type": "dow",
+     "tf": "D",
+     "label": "BTC khung D 2024: đáy sau cao hơn đáy trước",
+     "n": 6,
+     "from": "2024-02",
+     "to": "2024-12",
+     "k": 8
+    },
+    {
+     "at": "BTC vượt 100 nghìn",
+     "type": "bignum",
+     "value": "$100K",
+     "label": "BTC 12/2024, 4 tháng sau con sóng -33%",
+     "tone": "up",
+     "tone_lock": true
+    },
+    {
+     "at": "Trend is your friend",
+     "type": "flow",
+     "label": "Trend is your friend",
+     "steps": [
+      "Theo triều: sóng là nhịp",
+      "Ngược triều: sóng là bẫy"
+     ],
+     "step_at": [
+      "bơi theo thuỷ triều",
+      "Bơi ngược thì"
+     ]
+    }
+   ],
+   "visual_queries": [
+    "ocean tide waves"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Đọc thuỷ triều bằng đỉnh và đáy",
+   "edu": true,
+   "key_stat": "LH + LL",
+   "key_label": "đỉnh thấp hơn rồi thủng đáy = đảo chiều",
+   "bullets": [
+    "Uptrend: HH + HL",
+    "Downtrend: LH + LL",
+    "Đảo chiều: LH rồi thủng đáy"
+   ],
+   "narration": "Cây cọc trên bãi biển, ra chart chính là đỉnh và đáy. Uptrend là đỉnh sau cao hơn đỉnh trước, đáy sau cao hơn đáy trước: HH và HL. Downtrend thì ngược lại: LH và LL. Thử đọc cùng mình. Đây là BTC khung D từ tháng 9 năm 2025. Đỉnh 126 nghìn tháng 10. Năm 2026, nhịp hồi mạnh nhất chỉ lên 87.4 nghìn: một đỉnh thấp hơn. Tháng 7, giá lập đáy 57.7 nghìn. Tháng 11, giá thủng luôn đáy đó: một đáy thấp hơn. Đỉnh thấp hơn rồi thủng đáy cũ, đó là tín hiệu đảo chiều của Dow. Không cần dự báo, không cần tin đồn. Bạn chỉ cần đếm đỉnh và đáy.",
+   "beats": [
+    {
+     "at": "Uptrend là đỉnh sau",
+     "type": "flow",
+     "label": "Đọc xu hướng bằng đỉnh đáy",
+     "steps": [
+      "Uptrend: HH + HL",
+      "Downtrend: LH + LL"
+     ],
+     "step_at": [
+      "Uptrend là đỉnh sau",
+      "Downtrend thì ngược lại"
+     ]
+    },
+    {
+     "at": "Đây là BTC khung D",
+     "type": "dow",
+     "tf": "D",
+     "label": "BTC khung D từ 9/2025: đếm đỉnh và đáy",
+     "n": 6,
+     "from": "2025-09",
+     "k": 10,
+     "hold": 10
+    },
+    {
+     "at": "chỉ lên 87.4 nghìn",
+     "type": "versus",
+     "label": "Đỉnh thấp hơn (LH)",
+     "left": {
+      "label": "Đỉnh 10/2025",
+      "value": "$126K",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Đỉnh hồi 2026",
+      "value": "$87.4K",
+      "tone": "down",
+      "note": "LH"
+     },
+     "hold": 4
+    },
+    {
+     "at": "thủng luôn đáy đó",
+     "type": "versus",
+     "label": "Đáy thấp hơn (LL)",
+     "left": {
+      "label": "Đáy 7/2026",
+      "value": "$57.7K",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "21/11/2026",
+      "value": "$55.2K",
+      "tone": "down",
+      "note": "LL"
+     },
+     "hold": 4
+    },
+    {
+     "at": "Đỉnh thấp hơn rồi thủng",
+     "type": "flow",
+     "label": "Tín hiệu đảo chiều của Dow",
+     "steps": [
+      "Đỉnh thấp hơn",
+      "Thủng đáy cũ",
+      "Thuỷ triều đổi chiều"
+     ],
+     "step_at": [
+      "Đỉnh thấp hơn rồi",
+      "thủng đáy cũ, đó là",
+      "tín hiệu đảo chiều"
+     ]
+    }
+   ],
+   "visual_queries": [
+    "stock chart"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "1929: bài báo đọc ra thuỷ triều",
+   "edu": true,
+   "key_stat": "-89%",
+   "key_label": "Dow Jones 9/1929 tới 7/1932",
+   "bullets": [
+    "Tích luỹ: ít ai quan tâm",
+    "Đại chúng: tin tốt, giá chạy",
+    "Phân phối: người sớm chốt lời"
+   ],
+   "narration": "Dow còn nói mỗi thuỷ triều lớn đi qua ba giai đoạn. Tích luỹ: giá thấp, tin xấu, chỉ người kiên nhẫn mua. Tham gia đại chúng: tin tốt dồn dập, giá chạy nhanh, retail ùa vào. Phân phối: ai cũng hưng phấn, còn người mua sớm lặng lẽ bán. Bitcoin vừa đi trọn một vòng như vậy, từ đáy FTX tới đỉnh 126 nghìn. Năm 1929 cũng y như thế. Cả nước Mỹ vay tiền mua cổ phiếu. Ngày 25 tháng 10, Hamilton, người kế nhiệm Dow, đăng bài A Turn in the Tide. Ông không đoán tin tức. Ông thấy cả hai chỉ số Dow cùng thủng đáy cũ, và viết: thuỷ triều đã đổi chiều. Từ đỉnh 381 điểm, chỉ số rơi về 41 điểm năm 1932, mất 89%. Những người nghe ông đã ra khỏi thị trường trước phần tệ nhất.",
+   "beats": [
+    {
+     "at": "đi qua ba giai đoạn",
+     "type": "flow",
+     "label": "3 giai đoạn của thuỷ triều",
+     "steps": [
+      "Tích luỹ",
+      "Tham gia đại chúng",
+      "Phân phối"
+     ],
+     "step_at": [
+      "Tích luỹ",
+      "Tham gia đại chúng",
+      "Phân phối"
+     ]
+    },
+    {
+     "at": "retail ùa vào",
+     "type": "trend",
+     "keyword": "Bitcoin",
+     "label": "Google Trends: lượt tìm Bitcoin",
+     "hold": 5
+    },
+    {
+     "at": "Bitcoin vừa đi trọn một vòng",
+     "type": "versus",
+     "label": "Một vòng thuỷ triều của BTC",
+     "left": {
+      "label": "Đáy 11/2022",
+      "value": "$15.5K",
+      "tone": "down"
+     },
+     "right": {
+      "label": "Đỉnh 10/2025",
+      "value": "$126K",
+      "tone": "up",
+      "note": "x8"
+     },
+     "hold": 4
+    },
+    {
+     "at": "Cả nước Mỹ vay tiền",
+     "type": "statement",
+     "text": "1929: cả nước vay tiền mua cổ phiếu"
+    },
+    {
+     "at": "Ngày 25 tháng 10",
+     "type": "bignum",
+     "value": "25/10/1929",
+     "label": "Hamilton đăng A Turn in the Tide trên Wall Street Journa",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "cả hai chỉ số Dow",
+     "type": "flow",
+     "label": "Hamilton đọc ra điều gì",
+     "steps": [
+      "Công nghiệp thủng đáy",
+      "Đường sắt thủng đáy",
+      "Thuỷ triều đổi chiều"
+     ],
+     "step_at": [
+      "cả hai chỉ số Dow",
+      "cùng thủng đáy cũ",
+      "thuỷ triều đã đổi chiều"
+     ]
+    },
+    {
+     "at": "Từ đỉnh 381 điểm",
+     "type": "versus",
+     "label": "Chỉ số Dow Jones công nghiệp",
+     "left": {
+      "label": "Đỉnh 9/1929",
+      "value": "381",
+      "tone": "up"
+     },
+     "right": {
+      "label": "Đáy 7/1932",
+      "value": "41",
+      "tone": "down",
+      "note": "-89%"
+     },
+     "hold": 5
+    }
+   ],
+   "visual_queries": [
+    "Wall Street crash 1929"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  },
+  {
+   "heading": "Dow không thần thánh: dùng thế nào cho đúng",
+   "edu": true,
+   "key_stat": "12% vs 15.5%",
+   "key_label": "Cowles 1934: theo Dow vs mua rồi giữ",
+   "bullets": [
+    "Các chỉ số phải xác nhận nhau",
+    "Volume phải đi cùng xu hướng",
+    "Dow chậm: vào trễ, ra trễ"
+   ],
+   "narration": "Nhưng Dow không thần thánh. Ông đặt thêm hai luật để khỏi bị lừa. Một, các chỉ số phải xác nhận nhau: BTC lập đỉnh mới mà altcoin không theo là tín hiệu cần cẩn thận. Hai, volume phải đi cùng xu hướng: giá tăng mà volume giảm dần thì con sóng đang hụt hơi. Và Dow có một điểm yếu lớn: chậm. Năm 1934, Alfred Cowles chấm lại các lời gọi của Hamilton từ 1902 tới 1929. Theo Dow lãi khoảng 12% mỗi năm, mua rồi giữ được 15.5%. Dow không giúp bạn bắt đáy hay bán đỉnh. Nó giúp bạn biết lúc nào mình đang sai, và né phần tệ nhất của thuỷ triều xuống. Đó cũng là giá trị lớn nhất của phân tích kỹ thuật: không phải đoán giá, mà là có kế hoạch. Nhìn khung D trở lên, xác định thuỷ triều, rồi mới vào lệnh.",
+   "beats": [
+    {
+     "at": "Dow không thần thánh",
+     "type": "bignum",
+     "value": "2",
+     "label": "luật xác nhận Dow đặt ra để khỏi bị lừa",
+     "tone": "flat",
+     "tone_lock": true
+    },
+    {
+     "at": "các chỉ số phải xác nhận nhau",
+     "type": "flow",
+     "label": "Luật 1: các chỉ số xác nhận nhau",
+     "steps": [
+      "BTC lập đỉnh mới",
+      "Altcoin phải theo"
+     ],
+     "step_at": [
+      "các chỉ số phải xác nhận nhau",
+      "altcoin không theo"
+     ]
+    },
+    {
+     "at": "volume phải đi cùng xu hướng",
+     "type": "statement",
+     "text": "Giá tăng, volume giảm: sóng hụt hơi"
+    },
+    {
+     "at": "Dow có một điểm yếu lớn",
+     "type": "bignum",
+     "value": "Chậm",
+     "label": "vào trễ, ra trễ: điểm yếu lớn nhất của Dow",
+     "tone": "down",
+     "tone_lock": true
+    },
+    {
+     "at": "Theo Dow lãi khoảng",
+     "type": "versus",
+     "label": "Cowles 1934, giai đoạn 1902 tới 1929",
+     "left": {
+      "label": "Theo Dow",
+      "value": "12%/năm",
+      "tone": "flat"
+     },
+     "right": {
+      "label": "Mua rồi giữ",
+      "value": "15.5%/năm",
+      "tone": "up"
+     },
+     "hold": 5
+    },
+    {
+     "at": "biết lúc nào mình đang sai",
+     "type": "statement",
+     "text": "Dow giúp bạn biết lúc nào mình sai"
+    },
+    {
+     "at": "giá trị lớn nhất của phân tích kỹ thuật",
+     "type": "statement",
+     "text": "PTKT: không đoán giá, mà có kế hoạch"
+    },
+    {
+     "at": "Nhìn khung D trở lên",
+     "type": "flow",
+     "label": "Dùng Dow đúng cách",
+     "steps": [
+      "Nhìn khung D trở lên",
+      "Xác định thuỷ triều",
+      "Rồi mới vào lệnh"
+     ],
+     "step_at": [
+      "Nhìn khung D trở lên",
+      "xác định thuỷ triều",
+      "rồi mới vào lệnh"
+     ]
+    }
+   ],
+   "visual_queries": [
+    "trading plan"
+   ],
+   "quote": "",
+   "data": {
+    "type": "none",
+    "tickers": [],
+    "items": [],
+    "title": ""
+   },
+   "project": {
+    "name": "",
+    "ticker": ""
+   },
+   "source_ids": [
+    0
+   ]
+  }
+ ],
+ "outro": "Tóm lại: giá biết trước tin tức, nên hãy nhìn thuỷ triều trước sóng, đọc xu hướng bằng đỉnh và đáy, và chỉ đổi ý khi đỉnh thấp hơn rồi thủng đáy cũ. Đây là nội dung giáo dục, không phải lời khuyên đầu tư. Bình luận cho mình biết: trên chart BTC khung D lúc này, bạn thấy thuỷ triều đang lên hay xuống?",
+ "outro_points": [
+  "Giá biết trước tin tức",
+  "Đọc xu hướng bằng đỉnh đáy",
+  "Đổi ý khi LH + thủng đáy"
+ ],
+ "outro_cta": "THUỶ TRIỀU ĐANG LÊN HAY XUỐNG?",
+ "shorts": [
+  0,
+  3
+ ],
+ "short_spans": [
+  {
+   "from": "Nhìn Bitcoin là thấy.",
+   "to": "sai thì thoát ở đâu."
+  },
+  {
+   "from": "Năm 1929 cũng y như thế.",
+   "to": "mất 89%."
+  }
+ ],
+ "short_hooks": {
+  "0": "FTX sụp, BTC $15.5K: tin tệ nhất lại là đáy?",
+  "3": "1929: bài báo đọc ra cú sập 89%"
+ },
+ "short_cta": "Bạn nhìn tin tức hay nhìn chart? Bình luận nhé.",
+ "thumb_stat": "-89%",
+ "thumb_text": "Giá biết trước tin tức?",
+ "thumb_tag": "lý thuyết Dow",
+ "thumb_kicker": "Đọc xu hướng bằng đỉnh và đáy"
+}

@@ -66,7 +66,9 @@ const measure = (W: number, H: number) => {
     for (let j = i + 1; j < bs.length; j++) {
       const a = bs[i], b = bs[j];
       if (a.el.contains(b.el) || b.el.contains(a.el)) continue;
-      const ov = inter(a.r, b.r);
+      // khung chữ của trình duyệt cao hơn nét chữ thật (chừa chỗ dấu, chân chữ): co 18% trên dưới để không báo oan số to sát nhãn
+      const ink = (r: DOMRect) => new DOMRect(r.left, r.top + r.height * 0.18, r.width, r.height * 0.64);
+      const ov = inter(ink(a.r), ink(b.r));
       const small = Math.min(a.r.width * a.r.height, b.r.width * b.r.height);
       if (small > 0 && ov / small > 0.12) issues.push({kind: 'de_chu', text: a.text.slice(0, 80), other: b.text.slice(0, 80)});
     }
