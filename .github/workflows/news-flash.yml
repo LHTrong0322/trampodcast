@@ -67,6 +67,8 @@ jobs:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
       PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+      GOOGLE_CSE_KEY: ${{ secrets.GOOGLE_CSE_KEY }}
+      GOOGLE_CSE_ID: ${{ secrets.GOOGLE_CSE_ID }}
       GH_TOKEN: ${{ github.token }}
       SOCIAL_AUTOPOST: "0"
     steps:
