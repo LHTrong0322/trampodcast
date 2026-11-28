@@ -28,9 +28,11 @@
    - Bot xem trước short thêm ảnh kho lạc đề (guitar, cassette): bỏ quyền thêm ảnh kho.
    - Vòng sửa bị bỏ trắng vì bản sửa sinh lỗi khung: giờ bot được sửa lại 1 lần, có danh sách lỗi nó vừa tạo.
    - Short cụt chữ câu sau ("Những"): điểm cắt dừng trước chữ kế tiếp.
-9. ẢNH AI (Trọng 28/11): thẻ photo có "gen": "mô tả tiếng Anh" thì máy dựng gọi Gemini tạo ảnh (insight_lab.gen_image, key Gemini sẵn có,
-   model lấy từ models.image trong sources.yaml hoặc tự tìm model có chữ "image"). Phong cách chung IMG_STYLE: không chữ, không logo,
-   không người thật nhận ra được. Tạo lỗi thì thử ảnh kho theo "query", rồi đổi thành thẻ chữ. Ảnh ghi nguồn "tạo bằng AI".
+9. ẢNH (Trọng 28/11, thay luật 24/11 "thêm ảnh kho"): video Smart Penguin KHÔNG dùng ảnh kho (Pixabay, Pexels, Openverse: "quá tệ").
+   Ảnh chỉ tìm theo đúng từ khoá kịch bản (thẻ photo "query", visual_queries) trên Google Custom Search (chỉ ảnh giấy phép mở,
+   cần secret GOOGLE_CSE_KEY + GOOGLE_CSE_ID) rồi Wikimedia Commons; AI xem lại từng ảnh, lạc đề thì bỏ, thẻ thành thẻ chữ.
+   Ảnh AI tạo bằng Gemini có sẵn trong code nhưng TẮT (Trọng: "không cần thiết"), bật bằng insight.ai_images: true.
+   Podcast hằng ngày (video.find_images) chưa đổi.
 7. Khuôn mở đầu (Insight.tsx IntroScene): có thẻ bên phải thì tiêu đề chỉ rộng 860; mục lục hiện tới 8 phần.
 
 ## 📈 TĂNG PHÂN PHỐI KÊNH MỚI (TRỌNG CHỐT 15:32 NGÀY 26/11, áp dụng cho MỌI video từ nay)

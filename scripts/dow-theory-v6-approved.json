@@ -127,8 +127,8 @@
      "at": "Tin tức nói chuyện hôm qua",
      "type": "photo",
      "label": "Tin tức: hôm qua. Chart: hôm nay",
-     "gen": "an old folded newspaper on a desk next to a smartphone showing a glowing candlestick price chart, contrast between yesterday's news and live market data",
-     "hold": 4
+     "hold": 4,
+     "query": "stock market newspaper headlines"
     },
     {
      "at": "Phân tích cơ bản trả lời",
@@ -201,8 +201,8 @@
      "at": "Câu trả lời của ông",
      "type": "photo",
      "label": "Câu trả lời của Dow: bãi biển",
-     "gen": "a wide sandy beach with a single wooden stake planted in the sand, the tide rising with big waves and small ripples, golden hour",
-     "hold": 4
+     "hold": 4,
+     "query": "ocean tide waves beach"
     },
     {
      "at": "Thuỷ triều là xu hướng chính",
@@ -444,15 +444,15 @@
      "at": "Cả nước Mỹ vay tiền",
      "type": "photo",
      "label": "1929: cả nước vay tiền mua cổ phiếu",
-     "gen": "vintage 1920s stock exchange trading floor crowded with excited generic traders in suits and hats, ticker tape in the air, sepia tones",
-     "hold": 4
+     "hold": 4,
+     "query": "1929 Wall Street crowd stock market crash"
     },
     {
      "at": "Ngày 25 tháng 10",
      "type": "photo",
      "label": "25/10/1929: A Turn in the Tide",
-     "gen": "a vintage 1929 newspaper front page lying on a wooden desk, headline area blurred and unreadable, a dramatic ocean wave turning back in the background, sepia",
-     "hold": 4
+     "hold": 4,
+     "query": "1929 newspaper stock market crash headline"
     },
     {
      "at": "cả hai chỉ số Dow",

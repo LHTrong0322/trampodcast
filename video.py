@@ -299,8 +299,14 @@ _used: set = set()  # không dùng lại 1 ảnh 2 lần trong cùng video
 
 def _get(url, **kw):
     kw.setdefault("timeout", 25)
-    kw.setdefault("headers", {"User-Agent": "TramPodcastCrypto/1.0 (video bot)"})
-    r = requests.get(url, **kw)
+    # Wikimedia đòi User-Agent có thông tin liên hệ; log 28/11: tải dồn dập bị 429 hàng loạt → chờ rồi thử lại
+    kw.setdefault("headers", {"User-Agent": "TramPodcastCrypto/1.0 (https://github.com/LHTrong0322/trampodcast; video bot)"})
+    import time as _t
+    for k in range(4):
+        r = requests.get(url, **kw)
+        if r.status_code != 429 or k == 3:
+            break
+        _t.sleep(2.0 * (k + 1))
     r.raise_for_status()
     return r
 
@@ -387,6 +393,44 @@ def search_wikimedia(query: str, orientation: str = "landscape"):
             out.append((ii.get("thumburl") or ii.get("url"), f"{artist} / Wikimedia Commons ({lic})"))
         return out
     return _first_new(_cached(("Wikimedia", query, orientation), fetch))
+
+
+def search_google(query: str, orientation: str = "landscape"):
+    """Trọng 28/11: "search từ google những ảnh liên quan". Google Custom Search (tìm ảnh), CHỈ lấy ảnh có giấy phép
+    cho phép dùng lại (public domain, CC) để video không bị YouTube đánh bản quyền. Cần secret GOOGLE_CSE_KEY + GOOGLE_CSE_ID;
+    chưa có thì bỏ qua (dùng Wikimedia Commons)."""
+    key, cx = os.getenv("GOOGLE_CSE_KEY"), os.getenv("GOOGLE_CSE_ID")
+    if not key or not cx:
+        return None
+
+    def fetch():
+        items = _get("https://www.googleapis.com/customsearch/v1", params={
+            "key": key, "cx": cx, "q": query[:120], "searchType": "image", "num": 10, "safe": "active", "imgSize": "xlarge",
+            "rights": "cc_publicdomain|cc_attribute|cc_sharealike|cc_noncommercial|cc_nonderived"}).json().get("items", [])
+        out = []
+        for it in items:
+            im = it.get("image") or {}
+            w, h = im.get("width", 0), im.get("height", 0)
+            if w < 900 or ((w >= h * 0.9) != (orientation == "landscape")):
+                continue
+            out.append((it.get("link"), f"{it.get('displayLink', '')} (Google, ảnh giấy phép mở)"))
+        return out
+    return _first_new(_cached(("Google", query, orientation), fetch))
+
+
+def find_relevant_images(item: dict, orientation: str, n: int) -> list:
+    """Video Smart Penguin (Trọng 28/11: "ảnh kho thì delete đi, quá tệ"): KHÔNG dùng Pixabay/Pexels/Openverse nữa.
+    Chỉ tìm ảnh đúng chủ đề trên Google (giấy phép mở) rồi Wikimedia Commons, theo đúng từ khoá của kịch bản,
+    không thêm từ khoá chung chung. Podcast hằng ngày vẫn dùng find_images như cũ."""
+    queries = list(dict.fromkeys(q for q in (item.get("visual_queries") or []) if q))
+    out = []
+    for q in queries:
+        if len(out) >= n:
+            break
+        res = search_google(q, orientation) or search_wikimedia(q, orientation)
+        if res:
+            out.append(res)
+    return out
 
 
 def search_openverse(query: str, orientation: str):

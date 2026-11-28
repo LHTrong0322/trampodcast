@@ -799,18 +799,17 @@ def save_images(lab: Path, plan: dict, gem=None, cfg=None):
     img = lab / "img"
     credits = {}
     secs = plan["sections"]
-    jobs = [("intro", {"visual_queries": (plan.get("visual_queries") or []) + [plan.get("theme", ""), "cryptocurrency trading chart screen"],
-                       "category": "Dự án"}, "landscape", 6)]
+    # Trọng 28/11: bỏ ảnh kho, chỉ tìm đúng từ khoá kịch bản trên Google (giấy phép mở) + Wikimedia Commons
+    jobs = [("intro", {"visual_queries": plan.get("visual_queries") or []}, "landscape", 3)]
     for k, s in enumerate(secs):
-        jobs.append((f"s{k}", {"visual_queries": s.get("visual_queries") or [], "category": "Dự án",
-                               "visual_query": s.get("heading", "")}, "landscape", 6))
+        jobs.append((f"s{k}", {"visual_queries": s.get("visual_queries") or []}, "landscape", 3))
     topics = {"intro": plan.get("title", "")}
     for k, s in enumerate(secs):
         topics[f"s{k}"] = s.get("heading", "")
     thumbs = []
     for name, item, ori, n in jobs:
         files = []
-        for i, (im, cr) in enumerate(V.find_images(item, ori, n)):
+        for i, (im, cr) in enumerate(V.find_relevant_images(item, ori, n)):
             fn = f"{name}_{i}.jpg"
             im.save(img / fn, quality=90)
             files.append(fn)
@@ -892,6 +891,22 @@ def gen_image(gem, cfg, prompt: str) -> bytes | None:
 _IMG_MODELS = None
 
 
+def photo_relevant(gem, cfg, im, label: str) -> bool:
+    """AI xem ảnh: có minh hoạ ĐÚNG ý thẻ không (Trọng 28/11: ảnh lạc đề bị review chấm KHÔNG ĐÁNG). Lỗi gọi AI thì cho qua."""
+    import io
+    try:
+        t = im.copy()
+        t.thumbnail((512, 512))
+        b = io.BytesIO()
+        t.convert("RGB").save(b, "JPEG", quality=75)
+        r = gem_vision(gem, cfg, f'Ảnh này dùng minh hoạ cho câu "{label}" trong video giáo dục đầu tư. Chấm 0-10 mức ăn khớp '
+                                 '(đúng thời kỳ, đúng sự vật). Ảnh chung chung, đời sống, lạc đề thì ≤4. Trả JSON {"score": số}',
+                       [("anh", b.getvalue())])
+        return float(r.get("score") or 0) >= 6
+    except Exception:
+        return True
+
+
 def photo_beats(lab: Path, plan: dict, gem=None, cfg=None):
     img = lab / "img"
     img.mkdir(parents=True, exist_ok=True)
@@ -900,7 +915,7 @@ def photo_beats(lab: Path, plan: dict, gem=None, cfg=None):
         for b in sec.get("beats") or []:
             if b.get("type") != "photo" or b.get("src"):
                 continue
-            if b.get("gen") and gem is not None:   # ảnh AI theo mô tả (Trọng 28/11)
+            if b.get("gen") and gem is not None and ((cfg or {}).get("insight") or {}).get("ai_images"):   # ảnh AI (tắt mặc định, Trọng 28/11)
                 raw = gen_image(gem, cfg or {}, str(b["gen"]))
                 if raw:
                     from PIL import Image
@@ -921,8 +936,10 @@ def photo_beats(lab: Path, plan: dict, gem=None, cfg=None):
                 continue
             res = None
             for ori in ("landscape", "portrait"):
-                res = (V.search_pixabay(q, ori) or V.search_pexels(q, ori)
-                       or V.search_wikimedia(q, ori) or V.search_openverse(q, ori))
+                res = V.search_google(q, ori) or V.search_wikimedia(q, ori)   # Trọng 28/11: bỏ ảnh kho
+                if res and gem is not None and not photo_relevant(gem, cfg or {}, res[0], b.get("label") or q):
+                    log(f"   ! ảnh cho '{q}' không đúng ý '{b.get('label', '')}', bỏ")
+                    res = None
                 if res:
                     break
             if not res:
