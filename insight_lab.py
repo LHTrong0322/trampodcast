@@ -674,13 +674,16 @@ def wma_data(plan: dict, data: dict):
 def dow_key(b: dict) -> str:
     """Khoá dữ liệu của 1 beat dow, khớp với beats.tsx: "from:k" (khung tuần) hoặc "from:k:D[:to]" (khung ngày)."""
     tf = str(b.get("tf") or "W").upper()
+    if b.get("last"):   # Trọng 28/11: chart đỉnh đáy phải ZOOM gần (vài tháng gần nhất) cho người xem hiểu
+        return f"last{int(b['last'])}:{int(b.get('k') or 4)}:{tf}"
     k = f"{b.get('from') or '2018'}:{int(b.get('k') or 4)}"
     return k if tf != "D" else k + ":D" + (f":{b['to']}" if b.get("to") else "")
 
 
 def dow_data(plan: dict, data: dict):
     """Trọng 27/11: chart lý thuyết Dow trên giá BTC thật (beat type "dow": đỉnh đáy HH, HL, LH, LL).
-    Beat: {"type": "dow", "from": "2018" hoặc "2025-06", "k": 4, "tf": "W" | "D", "to": "2025-10" (tuỳ chọn)}.
+    Beat: {"type": "dow", "from": "2018" hoặc "2025-06", "k": 4, "tf": "W" | "D", "to": "2025-10" (tuỳ chọn), "last": 150 (tuỳ chọn:
+    chỉ lấy 150 nến gần nhất)}. Trọng 28/11: chart đỉnh đáy phải zoom gần, vài tháng, k nhỏ (4 đến 6), để thấy rõ 3 đến 6 đỉnh đáy.
     Trọng 28/11: bỏ backtest; thêm khung D (giá ngày). Không lấy được giá thì bỏ beat (ghi log)."""
     import dow_lab as DL
     secs = [("hook_beats", plan), ("intro_beats", plan)] + [("beats", s) for s in plan.get("sections", [])]
@@ -704,6 +707,8 @@ def dow_data(plan: dict, data: dict):
             continue
         frm, to, k = str(b.get("from") or "2018"), str(b.get("to") or "9999"), int(b.get("k") or 4)
         keep = [(i, d, p) for i, (d, p) in enumerate(r) if d[:len(frm)] >= frm and d[:len(to)] <= to]
+        if b.get("last"):
+            keep = [(i, d, p) for i, (d, p) in enumerate(r)][-int(b["last"]):]
         if len(keep) < 30:
             drop.add(id(b))
             continue
@@ -712,7 +717,7 @@ def dow_data(plan: dict, data: dict):
         sw = [{**x, "i": x["i"] - lo} for x in DL.label_swings(DL.pivots(px, k)) if x["i"] >= lo]
         data["dow"][key] = {"dates": [d for _, d, _ in keep], "price": [p for _, _, p in keep], "swings": sw,
                             "states": DL.states(px, k)[lo:], "tf": tf}
-        log(f"   Dow BTC khung {tf} {frm} tới {keep[-1][1]} (k={k}): {len(sw)} đỉnh đáy")
+        log(f"   Dow BTC khung {tf} {keep[0][1]} tới {keep[-1][1]} (k={k}): {len(sw)} đỉnh đáy")
     if drop:
         for k, s in secs:
             if s.get(k):

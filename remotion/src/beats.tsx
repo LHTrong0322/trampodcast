@@ -9,7 +9,7 @@ export type Side = {label: string; value: string; logo?: string | null; tone?: '
 export type Beat = {
   s: number;
   type: 'bignum' | 'versus' | 'dots' | 'flow' | 'statement' | 'chart' | 'logos' | 'question' | 'race' | 'matrix' | 'wma' | 'trend' | 'photo' | 'dow';
-  from?: string; k?: number; mode?: 'swings'; n?: number; tf?: 'W' | 'D'; to?: string;
+  from?: string; k?: number; mode?: 'swings'; n?: number; tf?: 'W' | 'D'; to?: string; last?: number;
   src?: string;
   value?: string; label?: string; logo?: string | null; tone?: 'up' | 'down' | 'flat';
   left?: Side; right?: Side;
@@ -297,7 +297,7 @@ export const BeatPanel: React.FC<{beats: Beat[]; t: number; sceneDur: number; da
       case 'matrix': return <Matrix b={b} w={w} h={h} />;
       case 'race': return <Race b={b} w={w} h={h} data={data} />;
       case 'trend': return data?.trends?.[b.keyword || 'Bitcoin']?.values?.length ? <Trend b={b} w={w} h={h} data={data} /> : <Statement b={{...b, text: b.label || 'Google Trends'}} w={w} h={h} />;
-      case 'dow': { const dk = `${b.from || '2018'}:${b.k || 4}` + (b.tf === 'D' ? `:D${b.to ? ':' + b.to : ''}` : '');
+      case 'dow': { const dk = b.last ? `last${b.last}:${b.k || 4}:${b.tf || 'W'}` : `${b.from || '2018'}:${b.k || 4}` + (b.tf === 'D' ? `:D${b.to ? ':' + b.to : ''}` : '');
         return data?.dow?.[dk]?.price?.length ? <Dow b={b} w={w} h={h} d={data.dow[dk]} /> : <Statement b={{...b, text: b.label || 'Lý thuyết Dow'}} w={w} h={h} />; }
       case 'wma': return data?.wma?.price?.length ? <Wma b={b} w={w} h={h} data={data} /> : <Statement b={{...b, text: b.label || '200WMA'}} w={w} h={h} />;
       case 'chart': {
@@ -428,14 +428,14 @@ export const Dow: React.FC<{b: Beat; w: number; h: number; d: any}> = ({b, w, h,
   const shortSpan = n > 1 && (Date.parse(dates[n - 1]) - Date.parse(dates[0])) < 2 * 365 * 864e5;
   const years = shortSpan
     ? dates.map((dt, i) => [`${Number(dt.slice(5, 7))}/${dt.slice(0, 4)}`, i, dt.slice(5, 7)] as [string, number, string])
-      .filter(([, , mo], j, a) => j > 0 && mo !== a[j - 1][2] && ['01', '04', '07', '10'].includes(mo)).map(([l, i]) => [l, i] as [string, number])
+      .filter(([, , mo], j, a) => j > 0 && mo !== a[j - 1][2] && (n < 260 || ['01', '04', '07', '10'].includes(mo))).map(([l, i]) => [l, i] as [string, number])
     : dates.map((dt, i) => [dt.slice(0, 4), i] as [string, number]).filter(([yr], j, a) => j > 0 && yr !== a[j - 1][0])
       .filter(([yr]) => big || Number(yr) % 2 === 0);
   // Trọng 28/11: khung D có rất nhiều đỉnh đáy, nhãn chồng nhau (HHHHHH). Chọn đỉnh đáy RÕ nhất trước (lệch giá lớn nhất
   // so với 2 đỉnh đáy kề bên), bỏ nhãn quá sát nhãn đã đặt, tối đa b.n nhãn, rồi xếp lại theo thời gian.
   const all: any[] = d.swings || [];
   const prom = (j: number) => Math.max(...[all[j - 1], all[j + 1]].filter(Boolean).map((o: any) => Math.abs(Math.log(all[j].v) - Math.log(o.v))), 0);
-  const cap = b.n || (big ? 14 : 10), gap = big ? 86 : 70;
+  const cap = b.n || (n < 260 ? 6 : big ? 14 : 10), gap = big ? 86 : 70;   // chart zoom gần: chỉ 6 đỉnh đáy rõ nhất
   const sw: any[] = [];
   all.map((s, j) => ({s, p: prom(j)})).sort((p, q) => q.p - p.p).forEach(({s}) => {
     if (sw.length >= cap) return;
@@ -443,19 +443,28 @@ export const Dow: React.FC<{b: Beat; w: number; h: number; d: any}> = ({b, w, h,
     sw.push(s);
   });
   sw.sort((p, q) => p.i - q.i);
+  // nhãn so với đỉnh (đáy) TRƯỚC ĐÓ ĐANG HIỆN trên hình, để người xem tự so được bằng mắt
+  const seen: Record<string, number> = {};
+  sw.forEach((s, j) => { const pv = seen[s.tp];
+    if (pv !== undefined) sw[j] = {...s, label: s.tp === 'H' ? (s.v > pv ? 'HH' : 'LH') : (s.v > pv ? 'HL' : 'LL')};
+    seen[s.tp] = s.v; });
+  const few = sw.length <= 8;   // ít đỉnh đáy (chart zoom gần): nhãn to, có đường nối
   const BTC = '#F7931A';
   return (
     <Card w={w} h={h} pad={0}>
       <div style={{position: 'absolute', left: 40, top: 28, right: 40, fontSize: big ? 42 : 38, fontWeight: 800, color: C.ink}}>
         {b.label || (d.tf === 'D' ? 'BTC khung ngày: đỉnh và đáy' : 'BTC khung tuần: đỉnh và đáy')}</div>
       <svg width={w} height={h} style={{position: 'absolute', inset: 0}}>
-        {years.map(([yr, i]) => <g key={yr}>
+        {years.filter(([, i]) => x(i) < w - 150).map(([yr, i]) => <g key={yr}>
           <line x1={x(i)} x2={x(i)} y1={pad.t} y2={pad.t + H} stroke={C.line} strokeWidth={2} />
           <text x={x(i) + 8} y={pad.t + H + 34} fontSize={28} fontWeight={700} fill={C.muted} fontFamily={FONT}>{yr}</text></g>)}
-        <polyline points={line} fill="none" stroke={BTC} strokeWidth={5} strokeLinejoin="round" strokeLinecap="round" />
+        <polyline points={line} fill="none" stroke={BTC} strokeWidth={5} strokeLinejoin="round" strokeLinecap="round" opacity={few ? 0.55 : 1} />
+        {/* Trọng 28/11: nối các đỉnh đáy thành đường gấp khúc để người mới nhìn ra cấu trúc bậc thang lên/xuống */}
+        {few ? sw.slice(1).map((s, k) => shown(s.i) ? <line key={'z' + k} x1={x(sw[k].i)} y1={y(sw[k].v)} x2={x(s.i)} y2={y(s.v)}
+          stroke={/^H[HL]$/.test(s.label) ? C.green : /^L[HL]$/.test(s.label) ? C.red : C.muted} strokeWidth={6} strokeDasharray="16 10" strokeLinecap="round" /> : null) : null}
         {sw.map((s, k) => shown(s.i) ? <g key={k}>
-          <circle cx={x(s.i)} cy={y(s.v)} r={11} fill="#fff" stroke={/^H[HL]$/.test(s.label) ? C.green : C.red} strokeWidth={5} />
-          <text x={x(s.i)} y={y(s.v) + (s.tp === 'H' ? -22 : 44)} textAnchor="middle" fontSize={big ? 30 : 28} fontWeight={900}
+          <circle cx={x(s.i)} cy={y(s.v)} r={few ? 15 : 11} fill="#fff" stroke={/^H[HL]$/.test(s.label) ? C.green : C.red} strokeWidth={few ? 6 : 5} />
+          <text x={x(s.i)} y={y(s.v) + (s.tp === 'H' ? (few ? -30 : -22) : (few ? 58 : 44))} textAnchor="middle" fontSize={few ? (big ? 42 : 36) : (big ? 30 : 28)} fontWeight={900}
             fill={/^H[HL]$/.test(s.label) ? C.green : C.red} fontFamily={FONT}>{s.label}</text></g> : null)}
       </svg>
       <div style={{position: 'absolute', left: 40, bottom: 14, fontSize: 24, fontWeight: 600, color: C.muted}}>
