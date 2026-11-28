@@ -22,8 +22,9 @@ Thẻ so sánh: Lãi suất Fed 2021: ~0% vs 2022: trên 4% / note: BTC -77% tro
 CHART: giá BTC 2020 đến 2022, đánh dấu đỉnh 2021 và đáy 2022
 
 ## Phần 2: Bong bóng chạy bằng 2 loại nhiên liệu
-Nếu chu kỳ là nhịp thở, thì bong bóng là cơn sốt. Giá bay xa khỏi giá trị thật. Và cơn sốt nào cũng chạy bằng 2 loại nhiên liệu. Nhiên liệu thứ nhất là tâm lý. Thấy hàng xóm lãi gấp 3, bạn sợ bị bỏ lại, đó là FOMO. Mua rồi thì chỉ đọc tin tốt, đó là sai lệch xác nhận. Và ai cũng tin mình sẽ thoát kịp trước khi vỡ. Nhiên liệu thứ hai nguy hiểm hơn: đòn bẩy, tức là vay tiền để đầu tư. Ví dụ: bạn mua căn nhà 500 nghìn đô, tự bỏ 100 nghìn, vay 400 nghìn. Nhà tăng 20%, vốn của bạn tăng 100%. Nhưng nhà giảm 20%, vốn của bạn về 0. Trong crypto còn tàn nhẫn hơn: mở lệnh đòn bẩy 10 lần, giá chỉ cần đi ngược 10% là bị thanh lý sạch. Nhà kinh tế Hyman Minsky có một câu rất đáng nhớ: chính sự ổn định sinh ra bất ổn. Càng nhiều năm êm đẹp, người ta càng vay nhiều, cho tới khi một cú sốc nhỏ làm cả hệ thống đổ cùng lúc.
-Chữ trên hình: Nhiên liệu 1: tâm lý (FOMO, chỉ đọc tin tốt, tin mình thoát kịp) / Nhiên liệu 2: đòn bẩy
+Nếu chu kỳ là nhịp thở, thì bong bóng là cơn sốt. Giá bay xa khỏi giá trị thật. Và cơn sốt nào cũng chạy bằng 2 loại nhiên liệu. Nhiên liệu thứ nhất là tâm lý. Thấy hàng xóm lãi gấp 3, bạn sợ bị bỏ lại, đó là FOMO. Mua rồi thì chỉ đọc tin tốt, đó là sai lệch xác nhận. Và ai cũng tin mình sẽ thoát kịp trước khi vỡ. Nhưng tâm lý thôi chưa đủ làm bong bóng to đến vậy. Thứ gì mới thật sự bơm nó phình lên? Nhiên liệu thứ hai: đòn bẩy, tức là vay tiền để đầu tư. Ví dụ: bạn mua căn nhà 500 nghìn đô, tự bỏ 100 nghìn, vay 400 nghìn. Nhà tăng 20%, vốn của bạn tăng 100%. Nhưng nhà giảm 20%, vốn của bạn về 0. Trong crypto còn tàn nhẫn hơn: mở lệnh đòn bẩy 10 lần, giá chỉ cần đi ngược 10% là bị thanh lý sạch. Nhà kinh tế Hyman Minsky có một câu rất đáng nhớ: chính sự ổn định sinh ra bất ổn. Càng nhiều năm êm đẹp, người ta càng vay nhiều, cho tới khi một cú sốc nhỏ làm cả hệ thống đổ cùng lúc.
+Hình: icon não + chữ FOMO to (hiện khi đọc "FOMO"), rồi 2 thẻ ngắn hiện lần lượt: "Chỉ đọc tin tốt" / "Tin mình thoát kịp"
+Hình: icon đòn bẩy (bập bênh) + số "x5" khi đọc "Thứ gì mới thật sự bơm nó phình lên?" (500 nghìn đô / 100 nghìn vốn = đòn bẩy 5 lần)
 Thẻ so sánh đòn bẩy (2 phía): Nhà +20%: vốn +100% vs Nhà -20%: vốn về 0 (sub: Mua 500 nghìn đô, vay 400 nghìn)
 Thẻ số: 10% / Giá đi ngược 10%, lệnh đòn bẩy 10x bị thanh lý
 Thẻ trích: "Sự ổn định sinh ra bất ổn" / Hyman Minsky
@@ -35,10 +36,10 @@ Hàng thẻ lịch sử (hiện từng thẻ theo lời đọc): 1637 Tulip: s�
 Thẻ số: -94% / Cổ phiếu Amazon sau bong bóng dot-com (logo Amazon)
 
 ## Phần 4: 2 con số để nhận ra bong bóng, và hôm nay chúng đang ở đâu
-Vậy làm sao biết mình đang ở giai đoạn nào? Có 2 con số rất đáng theo dõi. Con số thứ nhất là chỉ số CAPE, hay Shiller P/E: lấy giá S&P 500 chia cho earnings trung bình 10 năm. Trung bình lịch sử khoảng 17. Đỉnh bong bóng dot-com năm 1999 là 44. Tháng 11 năm nay, CAPE đang ở khoảng 40. Con số thứ hai là chỉ báo Buffett: tổng vốn hoá chứng khoán Mỹ chia cho GDP. Trung bình hơn 50 năm qua khoảng 88%. Quý 3 năm nay, nó lên khoảng 225%. Nghe đáng sợ, nhưng phải công bằng: định giá cao không cho biết khi nào sập. Thị trường có thể đắt thêm nhiều năm. Ngoài con số, hãy nhìn hành vi. Khi người chưa từng đầu tư bỗng cho bạn lời khuyên mua coin, khi ai cũng nói lần này khác, và khi người ta vay tiền để mua, đó là lúc nên thận trọng nhất. Crypto thì không có P/E, nên tín hiệu hành vi càng quan trọng. Hiện tại, BTC từ đỉnh khoảng 126 nghìn đô đã về quanh 64 nghìn đô giữa tháng 11, tức là khoảng một nửa.
+Vậy làm sao biết mình đang ở giai đoạn nào? Có 2 con số rất đáng theo dõi. Con số thứ nhất là chỉ số CAPE, hay Shiller P/E: lấy giá S&P 500 chia cho earnings trung bình 10 năm. Trung bình lịch sử khoảng 17. Đỉnh bong bóng dot-com năm 1999 là 44. Tháng 11 năm nay, CAPE đang ở khoảng 40. Con số thứ hai là chỉ báo Buffett: tổng vốn hoá chứng khoán Mỹ chia cho GDP. Trung bình hơn 50 năm qua khoảng 88%. Quý 3 năm nay, nó lên khoảng 225%. Nghe đáng sợ, nhưng phải công bằng: định giá cao không cho biết khi nào sập. Cuối thập niên 90, CAPE nằm trên 30 khoảng 4 năm rồi mới vỡ. Ngoài con số, hãy nhìn hành vi. Khi người chưa từng đầu tư bỗng cho bạn lời khuyên mua coin, khi ai cũng nói lần này khác, và khi người ta vay tiền để mua, đó là lúc nên thận trọng nhất. Crypto thì không có P/E, nên tín hiệu hành vi càng quan trọng. Hiện tại, BTC từ đỉnh khoảng 126 nghìn đô đã về quanh 64 nghìn đô giữa tháng 11, tức là khoảng một nửa.
 Thẻ so sánh: CAPE trung bình ~17 vs CAPE tháng 11/2026 ~40 (note: Đỉnh dot-com 1999: 44) (nguồn nhỏ: CFA Institute, Shiller)
 Thẻ so sánh: Buffett trung bình ~88% vs Quý 3/2026 ~225% (nguồn nhỏ: Statista, Motley Fool)
-Thẻ chữ: Định giá cao ≠ sập ngay
+CHART: CAPE 1995 đến 2002, tô vùng CAPE trên 30 từ 1997 tới 2001 (khoảng 4 năm đắt trước khi sập), đánh dấu đỉnh 44 tháng 12/1999 (nguồn nhỏ: Shiller)
 Checklist hành vi: Người ngoài ngành cho lời khuyên coin / "Lần này khác" / Vay tiền để mua
 Thẻ số: ~$64K / BTC giữa tháng 11/2026, đỉnh ~$126K (nguồn nhỏ: Fortune)
 
@@ -50,7 +51,7 @@ Thẻ trích: "Buy American. I am." / Warren Buffett, 10/2008
 
 ## Tóm lại
 Tóm lại, bong bóng nào cũng có 4 giai đoạn: manh nha, tăng tốc, hưng phấn, hoảng loạn. Nhiên liệu luôn là FOMO và đòn bẩy. Bạn không cần đoán đúng đỉnh. Bạn chỉ cần không dùng đòn bẩy, DCA đều, và luôn còn tiền khi người khác hoảng loạn. Đây là nội dung giáo dục, không phải lời khuyên đầu tư. Bình luận cho mình biết: theo bạn, crypto bây giờ đang ở giai đoạn mấy, 1, 2, 3 hay 4?
-Chữ trên hình (hiện cả 3 ý cùng lúc): Không đòn bẩy / DCA đều / Còn tiền khi người khác hoảng
+Hình: 3 icon minh hoạ hiện lần lượt theo lời đọc: ổ khoá trên bập bênh (không đòn bẩy) / lịch có dấu mỗi tháng (DCA đều) / ví còn tiền (còn tiền khi người khác hoảng)
 
 ## Góc nhìn riêng của kênh (ngoài nội dung nguồn tham khảo)
 - Nối chu kỳ lãi suất với giá BTC: Fed về gần 0% năm 2020, BTC đỉnh 2021; Fed tăng lên trên 4% năm 2022, BTC -77%.
