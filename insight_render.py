@@ -49,12 +49,42 @@ def speed(pcm: bytes, factor: float) -> bytes:
     return P._ffmpeg_pcm(["-f", "s16le", "-ar", str(SR), "-ac", "1"], pcm, f"atempo={factor:.3f}")
 
 
+_WA_OFF = False
+_WA_CACHE: dict = {}
+
+
+def real_word_times(words: list[str], pcm: bytes, speech: float) -> list[dict] | None:
+    """Trọng 28/11: mốc chữ theo giọng THẬT (Whisper) để thẻ hình, phụ đề khớp lời đọc. Lỗi hay chưa cài thì trả None."""
+    global _WA_OFF
+    if _WA_OFF or os.getenv("REAL_WORD_TIMES", "1") == "0" or not pcm:
+        return None
+    try:
+        import hashlib
+        import word_align as WA
+        key = hashlib.md5(pcm).hexdigest()   # 1 đoạn được hỏi mốc chữ nhiều lần (cảnh, nhạc, short): chỉ nghe 1 lần
+        if key not in _WA_CACHE:
+            _WA_CACHE[key] = WA.heard_words(pcm, SR)
+        out = WA.align(words, _WA_CACHE[key], speech)
+        if out is None:
+            log("   ! khớp chữ theo giọng thật dưới 50%, dùng cách ước cũ cho đoạn này")
+        return out
+    except ImportError:
+        _WA_OFF = True
+        log("   ! chưa cài faster-whisper: mốc chữ dùng cách ước cũ")
+    except Exception as ex:
+        log(f"   ! khớp chữ theo giọng thật lỗi: {str(ex)[:150]}")
+    return None
+
+
 def word_times(text: str, pcm: bytes) -> list[dict]:
     """Thời điểm từng chữ: chia theo câu (bám chỗ ngừng thật), trong câu chia theo độ dài chữ."""
     sents = [s for s in re.split(r"(?<=[.!?…,;:])\s+", V.en_money(text).strip()) if s]
     if not sents:
         return []
     speech = len(pcm) / SR / 2
+    real = real_word_times([w for x in sents for w in x.split()], pcm, speech)
+    if real:
+        return real
     bounds = V.chunk_bounds({"pcm": pcm}, [s.split() for s in sents], speech)
     out = []
     for s, (a, b) in zip(sents, bounds):
