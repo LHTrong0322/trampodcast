@@ -17,3 +17,4 @@ Trọng 26/11 15:15: mọi bài chưa lên sóng dời về 19:00 (giữ ngày),
 TikTok Video 2 dài (16:9, caption Facebook + dòng kênh YouTube): T6 27/11 19:00, vidIQ post 630303a0-fa8d-43aa-a914-5838c87ec08c.
 Trọng 27/11 00:47: Video 3 Short 5 dời T2 30/11 11:00; Short 2 dời T4 2/12 19:00; Short 3 dời T6 4/12 19:00 (xen kẽ với short Video 5), cả YouTube, Facebook, TikTok.
 Trọng 27/11 01:09: Video 5 Short 2 dời T5 3/12 11:00; Short 4 dời T2 7/12 19:00; Short 5 dời T4 9/12 19:00 (xen kẽ short Video 4).
+Trọng 28/11 11:26: Video 3 Short 5 dời lên T7 28/11 12:00 (YouTube, Facebook, TikTok).
