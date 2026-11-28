@@ -28,6 +28,9 @@
    - Bot xem trước short thêm ảnh kho lạc đề (guitar, cassette): bỏ quyền thêm ảnh kho.
    - Vòng sửa bị bỏ trắng vì bản sửa sinh lỗi khung: giờ bot được sửa lại 1 lần, có danh sách lỗi nó vừa tạo.
    - Short cụt chữ câu sau ("Những"): điểm cắt dừng trước chữ kế tiếp.
+9. ẢNH AI (Trọng 28/11): thẻ photo có "gen": "mô tả tiếng Anh" thì máy dựng gọi Gemini tạo ảnh (insight_lab.gen_image, key Gemini sẵn có,
+   model lấy từ models.image trong sources.yaml hoặc tự tìm model có chữ "image"). Phong cách chung IMG_STYLE: không chữ, không logo,
+   không người thật nhận ra được. Tạo lỗi thì thử ảnh kho theo "query", rồi đổi thành thẻ chữ. Ảnh ghi nguồn "tạo bằng AI".
 7. Khuôn mở đầu (Insight.tsx IntroScene): có thẻ bên phải thì tiêu đề chỉ rộng 860; mục lục hiện tới 8 phần.
 
 ## 📈 TĂNG PHÂN PHỐI KÊNH MỚI (TRỌNG CHỐT 15:32 NGÀY 26/11, áp dụng cho MỌI video từ nay)

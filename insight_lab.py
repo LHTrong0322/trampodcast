@@ -848,7 +848,51 @@ def save_images(lab: Path, plan: dict, gem=None, cfg=None):
 _PERSON_HINT = re.compile(r"\b(jensen|huang|trump|musk|powell|saylor|cz|vitalik|buterin|biden|gensler|bessent)\b", re.I)
 
 
-def photo_beats(lab: Path, plan: dict):
+IMG_STYLE = ("Editorial illustration for a Vietnamese finance education YouTube video, clean modern flat-3D style, soft light, "
+             "white and indigo palette with warm accents, 16:9 landscape, no text, no letters, no logos, no watermark, "
+             "no real identifiable people (generic figures only).")
+
+
+def _image_models(gem, cfg) -> list[str]:
+    """Model tạo ảnh của Gemini: lấy trong cấu hình (models.image), không có thì hỏi API danh sách model có chữ 'image'."""
+    want = list((cfg.get("models") or {}).get("image") or [])
+    try:
+        r = requests.get(f"{P.GEMINI_BASE}", params={"pageSize": 200}, headers={"x-goog-api-key": gem.key}, timeout=30)
+        names = [m["name"].split("/")[-1] for m in r.json().get("models", [])
+                 if "generateContent" in (m.get("supportedGenerationMethods") or []) and "image" in m["name"] and "tts" not in m["name"]]
+        want += sorted(names, key=lambda n: ("pro" not in n, "preview" in n, n), reverse=False)
+    except Exception as ex:
+        log(f"   ! không lấy được danh sách model ảnh: {str(ex)[:120]}")
+    return list(dict.fromkeys(want or ["gemini-2.5-flash-image"]))
+
+
+def gen_image(gem, cfg, prompt: str) -> bytes | None:
+    """Trọng 28/11: máy dựng gọi thẳng công cụ tạo ảnh của Google (Gemini, key có sẵn) để có ảnh minh hoạ ĐÚNG ý,
+    thay ảnh kho tìm theo từ khoá hay lạc đề. Lỗi (hết lượt, model không có) thì trả None, không làm hỏng lượt dựng."""
+    import base64
+    global _IMG_MODELS
+    if _IMG_MODELS is None:
+        _IMG_MODELS = _image_models(gem, cfg)
+    for m in list(_IMG_MODELS):
+        try:
+            data = gem._post(m, {"contents": [{"role": "user", "parts": [{"text": f"{prompt}. {IMG_STYLE}"}]}],
+                                 "generationConfig": {"responseModalities": ["IMAGE", "TEXT"]}}, timeout=180)
+            for c in data.get("candidates") or []:
+                for p in (c.get("content") or {}).get("parts") or []:
+                    blob = p.get("inline_data") or p.get("inlineData")
+                    if blob and blob.get("data"):
+                        return base64.b64decode(blob["data"])
+            log(f"   ! model ảnh {m} không trả ảnh")
+        except Exception as ex:
+            log(f"   ! model ảnh {m} lỗi: {str(ex)[:160]}")
+            _IMG_MODELS.remove(m)
+    return None
+
+
+_IMG_MODELS = None
+
+
+def photo_beats(lab: Path, plan: dict, gem=None, cfg=None):
     img = lab / "img"
     img.mkdir(parents=True, exist_ok=True)
     k = 0
@@ -856,6 +900,20 @@ def photo_beats(lab: Path, plan: dict):
         for b in sec.get("beats") or []:
             if b.get("type") != "photo" or b.get("src"):
                 continue
+            if b.get("gen") and gem is not None:   # ảnh AI theo mô tả (Trọng 28/11)
+                raw = gen_image(gem, cfg or {}, str(b["gen"]))
+                if raw:
+                    from PIL import Image
+                    import io
+                    fn = f"gen_{k}.jpg"
+                    im = Image.open(io.BytesIO(raw)).convert("RGB")
+                    im.save(img / fn, quality=92)
+                    b["src"] = f"img/{fn}"
+                    plan.setdefault("image_credits", {})[fn] = "Ảnh minh hoạ tạo bằng AI (Google Gemini)"
+                    log(f"   🎨 Ảnh AI {fn}: {str(b['gen'])[:70]} ({im.size[0]}x{im.size[1]})")
+                    k += 1
+                    continue
+                log(f"   ! không tạo được ảnh AI '{str(b['gen'])[:60]}', thử ảnh kho rồi tới thẻ chữ")
             q = str(b.get("query") or "").strip()
             if not q or _PERSON_HINT.search(q):
                 log(f"   ! bỏ ảnh '{q}': không tìm ảnh theo tên người thật")
@@ -1144,7 +1202,7 @@ def prepare(posts_or_links, out: Path, voices: list[str] | None = None, release:
     plan = live_numbers(plan, md)   # Trọng 22/11: hook, biểu đồ, ảnh bìa, short dùng CÙNG một bộ số giá thật
     (lab / "data.json").write_text(json.dumps(md, ensure_ascii=False), encoding="utf-8")
     save_images(lab, plan, gem, cfg)
-    photo_beats(lab, plan)
+    photo_beats(lab, plan, gem, cfg)
     parts = [("hook", plan.get("hook", "")), ("intro", plan.get("intro", ""))]
     parts += [(f"s{k}", s["narration"]) for k, s in enumerate(plan["sections"])]
     parts += [("outro", plan.get("outro", ""))]

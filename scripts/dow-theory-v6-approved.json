@@ -125,8 +125,10 @@
     },
     {
      "at": "Tin tức nói chuyện hôm qua",
-     "type": "statement",
-     "text": "Tin tức: hôm qua. Chart: tiền đang chạy đâu"
+     "type": "photo",
+     "label": "Tin tức: hôm qua. Chart: hôm nay",
+     "gen": "an old folded newspaper on a desk next to a smartphone showing a glowing candlestick price chart, contrast between yesterday's news and live market data",
+     "hold": 4
     },
     {
      "at": "Phân tích cơ bản trả lời",
@@ -196,12 +198,14 @@
      "tone_lock": true
     },
     {
-     "at": "thị trường nói chung đang lên",
-     "type": "statement",
-     "text": "Câu hỏi của Dow: thị trường lên hay xuống?"
+     "at": "Câu trả lời của ông",
+     "type": "photo",
+     "label": "Câu trả lời của Dow: bãi biển",
+     "gen": "a wide sandy beach with a single wooden stake planted in the sand, the tide rising with big waves and small ripples, golden hour",
+     "hold": 4
     },
     {
-     "at": "hình ảnh bãi biển",
+     "at": "Thuỷ triều là xu hướng chính",
      "type": "flow",
      "label": "3 xu hướng của Dow",
      "steps": [
@@ -438,16 +442,17 @@
     },
     {
      "at": "Cả nước Mỹ vay tiền",
-     "type": "statement",
-     "text": "1929: cả nước vay tiền mua cổ phiếu"
+     "type": "photo",
+     "label": "1929: cả nước vay tiền mua cổ phiếu",
+     "gen": "vintage 1920s stock exchange trading floor crowded with excited generic traders in suits and hats, ticker tape in the air, sepia tones",
+     "hold": 4
     },
     {
      "at": "Ngày 25 tháng 10",
-     "type": "bignum",
-     "value": "25/10/1929",
-     "label": "Hamilton đăng A Turn in the Tide trên báo WSJ",
-     "tone": "down",
-     "tone_lock": true
+     "type": "photo",
+     "label": "25/10/1929: A Turn in the Tide",
+     "gen": "a vintage 1929 newspaper front page lying on a wooden desk, headline area blurred and unreadable, a dramatic ocean wave turning back in the background, sepia",
+     "hold": 4
     },
     {
      "at": "cả hai chỉ số Dow",
