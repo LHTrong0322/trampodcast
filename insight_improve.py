@@ -81,6 +81,7 @@ def improve(plan: dict, rv: dict, locked: bool = True) -> tuple[dict, list[str]]
     plan = base_plan(plan)
     fixes = ([f"[Nên sửa] {x}" for x in as_list(rv.get("can_sua"))] + [f"[Dễ mất người xem] {x}" for x in as_list(rv.get("retention_risk"))]
              + [f"[Mẹo kịch bản] {x}" for x in as_list(rv.get("script_tips"))])
+    fixes += [f"[Nghề dựng] {x}" for x in as_list(rv.get("dung_video"))]   # Trọng 28/11: góp ý chuyên gia dựng video
     nx = rv.get("nguoi_xem") if isinstance(rv.get("nguoi_xem"), dict) else {}   # Trọng 28/11: vai người xem
     fixes += [f"[Người xem thấy chán] {x}" for x in as_list(nx.get("doan_chan"))] + [f"[Người xem thấy lặp] {x}" for x in as_list(nx.get("doan_lap"))]
     if nx.get("ly_do_thoat"):

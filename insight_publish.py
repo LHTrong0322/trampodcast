@@ -222,7 +222,7 @@ def thumbnail(res: dict, out: Path) -> Path | None:
 # ---------------------------------------------------------------------------
 # BOT REVIEW: AI xem khung hình + lời đọc → chấm điểm & gợi ý
 # ---------------------------------------------------------------------------
-REVIEW_PROMPT = """Bạn là biên tập viên YouTube/TikTok kỳ cựu mảng crypto (chuyên tối ưu giữ chân người xem).
+REVIEW_PROMPT = """Bạn là biên tập viên YouTube/TikTok kỳ cựu mảng crypto (chuyên tối ưu giữ chân người xem) kiêm CHUYÊN GIA DỰNG VIDEO.
 Dưới đây là {n} khung hình trích đều từ video dài "{title}" ({minutes:.1f} phút, giọng {voice}, tốc độ ~{wpm} từ/phút)
 và {ns} khung hình từ video ngắn 9:16. Lời đọc mở đầu: "{hook}".
 Hãy review THẲNG THẮN, cụ thể, có thể làm được ngay ở lần dựng sau. Viết tiếng Việt dễ hiểu.
@@ -232,7 +232,8 @@ Trả JSON:
   "scores": {{"hook_3s": 1-10, "hinh_anh_ro_rang": 1-10, "mau_sac_brand": 1-10, "nhip_do": 1-10, "phu_de": 1-10,
               "du_lieu_lien_quan": 1-10, "thumbnail": 1-10, "short_9x16": 1-10, "dang_xem": 1-10}},
   "tot": ["2-3 điểm đang làm tốt"],
-  "can_sua": ["3-6 việc cần sửa, mỗi việc nêu rõ ở đâu (giây/khung) và sửa thế nào"],
+  "can_sua": ["8 đến 15 việc cần sửa (lỗi + nâng cấp nghề dựng), mỗi việc nêu rõ ở đâu (giây/khung) và sửa thế nào"],
+  "dung_video": ["5 đến 10 góp ý NGHỀ DỰNG để cuốn và chuyên nghiệp hơn (bố cục, chuyển động, nhịp cắt, kể bằng hình, chữ, màu, âm thanh), mỗi ý: giây/khung, đang thế nào, đổi thành gì"],
   "script_tips": ["2-3 mẹo cho LỜI ĐỌC lần sau (hook, độ dài, cách kể), sẽ được đưa thẳng vào hướng dẫn viết kịch bản"],
   "retention_risk": "đoạn nào dễ làm người xem bỏ đi và vì sao",
   "nguoi_xem": {{"xem_toi_giay": số giây bạn (vai người xem) bấm thoát, hoặc xem hết thì ghi độ dài video,
@@ -240,6 +241,18 @@ Trả JSON:
                 "doan_lap": ["giây/khung: hình hoặc ý lặp lại kiểu cũ"], "dang_xem": true hoặc false,
                 "nhan_xet": "2 đến 3 câu nói thật như người xem để lại bình luận"}}
 }}
+CHUYÊN GIA DỰNG VIDEO (Trọng 28/11: "bot review cần feedback nhiều hơn, phải là chuyên gia dựng video để đưa ra feedback giúp video
+cuốn hút và chuyên nghiệp hơn"): bạn đồng thời là editor/motion designer 10 năm cho các kênh giáo dục tài chính top đầu
+(kiểu Johnny Harris, Wendover, Kurzgesagt, Coin Bureau). Ngoài lỗi, hãy góp ý NGHỀ DỰNG cụ thể, làm được ngay trong khuôn Remotion:
+- Bố cục và thứ bậc thị giác: mắt người xem nhìn vào đâu trước, chữ chính đủ to chưa, khoảng trống thừa hay chật, căn lề, cân đối trái phải.
+- Chuyển động: hình có "sống" không (zoom chậm, đẩy vào biểu đồ, vẽ dần đường giá, số đếm lên, highlight vòng tròn/mũi tên vào điểm đang nói),
+  chuyển cảnh có mượt và có lý do không, có đoạn nào đứng hình quá lâu.
+- Nhịp dựng: cắt theo nhịp câu, mỗi ý 1 hình, đoạn cần "thở" (giữ chart lâu để người xem đọc) và đoạn cần nhanh.
+- Kể bằng hình: chỗ nào nên thay chữ bằng biểu đồ, sơ đồ, so sánh, ảnh minh hoạ, ví dụ trực quan; chỗ nào nên phóng to (zoom) vào 1 vùng chart.
+- Typography và màu: cỡ chữ, độ đậm, số liệu nổi bật, màu xanh/đỏ đúng nghĩa, đồng bộ brand, không quá nhiều kiểu chữ.
+- Âm thanh: nhạc nền, chỗ nên có tiếng nhấn (whoosh, pop) hoặc khoảng lặng để nhấn ý.
+- Mở và kết: 3 giây đầu có cú móc thị giác không, kết có lý do để xem tiếp không.
+Mỗi góp ý ghi rõ giây/khung, đang thế nào, đổi thành gì, vì sao cuốn hơn. Viết như brief giao cho editor, không chung chung kiểu "làm sinh động hơn".
 VAI NGƯỜI XEM (Trọng 28/11: "video bạn làm ra bạn còn thấy không oke thì làm sao user xem được"): SAU khi chấm kiểu biên tập viên,
 hãy đóng vai một người xem thật: 22 tuổi, mới vào crypto 6 tháng, lướt YouTube buổi tối, có 10 giây là bấm sang video khác nếu chán.
 Xem lần lượt từng khung theo giây và trả lời THẬT LÒNG: tới giây nào bạn thoát, vì sao; đoạn nào khô khan như sách giáo khoa;
@@ -403,6 +416,8 @@ def review_text(rv: dict) -> str:
         lines += ["", "👍 Đang tốt:"] + [f"• {x}" for x in rv["tot"]]
     if rv.get("can_sua"):
         lines += ["", "🔧 Nên sửa:"] + [f"{i + 1}. {x}" for i, x in enumerate(rv["can_sua"])]
+    if rv.get("dung_video"):
+        lines += ["", "🎬 Góp ý nghề dựng:"] + [f"{i + 1}. {x}" for i, x in enumerate(rv["dung_video"])]
     if rv.get("retention_risk"):
         lines += ["", "⚠️ Dễ mất người xem: " + rv["retention_risk"]]
     if rv.get("script_tips"):

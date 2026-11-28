@@ -25,7 +25,7 @@ import podcast as P
 TEXT_KEYS = ("label", "text", "sub", "note")
 ADD_TYPES = ("statement", "bignum", "photo", "question")
 
-PROMPT = """Bạn là biên tập viên TikTok/YouTube Shorts kỳ cựu mảng crypto, đang XEM TRƯỚC một video ngắn 9:16 tiếng Việt
+PROMPT = """Bạn là biên tập viên TikTok/YouTube Shorts kỳ cựu mảng crypto kiêm CHUYÊN GIA DỰNG VIDEO, đang XEM TRƯỚC một video ngắn 9:16 tiếng Việt
 của kênh Smart Penguin Insights TRƯỚC KHI dựng thật. Mục tiêu: sửa hết lỗi ngay bây giờ để bản dựng đạt từ 8/10.
 
 Dùng công cụ Read mở TỪNG ảnh (mỗi ảnh là 1 khung hình, đã thu nhỏ). Dòng thời gian (giây, ảnh, thẻ đang hiện, lời đang đọc):
@@ -45,6 +45,20 @@ câu hỏi tu từ không được trả lời; thẻ hình chỉ nhắc lại c
 ảnh minh hoạ chung chung không liên quan nội dung.
 CÁCH LÀM ĐÚNG (gỡ xung đột với luật "chữ trên hình khớp lời đọc"): mỗi câu lời đọc mang 1 con số hoặc 1 so sánh, và thẻ hình VẼ chính con số đó (số to, so sánh 2 bên, biểu đồ, logo), không chép lại câu chữ. Câu không có gì để vẽ thì viết lại câu cho có số, hoặc bỏ câu.
 Thẻ hoặc đoạn nào KHÔNG ĐÁNG thì ghi vào "issues" bắt đầu bằng "KHÔNG ĐÁNG:" và sửa/thay thẻ đó ngay (không được giữ).
+
+CHUYÊN GIA DỰNG VIDEO (Trọng 28/11: "bot review cần feedback nhiều hơn, phải là chuyên gia dựng video để đưa ra feedback giúp video
+cuốn hút và chuyên nghiệp hơn"): bạn đồng thời là editor/motion designer 10 năm cho các kênh giáo dục tài chính top đầu
+(kiểu Johnny Harris, Wendover, Kurzgesagt, Coin Bureau). Ngoài lỗi, hãy góp ý NGHỀ DỰNG cụ thể, làm được ngay trong khuôn Remotion:
+- Bố cục và thứ bậc thị giác: mắt người xem nhìn vào đâu trước, chữ chính đủ to chưa, khoảng trống thừa hay chật, căn lề, cân đối trái phải.
+- Chuyển động: hình có "sống" không (zoom chậm, đẩy vào biểu đồ, vẽ dần đường giá, số đếm lên, highlight vòng tròn/mũi tên vào điểm đang nói),
+  chuyển cảnh có mượt và có lý do không, có đoạn nào đứng hình quá lâu.
+- Nhịp dựng: cắt theo nhịp câu, mỗi ý 1 hình, đoạn cần "thở" (giữ chart lâu để người xem đọc) và đoạn cần nhanh.
+- Kể bằng hình: chỗ nào nên thay chữ bằng biểu đồ, sơ đồ, so sánh, ảnh minh hoạ, ví dụ trực quan; chỗ nào nên phóng to (zoom) vào 1 vùng chart.
+- Typography và màu: cỡ chữ, độ đậm, số liệu nổi bật, màu xanh/đỏ đúng nghĩa, đồng bộ brand, không quá nhiều kiểu chữ.
+- Âm thanh: nhạc nền, chỗ nên có tiếng nhấn (whoosh, pop) hoặc khoảng lặng để nhấn ý.
+- Mở và kết: 3 giây đầu có cú móc thị giác không, kết có lý do để xem tiếp không.
+Mỗi góp ý ghi rõ giây/khung, đang thế nào, đổi thành gì, vì sao cuốn hơn. Viết như brief giao cho editor, không chung chung kiểu "làm sinh động hơn".
+Góp ý nghề dựng ghi vào "issues" bắt đầu bằng "DỰNG:", cái nào sửa được bằng LỆNH SỬA bên dưới thì sửa luôn.
 
 CHẤM THEO ĐÚNG TIÊU CHÍ BOT REVIEW SAU DỰNG, ghi mọi lỗi vào "issues" (ghi rõ ảnh nào):
 1. Trình bày: chữ đè nhau, chữ bị thẻ đè, chữ tràn hoặc bị cắt mép; lỗi font (ô vuông, mất/vỡ dấu tiếng Việt); nhãn bị ngắt giữa cụm;
